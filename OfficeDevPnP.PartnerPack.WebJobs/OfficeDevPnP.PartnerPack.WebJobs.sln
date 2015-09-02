@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfficeDevPnP.PartnerPack.WebJobs.CheckAdminsWebJob", "OfficeDevPnP.PartnerPack.WebJobs.CheckAdminsWebJob\OfficeDevPnP.PartnerPack.WebJobs.CheckAdminsWebJob.csproj", "{8EEAA71A-F2F4-422F-8ABE-235A31BF5EE1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{A5B865F5-2DA3-4788-8E19-572FC67B59AA}"
+	ProjectSection(SolutionItems) = preProject
+		PostBuild.ps1 = PostBuild.ps1
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{043788C4-ED46-4061-96EA-F0F3946E5612}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfficeDevPnP.PartnerPack.Core", "..\OfficeDevPnP.PartnerPack.Core\OfficeDevPnP.PartnerPack.Core\OfficeDevPnP.PartnerPack.Core.csproj", "{090EEF9A-CF43-41A0-BE8E-869CCB82FF11}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8EEAA71A-F2F4-422F-8ABE-235A31BF5EE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EEAA71A-F2F4-422F-8ABE-235A31BF5EE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EEAA71A-F2F4-422F-8ABE-235A31BF5EE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EEAA71A-F2F4-422F-8ABE-235A31BF5EE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{090EEF9A-CF43-41A0-BE8E-869CCB82FF11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{090EEF9A-CF43-41A0-BE8E-869CCB82FF11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{090EEF9A-CF43-41A0-BE8E-869CCB82FF11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{090EEF9A-CF43-41A0-BE8E-869CCB82FF11}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{090EEF9A-CF43-41A0-BE8E-869CCB82FF11} = {043788C4-ED46-4061-96EA-F0F3946E5612}
+	EndGlobalSection
+EndGlobal
