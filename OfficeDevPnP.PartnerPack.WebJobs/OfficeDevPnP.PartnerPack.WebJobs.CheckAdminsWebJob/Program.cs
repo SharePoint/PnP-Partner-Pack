@@ -18,7 +18,7 @@ namespace OfficeDevPnP.PartnerPack.WebJobs.CheckAdminsWebJob
         static void Main()
         {
             var job = new EnforceTwoAdministratorsTimerJob();
-            
+
             job.AddSite("https://erwinmcm.sharepoint.com/sites/test");
 
             //   job.SetEnumerationCredentials("erwinmcm");
@@ -26,7 +26,7 @@ namespace OfficeDevPnP.PartnerPack.WebJobs.CheckAdminsWebJob
                 ConfigurationManager.AppSettings["ClientId"],
                 ConfigurationManager.AppSettings["AzureTenant"],
                 ConfigurationManager.AppSettings["CertificatePath"],
-                ConfigurationManager.AppSettings["CertificatePassword"]);
+                ConfigurationManager.ConnectionStrings["CertificatePassword"].ConnectionString);
 
             job.Run();
 
