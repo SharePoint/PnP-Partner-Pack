@@ -1,0 +1,13 @@
+﻿@model System.String
+
+@{
+    var policies =
+        new SelectListItem[]
+        {
+            new SelectListItem { Text = "Low Business Impact", Value = "LBI" },
+            new SelectListItem { Text = "Medium Business Impact", Value = "MBI" },
+            new SelectListItem { Text = "High Business Impact", Value = "HBI" },
+        };
+}
+@Html.DropDownListFor(model => model, policies)
+@Html.ValidationMessageFor(model => model)

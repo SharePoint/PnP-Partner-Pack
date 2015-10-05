@@ -1,0 +1,30 @@
+﻿@model OfficeDevPnP.PartnerPack.SiteProvisioningWeb.Models.CreateSiteViewModel
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<h2>Welcome @ViewBag.UserName!</h2>
+
+<div class="row">
+    <div class="col">
+
+        <h2>@ViewBag.Message</h2>
+
+        <div class="table">
+            <div class="row">
+                <div class="col-sm-4">Press the following button to create a new Site Collection in the current Tenant.</div>
+                <div class="col-sm-4">Press the following button to create a new Sub Site in the current Host Web.</div>
+                <div class="col-sm-4">Press the following button to see the list of your already provisioned sites.</div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">&nbsp;</div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">@Html.ActionLink("Create Site Collection", "CreateSiteCollection", "Home", new { @class = "btn btn-default" })</div>
+                <div class="col-sm-4">@Html.ActionLink("Create Sub Site", "CreateSubSite", "Home", new { @class = "btn btn-default" })</div>
+                <div class="col-sm-4">@Html.ActionLink("My Provisioned Sites", "ProvisionedSites", "Home", new { @class = "btn btn-default" })</div>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,14 @@
+﻿@model System.Int32
+
+@{
+    var culturesList =
+        System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.AllCultures)
+        .Select(c => new SelectListItem
+        {
+            Text = c.DisplayName,
+            Value = c.LCID.ToString(),
+            Selected = Model > 0 && c.LCID == Model
+        });
+}
+@Html.DropDownListFor(model => model, culturesList)
+@Html.ValidationMessageFor(model => model)
