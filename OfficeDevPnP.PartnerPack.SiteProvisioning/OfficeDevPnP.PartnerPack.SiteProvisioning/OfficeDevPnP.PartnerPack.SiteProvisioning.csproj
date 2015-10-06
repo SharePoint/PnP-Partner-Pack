@@ -22,6 +22,7 @@
     <WorkflowPartId>{1a430ba4-1c05-488a-9fc9-74f08600d1d0}</WorkflowPartId>
     <CspkgPartId>{4534a68d-f7b5-49f2-b382-36d00b8d35b4}</CspkgPartId>
     <SqlPackagePartId>{9b6f5044-fc79-41a1-86fb-de1fe9f88adb}</SqlPackagePartId>
+    <ActivePublishProfile>pnp-partner-pack-site-provisioning - Web Deploy</ActivePublishProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

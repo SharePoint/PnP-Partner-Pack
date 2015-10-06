@@ -226,6 +226,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Components\JSLinkUtility.cs" />
     <Compile Include="Components\SystemWebCookieManager.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Filters\SharePointContextFilterAttribute.cs" />
@@ -283,6 +284,8 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Properties\PublishProfiles\pnp-partner-pack-site-provisioning - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\pnp-partner-pack-site-provisioning - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -294,6 +297,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\PnP-Partner-Pack-Overrides.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\spcontext.js" />
