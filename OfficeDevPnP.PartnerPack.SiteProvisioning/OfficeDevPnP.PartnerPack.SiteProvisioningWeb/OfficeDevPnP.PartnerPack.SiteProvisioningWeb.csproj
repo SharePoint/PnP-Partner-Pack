@@ -236,6 +236,7 @@
     <Compile Include="Models\CreateSiteCollectionViewModel.cs" />
     <Compile Include="Models\CreateSiteViewModel.cs" />
     <Compile Include="Models\CreateSubSiteViewModel.cs" />
+    <Compile Include="Models\SaveTemplateViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SharePointContext.cs" />
     <Compile Include="Startup.cs" />
@@ -320,6 +321,7 @@
     <Content Include="Views\Shared\EditorTemplates\LocaleID.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ProvisioningTemplate.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SitePolicy.cshtml" />
+    <Content Include="Views\Home\SaveSiteTemplate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -57,6 +57,12 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioningWeb.Controllers
         }
         public ActionResult SaveSiteTemplate()
         {
+            SaveTemplateViewModel model = new SaveTemplateViewModel();
+            return View(model);
+        }
+
+        public ActionResult ApplyProvisioningTemplate()
+        {
             return View("Index");
         }
     }
