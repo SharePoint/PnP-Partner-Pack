@@ -227,6 +227,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Components\JSLinkUtility.cs" />
+    <Compile Include="Components\PeoplePickerHelper.cs" />
     <Compile Include="Components\SystemWebCookieManager.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Filters\SharePointContextFilterAttribute.cs" />
@@ -236,6 +237,7 @@
     <Compile Include="Models\CreateSiteCollectionViewModel.cs" />
     <Compile Include="Models\CreateSiteViewModel.cs" />
     <Compile Include="Models\CreateSubSiteViewModel.cs" />
+    <Compile Include="Models\PeoplePickerUser.cs" />
     <Compile Include="Models\SaveTemplateViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SharePointContext.cs" />
@@ -246,6 +248,8 @@
     <Content Include="AppIcon.png" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\peoplepickercontrol.css" />
+    <Content Include="Content\SupportedUILanguages.xml" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
@@ -279,6 +283,7 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="Content\TimeZones.xml" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -288,6 +293,8 @@
     <None Include="Properties\PublishProfiles\pnp-partner-pack-site-provisioning - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\pnp-partner-pack-site-provisioning - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\csompeoplepickercontrol.js" />
+    <Content Include="Scripts\custom.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -298,11 +305,16 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\peoplepickercontrol.js" />
+    <Content Include="Scripts\peoplepickercontrol_resources.en.js" />
     <Content Include="Scripts\PnP-Partner-Pack-Overrides.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\spapp.js" />
     <Content Include="Scripts\spcontext.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="Templates\PnP-Partner-Pack-Infrastructure.xml" />
+    <Content Include="Templates\PnP.png" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -322,6 +334,8 @@
     <Content Include="Views\Shared\EditorTemplates\ProvisioningTemplate.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SitePolicy.cshtml" />
     <Content Include="Views\Home\SaveSiteTemplate.cshtml" />
+    <Content Include="Templates\Palette012.spcolor" />
+    <Content Include="Views\Shared\EditorTemplates\PeoplePickerUser[].cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

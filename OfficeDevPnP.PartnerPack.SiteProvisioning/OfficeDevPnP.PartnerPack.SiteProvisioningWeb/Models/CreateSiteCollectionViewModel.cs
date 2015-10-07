@@ -11,11 +11,11 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioningWeb.Models
     {
         [Required(ErrorMessage = "Primary Site Collection Administrator is a required field!")]
         [DisplayName("Primary Site Collection Administrator")]
-        public String PrimarySiteCollectionAdmin { get; set; }
+        public PeoplePickerUser[] PrimarySiteCollectionAdmin { get; set; }
 
         [Required(ErrorMessage = "Secondary Site Collection Administrator is a required field!")]
         [DisplayName("Secondary Site Collection Administrator")]
-        public String SecondarySiteCollectionAdmin { get; set; }
+        public PeoplePickerUser[] SecondarySiteCollectionAdmin { get; set; }
 
         [DisplayName("Storage Quota")]
         public Int32 StorageQuota { get; set; }

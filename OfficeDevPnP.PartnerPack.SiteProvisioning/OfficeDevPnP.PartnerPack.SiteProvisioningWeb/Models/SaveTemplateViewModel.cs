@@ -31,5 +31,23 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioningWeb.Models
 
         [DisplayName("Persist Composed Look Files")]
         public Boolean PersistComposedLookFiles { get; set; }
+
+        [DisplayName("Target Location for Template")]
+        public TemplateLocation Location { get; set; }
+    }
+
+    /// <summary>
+    /// Defines where to store a provisioning template
+    /// </summary>
+    public enum TemplateLocation
+    {
+        /// <summary>
+        /// Store the template in the Global infrastructural Site Collection 
+        /// </summary>
+        Global,
+        /// <summary>
+        /// Store the template in the Local Site Collection
+        /// </summary>
+        Local,
     }
 }

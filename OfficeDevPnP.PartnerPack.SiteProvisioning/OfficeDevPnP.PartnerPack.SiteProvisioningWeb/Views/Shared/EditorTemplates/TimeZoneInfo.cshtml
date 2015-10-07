@@ -1,14 +1,16 @@
 ﻿@model System.TimeZoneInfo
+@using System.Xml.Linq
 
 @{
-    var timeZoneList = TimeZoneInfo
-        .GetSystemTimeZones()
-        .Select(t => new SelectListItem
-        {
-            Text = t.DisplayName,
-            Value = t.Id,
-            Selected = Model != null && t.Id == Model.Id
-        });
+    XElement timeZones = XElement.Load(Server.MapPath("/Content/TimeZones.xml"));
+
+    var timeZoneList = from t in timeZones.Descendants("timeZone")
+                       select new SelectListItem
+                       {
+                           Text = t.Attribute("description").Value,
+                           Value = t.Attribute("value").Value,
+                           Selected = Model != null && t.Attribute("value").Value == Model.Id
+                       };
 }
 @Html.DropDownListFor(model => model, timeZoneList)
 @Html.ValidationMessageFor(model => model)

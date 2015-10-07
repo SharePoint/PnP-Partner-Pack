@@ -47,6 +47,13 @@
     <Content Include="AppIcon.png">
       <OpcRelationship>manifest-icon</OpcRelationship>
     </Content>
+    <Content Include="FakeEmptyElement\Elements.xml" />
+    <Content Include="Features\FakeFeature\FakeFeature.Template.xml">
+      <DependentUpon>FakeFeature.feature</DependentUpon>
+    </Content>
+    <Content Include="Package\Package.Template.xml">
+      <DependentUpon>Package.package</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <AppManifestFile Include="AppManifest.xml">
@@ -66,7 +73,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="FakeEmptyElement\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{30f4707a-35b7-4fc1-8a59-d2f8529203f0}</SharePointProjectItemId>
+    </None>
+    <None Include="Features\FakeFeature\FakeFeature.feature">
+      <FeatureId>{baf7fc07-8789-4c1d-960e-f6ecad1b88b0}</FeatureId>
+    </None>
     <None Include="packages.config" />
+    <None Include="Package\Package.package">
+      <PackageId>{eed1a552-4ddd-40c1-a462-ad00ed27e09e}</PackageId>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.IdentityModel, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />

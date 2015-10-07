@@ -3,7 +3,7 @@
 <App xmlns="http://schemas.microsoft.com/sharepoint/2012/app/manifest"
      Name="OfficeDevPnPPartnerPackSiteProvisioning"
      ProductID="{8a4482a6-8975-4a0a-8f12-7ade4c863b56}"
-     Version="1.0.0.0"
+     Version="1.0.0.1"
      SharePointMinVersion="16.0.0.0"
 >
   <Properties>

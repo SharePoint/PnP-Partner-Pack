@@ -8,17 +8,21 @@
     // SPHostUrl parameter name
     var SPHostUrlKey = "SPHostUrl";
 
+    // SPAppWebUrl parameter name
+    var SPAppWebUrlKey = "SPAppWebUrl";
+
     // Gets SPHostUrl from the current URL and appends it as query string to the links which point to current domain in the page.
     $(document).ready(function () {
         ensureSPHasRedirectedToSharePointRemoved();
-
-        var spHostUrl = getSPHostUrlFromQueryString(window.location.search);
+        
+        var spHostUrl = getSPItemFromQueryString(window.location.search, SPHostUrlKey);
+        var spAppWebUrl = getSPItemFromQueryString(window.location.search, SPAppWebUrlKey);
         var currentAuthority = getAuthorityFromUrl(window.location.href).toUpperCase();
 
         $("#mainChrome").hide();
 
         if (spHostUrl && currentAuthority) {
-            appendSPHostUrlToLinks(spHostUrl, currentAuthority);
+            appendSPHostUrlToLinks(spHostUrl, spAppWebUrl, currentAuthority);
 
             // The SharePoint js files URL are in the form:
             // web_url/_layouts/15/resource
@@ -31,7 +35,7 @@
     });
 
     // Appends SPHostUrl as query string to all the links which point to current domain.
-    function appendSPHostUrlToLinks(spHostUrl, currentAuthority) {
+    function appendSPHostUrlToLinks(spHostUrl, spAppWebUrl, currentAuthority) {
         $("a")
             .filter(function () {
                 var authority = getAuthorityFromUrl(this.href);
@@ -42,12 +46,12 @@
                 return authority.toUpperCase() == currentAuthority;
             })
             .each(function () {
-                if (!getSPHostUrlFromQueryString(this.search)) {
+                if (!getSPItemFromQueryString(this.search, SPHostUrlKey)) {
                     if (this.search.length > 0) {
-                        this.search += "&" + SPHostUrlKey + "=" + spHostUrl;
+                        this.search += "&" + SPHostUrlKey + "=" + spHostUrl + "&SPAppWebUrl=" + spAppWebUrl;
                     }
                     else {
-                        this.search = "?" + SPHostUrlKey + "=" + spHostUrl;
+                        this.search = "?" + SPHostUrlKey + "=" + spHostUrl + "&SPAppWebUrl=" + spAppWebUrl;
                     }
                 }
             });
@@ -64,17 +68,17 @@
             })
             .each(function () {
                 if (this.action.indexOf("?") == -1) {
-                    this.action += "?" + SPHostUrlKey + "=" + spHostUrl;
+                    this.action += "?" + SPHostUrlKey + "=" + spHostUrl + "&SPAppWebUrl=" + spAppWebUrl;
                 } else {
                     if (this.action.indexOf(SPHostUrlKey) == -1) {
-                        this.action += "&" + SPHostUrlKey + "=" + spHostUrl;
+                        this.action += "&" + SPHostUrlKey + "=" + spHostUrl + "&SPAppWebUrl=" + spAppWebUrl;
                     }
                 }
             });
     }
 
-    // Gets SPHostUrl from the given query string.
-    function getSPHostUrlFromQueryString(queryString) {
+    // Gets SP* item from the given query string.
+    function getSPItemFromQueryString(queryString, key) {
         if (queryString) {
             if (queryString[0] === "?") {
                 queryString = queryString.substring(1);
@@ -85,7 +89,7 @@
             for (var i = 0; i < keyValuePairArray.length; i++) {
                 var currentKeyValuePair = keyValuePairArray[i].split("=");
 
-                if (currentKeyValuePair.length > 1 && currentKeyValuePair[0] == SPHostUrlKey) {
+                if (currentKeyValuePair.length > 1 && currentKeyValuePair[0] == key) {
                     return currentKeyValuePair[1];
                 }
             }

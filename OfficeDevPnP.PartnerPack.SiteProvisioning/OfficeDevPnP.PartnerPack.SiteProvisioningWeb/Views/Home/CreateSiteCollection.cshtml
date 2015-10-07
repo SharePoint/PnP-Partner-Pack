@@ -71,16 +71,16 @@
 
         <div class="form-group">
             @Html.LabelFor(model => model.PrimarySiteCollectionAdmin, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.PrimarySiteCollectionAdmin, new { htmlAttributes = new { @class = "form-control" } })
+            <div class="col-md-6">
+                @Html.EditorFor(model => model.PrimarySiteCollectionAdmin)
                 @Html.ValidationMessageFor(model => model.PrimarySiteCollectionAdmin, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.SecondarySiteCollectionAdmin, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.SecondarySiteCollectionAdmin, new { htmlAttributes = new { @class = "form-control" } })
+            <div class="col-md-6">
+                @Html.EditorFor(model => model.SecondarySiteCollectionAdmin)
                 @Html.ValidationMessageFor(model => model.SecondarySiteCollectionAdmin, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -110,7 +110,7 @@
 }
 
 <div>
-    @Html.ActionLink("Back to Main Menu", "Index")
+    <a href="javascript:history.back();">Back</a>
 </div>
 
 @section Scripts {

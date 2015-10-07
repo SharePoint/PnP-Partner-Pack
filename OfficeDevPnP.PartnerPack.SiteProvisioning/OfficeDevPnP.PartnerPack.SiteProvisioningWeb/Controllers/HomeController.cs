@@ -65,5 +65,35 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioningWeb.Controllers
         {
             return View("Index");
         }
+
+        [HttpPost]
+        public ActionResult GetPeoplePickerData()
+        {
+            return Json(PeoplePickerHelper.GetPeoplePickerSearchData());
+        }
+
+        private PeoplePickerUser GetApplicant(string loginName)
+        {
+            using (var ctx = retrieveClientContext())
+            {
+                return GetApplicant(ctx.Web.EnsureUser(loginName));
+            }
+        }
+
+        private PeoplePickerUser GetApplicant(Microsoft.SharePoint.Client.User user)
+        {
+            using (var ctx = retrieveClientContext())
+            {
+                ctx.Load(user, u => u.LoginName, u => u.Title, u => u.Email);
+                ctx.ExecuteQuery();
+
+                return new PeoplePickerUser
+                {
+                    Login = user.LoginName,
+                    Email = user.Email,
+                    Name = user.Title,
+                };
+            }
+        }
     }
 }

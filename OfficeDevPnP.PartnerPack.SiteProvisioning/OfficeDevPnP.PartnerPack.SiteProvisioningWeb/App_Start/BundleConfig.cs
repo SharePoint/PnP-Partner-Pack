@@ -24,7 +24,9 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioningWeb
                       "~/Scripts/respond.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/spcontext").Include(
-                        "~/Scripts/spcontext.js"));
+                        "~/Scripts/spcontext.js",
+                        //"~/Scripts/spapp.js",
+                        "~/Scripts/custom.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
