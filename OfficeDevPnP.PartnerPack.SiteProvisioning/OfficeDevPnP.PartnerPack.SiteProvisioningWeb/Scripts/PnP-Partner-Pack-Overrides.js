@@ -34,7 +34,7 @@ function replaceLinks() {
             // Customize the viewlsts.aspx page
             if (IsOnPage("viewlsts.aspx")) {
                 // Replace the "New Sub Site" link
-                $("#createnewsite").attr("href", addInSiteUrl + "Home/CreateSubSite?SPHostUrl=" + encodeURIComponent(hostWebUrl));
+                $("#createnewsite").attr("href", addInSiteUrl + "/Home/CreateSubSite?SPHostUrl=" + encodeURIComponent(hostWebUrl));
             }
 
             // Customize the settings.aspx page
@@ -42,7 +42,7 @@ function replaceLinks() {
                 // Add the "Save site as Provisioning Template" link
                 var manageSiteFeaturesCommand = $("#ctl00_PlaceHolderMain_SiteTasks_RptControls_ManageSiteFeatures");
                 if (manageSiteFeaturesCommand != undefined) {
-                    manageSiteFeaturesCommand.parent().parent().append('<li class="ms-linksection-listItem"><a id="ctl00_PlaceHolderMain_SiteTasks_RptControls_SaveAsProvisioningTemplate" href="' + addInSiteUrl + 'Home/SaveSiteTemplate?SPHostUrl=' + encodeURIComponent(hostWebUrl) + '">Save site as Provisioning Template</a></li>');
+                    manageSiteFeaturesCommand.parent().parent().append('<li class="ms-linksection-listItem"><a id="ctl00_PlaceHolderMain_SiteTasks_RptControls_SaveAsProvisioningTemplate" href="' + addInSiteUrl + '/Home/SaveSiteTemplate?SPHostUrl=' + encodeURIComponent(hostWebUrl) + '">Save site as Provisioning Template</a></li>');
                 }
 
                 //var saveSiteCommand = $("#ctl00_PlaceHolderMain_SiteTasks_RptControls_SaveAsTemplate");

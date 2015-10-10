@@ -39,19 +39,33 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioningWeb.Controllers
         public ActionResult AddRemoveExtensions()
         {
             String scriptName = "PnPPartnerPackOverrides";
+            String scriptUrl = "Scripts/PnP-Partner-Pack-Overrides.js";
+
+            string jsLink = String.Empty;
+
+            if (!scriptUrl.StartsWith("http://") && !scriptUrl.StartsWith("https://"))
+            {
+                string scriptFullUrl = String.Format("{0}://{1}:{2}/", this.Request.Url.Scheme,
+                                                    this.Request.Url.DnsSafeHost, this.Request.Url.Port);
+                string revision = Guid.NewGuid().ToString().Replace("-", "");
+                jsLink = string.Format("{0}{1}?rev={2}", scriptFullUrl, scriptUrl, revision);
+            }
+            else
+            {
+                jsLink = scriptUrl;
+            }
 
             using (var ctx = retrieveClientContext())
             {
-                if (!JSLinkUtility.ExistsJsLink(scriptName, ctx, ctx.Web))
+                if (!ctx.Site.ExistsJsLink(scriptName))
                 {
-                    JSLinkUtility.AddJsLink(scriptName, "Scripts/PnP-Partner-Pack-Overrides.js", this.Request, ctx, ctx.Web);
+                    ctx.Site.AddJsLink(scriptName, jsLink);
                 }
                 else
                 {
-                    JSLinkUtility.DeleteJsLink(scriptName, ctx, ctx.Web);
+                    ctx.Site.DeleteJsLink(scriptName);
                 }
             }
-
 
             return View("Index");
         }
