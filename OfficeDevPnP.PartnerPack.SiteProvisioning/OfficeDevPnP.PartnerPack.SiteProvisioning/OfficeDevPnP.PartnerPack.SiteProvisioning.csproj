@@ -366,6 +366,7 @@
     <Content Include="Views\Home\ApplyProvisioningTemplate.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\TemplateLocation.cshtml" />
     <Content Include="Templates\Infrastructure\Palette012.spcolor" />
+    <Content Include="Views\Shared\EditorTemplates\ManagedPath.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

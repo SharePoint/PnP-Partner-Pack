@@ -9,11 +9,11 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
 {
     public class CreateSiteCollectionViewModel : CreateSiteViewModel
     {
-        [Required(ErrorMessage = "Primary Site Collection Administrator is a required field!")]
+        //  [Required(ErrorMessage = "Primary Site Collection Administrator is a required field!")]
         [DisplayName("Primary Site Collection Administrator")]
         public PeoplePickerUser[] PrimarySiteCollectionAdmin { get; set; }
 
-        [Required(ErrorMessage = "Secondary Site Collection Administrator is a required field!")]
+        // [Required(ErrorMessage = "Secondary Site Collection Administrator is a required field!")]
         [DisplayName("Secondary Site Collection Administrator")]
         public PeoplePickerUser[] SecondarySiteCollectionAdmin { get; set; }
 
@@ -31,5 +31,8 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
 
         [DisplayName("External Sharing")]
         public Boolean ExternalSharingEnabled { get; set; }
+
+        [UIHint("ManagedPath")]
+        public String ManagedPath { get; set; }
     }
 }

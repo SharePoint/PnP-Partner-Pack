@@ -39,7 +39,8 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
         public String ProvisioningTemplateUrl { get; set; }
 
         [DisplayName("Time Zone")]
-        public TimeZoneInfo TimeZone { get; set; }
+        [UIHint("TimeZoneInfo")]
+        public Int32 TimeZone { get; set; }
 
         [DisplayName("Template Parameters")]
         public Dictionary<String, String> TemplateParameters { get; set; }

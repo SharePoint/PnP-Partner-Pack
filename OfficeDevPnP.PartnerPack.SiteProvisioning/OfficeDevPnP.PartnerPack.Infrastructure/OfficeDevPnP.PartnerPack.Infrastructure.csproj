@@ -127,6 +127,7 @@
     <Compile Include="JobStatus.cs" />
     <Compile Include="Jobs\ApplyProvisioningTemplateJob.cs" />
     <Compile Include="Jobs\GetProvisioningTemplateJob.cs" />
+    <Compile Include="Jobs\JobExtensions.cs" />
     <Compile Include="Jobs\ProvisioningJob.cs" />
     <Compile Include="Jobs\ProvisioningTemplateLocation.cs" />
     <Compile Include="Jobs\SiteProvisioningJob.cs" />

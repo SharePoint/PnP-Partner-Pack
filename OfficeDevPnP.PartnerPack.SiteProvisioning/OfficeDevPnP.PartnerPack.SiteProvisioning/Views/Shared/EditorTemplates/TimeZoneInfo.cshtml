@@ -1,4 +1,4 @@
-﻿@model System.TimeZoneInfo
+﻿@model System.Int32
 @using System.Xml.Linq
 
 @{
@@ -9,7 +9,7 @@
                        {
                            Text = t.Attribute("description").Value,
                            Value = t.Attribute("value").Value,
-                           Selected = Model != null && t.Attribute("value").Value == Model.Id
+                           Selected = Int32.Parse(t.Attribute("value").Value) == Model
                        };
 }
 @Html.DropDownListFor(model => model, timeZoneList)

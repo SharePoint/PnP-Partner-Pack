@@ -5,6 +5,7 @@ using OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml;
 using OfficeDevPnP.PartnerPack.Infrastructure.Jobs;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -101,7 +102,31 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
 
         public Guid EnqueueProvisioningJob(ProvisioningJob job)
         {
-            return (Guid.NewGuid()); 
+            // Prepare the Job ID
+            Guid jobId = Guid.NewGuid();
+
+            // Connect to the Infrastructural Site Collection
+            using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(PnPPartnerPackSettings.InfrastructureSiteUrl))
+            {
+                // Convert the current Provisioning Job into a Stream
+                Stream stream = job.ToJsonStream();
+
+                // Get a reference to the target library
+                Web web = context.Web;
+                List list = web.Lists.GetByTitle(PnPPartnerPackConstants.PnPProvisioningJobs);
+                Microsoft.SharePoint.Client.File file = list.RootFolder.UploadFile(String.Format("{0}.job", jobId), stream, false);
+
+                ListItem item = file.ListItemAllFields;
+                item[PnPPartnerPackConstants.ContentTypeIdField] = PnPPartnerPackConstants.PnPProvisioningJobContentTypeId;
+                item[PnPPartnerPackConstants.TitleField] = job.Title;
+                item[PnPPartnerPackConstants.PnPProvisioningJobStatus] = ProvisioningJobStatus.Pending.ToString();
+                item[PnPPartnerPackConstants.PnPProvisioningJobError] = String.Empty;
+                item.Update();
+
+                context.ExecuteQueryRetry();
+            }
+
+            return (jobId);
         }
 
         public ProvisioningJob GetProvisioningJob(Guid jobId)

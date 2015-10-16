@@ -44,7 +44,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs
         /// <summary>
         /// Defines the TimeZone for the Site Collection or Sub site to provision
         /// </summary>
-        public TimeZoneInfo TimeZone { get; set; }
+        public Int32 TimeZone { get; set; }
 
         /// <summary>
         /// Defines the Parameters keys and values for the Site Collection or Sub site to provision
