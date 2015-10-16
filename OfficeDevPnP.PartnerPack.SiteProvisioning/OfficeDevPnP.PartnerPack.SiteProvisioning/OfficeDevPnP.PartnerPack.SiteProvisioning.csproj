@@ -246,10 +246,6 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Components\PeoplePickerHelper.cs" />
-    <Compile Include="Components\PnPPartnerPackConstants.cs" />
-    <Compile Include="Components\PnPPartnerPackContextProvider.cs" />
-    <Compile Include="Components\PnPPartnerPackSettings.cs" />
-    <Compile Include="Components\PnPPartnerPackUtilities.cs" />
     <Compile Include="Components\SystemWebCookieManager.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
@@ -333,11 +329,12 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\peoplepickercontrol.js" />
     <Content Include="Scripts\peoplepickercontrol_resources.en.js" />
-    <Content Include="Scripts\PnP-Partner-Pack-Overrides.js" />
+    <Content Include="Templates\Overrides\PnP-Partner-Pack-Overrides.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\sppeoplepicker.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="Templates\Overrides\PnP-Partner-Pack-Overrides.xml" />
     <Content Include="Templates\PnP-Partner-Pack-Infrastructure.xml" />
     <Content Include="Templates\PnP.png" />
     <Content Include="Web.config" />
@@ -380,6 +377,12 @@
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OfficeDevPnP.PartnerPack.Infrastructure\OfficeDevPnP.PartnerPack.Infrastructure.csproj">
+      <Project>{af195497-cafd-444e-9b7b-d3b0acac455c}</Project>
+      <Name>OfficeDevPnP.PartnerPack.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

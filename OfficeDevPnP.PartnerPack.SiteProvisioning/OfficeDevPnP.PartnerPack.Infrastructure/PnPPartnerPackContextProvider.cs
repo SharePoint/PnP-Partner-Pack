@@ -1,14 +1,13 @@
 ﻿using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Microsoft.SharePoint.Client;
 using OfficeDevPnP.Core;
-using OfficeDevPnP.PartnerPack.SiteProvisioning.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Web;
 
-namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Components
+namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Infrastructure
 {
     /// <summary>
     /// This type provides an easy way to create a SharePoint CSOM ClientContext instance
@@ -38,21 +37,20 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Components
             return (context);
         }
 
-        public static ClientContext GetWebApplicationClientContext(String siteUrl)
+        public static ClientContext GetWebApplicationClientContext(String siteUrl, TokenCache tokenCache = null)
         {
             string tenantID = ClaimsPrincipal.Current.FindFirst("http://schemas.microsoft.com/identity/claims/tenantid").Value;
 
             AuthenticationManager authManager = new AuthenticationManager();
             ClientContext context = authManager.GetAzureADWebApplicationAuthenticatedContext(
                 siteUrl,
-                (s) => GetTokenForApplication(s));
+                (s) => GetTokenForApplication(s, tokenCache));
 
             return (context);
         }
 
-        private static String GetTokenForApplication(String serviceUri)
+        private static String GetTokenForApplication(String serviceUri, TokenCache tokenCache)
         {
-            string signedInUserID = ClaimsPrincipal.Current.FindFirst(ClaimTypes.NameIdentifier).Value;
             string tenantID = ClaimsPrincipal.Current.FindFirst("http://schemas.microsoft.com/identity/claims/tenantid").Value;
             string userObjectID = ClaimsPrincipal.Current.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier").Value;
 
@@ -60,9 +58,6 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Components
             ClientCredential clientcred = new ClientCredential(
                 PnPPartnerPackSettings.ClientId, 
                 PnPPartnerPackSettings.ClientSecret);
-
-            // Create an ADALTokenCache instance for the currently signed-in user
-            var tokenCache = new ADALTokenCache(signedInUserID);
 
             // Initialize AuthenticationContext with the token cache of the currently signed in user, as kept in the app's database
             AuthenticationContext authenticationContext = new AuthenticationContext(PnPPartnerPackSettings.AADInstance + tenantID, tokenCache);

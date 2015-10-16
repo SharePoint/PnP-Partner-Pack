@@ -12,6 +12,12 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
     public interface IProvisioningRepository
     {
         /// <summary>
+        /// Initializes the Provisioning Repository implementation
+        /// </summary>
+        /// <param name="settings"></param>
+        void Init(Object settings);
+
+        /// <summary>
         /// Enqueues a new Site Collection creation job
         /// </summary>
         /// <param name="site">The information about the Site Collection to create</param>
@@ -59,14 +65,14 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
         /// </summary>
         /// <param name="status">The status to use for filtering Provisioning Jobs</param>
         /// <param name="owner">The optional owner of the Provisioning Job</param>
-        /// <returns>The list of Provisioning Jobs</returns>
+        /// <returns>The list of Provisioning Jobs, if any</returns>
         ProvisioningJob[] GetJobs(JobStatus status, String owner = null);
 
         /// <summary>
-        /// Retrieves a Provisioning Jobs by ID
+        /// Retrieves a Provisioning Job by ID
         /// </summary>
         /// <param name="jobId">The ID of the job to retrieve</param>
-        /// <returns>The Provisioning Jobs, if any</returns>
+        /// <returns>The Provisioning Job, if any</returns>
         ProvisioningJob GetJob(Guid jobId);
     }
 }

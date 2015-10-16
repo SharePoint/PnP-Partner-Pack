@@ -3,6 +3,7 @@ using Microsoft.SharePoint.Client;
 using OfficeDevPnP.Core;
 using OfficeDevPnP.PartnerPack.SiteProvisioning.Components;
 using OfficeDevPnP.PartnerPack.SiteProvisioning.Models;
+using OfficeDevPnP.PartnerPack.SiteProvisioning.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;

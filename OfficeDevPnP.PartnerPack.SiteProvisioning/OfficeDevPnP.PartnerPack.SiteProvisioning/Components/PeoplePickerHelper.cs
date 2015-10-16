@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using OfficeDevPnP.PartnerPack.SiteProvisioning.Infrastructure;
 
 namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Components
 {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Web;
 
-namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Components
+namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Infrastructure
 {
     public static class PnPPartnerPackSettings
     {
@@ -14,8 +14,29 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Components
         private static String _aadInstance = ConfigurationManager.AppSettings["ida:AADInstance"];
         private static String _infrastructureSiteUrl = ConfigurationManager.AppSettings["pnp:InfrastructureSiteUrl"];
         private static String _overridesScriptUrl = ConfigurationManager.AppSettings["pnp:OverridesScriptUrl"];
-        private static X509Certificate2 _appOnlyCertificate = null;
-        private static Object _appOnlyCertificateSyncLock = new Object();
+
+        private static readonly Lazy<X509Certificate2> _appOnlyCertificateLazy =
+            new Lazy<X509Certificate2>(() => {
+
+                X509Certificate2 appOnlyCertificate = null;
+
+                X509Store certStore = new X509Store(StoreName.My, StoreLocation.CurrentUser);
+                certStore.Open(OpenFlags.ReadOnly);
+
+                X509Certificate2Collection certCollection = certStore.Certificates.Find(
+                    X509FindType.FindByThumbprint,
+                    ConfigurationManager.AppSettings["pnp:AppOnlyCertificateThumbprint"],
+                    false);
+
+                // Get the first cert with the thumbprint
+                if (certCollection.Count > 0)
+                {
+                    appOnlyCertificate = certCollection[0];
+                }
+                certStore.Close();
+
+                return (appOnlyCertificate);
+            });
 
         /// <summary>
         /// Provides the Azure AD Client ID
@@ -78,30 +99,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Components
         {
             get
             {
-                if (_appOnlyCertificate == null)
-                {
-                    lock(_appOnlyCertificateSyncLock)
-                    {
-                        if (_appOnlyCertificate == null)
-                        {
-                            X509Store certStore = new X509Store(StoreName.My, StoreLocation.CurrentUser);
-                            certStore.Open(OpenFlags.ReadOnly);
-
-                            X509Certificate2Collection certCollection = certStore.Certificates.Find(
-                                X509FindType.FindByThumbprint,
-                                ConfigurationManager.AppSettings["pnp:AppOnlyCertificateThumbprint"],
-                                false);
-
-                            // Get the first cert with the thumbprint
-                            if (certCollection.Count > 0)
-                            {
-                                _appOnlyCertificate = certCollection[0];
-                            }
-                            certStore.Close();
-                        }
-                    }
-                }
-                return (_appOnlyCertificate);
+                return (_appOnlyCertificateLazy.Value);
             }
         }
     }
