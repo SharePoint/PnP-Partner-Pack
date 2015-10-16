@@ -1,0 +1,109 @@
+{
+  "appId": "8fda8e06-91b8-474b-8160-2e2598ab54d7",
+  "appRoles": [],
+  "availableToOtherTenants": true,
+  "displayName": "OfficeDev PnP Partner Pack",
+  "errorUrl": null,
+  "groupMembershipClaims": null,
+  "homepage": "https://localhost:44300/",
+  "identifierUris": [
+    "https://PiaSysDev.onmicrosoft.com/OfficeDevPnP.PartnerPack.SiteProvisioning"
+  ],
+  "keyCredentials": [
+    {
+      "customKeyIdentifier": "O/a9hCwBHp44fzRzQDfJBIjbkpw=",
+      "keyId": "6edcb7fc-8d08-401f-8cc1-f3df209334f1",
+      "type": "AsymmetricX509Cert",
+      "usage": "Verify",
+      "value":  "MIIDAjCCAe6gAwIBAgIQO0SLJIcEy4xAt/GKmgxb5TAJBgUrDgMCHQUAMBkxFzAVBgNVBAMTDlBuUFBhcnRuZXJQYWNrMB4XDTE1MTAxNDIyMDAwMFoXDTE3MTAxNDIyMDAwMFowGTEXMBUGA1UEAxMOUG5QUGFydG5lclBhY2swggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCnCIQPIIPR1um4QS+Eon4XS2jIKWtZZqAi5Swn/F1hMtdwOrm88SOulOYg2WHFfeANht+MVBdOJfWOSViBL14KPTea55m64DbuQql6vaLrwAkuc6XwuCfUNSBLa0q0Ely/t3z0ua1Cf3P8eZx5xjC5QKZePyd3R5ZrUo1u/XSPeyGESgeQ5pLj/92WvrxPgng6Kk5yzeirWCz0Kw7NNX1ebmn24XDqwGLtX6e+hrMvNWwzdDcT53Rn4WW+EgDVND9VrGQggIjdnZdYurJYuSIfAhPUPda/Fi3dAXGodF3zsfcklZbiX7SsmOKK2ek3ts7DqIDBMbucpbmANzUEHFLtAgMBAAGjTjBMMEoGA1UdAQRDMEGAEDtmaZjZaX26L2abvNwjUaahGzAZMRcwFQYDVQQDEw5QblBQYXJ0bmVyUGFja4IQO0SLJIcEy4xAt/GKmgxb5TAJBgUrDgMCHQUAA4IBAQCYybAdV/fn+mtAjOOeoJ2hHJJEhH/IUqlHYGEPi8ithiocUwmmSm5sbd2BTjJP4xX/pTaQwUC4Mnrnwl67R50WrKM7P1XIFwkHt5lWE2JNZK/d2KqwPeovykZ2LwxLWC7ksO7o0aarrcwU3AH7pjusaM2cGenViu1Su20mLtMhKF7WwwI2yRht3/o44v0dlcmOFnlfseGlJXmnszqHMYfJ/AYBFTimIBJX0UeTjU+XtJGIfZS3QIfe2MohpOOci4WKNtUyKYYen7yk3jk52L2+PVdYSr55y4RNxCnHI1qdEYL/EYluafvUWtMHSQL8AzhcRCxL6cgrDyE8ok6vxWcy"
+     }
+  ],
+  "knownClientApplications": [],
+  "logoutUrl": null,
+  "oauth2AllowImplicitFlow": false,
+  "oauth2AllowUrlPathMatching": false,
+  "oauth2Permissions": [
+    {
+      "adminConsentDescription": "Allow the application to access OfficeDevPnP.PartnerPack.SiteProvisioning on behalf of the signed-in user.",
+      "adminConsentDisplayName": "Access OfficeDevPnP.PartnerPack.SiteProvisioning",
+      "id": "6988b66c-a4a0-4347-ae10-40510d4393f2",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allow the application to access OfficeDevPnP.PartnerPack.SiteProvisioning on your behalf.",
+      "userConsentDisplayName": "Access OfficeDevPnP.PartnerPack.SiteProvisioning",
+      "value": "user_impersonation"
+    }
+  ],
+  "oauth2RequirePostResponse": false,
+  "passwordCredentials": [
+    {
+      "customKeyIdentifier": null,
+      "endDate": "2016-10-15T08:08:37.6329616Z",
+      "keyId": "657b876a-b004-45ac-ad86-98dca553aba0",
+      "startDate": "2015-10-15T08:08:37.6329616Z",
+      "value": null
+    }
+  ],
+  "publicClient": false,
+  "replyUrls": [
+    "https://localhost:44300/"
+  ],
+  "requiredResourceAccess": [
+    {
+      "resourceAppId": "00000003-0000-0000-c000-000000000000",
+      "resourceAccess": [
+        {
+          "id": "e383f46e-2787-4529-855e-0e479a3ffac0",
+          "type": "Scope"
+        }
+      ]
+    },
+    {
+      "resourceAppId": "00000003-0000-0ff1-ce00-000000000000",
+      "resourceAccess": [
+        {
+          "id": "678536fe-1083-478a-9c59-b99265e6b0d3",
+          "type": "Role"
+        },
+        {
+          "id": "9bff6588-13f2-4c48-bbf2-ddab62256b36",
+          "type": "Role"
+        },
+        {
+          "id": "56680e0d-d2a3-4ae1-80d8-3c4f2100e3d0",
+          "type": "Scope"
+        },
+        {
+          "id": "b3f70a70-8a4b-4f95-9573-d71c496a53f4",
+          "type": "Scope"
+        }
+      ]
+    },
+    {
+      "resourceAppId": "00000002-0000-0000-c000-000000000000",
+      "resourceAccess": [
+        {
+          "id": "311a71cc-e848-46a1-bdf8-97ff7156d8e6",
+          "type": "Scope"
+        },
+        {
+          "id": "5778995a-e1bf-45b8-affa-663a9f3f4d04",
+          "type": "Scope"
+        }
+      ]
+    }
+  ],
+  "samlMetadataUrl": null,
+  "extensionProperties": [],
+  "objectType": "Application",
+  "objectId": "42258e1b-6bce-4074-964a-1f638438ee5c",
+  "deletionTimestamp": null,
+  "createdOnBehalfOf": null,
+  "createdObjects": [],
+  "manager": null,
+  "directReports": [],
+  "members": [],
+  "memberOf": [],
+  "owners": [],
+  "ownedObjects": []
+}

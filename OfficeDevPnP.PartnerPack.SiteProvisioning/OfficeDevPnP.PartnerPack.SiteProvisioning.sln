@@ -3,9 +3,22 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfficeDevPnP.PartnerPack.SiteProvisioning", "OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning.csproj", "{5110E550-8DC6-46C9-A1D3-6CB6AAF88FBA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfficeDevPnP.PartnerPack.SiteProvisioning", "OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning.csproj", "{9123B66F-A7A9-4E8E-83A2-9EC1FC4B57B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfficeDevPnP.PartnerPack.SiteProvisioningWeb", "OfficeDevPnP.PartnerPack.SiteProvisioningWeb\OfficeDevPnP.PartnerPack.SiteProvisioningWeb.csproj", "{A9F80516-D250-4044-B197-B0C62A87725D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfficeDevPnP.PartnerPack.SiteProvisioning.Tests", "OfficeDevPnP.PartnerPack.SiteProvisioning.Tests\OfficeDevPnP.PartnerPack.SiteProvisioning.Tests.csproj", "{8EC2BB60-0E95-4237-8BCD-AFE40865D919}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PublishScripts", "PublishScripts", "{BE32982E-601B-45BF-B30E-BD5843C855E3}"
+	ProjectSection(SolutionItems) = preProject
+		PublishScripts\AzureVMPublishModule.psm1 = PublishScripts\AzureVMPublishModule.psm1
+		PublishScripts\Publish-WebApplicationVM.ps1 = PublishScripts\Publish-WebApplicationVM.ps1
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configurations", "Configurations", "{5346FD54-D140-4DD8-A61F-64F489E94613}"
+	ProjectSection(SolutionItems) = preProject
+		PublishScripts\Configurations\OfficeDevPnPPartnerPackSiteProvisioning-WAWS-dev.json = PublishScripts\Configurations\OfficeDevPnPPartnerPackSiteProvisioning-WAWS-dev.json
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfficeDevPnP.PartnerPack.Infrastructure", "OfficeDevPnP.PartnerPack.Infrastructure\OfficeDevPnP.PartnerPack.Infrastructure.csproj", "{AF195497-CAFD-444E-9B7B-D3B0ACAC455C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,18 +26,23 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5110E550-8DC6-46C9-A1D3-6CB6AAF88FBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5110E550-8DC6-46C9-A1D3-6CB6AAF88FBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5110E550-8DC6-46C9-A1D3-6CB6AAF88FBA}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{5110E550-8DC6-46C9-A1D3-6CB6AAF88FBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5110E550-8DC6-46C9-A1D3-6CB6AAF88FBA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5110E550-8DC6-46C9-A1D3-6CB6AAF88FBA}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{A9F80516-D250-4044-B197-B0C62A87725D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A9F80516-D250-4044-B197-B0C62A87725D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A9F80516-D250-4044-B197-B0C62A87725D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A9F80516-D250-4044-B197-B0C62A87725D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9123B66F-A7A9-4E8E-83A2-9EC1FC4B57B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9123B66F-A7A9-4E8E-83A2-9EC1FC4B57B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9123B66F-A7A9-4E8E-83A2-9EC1FC4B57B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9123B66F-A7A9-4E8E-83A2-9EC1FC4B57B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EC2BB60-0E95-4237-8BCD-AFE40865D919}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EC2BB60-0E95-4237-8BCD-AFE40865D919}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EC2BB60-0E95-4237-8BCD-AFE40865D919}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EC2BB60-0E95-4237-8BCD-AFE40865D919}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF195497-CAFD-444E-9B7B-D3B0ACAC455C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF195497-CAFD-444E-9B7B-D3B0ACAC455C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF195497-CAFD-444E-9B7B-D3B0ACAC455C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF195497-CAFD-444E-9B7B-D3B0ACAC455C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5346FD54-D140-4DD8-A61F-64F489E94613} = {BE32982E-601B-45BF-B30E-BD5843C855E3}
 	EndGlobalSection
 EndGlobal

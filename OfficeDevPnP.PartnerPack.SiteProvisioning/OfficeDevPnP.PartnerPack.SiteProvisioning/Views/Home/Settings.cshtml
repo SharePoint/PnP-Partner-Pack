@@ -1,0 +1,50 @@
+﻿@model OfficeDevPnP.PartnerPack.SiteProvisioning.Models.SettingsViewModel
+
+@{
+    ViewBag.Title = "Settings";
+}
+
+@functions {
+    public IEnumerable<SelectListItem> GetSiteCollections()
+    {
+        var sites = from s in Model.SiteCollections
+                    select new SelectListItem
+                    {
+                        Text = String.Format("{0} - {1}", s.Url, s.Title),
+                        Value = s.Url,
+                        Selected = s.PnPPartnerPackEnabled
+                    };
+
+        return (sites);
+    }
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SiteCollections, htmlAttributes: new { @class = "control-label col-md-6" })
+            <div class="col-md-6">
+                <div class="dropdown-toggle">
+                    @Html.ListBoxFor(model => model.SiteCollections, GetSiteCollections(), new { size = "20" })
+                    @Html.ValidationMessageFor(model => model.SiteCollections)
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-10">
+                <input type="submit" value="Apply" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="javascript:history.back();">Back</a>
+</div>
