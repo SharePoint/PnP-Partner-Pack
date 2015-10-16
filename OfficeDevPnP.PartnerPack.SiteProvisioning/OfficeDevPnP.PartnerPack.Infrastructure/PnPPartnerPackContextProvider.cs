@@ -37,38 +37,38 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
             return (context);
         }
 
-        public static ClientContext GetWebApplicationClientContext(String siteUrl, TokenCache tokenCache = null)
-        {
-            string tenantID = ClaimsPrincipal.Current.FindFirst("http://schemas.microsoft.com/identity/claims/tenantid").Value;
+        //public static ClientContext GetWebApplicationClientContext(String siteUrl, TokenCache tokenCache = null)
+        //{
+        //    string tenantID = ClaimsPrincipal.Current.FindFirst("http://schemas.microsoft.com/identity/claims/tenantid").Value;
 
-            AuthenticationManager authManager = new AuthenticationManager();
-            ClientContext context = authManager.GetAzureADWebApplicationAuthenticatedContext(
-                siteUrl,
-                (s) => GetTokenForApplication(s, tokenCache));
+        //    AuthenticationManager authManager = new AuthenticationManager();
+        //    ClientContext context = authManager.GetAzureADWebApplicationAuthenticatedContext(
+        //        siteUrl,
+        //        (s) => GetTokenForApplication(s, tokenCache));
 
-            return (context);
-        }
+        //    return (context);
+        //}
 
-        private static String GetTokenForApplication(String serviceUri, TokenCache tokenCache)
-        {
-            string tenantID = ClaimsPrincipal.Current.FindFirst("http://schemas.microsoft.com/identity/claims/tenantid").Value;
-            string userObjectID = ClaimsPrincipal.Current.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier").Value;
+        //private static String GetTokenForApplication(String serviceUri, TokenCache tokenCache)
+        //{
+        //    string tenantID = ClaimsPrincipal.Current.FindFirst("http://schemas.microsoft.com/identity/claims/tenantid").Value;
+        //    string userObjectID = ClaimsPrincipal.Current.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier").Value;
 
-            // Get a token for the Graph without triggering any user interaction (from the cache, via multi-resource refresh token, etc)
-            ClientCredential clientcred = new ClientCredential(
-                PnPPartnerPackSettings.ClientId, 
-                PnPPartnerPackSettings.ClientSecret);
+        //    // Get a token for the Graph without triggering any user interaction (from the cache, via multi-resource refresh token, etc)
+        //    ClientCredential clientcred = new ClientCredential(
+        //        PnPPartnerPackSettings.ClientId, 
+        //        PnPPartnerPackSettings.ClientSecret);
 
-            // Initialize AuthenticationContext with the token cache of the currently signed in user, as kept in the app's database
-            AuthenticationContext authenticationContext = new AuthenticationContext(PnPPartnerPackSettings.AADInstance + tenantID, tokenCache);
+        //    // Initialize AuthenticationContext with the token cache of the currently signed in user, as kept in the app's database
+        //    AuthenticationContext authenticationContext = new AuthenticationContext(PnPPartnerPackSettings.AADInstance + tenantID, tokenCache);
 
-            // Get the Access Token
-            AuthenticationResult authenticationResult = authenticationContext.AcquireTokenSilent(
-                serviceUri.ToString(), 
-                clientcred,
-                new UserIdentifier(userObjectID, UserIdentifierType.UniqueId));
+        //    // Get the Access Token
+        //    AuthenticationResult authenticationResult = authenticationContext.AcquireTokenSilent(
+        //        serviceUri.ToString(), 
+        //        clientcred,
+        //        new UserIdentifier(userObjectID, UserIdentifierType.UniqueId));
 
-            return authenticationResult.AccessToken;
-        }
+        //    return authenticationResult.AccessToken;
+        //}
     }
 }

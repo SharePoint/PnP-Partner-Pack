@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configurations", "Configura
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfficeDevPnP.PartnerPack.Infrastructure", "OfficeDevPnP.PartnerPack.Infrastructure\OfficeDevPnP.PartnerPack.Infrastructure.csproj", "{AF195497-CAFD-444E-9B7B-D3B0ACAC455C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfficeDevPnP.PartnerPack.ProvisioningJob", "OfficeDevPnP.PartnerPack.ProvisioningJob\OfficeDevPnP.PartnerPack.ProvisioningJob.csproj", "{B6B4B009-E0F9-4096-8DD2-260F49AC7D7A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{AF195497-CAFD-444E-9B7B-D3B0ACAC455C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF195497-CAFD-444E-9B7B-D3B0ACAC455C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF195497-CAFD-444E-9B7B-D3B0ACAC455C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6B4B009-E0F9-4096-8DD2-260F49AC7D7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6B4B009-E0F9-4096-8DD2-260F49AC7D7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6B4B009-E0F9-4096-8DD2-260F49AC7D7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6B4B009-E0F9-4096-8DD2-260F49AC7D7A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

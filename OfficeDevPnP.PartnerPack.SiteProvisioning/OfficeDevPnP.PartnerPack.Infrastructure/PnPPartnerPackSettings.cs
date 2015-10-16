@@ -12,6 +12,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
         private static String _clientId = ConfigurationManager.AppSettings["ida:ClientId"];
         private static String _clientSecret = ConfigurationManager.AppSettings["ida:ClientSecret"];
         private static String _aadInstance = ConfigurationManager.AppSettings["ida:AADInstance"];
+        private static String _tenant = ConfigurationManager.AppSettings["pnp:Tenant"];
         private static String _infrastructureSiteUrl = ConfigurationManager.AppSettings["pnp:InfrastructureSiteUrl"];
         private static String _provisioningRepositoryType = ConfigurationManager.AppSettings["pnp:ProvisioningRepositoryType"];
 
@@ -67,6 +68,17 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
             get
             {
                 return (_aadInstance);
+            }
+        }
+
+        /// <summary>
+        /// Provides the the target Tenant for the PnP Partner Pack
+        /// </summary>
+        public static String Tenant
+        {
+            get
+            {
+                return (_tenant);
             }
         }
 
