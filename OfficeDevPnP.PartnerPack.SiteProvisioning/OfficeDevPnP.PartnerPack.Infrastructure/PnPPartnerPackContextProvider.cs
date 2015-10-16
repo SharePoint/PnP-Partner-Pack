@@ -7,7 +7,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Web;
 
-namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Infrastructure
+namespace OfficeDevPnP.PartnerPack.Infrastructure
 {
     /// <summary>
     /// This type provides an easy way to create a SharePoint CSOM ClientContext instance

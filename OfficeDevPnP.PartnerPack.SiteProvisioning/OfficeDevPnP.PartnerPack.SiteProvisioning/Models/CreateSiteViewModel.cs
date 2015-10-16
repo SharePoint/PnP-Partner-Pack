@@ -7,7 +7,10 @@ using System.Web;
 
 namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
 {
-    public class CreateSiteViewModel
+    /// <summary>
+    /// Basic abstract class for a Site Provisioning View Model
+    /// </summary>
+    public abstract class CreateSiteViewModel : JobViewModel
     {
         [Required(ErrorMessage = "Title is a required field!")]
         [DisplayName("Title")]

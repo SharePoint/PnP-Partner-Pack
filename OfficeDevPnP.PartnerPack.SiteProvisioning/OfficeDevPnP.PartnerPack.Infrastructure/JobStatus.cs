@@ -9,7 +9,8 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
     /// <summary>
     /// The status of a Provisioning Job
     /// </summary>
-    public enum JobStatus
+    [Flags]
+    public enum ProvisioningJobStatus
     {
         /// <summary>
         /// The Provisioning Job is still pending
@@ -23,6 +24,10 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
         /// The Provisioning Job has been cancelled
         /// </summary>
         Cancelled,
+        /// <summary>
+        /// The Provisioning Job is running
+        /// </summary>
+        Running,
         /// <summary>
         /// The Provisioning Job as been completed
         /// </summary>

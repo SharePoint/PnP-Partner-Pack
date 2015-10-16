@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OfficeDevPnP.PartnerPack.Infrastructure.Jobs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,29 +15,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
         /// <summary>
         /// Initializes the Provisioning Repository implementation
         /// </summary>
-        /// <param name="settings"></param>
-        void Init(Object settings);
-
-        /// <summary>
-        /// Enqueues a new Site Collection creation job
-        /// </summary>
-        /// <param name="site">The information about the Site Collection to create</param>
-        /// <returns>Returns the ID of the job</returns>
-        Guid EnqueueSiteCollectionCreation(SiteCollectionCreationInformation site);
-
-        /// <summary>
-        /// Enqueues a new Sub Site creation job
-        /// </summary>
-        /// <param name="site">The information about the Sub Site to create</param>
-        /// <returns>Returns the ID of the job</returns>
-        Guid EnqueueSubSiteCreation(SubSiteCreationInformation site);
-
-        /// <summary>
-        /// Enqueues a job to provision a template onto a target Site
-        /// </summary>
-        /// <param name="template">The information about the template to apply</param>
-        /// <returns>Returns the ID of the job</returns>
-        Guid EnqueueProvisioningTemplateApplication(ProvisioningTemplateApplicationInformation template);
+        void Init();
 
         /// <summary>
         /// Retrieves the list of Global Provisioning Templates
@@ -54,11 +33,33 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
         ProvisioningTemplateInformation[] GetLocalProvisioningTemplates(String siteUrl, TemplateScope scope);
 
         /// <summary>
+        /// Saves a Provisioning Template into the target Global repository
+        /// </summary>
+        /// <param name="template">The Provisioning Template to save</param>
+        /// <returns>The ID  of the saved Provisioning Template</returns>
+        Guid SaveGlobalProvisioningTemplate(GetProvisioningTemplateJob job);
+
+        /// <summary>
+        /// Saves a Provisioning Template into the target Local repository
+        /// </summary>
+        /// <param name="siteUrl">The local Site Collection to save to</param>
+        /// <param name="template">The Provisioning Template to save</param>
+        /// <returns>The ID  of the saved Provisioning Template</returns>
+        Guid SaveLocalProvisioningTemplate(String siteUrl, GetProvisioningTemplateJob job);
+
+        /// <summary>
+        /// Enqueues a new Provisioning Job
+        /// </summary>
+        /// <param name="job">The Provisioning Job to enqueue</param>
+        /// <returns>Returns the ID of the job</returns>
+        Guid EnqueueProvisioningJob(ProvisioningJob job);
+
+        /// <summary>
         /// Updates a job in the queue
         /// </summary>
         /// <remarks>In case of failure it will throw an Exception</remarks>
         /// <param name="job">The job to update</param>
-        void UpdateJob(ProvisioningJob job);
+        void UpdateProvisioningJob(ProvisioningJob job);
         
         /// <summary>
         /// Retrieves the list of Provisioning Jobs
@@ -66,13 +67,13 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
         /// <param name="status">The status to use for filtering Provisioning Jobs</param>
         /// <param name="owner">The optional owner of the Provisioning Job</param>
         /// <returns>The list of Provisioning Jobs, if any</returns>
-        ProvisioningJob[] GetJobs(JobStatus status, String owner = null);
+        ProvisioningJob[] GetProvisioningJobs(ProvisioningJobStatus status, String owner = null);
 
         /// <summary>
         /// Retrieves a Provisioning Job by ID
         /// </summary>
         /// <param name="jobId">The ID of the job to retrieve</param>
         /// <returns>The Provisioning Job, if any</returns>
-        ProvisioningJob GetJob(Guid jobId);
+        ProvisioningJob GetProvisioningJob(Guid jobId);
     }
 }

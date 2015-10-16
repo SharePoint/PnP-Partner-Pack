@@ -5,7 +5,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Web;
 
-namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Infrastructure
+namespace OfficeDevPnP.PartnerPack.Infrastructure
 {
     public static class PnPPartnerPackSettings
     {
@@ -13,7 +13,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Infrastructure
         private static String _clientSecret = ConfigurationManager.AppSettings["ida:ClientSecret"];
         private static String _aadInstance = ConfigurationManager.AppSettings["ida:AADInstance"];
         private static String _infrastructureSiteUrl = ConfigurationManager.AppSettings["pnp:InfrastructureSiteUrl"];
-        private static String _overridesScriptUrl = ConfigurationManager.AppSettings["pnp:OverridesScriptUrl"];
+        private static String _provisioningRepositoryType = ConfigurationManager.AppSettings["pnp:ProvisioningRepositoryType"];
 
         private static readonly Lazy<X509Certificate2> _appOnlyCertificateLazy =
             new Lazy<X509Certificate2>(() => {
@@ -80,15 +80,15 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Infrastructure
                 return (_infrastructureSiteUrl);
             }
         }
-
+        
         /// <summary>
-        /// Provides the URL of the PnP Partner Pack Overrides Script URL
+        /// Provides the .NET type name of the Provisioning Repository
         /// </summary>
-        public static String OverridesScriptUrl
+        public static String ProvisioningRepositoryType
         {
             get
             {
-                return (_overridesScriptUrl);
+                return (_provisioningRepositoryType);
             }
         }
 

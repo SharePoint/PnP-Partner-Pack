@@ -258,6 +258,7 @@
     <Compile Include="Models\CreateSiteViewModel.cs" />
     <Compile Include="Models\CreateSubSiteViewModel.cs" />
     <Compile Include="Models\IndexViewModel.cs" />
+    <Compile Include="Models\JobViewModel.cs" />
     <Compile Include="Models\PeoplePickerUser.cs" />
     <Compile Include="Models\SaveTemplateViewModel.cs" />
     <Compile Include="Models\SettingsViewModel.cs" />
@@ -329,14 +330,15 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\peoplepickercontrol.js" />
     <Content Include="Scripts\peoplepickercontrol_resources.en.js" />
+    <Content Include="Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Jobs.xml" />
+    <Content Include="Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Templates.xml" />
+    <Content Include="Templates\Infrastructure\PnP.png" />
     <Content Include="Templates\Overrides\PnP-Partner-Pack-Overrides.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\sppeoplepicker.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Templates\Overrides\PnP-Partner-Pack-Overrides.xml" />
-    <Content Include="Templates\PnP-Partner-Pack-Infrastructure.xml" />
-    <Content Include="Templates\PnP.png" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -349,7 +351,6 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Templates\Palette012.spcolor" />
     <Content Include="Views\Home\CreateSiteCollection.cshtml" />
     <Content Include="Views\Home\CreateSubSite.cshtml" />
     <Content Include="Views\Home\SaveSiteAsTemplate.cshtml" />
@@ -363,11 +364,14 @@
     <Content Include="Views\Home\MyProvisionedSites.cshtml" />
     <Content Include="Views\Home\Settings.cshtml" />
     <Content Include="Views\Home\ApplyProvisioningTemplate.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\TemplateLocation.cshtml" />
+    <Content Include="Templates\Infrastructure\Palette012.spcolor" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Templates\CompanyNavBar\" />
+    <Folder Include="Templates\NavBar\" />
     <Folder Include="Templates\Responsive\" />
+    <Folder Include="Templates\StatusBar\" />
     <Folder Include="Views\Shared\DisplayTemplates\" />
   </ItemGroup>
   <ItemGroup>

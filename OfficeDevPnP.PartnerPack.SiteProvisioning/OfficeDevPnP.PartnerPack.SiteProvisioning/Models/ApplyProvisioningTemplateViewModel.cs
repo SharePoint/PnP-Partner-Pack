@@ -7,7 +7,7 @@ using System.Web;
 
 namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
 {
-    public class ApplyProvisioningTemplateViewModel
+    public class ApplyProvisioningTemplateViewModel : JobViewModel
     {
         [Required(ErrorMessage = "Relative URL is a required field!")]
         [DisplayName("Relative URL")]

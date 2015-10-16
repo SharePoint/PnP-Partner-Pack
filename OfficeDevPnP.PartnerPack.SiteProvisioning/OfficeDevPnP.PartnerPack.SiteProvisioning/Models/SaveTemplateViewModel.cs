@@ -7,11 +7,14 @@ using System.Web;
 
 namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
 {
-    public class SaveTemplateViewModel
+    public class SaveTemplateViewModel : JobViewModel
     {
         [Required(ErrorMessage = "Title is a required field!")]
         [DisplayName("Title")]
         public String Title { get; set; }
+
+        [DisplayName("Description")]
+        public String Description { get; set; }
 
         [Required(ErrorMessage = "Template File Name is a required field!")]
         [DisplayName("Template File Name")]
@@ -33,21 +36,11 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
         public Boolean PersistComposedLookFiles { get; set; }
 
         [DisplayName("Target Location for Template")]
-        public TemplateLocation Location { get; set; }
-    }
+        [UIHint("TemplateLocation")]
+        public String Location { get; set; }
 
-    /// <summary>
-    /// Defines where to store a provisioning template
-    /// </summary>
-    public enum TemplateLocation
-    {
-        /// <summary>
-        /// Store the template in the Global infrastructural Site Collection 
-        /// </summary>
-        Global,
-        /// <summary>
-        /// Store the template in the Local Site Collection
-        /// </summary>
-        Local,
+        public String SourceSiteUrl { get; set; }
+
+        public Guid ProvisioningTemplateId { get; set; }
     }
 }

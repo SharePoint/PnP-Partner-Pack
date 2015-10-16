@@ -125,18 +125,21 @@
   <ItemGroup>
     <Compile Include="IProvisioningRepository.cs" />
     <Compile Include="JobStatus.cs" />
+    <Compile Include="Jobs\ApplyProvisioningTemplateJob.cs" />
+    <Compile Include="Jobs\GetProvisioningTemplateJob.cs" />
+    <Compile Include="Jobs\ProvisioningJob.cs" />
+    <Compile Include="Jobs\ProvisioningTemplateLocation.cs" />
+    <Compile Include="Jobs\SiteProvisioningJob.cs" />
+    <Compile Include="Jobs\SiteCollectionProvisioningJob.cs" />
+    <Compile Include="Jobs\SubSiteProvisioningJob.cs" />
     <Compile Include="PnPPartnerPackConstants.cs" />
     <Compile Include="PnPPartnerPackContextProvider.cs" />
     <Compile Include="PnPPartnerPackSettings.cs" />
     <Compile Include="PnPPartnerPackUtilities.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProvisioningJob.cs" />
     <Compile Include="ProvisioningRepositoryFactory.cs" />
-    <Compile Include="ProvisioningTemplateApplicationInformation.cs" />
     <Compile Include="ProvisioningTemplateInformation.cs" />
     <Compile Include="SharePoint\SharePointProvisioningRepository.cs" />
-    <Compile Include="SiteCollectionCreationInformation.cs" />
-    <Compile Include="SubSiteCreationInformation.cs" />
     <Compile Include="TemplateScope.cs" />
   </ItemGroup>
   <ItemGroup>

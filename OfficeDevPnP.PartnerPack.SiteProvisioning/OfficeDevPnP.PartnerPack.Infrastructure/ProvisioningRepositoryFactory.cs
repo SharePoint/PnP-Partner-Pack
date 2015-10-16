@@ -13,7 +13,15 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
     {
         private static readonly Lazy<IProvisioningRepository> _provisioningRepositoryLazy =
             new Lazy<IProvisioningRepository>(() => {
-                return (null);
+
+                // Creates the Provisioning Repository instance
+                Type provisioningRepositoryType = Type.GetType(PnPPartnerPackSettings.ProvisioningRepositoryType, true);
+                IProvisioningRepository result = (IProvisioningRepository)Activator.CreateInstance(provisioningRepositoryType);
+
+                // Initializes the Provisioning Repository instance
+                result.Init();
+
+                return (result);
             });
 
         /// <summary>
