@@ -18,7 +18,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
         public static String PnPProvisioningJobContentTypeId = "0x010100536B921A19A92949A056A9E7BEF008E5";
         public static String PnPProvisioningJobStatus = "PnPProvisioningJobStatus";
         public static String PnPProvisioningJobError = "PnPProvisioningJobError";
-
+        public static String PnPProvisioningJobType = "PnPProvisioningJobType";
 
         public static String PnPPartnerPackOverridesPropertyBag = "_PnP_PartnerPack_Overrides_Enabled";
     }

@@ -121,6 +121,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
                 item[PnPPartnerPackConstants.TitleField] = job.Title;
                 item[PnPPartnerPackConstants.PnPProvisioningJobStatus] = ProvisioningJobStatus.Pending.ToString();
                 item[PnPPartnerPackConstants.PnPProvisioningJobError] = String.Empty;
+                item[PnPPartnerPackConstants.PnPProvisioningJobType] = job.GetType().FullName;
                 item.Update();
 
                 context.ExecuteQueryRetry();
