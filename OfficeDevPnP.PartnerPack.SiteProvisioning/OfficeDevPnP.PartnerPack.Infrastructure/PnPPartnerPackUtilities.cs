@@ -30,7 +30,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
 
                 // Turn ON the customization flag
                 context.Site.RootWeb.SetPropertyBagValue(
-                    PnPPartnerPackConstants.PnPPartnerPackOverridesPropertyBag, "false");
+                    PnPPartnerPackConstants.PnPPartnerPackOverridesPropertyBag, "true");
             }
         }
 
@@ -48,6 +48,24 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
                 context.Site.RootWeb.SetPropertyBagValue(
                     PnPPartnerPackConstants.PnPPartnerPackOverridesPropertyBag, "false");
             }
+        }
+
+        public static SiteCollectionSettings GetSiteCollectionSettings(String siteCollectionUri)
+        {
+            SiteCollectionSettings result = new SiteCollectionSettings();
+
+            using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(siteCollectionUri))
+            {
+                Web web = context.Web;
+                context.Load(web, w => w.Title, w => w.Url);
+                context.ExecuteQuery();
+
+                result.Title = web.Title;
+                result.Url = web.Url;
+                result.PnPPartnerPackEnabled = PnPPartnerPackUtilities.IsPartnerPackOverridesEnabledOnSite(siteCollectionUri);
+            }
+
+            return (result);
         }
 
         private static void ApplyProvisioningTemplateToSite(ClientContext context, String container, String fileName)

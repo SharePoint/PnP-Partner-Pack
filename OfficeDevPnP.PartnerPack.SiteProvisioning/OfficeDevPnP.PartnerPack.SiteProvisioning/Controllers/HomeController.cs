@@ -271,5 +271,26 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         {
             return Json(PeoplePickerHelper.GetPeoplePickerSearchData());
         }
+
+        [HttpPost]
+        public ActionResult GetSiteCollectionSettings(String siteCollectionUri)
+        {
+            return Json(PnPPartnerPackUtilities.GetSiteCollectionSettings(siteCollectionUri));
+        }
+
+        [HttpPost]
+        public ActionResult ToggleSiteCollectionSettings(String siteCollectionUri, Boolean toggleAction)
+        {
+            if (toggleAction)
+            {
+                PnPPartnerPackUtilities.EnablePartnerPackOnSite(siteCollectionUri);
+            }
+            else
+            {
+                PnPPartnerPackUtilities.DisablePartnerPackOnSite(siteCollectionUri);
+            }
+
+            return Json(PnPPartnerPackUtilities.GetSiteCollectionSettings(siteCollectionUri));
+        }
     }
 }

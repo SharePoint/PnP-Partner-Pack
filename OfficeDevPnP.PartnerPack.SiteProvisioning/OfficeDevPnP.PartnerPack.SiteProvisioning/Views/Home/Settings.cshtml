@@ -7,13 +7,19 @@
 @functions {
     public IEnumerable<SelectListItem> GetSiteCollections()
     {
-        var sites = from s in Model.SiteCollections
-                    select new SelectListItem
-                    {
-                        Text = String.Format("{0} - {1}", s.Url, s.Title),
-                        Value = s.Url,
-                        Selected = s.PnPPartnerPackEnabled
-                    };
+        var sites = (from s in Model.SiteCollections
+                     select new SelectListItem
+                     {
+                         Text = String.Format("{0} - {1}", s.Url, s.Title),
+                         Value = s.Url,
+                         Selected = (Model.SelectedSiteCollection == s.Url)
+                     }).ToList();
+        sites.Add(new SelectListItem
+        {
+            Text = "(Select a Site Collection)",
+            Value = "",
+            Selected = String.IsNullOrEmpty(Model.SelectedSiteCollection)
+        });
 
         return (sites);
     }
@@ -28,18 +34,43 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
         <div class="form-group">
-            @Html.LabelFor(model => model.SiteCollections, htmlAttributes: new { @class = "control-label col-md-6" })
-            <div class="col-md-6">
+            @Html.LabelFor(model => model.SelectedSiteCollection, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-12">
                 <div class="dropdown-toggle">
-                    @Html.ListBoxFor(model => model.SiteCollections, GetSiteCollections(), new { size = "20" })
-                    @Html.ValidationMessageFor(model => model.SiteCollections)
+                    @Html.DropDownListFor(model => model.SelectedSiteCollection, GetSiteCollections(), new { style = "width: 400px;" })
+                    @Html.ValidationMessageFor(model => model.SelectedSiteCollection)
                 </div>
             </div>
         </div>
 
-        <div class="form-group">
-            <div class="col-md-10">
-                <input type="submit" value="Apply" class="btn btn-default" />
+        <div>
+            <div id="WorkingOnIt">
+                <span class="ms-accentText" style="font-size: 36px; font-family: &quot;Segoe UI Light&quot;, &quot;Segoe UI&quot;, Tahoma, Helvetica, Arial, sans-serif">&nbsp;Working on it...</span>
+            </div>
+            <div id="SiteCollectionPanel">
+                <div class="table">
+                    <div class="row">
+                        <div class="col-md-6">
+                            Title
+                        </div>
+                        <div class="col-md-6">
+                            <div id="SiteCollectionTitle"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            URL
+                        </div>
+                        <div class="col-md-6">
+                            <div id="SiteCollectionUrl"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input type="button" id="SiteCollectionPnPPartnerToggleButton" value="Enable" class="btn btn-default" data-pnp-status="false" onclick="togglePnPPartnerPack()" />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -48,3 +79,81 @@
 <div>
     <a href="javascript:history.back();">Back</a>
 </div>
+
+<script language="javascript">
+
+    $(document).ready(function () {
+
+        // Hide the Site Collection details panel
+        $("#SiteCollectionPanel").hide();
+        $("#WorkingOnIt").hide();
+
+        // Handle selection
+        $("#SelectedSiteCollection").change(function () {
+            var siteCollectionUri = $("option:selected", this).val();
+            refreshSiteCollectionSettings(siteCollectionUri);
+        });
+    });
+
+    function refreshSiteCollectionSettings(siteCollectionUri) {
+
+        // Hide the Site Collection details panel
+        $("#SiteCollectionPanel").hide();
+        $("#WorkingOnIt").show();
+
+        // Query for site collection settings
+        $.ajax({
+            method: "POST",
+            url: "/Home/GetSiteCollectionSettings?siteCollectionUri=" + encodeURI(siteCollectionUri),
+            success: function (result) {
+                if (result) {
+                    $("#SiteCollectionTitle").text(result.Title);
+                    $("#SiteCollectionUrl").text(result.Url);
+                    if (result.PnPPartnerPackEnabled) {
+                        $("#SiteCollectionPnPPartnerToggleButton").val("Disable PnP Partner Pack");
+                    }
+                    else {
+                        $("#SiteCollectionPnPPartnerToggleButton").val("Enable PnP Partner Pack");
+                    }
+                    $("#SiteCollectionPnPPartnerToggleButton").attr("data-pnp-status", result.PnPPartnerPackEnabled);
+
+                    $("#WorkingOnIt").hide();
+                    $("#SiteCollectionPanel").show();
+                }
+            },
+            error: function (xhr, status, error) {
+                $("#WorkingOnIt").hide();
+                $("#SiteCollectionPanel").hide();
+                alert("Error retrieving Site Collection data: " + error);
+            }
+        });
+    }
+
+    function togglePnPPartnerPack() {
+
+        // Get the currently selected site collection and action to perform
+        var siteCollectionUri = $("#SelectedSiteCollection > option:selected").val();
+        var action = $("#SiteCollectionPnPPartnerToggleButton").attr("data-pnp-status") == "false";
+
+        // Hide the Site Collection details panel
+        $("#SiteCollectionPanel").hide();
+        $("#WorkingOnIt").show();
+
+        $.ajax({
+            method: "POST",
+            url: "/Home/ToggleSiteCollectionSettings?siteCollectionUri=" + encodeURI(siteCollectionUri) +
+                "&toggleAction=" + action,
+            success: function (result) {
+                if (result) {
+                    refreshSiteCollectionSettings(siteCollectionUri);
+                }
+            },
+            error: function (xhr, status, error) {
+                $("#WorkingOnIt").hide();
+                $("#SiteCollectionPanel").hide();
+                alert("Error updating Site Collection settings: " + error);
+            }
+        });
+    }
+
+</script>

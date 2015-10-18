@@ -142,6 +142,7 @@
     <Compile Include="ProvisioningRepositoryFactory.cs" />
     <Compile Include="ProvisioningTemplateInformation.cs" />
     <Compile Include="SharePoint\SharePointProvisioningRepository.cs" />
+    <Compile Include="SiteCollectionSettings.cs" />
     <Compile Include="TemplateScope.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -16,10 +16,13 @@
     <div class="row">
         <div class="col-sm-12">&nbsp;</div>
     </div>
-    <div class="row">
-        <div class="col-sm-12">
-            Go to the <a target="_blank" href="@Model.InfrastructuralSiteUrl">Infrastructural Site Collection</a>.
+    @if (Model != null && !String.IsNullOrEmpty(Model.InfrastructuralSiteUrl))
+    {
+        <div class="row">
+            <div class="col-sm-12">
+                Go to the <a target="_blank" href="@Model.InfrastructuralSiteUrl">Infrastructural Site Collection</a>.
+            </div>
         </div>
-    </div>
+    }
     
 </div>

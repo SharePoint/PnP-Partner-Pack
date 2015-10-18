@@ -11,7 +11,9 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
         /// <summary>
         /// The Site Collections in the current Tenant
         /// </summary>
-        [DisplayName("Please select the Site Collection to which you want to provision the PnP Partner Pack capabilities")]
+        [DisplayName("Select a Site Collection")]
+        public String SelectedSiteCollection { get; set; }
+
         public SiteCollectionItem[] SiteCollections { get; set; }
     }
 
