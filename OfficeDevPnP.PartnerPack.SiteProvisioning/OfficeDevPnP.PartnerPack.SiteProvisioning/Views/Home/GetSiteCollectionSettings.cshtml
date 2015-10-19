@@ -1,0 +1,25 @@
+﻿@model OfficeDevPnP.PartnerPack.Infrastructure.SiteCollectionSettings
+
+<div class="table">
+    <div class="row">
+        <div class="col-md-6">
+            Title
+        </div>
+        <div class="col-md-6">
+            @Model.Title
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            URL
+        </div>
+        <div class="col-md-6">
+            @Model.Url
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <input type="button" class="PnPPartnerToggleButton btn btn-default" value="@(Model.PnPPartnerPackEnabled ? "Disable PnP Partner Pack" : "Enable PnP Partner Pack")" data-pnp-status="@Model.PnPPartnerPackEnabled.ToString().ToLower()" />
+        </div>
+    </div>
+</div>

@@ -48,29 +48,6 @@
                 <span class="ms-accentText" style="font-size: 36px; font-family: &quot;Segoe UI Light&quot;, &quot;Segoe UI&quot;, Tahoma, Helvetica, Arial, sans-serif">&nbsp;Working on it...</span>
             </div>
             <div id="SiteCollectionPanel">
-                <div class="table">
-                    <div class="row">
-                        <div class="col-md-6">
-                            Title
-                        </div>
-                        <div class="col-md-6">
-                            <div id="SiteCollectionTitle"></div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            URL
-                        </div>
-                        <div class="col-md-6">
-                            <div id="SiteCollectionUrl"></div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <input type="button" id="SiteCollectionPnPPartnerToggleButton" value="Enable" class="btn btn-default" data-pnp-status="false" onclick="togglePnPPartnerPack()" />
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -93,6 +70,8 @@
             var siteCollectionUri = $("option:selected", this).val();
             refreshSiteCollectionSettings(siteCollectionUri);
         });
+
+        $(document).on("click", ".PnPPartnerToggleButton", togglePnPPartnerPack);
     });
 
     function refreshSiteCollectionSettings(siteCollectionUri) {
@@ -107,15 +86,7 @@
             url: "/Home/GetSiteCollectionSettings?siteCollectionUri=" + encodeURI(siteCollectionUri),
             success: function (result) {
                 if (result) {
-                    $("#SiteCollectionTitle").text(result.Title);
-                    $("#SiteCollectionUrl").text(result.Url);
-                    if (result.PnPPartnerPackEnabled) {
-                        $("#SiteCollectionPnPPartnerToggleButton").val("Disable PnP Partner Pack");
-                    }
-                    else {
-                        $("#SiteCollectionPnPPartnerToggleButton").val("Enable PnP Partner Pack");
-                    }
-                    $("#SiteCollectionPnPPartnerToggleButton").attr("data-pnp-status", result.PnPPartnerPackEnabled);
+                    $("#SiteCollectionPanel").html(result);
 
                     $("#WorkingOnIt").hide();
                     $("#SiteCollectionPanel").show();
@@ -133,7 +104,7 @@
 
         // Get the currently selected site collection and action to perform
         var siteCollectionUri = $("#SelectedSiteCollection > option:selected").val();
-        var action = $("#SiteCollectionPnPPartnerToggleButton").attr("data-pnp-status") == "false";
+        var action = $(this).attr("data-pnp-status") == "false";
 
         // Hide the Site Collection details panel
         $("#SiteCollectionPanel").hide();
@@ -145,7 +116,10 @@
                 "&toggleAction=" + action,
             success: function (result) {
                 if (result) {
-                    refreshSiteCollectionSettings(siteCollectionUri);
+                    $("#SiteCollectionPanel").html(result);
+
+                    $("#WorkingOnIt").hide();
+                    $("#SiteCollectionPanel").show();
                 }
             },
             error: function (xhr, status, error) {

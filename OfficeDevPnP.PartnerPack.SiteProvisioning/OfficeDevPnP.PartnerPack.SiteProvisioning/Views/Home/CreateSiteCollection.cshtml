@@ -1,160 +1,82 @@
 ﻿@model OfficeDevPnP.PartnerPack.SiteProvisioning.Models.CreateSiteCollectionViewModel
+@using OfficeDevPnP.PartnerPack.SiteProvisioning.Models
 
 @{
     ViewBag.Title = "Create Site Collection";
 }
 
-@if (Model.JobId.HasValue && Model.JobId.Value != Guid.Empty)
+@using (Html.BeginForm())
 {
-    <div class="table">
-        <div class="row">
-            <div class="col-sm-12">
-            The Site Collection Provisioning Job has been scheduled. The ID assigned to the Job is: @Model.JobId.
-            </div>
+    @Html.AntiForgeryToken()
+
+    <div id="SiteCreationWizard">
+        <div id="@CreateSiteStep.TemplateSelection">
+            @Html.Partial("TemplateSelection")
+        </div>
+        <div id="@CreateSiteStep.SiteInformation">
+        </div>
+        <div id="@CreateSiteStep.TemplateParameters">
+        </div>
+        <div id="@CreateSiteStep.CreateSite">
         </div>
     </div>
 }
-else
-{
-    using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
 
-        <div class="form-horizontal">
-            <hr />
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="form-group">
-                @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
-                </div>
-            </div>
+<div>
+    <a href="javascript:history.back();">Back</a>
+</div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.RelativeUrl, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.ManagedPath) @Html.EditorFor(model => model.RelativeUrl, new { htmlAttributes = new { @class = "form-control", style = "width: 280px; display: inline;" } })
-                    @Html.ValidationMessageFor(model => model.RelativeUrl, "", new { @class = "text-danger" })
-                </div>
-            </div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.SitePolicy, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.SitePolicy, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.SitePolicy, "", new { @class = "text-danger" })
-                </div>
-            </div>
+    <script>
+        $(function () {
+            //$("#template-tabs").tabs();
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-                </div>
-            </div>
+            // Handle wizard steps
+            $(document).on("click", ".NextStep,.PreviousStep", moveWizardStep);
+        });
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.Language, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Language, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Language, "", new { @class = "text-danger" })
-                </div>
-            </div>
+        function moveWizardStep() {
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.ProvisioningTemplateUrl, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-4">
-                    @Html.EditorFor(model => model.ProvisioningTemplateUrl, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.ProvisioningTemplateUrl, "", new { @class = "text-danger" })
-                </div>
-            </div>
+            var direction = $(this).hasClass("NextStep") ? "forward" : "backward";
+            $("#SiteCreationWizard > div").hide();
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.TimeZone, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.TimeZone, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.TimeZone, "", new { @class = "text-danger" })
-                </div>
-            </div>
+            var currentStep = $("#@Html.IdFor(model => model.Step)").val();
+            switch (currentStep) {
+                case "@CreateSiteStep.TemplateSelection":
+                    currentStep = "@CreateSiteStep.SiteInformation";
+                    break;
+                case "@CreateSiteStep.SiteInformation":
+                    currentStep = direction == "forward" ? "@CreateSiteStep.TemplateParameters" : "@CreateSiteStep.TemplateSelection";
+                    break;
+                case "@CreateSiteStep.TemplateParameters":
+                    currentStep = direction == "forward" ? "@CreateSiteStep.CreateSite" : "@CreateSiteStep.SiteInformation";
+                    break;
+            }
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.PrimarySiteCollectionAdmin, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-6">
-                    @Html.EditorFor(model => model.PrimarySiteCollectionAdmin)
-                    @Html.ValidationMessageFor(model => model.PrimarySiteCollectionAdmin, "", new { @class = "text-danger" })
-                </div>
-            </div>
+            $("#@Html.IdFor(model => model.Step)").val(currentStep);
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.SecondarySiteCollectionAdmin, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-6">
-                    @Html.EditorFor(model => model.SecondarySiteCollectionAdmin)
-                    @Html.ValidationMessageFor(model => model.SecondarySiteCollectionAdmin, "", new { @class = "text-danger" })
-                </div>
-            </div>
+            $.ajax({
+                method: "POST",
+                url: "@Url.Action("CreateSiteCollection")",
+                data: $("form").serialize(),
+                success: function (result) {
+                    if (result) {
+                        $("#@Html.IdFor(model => model.Step)").remove();
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.StorageMaximumLevel, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.StorageMaximumLevel, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.StorageMaximumLevel, "", new { @class = "text-danger" })
-                </div>
-            </div>
+                        var htmlResult = $.parseHTML(result);
+                        var newStep = $("#@Html.IdFor(model => model.Step )", htmlResult).val();
+                        $("#" + newStep).html(result).show();
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.StorageWarningLevel, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.StorageWarningLevel, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.StorageWarningLevel, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.UserCodeMaximumLevel, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.UserCodeMaximumLevel, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.UserCodeMaximumLevel, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.UserCodeWarningLevel, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.UserCodeWarningLevel, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.UserCodeWarningLevel, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.ExternalSharingEnabled, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.ExternalSharingEnabled, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.ExternalSharingEnabled, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Create" class="btn btn-default" />
-                </div>
-            </div>
-        </div>
-
-        <div>
-            <a href="javascript:history.back();">Back</a>
-        </div>
-    }
-}
-
-
-        @section Scripts {
-            @Scripts.Render("~/bundles/jqueryval")
-
-            <script>
-                $(function () {
-                    $("#template-tabs").tabs();
-                });
-            </script>
+                        spApp.setup();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert("Error stepping through Site Collection creation: " + error);
+                }
+            });
         }
+
+    </script>
+}

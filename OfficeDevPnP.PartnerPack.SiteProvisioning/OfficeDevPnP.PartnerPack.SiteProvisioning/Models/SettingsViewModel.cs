@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OfficeDevPnP.PartnerPack.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -14,24 +15,24 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
         [DisplayName("Select a Site Collection")]
         public String SelectedSiteCollection { get; set; }
 
-        public SiteCollectionItem[] SiteCollections { get; set; }
+        public SiteCollectionSettings[] SiteCollections { get; set; }
     }
 
-    public class SiteCollectionItem
-    {
-        /// <summary>
-        /// The Title of a Site Collection
-        /// </summary>
-        public String Title { get; set; }
+    //public class SiteCollectionItem
+    //{
+    //    /// <summary>
+    //    /// The Title of a Site Collection
+    //    /// </summary>
+    //    public String Title { get; set; }
 
-        /// <summary>
-        /// The URL of a Site Collection
-        /// </summary>
-        public String Url { get; set; }
+    //    /// <summary>
+    //    /// The URL of a Site Collection
+    //    /// </summary>
+    //    public String Url { get; set; }
 
-        /// <summary>
-        /// Defines whether the PnP Partner Pack is enabled or not on the target Site Collection
-        /// </summary>
-        public Boolean PnPPartnerPackEnabled { get; set; }
-    }
+    //    /// <summary>
+    //    /// Defines whether the PnP Partner Pack is enabled or not on the target Site Collection
+    //    /// </summary>
+    //    public Boolean PnPPartnerPackEnabled { get; set; }
+    //}
 }

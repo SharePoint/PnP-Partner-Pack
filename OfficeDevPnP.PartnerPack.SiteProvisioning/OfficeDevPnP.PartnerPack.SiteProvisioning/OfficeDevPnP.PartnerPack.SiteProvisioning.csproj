@@ -245,6 +245,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Binders\PeoplePickerUserBinder.cs" />
     <Compile Include="Components\PeoplePickerHelper.cs" />
     <Compile Include="Components\SystemWebCookieManager.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -330,6 +331,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\peoplepickercontrol.js" />
+    <Content Include="Scripts\csompeoplepickercontrol_resources.en.js" />
     <Content Include="Scripts\peoplepickercontrol_resources.en.js" />
     <Content Include="Templates\CustomBar\SPO-CustomBar.xml" />
     <Content Include="Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Jobs.xml" />
@@ -373,6 +375,11 @@
     <Content Include="Views\Shared\EditorTemplates\TemplateLocation.cshtml" />
     <Content Include="Templates\Infrastructure\Palette012.spcolor" />
     <Content Include="Views\Shared\EditorTemplates\ManagedPath.cshtml" />
+    <Content Include="Views\Home\GetSiteCollectionSettings.cshtml" />
+    <Content Include="Views\Home\TemplateSelection.cshtml" />
+    <Content Include="Views\Home\SiteInformation.cshtml" />
+    <Content Include="Views\Home\TemplateParameters.cshtml" />
+    <Content Include="Views\Home\CreateSite.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

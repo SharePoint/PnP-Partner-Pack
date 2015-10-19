@@ -12,6 +12,8 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
     /// </summary>
     public abstract class CreateSiteViewModel : JobViewModel
     {
+        public CreateSiteStep Step { get; set; }
+
         [Required(ErrorMessage = "Title is a required field!")]
         [DisplayName("Title")]
         public String Title { get; set; }
@@ -44,5 +46,13 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
 
         [DisplayName("Template Parameters")]
         public Dictionary<String, String> TemplateParameters { get; set; }
+    }
+
+    public enum CreateSiteStep
+    {
+        TemplateSelection,
+        SiteInformation,
+        TemplateParameters,
+        CreateSite,
     }
 }

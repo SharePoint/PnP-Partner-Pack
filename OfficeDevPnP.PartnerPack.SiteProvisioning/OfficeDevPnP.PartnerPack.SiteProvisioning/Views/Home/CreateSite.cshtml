@@ -1,0 +1,15 @@
+﻿@model OfficeDevPnP.PartnerPack.SiteProvisioning.Models.CreateSiteCollectionViewModel
+
+<div>
+
+    @Html.Hidden(Html.NameFor(model => model.Step).ToString(), Model.Step)
+
+    <div class="table">
+        <div class="row">
+            <div class="col-sm-12">
+                The Site Collection Provisioning Job has been scheduled. The ID assigned to the Job is: @Model.JobId.
+            </div>
+        </div>
+    </div>
+
+</div>

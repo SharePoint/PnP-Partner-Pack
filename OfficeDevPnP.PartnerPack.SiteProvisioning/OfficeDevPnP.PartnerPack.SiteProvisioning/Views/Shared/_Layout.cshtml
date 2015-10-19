@@ -19,7 +19,7 @@
     @Styles.Render("~/Content/themes/base/css")
     @Scripts.Render("~/bundles/modernizr")
 
-    <link rel="stylesheet" href="https://prod.msocdn.com/16.00.0955.003/en-US/css/shellg2coremincss_b4599142.css" />
+    <link rel="stylesheet" href="https://prod.msocdn.com/16.00.0955.005/en-US/css/shellg2coremincss_b4599142.css" />
     @*<link rel="stylesheet" href="https://r3.res.outlook.com/o365/versionless/wexvpstyles_1543de0c.css" />*@
 
     <link rel="stylesheet" href="https://appsforoffice.microsoft.com/fabric/1.0/fabric.min.css" />
@@ -33,20 +33,24 @@
     @Html.Partial("~/Views/Shared/_Office365SuiteBar.cshtml")
     @Html.Partial("~/Views/Shared/_Office365NavBar.cshtml")
 
-    <img src="~/AppIcon.png" class="siteIcon" />
-    <h1>@ViewBag.Title</h1>
+    <div class="scrollableContent">
 
-    <div id="mainContent">
+        <img src="~/AppIcon.png" class="siteIcon" />
+        <h1>@ViewBag.Title</h1>
 
-        <div class="container body-content">
-            @RenderBody()
-            <hr />
-            <footer>
-                <p>&copy; <a href="http://aka.ms/OfficeDevPnP">Office 365 Developers Patterns &amp; Practices</a></p>
-            </footer>
+        <div id="mainContent">
+
+            <div class="container body-content">
+                @RenderBody()
+                <hr />
+                <footer>
+                    <p>&copy; <a href="http://aka.ms/OfficeDevPnP">Office 365 Developers Patterns &amp; Practices</a></p>
+                </footer>
 
 
+            </div>
         </div>
+
     </div>
 
     @Scripts.Render("~/bundles/bootstrap")

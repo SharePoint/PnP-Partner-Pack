@@ -18,23 +18,32 @@ function spApp() {
         //Build absolute path to the layouts root with the spHostUrl
         var layoutsRoot = spHostUrl + '/_layouts/15/';
 
-        //load all appropriate scripts for the page to function
-        $.getScript(layoutsRoot + 'SP.Runtime.js',
-            function () {
-                $.getScript(layoutsRoot + 'SP.js',
-                    function () {
-                        //load scripts for cross site calls (needed to use the people picker control in an IFrame)
-                        $.getScript(layoutsRoot + 'SP.RequestExecutor.js', function () {
-                            //context = new SP.ClientContext(appWebUrl);
-                            //var factory = new SP.ProxyWebRequestExecutorFactory(appWebUrl.toLowerCase());
-                            //context.set_webRequestExecutorFactory(factory);
+        if (typeof(SP) == undefined)  {
+            //load all appropriate scripts for the page to function
+            $.getScript(layoutsRoot + 'SP.Runtime.js',
+                function () {
+                    $.getScript(layoutsRoot + 'SP.js',
+                        function () {
+                            //load scripts for cross site calls (needed to use the people picker control in an IFrame)
+                            $.getScript(layoutsRoot + 'SP.RequestExecutor.js', function () {
+                                //context = new SP.ClientContext(appWebUrl);
+                                //var factory = new SP.ProxyWebRequestExecutorFactory(appWebUrl.toLowerCase());
+                                //context.set_webRequestExecutorFactory(factory);
 
-                            $.each(self.ready, function (i, c) {
-                                c(context);
+                                $.each(self.ready, function (i, c) {
+                                    c(context);
+                                });
+                                self.ready = [];
                             });
                         });
-                    });
+                });
+        }
+        else {
+            $.each(self.ready, function (i, c) {
+                c(context);
             });
+            self.ready = [];
+        }
     }
 
     //function to get a parameter value by a specific key

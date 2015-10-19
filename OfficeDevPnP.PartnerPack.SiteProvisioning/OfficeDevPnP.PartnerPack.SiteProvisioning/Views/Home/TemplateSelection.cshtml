@@ -1,0 +1,11 @@
+﻿@model OfficeDevPnP.PartnerPack.SiteProvisioning.Models.CreateSiteCollectionViewModel
+
+<div>
+
+    @Html.Hidden(Html.NameFor(model => model.Step).ToString(), Model.Step)
+
+    <h1>Step 1</h1>
+
+    <input type="button" class="btn-default btn NextStep" value="Next" />
+
+</div>

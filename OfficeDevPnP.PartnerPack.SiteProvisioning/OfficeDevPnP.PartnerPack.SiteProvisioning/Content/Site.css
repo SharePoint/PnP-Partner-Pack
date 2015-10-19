@@ -45,3 +45,7 @@ a {
 a:hover {
     color: #333 !important;
 }
+
+.scrollableContent {
+    overflow: auto;
+}

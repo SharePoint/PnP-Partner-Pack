@@ -1,4 +1,6 @@
-﻿using System;
+﻿using OfficeDevPnP.PartnerPack.SiteProvisioning.Binders;
+using OfficeDevPnP.PartnerPack.SiteProvisioning.Models;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Claims;
 using System.Linq;
@@ -18,6 +20,8 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            ModelBinders.Binders.Add(typeof(PeoplePickerUser[]), new PeoplePickerUserBinder());
 
             AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
         }
