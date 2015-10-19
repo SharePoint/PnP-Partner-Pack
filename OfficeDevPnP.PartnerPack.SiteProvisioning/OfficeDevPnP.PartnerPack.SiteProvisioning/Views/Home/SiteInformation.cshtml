@@ -50,14 +50,6 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.ProvisioningTemplateUrl, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-4">
-                @Html.EditorFor(model => model.ProvisioningTemplateUrl, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ProvisioningTemplateUrl, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
             @Html.LabelFor(model => model.TimeZone, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.TimeZone, new { htmlAttributes = new { @class = "form-control" } })
