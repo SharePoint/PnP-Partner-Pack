@@ -9,5 +9,5 @@
             new SelectListItem { Text = "High Business Impact", Value = "HBI" },
         };
 }
-@Html.DropDownListFor(model => model, policies)
+@Html.DropDownListFor(model => model, policies, new { @class = "form-control" })
 @Html.ValidationMessageFor(model => model)

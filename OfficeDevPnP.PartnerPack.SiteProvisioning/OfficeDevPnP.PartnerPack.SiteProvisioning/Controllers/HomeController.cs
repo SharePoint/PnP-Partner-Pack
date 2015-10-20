@@ -41,7 +41,9 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         public ActionResult CreateSiteCollection()
         {
             CreateSiteCollectionViewModel model = new CreateSiteCollectionViewModel();
-            return View(model);
+            model.Scope = TemplateScope.Site;
+            model.SiteCollectionUrl = String.Empty;
+            return View("CreateSite", model);
         }
 
         [HttpPost]
@@ -58,7 +60,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
                         model.Step = CreateSiteStep.SiteInformation;
                     }
                     break;
-                case CreateSiteStep.CreateSite:
+                case CreateSiteStep.SiteCreated:
                     AntiForgery.Validate();
                     if (ModelState.IsValid)
                     {
@@ -105,40 +107,58 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         public ActionResult CreateSubSite()
         {
             CreateSubSiteViewModel model = new CreateSubSiteViewModel();
-            return View(model);
+            model.Scope = TemplateScope.Web;
+            model.SiteCollectionUrl = HttpContext.Request["SPHostUrl"];
+            return View("CreateSite", model);
         }
 
         [HttpPost]
         public ActionResult CreateSubSite(CreateSubSiteViewModel model)
         {
-            AntiForgery.Validate();
-            if (ModelState.IsValid)
+            switch (model.Step)
             {
-                // Prepare the Job to provision the Sub Site 
-                SubSiteProvisioningJob job = new SubSiteProvisioningJob();
+                case CreateSiteStep.SiteInformation:
+                    ModelState.Clear();
+                    break;
+                case CreateSiteStep.TemplateParameters:
+                    if (!ModelState.IsValid)
+                    {
+                        model.Step = CreateSiteStep.SiteInformation;
+                    }
+                    break;
+                case CreateSiteStep.SiteCreated:
+                    AntiForgery.Validate();
+                    if (ModelState.IsValid)
+                    {
+                        // Prepare the Job to provision the Sub Site 
+                        SubSiteProvisioningJob job = new SubSiteProvisioningJob();
 
-                // Prepare all the other information about the Provisioning Job
-                job.SiteTitle = model.Title;
-                job.Description = model.Description;
-                job.Language = model.Language;
-                job.TimeZone = model.TimeZone;
-                job.RelativeUrl = model.RelativeUrl;
-                job.SitePolicy = model.SitePolicy;
-                job.Owner = ClaimsPrincipal.Current.Identity.Name;
-                job.ProvisioningTemplateUrl = model.ProvisioningTemplateUrl;
-                job.InheritPermissions = model.InheritPermissions;
-                job.Title = String.Format("Provisioning of Sub Site \"{1}\" with Template \"{0}\" by {2}",
-                    job.ProvisioningTemplateUrl,
-                    job.RelativeUrl,
-                    job.Owner);
+                        // Prepare all the other information about the Provisioning Job
+                        job.SiteTitle = model.Title;
+                        job.Description = model.Description;
+                        job.Language = model.Language;
+                        job.TimeZone = model.TimeZone;
+                        job.RelativeUrl = model.RelativeUrl;
+                        job.SitePolicy = model.SitePolicy;
+                        job.Owner = ClaimsPrincipal.Current.Identity.Name;
+                        job.ProvisioningTemplateUrl = model.ProvisioningTemplateUrl;
+                        job.InheritPermissions = model.InheritPermissions;
+                        job.Title = String.Format("Provisioning of Sub Site \"{1}\" with Template \"{0}\" by {2}",
+                            job.ProvisioningTemplateUrl,
+                            job.RelativeUrl,
+                            job.Owner);
 
-                // TODO: Implement handling of Template Parameters
-                job.TemplateParameters = null;
+                        // TODO: Implement handling of Template Parameters
+                        job.TemplateParameters = null;
 
-                model.JobId = ProvisioningRepositoryFactory.Current.EnqueueProvisioningJob(job);
+                        model.JobId = ProvisioningRepositoryFactory.Current.EnqueueProvisioningJob(job);
+                    }
+                    break;
+                default:
+                    break;
             }
 
-            return View(model);
+            return PartialView(model.Step.ToString(), model);
         }
 
         [HttpGet]
@@ -198,13 +218,9 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
                 job.StorageSiteLocationUrl = storageLocationUrl;
                 if (templateImageFile != null && templateImageFile.ContentLength > 0)
                 {
-                    job.TemplateImageFile = templateImageFile.InputStream.FixedSizeImageStream(150, 150).ToByteArray();
+                    job.TemplateImageFile = templateImageFile.InputStream.FixedSizeImageStream(320, 180).ToByteArray();
                     job.TemplateImageFileName = templateImageFile.FileName;
                 }
-                job.Title = String.Format("Saving of Template \"{0}\" from Site \"{1}\" by {2}",
-                    job.FileName,
-                    job.SourceSiteUrl,
-                    job.Owner);
 
                 model.JobId = ProvisioningRepositoryFactory.Current.EnqueueProvisioningJob(job);
             }

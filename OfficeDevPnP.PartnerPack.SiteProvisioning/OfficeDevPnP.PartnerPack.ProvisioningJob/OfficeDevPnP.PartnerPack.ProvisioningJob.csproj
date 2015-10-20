@@ -88,8 +88,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="OfficeDevPnP.Core, Version=1.7.1015.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OfficeDevPnPCore16.1.7.1015.1\lib\net45\OfficeDevPnP.Core.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\PaoloPia-PnP-Sites-Core\Core\OfficeDevPnP.Core\bin\Debug\OfficeDevPnP.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />

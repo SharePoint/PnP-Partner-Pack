@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,11 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs
         /// The ID of the Provisioning Job
         /// </summary>
         public Guid JobId { get; set; }
+
+        /// <summary>
+        /// The Server Relative URL of the Provisioning Job file
+        /// </summary>
+        public String JobServerRelativeUrl { get; set; }
 
         /// <summary>
         /// The descriptive Title of the Provisioning Job
@@ -40,5 +46,10 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs
         /// Defines the Error Message of the Provisioning Job, if any
         /// </summary>
         public String ErrorMessage { get; set; }
+
+        /// <summary>
+        /// Provides the Stream of the Provisioning Job file
+        /// </summary>
+        public Stream JobFile { get; set; }
     }
 }

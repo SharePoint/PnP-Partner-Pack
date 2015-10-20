@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OfficeDevPnP.PartnerPack.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -46,6 +47,10 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
 
         [DisplayName("Template Parameters")]
         public Dictionary<String, String> TemplateParameters { get; set; }
+
+        public TemplateScope Scope { get; set; }
+
+        public String SiteCollectionUrl { get; set; }
     }
 
     public enum CreateSiteStep
@@ -53,6 +58,6 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
         TemplateSelection,
         SiteInformation,
         TemplateParameters,
-        CreateSite,
+        SiteCreated,
     }
 }

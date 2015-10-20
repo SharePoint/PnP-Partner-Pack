@@ -12,5 +12,5 @@
                            Selected = Int32.Parse(t.Attribute("value").Value) == Model
                        };
 }
-@Html.DropDownListFor(model => model, timeZoneList)
+@Html.DropDownListFor(model => model, timeZoneList, new { @class = "form-control" })
 @Html.ValidationMessageFor(model => model)

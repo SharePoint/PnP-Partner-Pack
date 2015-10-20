@@ -13,6 +13,9 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
         public static String PnPInjectedScriptName = "PnPPartnerPackOverrides";
 
         public static String PnPProvisioningTemplates = "PnPProvisioningTemplates";
+        public static String PnPProvisioningTemplateContentTypeId = "0x010100498154DED7C84F4AB61A4029018F9048";
+        public static String PnPProvisioningTemplateScope = "PnPProvisioningTemplateScope";
+        public static String PnPProvisioningTemplateSourceUrl = "PnPProvisioningTemplateSourceUrl";
 
         public static String PnPProvisioningJobs = "PnPProvisioningJobs";
         public static String PnPProvisioningJobContentTypeId = "0x010100536B921A19A92949A056A9E7BEF008E5";
@@ -20,9 +23,6 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
         public static String PnPProvisioningJobError = "PnPProvisioningJobError";
         public static String PnPProvisioningJobType = "PnPProvisioningJobType";
         public static String PnPProvisioningJobOwner = "PnPProvisioningJobOwner";
-
-        public static String PnPProvisioningTemplateScope = "PnPProvisioningTemplateScope";
-        public static String PnPProvisioningTemplateSourceUrl = "PnPProvisioningTemplateSourceUrl";
 
         public static String PnPPartnerPackOverridesPropertyBag = "_PnP_PartnerPack_Overrides_Enabled";
     }

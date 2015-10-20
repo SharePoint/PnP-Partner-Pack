@@ -49,3 +49,70 @@ a:hover {
 .scrollableContent {
     overflow: auto;
 }
+
+.waitWorking {
+    width: 350px; 
+    margin-top: 50px; 
+    margin-left:150px; 
+    margin-bottom: 50px;
+    vertical-align: middle;
+}
+
+.settingsValue {
+    margin-top: 6px;
+}
+
+/******* Template Selection Styles *******/
+
+.stepcontainer {
+    margin: 20px;
+}
+/*.stepcontainer input[type=button] {
+    margin: 15px 15px 0 0;
+}*/
+
+.provtemplate {
+    display: inline-block;
+    border: solid 1px #ccc;
+    padding: 5px;
+    margin: 0 15px 15px 0;
+    width: 330px;
+    height: 310px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    vertical-align: top;
+    overflow: hidden;
+}
+.provtemplate:hover {
+    border: solid 1px #888;
+    background-color: #efefef;
+    cursor: pointer;
+}
+.provtemplate.active {
+    border: solid 1px #094AB2;
+    background-color: #0A5BC4;
+    color: #fff;
+}
+.provtemplate img {
+    width: 320px;
+    height: 180px;
+    background: #ddd;
+    margin-bottom: 7px;
+    border: solid 1px #ddd;
+}
+.provtemplate h1 {
+    display: block;
+    font-size: 1.1em;
+    font-weight: bold;
+    padding: 5px;
+    margin: 0;
+}
+.provtemplate span {
+    display: block;
+    font-size: 0.9em;
+    padding: 5px;
+    margin: 0;
+}
+input[type=checkbox], input[type=radio] {
+    margin: 10px 0 0;
+}

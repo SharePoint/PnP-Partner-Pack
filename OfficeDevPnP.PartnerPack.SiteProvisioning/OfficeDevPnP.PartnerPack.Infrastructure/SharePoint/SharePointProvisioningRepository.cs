@@ -38,12 +38,15 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
             {
                 // Get a reference to the target library
                 Web web = context.Web;
-                List list = web.Lists.GetByTitle(PnPPartnerPackConstants.PnPProvisioningTemplates);
 
-                // Get only Provisioning Templates documents with the specified Scope
-                CamlQuery query = new CamlQuery();
-                query.ViewXml =
-                    @"<View>
+                try
+                {
+                    List list = web.Lists.GetByTitle(PnPPartnerPackConstants.PnPProvisioningTemplates);
+
+                    // Get only Provisioning Templates documents with the specified Scope
+                    CamlQuery query = new CamlQuery();
+                    query.ViewXml =
+                        @"<View>
                         <Query>
                             <Where>
                                 <And>
@@ -65,33 +68,44 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
                         </ViewFields>
                     </View>";
 
-                ListItemCollection items = list.GetItems(query);
+                    ListItemCollection items = list.GetItems(query);
+                    context.Load(items,
+                        includes => includes.Include(i => i.File,
+                        i => i[PnPPartnerPackConstants.PnPProvisioningTemplateScope],
+                        i => i[PnPPartnerPackConstants.PnPProvisioningTemplateSourceUrl]));
+                    context.ExecuteQueryRetry();
 
-                foreach (ListItem item in items)
-                {
-                    result.Add(new ProvisioningTemplateInformation
+                    web.EnsureProperty(w => w.Url);
+
+                    foreach (ListItem item in items)
                     {
-                        Scope = (TemplateScope)Enum.Parse(typeof(TemplateScope), (String)item[PnPPartnerPackConstants.PnPProvisioningTemplateScope], true),
-                        TemplateSourceUrl = (String)item[PnPPartnerPackConstants.PnPProvisioningTemplateSourceUrl],
-                        TemplateFileUri = item.File.ServerRelativeUrl,
-                        TemplateImageUrl = GetImageUrlFromTemplate(context, web, item.File.ServerRelativeUrl)
-                    });
+                        // Configure the XML file system provider
+                        XMLTemplateProvider provider =
+                            new XMLSharePointTemplateProvider(context, web.Url,
+                                PnPPartnerPackConstants.PnPProvisioningTemplates);
+
+                        item.File.EnsureProperties(f => f.Name, f => f.ServerRelativeUrl);
+
+                        ProvisioningTemplate template = provider.GetTemplate(item.File.Name);
+
+                        result.Add(new ProvisioningTemplateInformation
+                        {
+                            Scope = (TemplateScope)Enum.Parse(typeof(TemplateScope), (String)item[PnPPartnerPackConstants.PnPProvisioningTemplateScope], true),
+                            TemplateSourceUrl = ((FieldUrlValue)item[PnPPartnerPackConstants.PnPProvisioningTemplateSourceUrl]).Url,
+                            TemplateFileUri = String.Format("{0}/{1}/{2}", web.Url, PnPPartnerPackConstants.PnPProvisioningTemplates, item.File.Name),
+                            TemplateImageUrl = template.ImagePreviewUrl,
+                            DisplayName = template.DisplayName,
+                            Description = template.Description,
+                        });
+                    }
+                }
+                catch (ServerException ex)
+                {
+                    // In case of any issue, ignore the local templates
                 }
             }
 
             return (result.ToArray());
-        }
-
-        private String GetImageUrlFromTemplate(ClientContext context, Web web, String fileServerRelativeUrl)
-        {
-            // Configure the XML file system provider
-            XMLTemplateProvider provider =
-                new XMLSharePointTemplateProvider(context, web.Url,
-                    PnPPartnerPackConstants.PnPProvisioningTemplates);
-
-            ProvisioningTemplate template = provider.GetTemplate(fileServerRelativeUrl);
-
-            return (template.ImagePreviewUrl);
         }
 
         /// <summary>
@@ -151,11 +165,33 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
             templateToSave.Description = job.Description;
             templateToSave.DisplayName = job.Title;
 
-            // TODO: Implement this one
-            templateToSave.ImagePreviewUrl = "fake.png";
+            // Save template image preview in folder
+            Folder templatesFolder = web.GetFolderByServerRelativeUrl(PnPPartnerPackConstants.PnPProvisioningTemplates);
+            context.Load(templatesFolder, f => f.ServerRelativeUrl, f => f.Name);
+            context.ExecuteQueryRetry();
+
+            String previewImageFileName = job.FileName.Replace(".xml", "_preview.png");
+            templatesFolder.UploadFile(previewImageFileName,
+                job.TemplateImageFile.ToStream(), true);
+
+            // And store URL in the XML file
+            templateToSave.ImagePreviewUrl = String.Format("{0}/{1}/{2}",
+                web.Url, templatesFolder.Name, previewImageFileName);
 
             // And save it on the file system
             provider.SaveAs(templateToSave, job.FileName);
+
+            Microsoft.SharePoint.Client.File templateFile = templatesFolder.GetFile(job.FileName);
+            ListItem item = templateFile.ListItemAllFields;
+
+            item[PnPPartnerPackConstants.ContentTypeIdField] = PnPPartnerPackConstants.PnPProvisioningTemplateContentTypeId;
+            item[PnPPartnerPackConstants.TitleField] = job.Title;
+            item[PnPPartnerPackConstants.PnPProvisioningTemplateScope] = job.Scope.ToString();
+            item[PnPPartnerPackConstants.PnPProvisioningTemplateSourceUrl] = job.SourceSiteUrl;
+
+            item.Update();
+
+            context.ExecuteQueryRetry();
 
             // TODO: Replace with real ID of the file
             return (Guid.NewGuid());
@@ -224,10 +260,13 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
                     </View>";
 
                 ListItemCollection items = list.GetItems(query);
+                context.Load(items);
+                context.ExecuteQueryRetry();
+
                 if (items.Count > 0)
                 {
                     ListItem jobItem = items[0];
-                    return (PrepareJobInformationFromSharePoint(jobItem));
+                    return (PrepareJobInformationFromSharePoint(context, jobItem, true));
                 }
                 else
                 {
@@ -261,23 +300,46 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
                     </View>";
 
                 ListItemCollection items = list.GetItems(query);
+                context.Load(items);
+                context.ExecuteQueryRetry();
+
                 foreach (var jobItem in items)
                 {
-                    result.Add(PrepareJobInformationFromSharePoint(jobItem));
+                    result.Add(PrepareJobInformationFromSharePoint(context, jobItem, true));
                 }
             }
             return (result.ToArray());
         }
 
-        private static ProvisioningJobInformation PrepareJobInformationFromSharePoint(ListItem jobItem)
+        private static ProvisioningJobInformation PrepareJobInformationFromSharePoint(ClientContext context, ListItem jobItem, Boolean includeFileStream = false)
         {
             ProvisioningJobInformation resultItem = new ProvisioningJobInformation();
-            resultItem.JobId = Guid.Parse(((String)jobItem["LinkFilename"]).Substring(0, ((String)jobItem["LinkFilename"]).Length - 4));
+            resultItem.JobId = Guid.Parse(((String)jobItem["FileLeafRef"]).Substring(0, ((String)jobItem["FileLeafRef"]).Length - 4));
             resultItem.Title = (String)jobItem[PnPPartnerPackConstants.TitleField];
             resultItem.Status = (ProvisioningJobStatus)Enum.Parse(typeof(ProvisioningJobStatus), (String)jobItem[PnPPartnerPackConstants.PnPProvisioningJobStatus]);
             resultItem.ErrorMessage = (String)jobItem[PnPPartnerPackConstants.PnPProvisioningJobError];
             resultItem.Type = (String)jobItem[PnPPartnerPackConstants.PnPProvisioningJobType];
             resultItem.Owner = ((FieldUserValue)jobItem[PnPPartnerPackConstants.PnPProvisioningJobOwner]).LookupValue;
+
+            if (includeFileStream)
+            {
+                jobItem.ParentList.RootFolder.EnsureProperty(f => f.ServerRelativeUrl);
+
+                Microsoft.SharePoint.Client.File jobFile = jobItem.ParentList.ParentWeb.GetFileByServerRelativeUrl(
+                    String.Format("{0}/{1}", jobItem.ParentList.RootFolder.ServerRelativeUrl, (String)jobItem["FileLeafRef"]));
+                context.Load(jobFile, jf => jf.ServerRelativeUrl);
+
+                var jobFileStream = jobFile.OpenBinaryStream();
+                context.ExecuteQueryRetry();
+
+                resultItem.JobServerRelativeUrl = jobFile.ServerRelativeUrl;
+
+                MemoryStream mem = new MemoryStream();
+                jobFileStream.Value.CopyTo(mem);
+                mem.Position = 0;
+                resultItem.JobFile = mem;
+            }
+
             return resultItem;
         }
 
@@ -304,6 +366,9 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
                     </View>";
 
                 ListItemCollection items = list.GetItems(query);
+                context.Load(items);
+                context.ExecuteQueryRetry();
+
                 if (items.Count > 0)
                 {
                     ListItem jobItem = items[0];

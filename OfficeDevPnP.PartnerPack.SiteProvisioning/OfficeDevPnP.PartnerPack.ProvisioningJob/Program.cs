@@ -13,15 +13,14 @@ namespace OfficeDevPnP.PartnerPack.ProvisioningJob
         static void Main()
         {
             var job = new PnPPartnerPackProvisioningJob();
+            job.UseThreading = false;
 
             job.AddSite(PnPPartnerPackSettings.InfrastructureSiteUrl);
 
-            //job.
-            //job.UseAzureADAppOnlyAuthentication(
-            //    PnPPartnerPackSettings.ClientId,
-            //    PnPPartnerPackSettings.Tenant,
-            //    ConfigurationManager.AppSettings["CertificatePath"],
-            //    ConfigurationManager.ConnectionStrings["CertificatePassword"].ConnectionString);
+            job.UseAzureADAppOnlyAuthentication(
+                PnPPartnerPackSettings.ClientId,
+                PnPPartnerPackSettings.Tenant,
+                PnPPartnerPackSettings.AppOnlyCertificate);
 
             job.Run();
         }

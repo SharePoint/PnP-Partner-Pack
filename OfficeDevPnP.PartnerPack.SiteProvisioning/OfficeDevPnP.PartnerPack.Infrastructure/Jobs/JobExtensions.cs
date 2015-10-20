@@ -75,13 +75,23 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs
             }
         }
 
-        //public static ProvisioningJob FromJsonStream(this Stream serializedJob)
-        //{
-        //    using (StreamReader sr = new StreamReader(serializedJob))
-        //    {
-        //        String jsonString = sr.ReadToEnd();
-        //        return((ProvisioningJob)JsonConvert.DeserializeObject(jsonString));
-        //    }
-        //}
+        public static ProvisioningJob FromJsonStream(this Stream serializedJob, String jobType)
+        {
+            using (StreamReader sr = new StreamReader(serializedJob, Encoding.Unicode, true))
+            {
+                Type targetJobType = Type.GetType(jobType, true);
+                JsonSerializer json = new JsonSerializer();
+                return ((ProvisioningJob)json.Deserialize(sr, targetJobType));
+            }
+        }
+
+        public static Stream ToStream(this Byte[] data)
+        {
+            MemoryStream mem = new MemoryStream();
+            mem.Write(data, 0, data.Length);
+            mem.Position = 0;
+
+            return (mem);
+        }
     }
 }

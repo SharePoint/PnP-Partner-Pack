@@ -12,5 +12,5 @@
                            Selected = Int32.Parse(l.Attribute("value").Value) == Model
                        };
 }
-@Html.DropDownListFor(model => model, culturesList)
+@Html.DropDownListFor(model => model, culturesList, new { @class = "form-control" })
 @Html.ValidationMessageFor(model => model)

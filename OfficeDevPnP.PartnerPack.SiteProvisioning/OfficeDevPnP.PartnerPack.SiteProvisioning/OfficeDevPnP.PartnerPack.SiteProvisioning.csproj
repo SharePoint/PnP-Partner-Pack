@@ -325,8 +325,8 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Home\CreateSiteCollection.cshtml" />
-    <Content Include="Views\Home\CreateSubSite.cshtml" />
+    <Content Include="Views\Home\CreateSite.cshtml" />
+    <Content Include="Views\Home\______CreateSubSite.cshtml" />
     <Content Include="Views\Home\SaveSiteAsTemplate.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\LocaleID.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\PeoplePickerUser[].cshtml" />
@@ -345,8 +345,9 @@
     <Content Include="Views\Home\TemplateSelection.cshtml" />
     <Content Include="Views\Home\SiteInformation.cshtml" />
     <Content Include="Views\Home\TemplateParameters.cshtml" />
-    <Content Include="Views\Home\CreateSite.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\TemplateSelector.cshtml" />
+    <Content Include="Views\Home\SiteCreated.cshtml" />
+    <Content Include="Views\Home\SiteCollectionInformation.cshtml" />
+    <Content Include="Views\Home\SubSiteInformation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

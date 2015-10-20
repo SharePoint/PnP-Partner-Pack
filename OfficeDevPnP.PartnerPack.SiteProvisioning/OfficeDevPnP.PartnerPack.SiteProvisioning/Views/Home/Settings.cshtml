@@ -34,17 +34,18 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
         <div class="form-group">
-            @Html.LabelFor(model => model.SelectedSiteCollection, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-12">
+            @Html.LabelFor(model => model.SelectedSiteCollection, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-6">
                 <div class="dropdown-toggle">
-                    @Html.DropDownListFor(model => model.SelectedSiteCollection, GetSiteCollections(), new { style = "width: 400px;" })
+                    @Html.DropDownListFor(model => model.SelectedSiteCollection, GetSiteCollections(), new { @class = "form-control", style = "width: 400px;" })
                     @Html.ValidationMessageFor(model => model.SelectedSiteCollection)
                 </div>
             </div>
         </div>
 
         <div>
-            <div id="WorkingOnIt">
+            <div id="WorkingOnIt" class="waitWorking">
+                <img width="32" height="32" src="data:image/gif;base64,R0lGODlhEAAQAIAAAFLOQv///yH/C05FVFNDQVBFMi4wAwEAAAAh+QQFCgABACwJAAIAAgACAAACAoRRACH5BAUKAAEALAwABQACAAIAAAIChFEAIfkEBQoAAQAsDAAJAAIAAgAAAgKEUQAh+QQFCgABACwJAAwAAgACAAACAoRRACH5BAUKAAEALAUADAACAAIAAAIChFEAIfkEBQoAAQAsAgAJAAIAAgAAAgKEUQAh+QQFCgABACwCAAUAAgACAAACAoRRACH5BAkKAAEALAIAAgAMAAwAAAINjAFne8kPo5y02ouzLQAh+QQJCgABACwCAAIADAAMAAACF4wBphvID1uCyNEZM7Ov4v1p0hGOZlAAACH5BAkKAAEALAIAAgAMAAwAAAIUjAGmG8gPW4qS2rscRPp1rH3H1BUAIfkECQoAAQAsAgACAAkADAAAAhGMAaaX64peiLJa6rCVFHdQAAAh+QQJCgABACwCAAIABQAMAAACDYwBFqiX3mJjUM63QAEAIfkECQoAAQAsAgACAAUACQAAAgqMARaol95iY9AUACH5BAkKAAEALAIAAgAFAAUAAAIHjAEWqJeuCgAh+QQJCgABACwFAAIAAgACAAACAoRRADs=" />
                 <span class="ms-accentText" style="font-size: 36px; font-family: &quot;Segoe UI Light&quot;, &quot;Segoe UI&quot;, Tahoma, Helvetica, Arial, sans-serif">&nbsp;Working on it...</span>
             </div>
             <div id="SiteCollectionPanel">

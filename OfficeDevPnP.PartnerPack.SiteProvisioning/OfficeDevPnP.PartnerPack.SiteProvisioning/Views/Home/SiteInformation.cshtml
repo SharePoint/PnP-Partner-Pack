@@ -1,4 +1,5 @@
-﻿@model OfficeDevPnP.PartnerPack.SiteProvisioning.Models.CreateSiteCollectionViewModel
+﻿@model OfficeDevPnP.PartnerPack.SiteProvisioning.Models.CreateSiteViewModel
+@using OfficeDevPnP.PartnerPack.SiteProvisioning.Models
 
 <div>
 
@@ -8,111 +9,75 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
-            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
                 @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.RelativeUrl, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ManagedPath) @Html.EditorFor(model => model.RelativeUrl, new { htmlAttributes = new { @class = "form-control", style = "width: 280px; display: inline;" } })
+            @Html.LabelFor(model => model.RelativeUrl, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                @if (Model.Scope == OfficeDevPnP.PartnerPack.Infrastructure.TemplateScope.Site)
+                {
+                    @Html.EditorFor(model => ((CreateSiteCollectionViewModel)model).ManagedPath)
+                }
+                @Html.EditorFor(model => model.RelativeUrl, new { htmlAttributes = new { @class = "form-control", style = "width: 280px; display: inline;" } })
                 @Html.ValidationMessageFor(model => model.RelativeUrl, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.SitePolicy, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            @Html.LabelFor(model => model.SitePolicy, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
                 @Html.EditorFor(model => model.SitePolicy, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.SitePolicy, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
                 @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Language, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            @Html.LabelFor(model => model.Language, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
                 @Html.EditorFor(model => model.Language, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Language, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.TimeZone, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            @Html.LabelFor(model => model.TimeZone, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
                 @Html.EditorFor(model => model.TimeZone, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.TimeZone, "", new { @class = "text-danger" })
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.PrimarySiteCollectionAdmin, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-6">
-                @Html.EditorFor(model => model.PrimarySiteCollectionAdmin)
-                @Html.ValidationMessageFor(model => model.PrimarySiteCollectionAdmin, "", new { @class = "text-danger" })
-            </div>
-        </div>
+        @if (Model.Scope == OfficeDevPnP.PartnerPack.Infrastructure.TemplateScope.Site)
+        {
+            @Html.Partial("SiteCollectionInformation")
+        }
+
+        @if (Model.Scope == OfficeDevPnP.PartnerPack.Infrastructure.TemplateScope.Web)
+        {
+            @Html.Partial("SubSiteInformation")
+        }
+
 
         <div class="form-group">
-            @Html.LabelFor(model => model.SecondarySiteCollectionAdmin, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-6">
-                @Html.EditorFor(model => model.SecondarySiteCollectionAdmin)
-                @Html.ValidationMessageFor(model => model.SecondarySiteCollectionAdmin, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.StorageMaximumLevel, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.StorageMaximumLevel, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.StorageMaximumLevel, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.StorageWarningLevel, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.StorageWarningLevel, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.StorageWarningLevel, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.UserCodeMaximumLevel, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.UserCodeMaximumLevel, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.UserCodeMaximumLevel, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.UserCodeWarningLevel, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.UserCodeWarningLevel, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.UserCodeWarningLevel, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ExternalSharingEnabled, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ExternalSharingEnabled, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ExternalSharingEnabled, "", new { @class = "text-danger" })
+            <div class="col-md-9 col-md-offset-3">
+                <input type="button" class="btn-default btn PreviousStep" value="Previous" />
+                <input type="button" class="btn-primary btn NextStep" value="Next" />
             </div>
         </div>
 
     </div>
 
-    <input type="button" class="btn-default btn PreviousStep" value="Previous" />
-    <input type="button" class="btn-default btn NextStep" value="Next" />
 </div>
