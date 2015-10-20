@@ -326,7 +326,6 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\CreateSite.cshtml" />
-    <Content Include="Views\Home\______CreateSubSite.cshtml" />
     <Content Include="Views\Home\SaveSiteAsTemplate.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\LocaleID.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\PeoplePickerUser[].cshtml" />
