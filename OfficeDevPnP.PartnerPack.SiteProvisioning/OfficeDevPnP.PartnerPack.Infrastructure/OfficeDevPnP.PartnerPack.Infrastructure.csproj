@@ -103,6 +103,7 @@
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.IdentityModel.Selectors" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -130,10 +131,12 @@
     <Compile Include="Jobs\GetProvisioningTemplateJob.cs" />
     <Compile Include="Jobs\JobExtensions.cs" />
     <Compile Include="Jobs\ProvisioningJob.cs" />
+    <Compile Include="Jobs\ProvisioningJobInformation.cs" />
     <Compile Include="Jobs\ProvisioningTemplateLocation.cs" />
     <Compile Include="Jobs\SiteProvisioningJob.cs" />
     <Compile Include="Jobs\SiteCollectionProvisioningJob.cs" />
     <Compile Include="Jobs\SubSiteProvisioningJob.cs" />
+    <Compile Include="PnPImageUtilities.cs" />
     <Compile Include="PnPPartnerPackConstants.cs" />
     <Compile Include="PnPPartnerPackContextProvider.cs" />
     <Compile Include="PnPPartnerPackSettings.cs" />

@@ -40,7 +40,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
         public String Location { get; set; }
 
         public String SourceSiteUrl { get; set; }
-
+        
         public Guid ProvisioningTemplateId { get; set; }
     }
 }

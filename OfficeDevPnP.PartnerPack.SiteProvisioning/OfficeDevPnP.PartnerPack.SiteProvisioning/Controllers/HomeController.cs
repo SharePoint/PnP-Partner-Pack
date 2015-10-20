@@ -150,7 +150,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         }
 
         [HttpPost]
-        public ActionResult SaveSiteAsTemplate(SaveTemplateViewModel model)
+        public ActionResult SaveSiteAsTemplate(SaveTemplateViewModel model, HttpPostedFileBase templateImageFile)
         {
             AntiForgery.Validate();
             if (ModelState.IsValid)
@@ -196,6 +196,11 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
                 job.Description = model.Description;
                 job.Location = (ProvisioningTemplateLocation)Enum.Parse(typeof(ProvisioningTemplateLocation), model.Location, true);
                 job.StorageSiteLocationUrl = storageLocationUrl;
+                if (templateImageFile != null && templateImageFile.ContentLength > 0)
+                {
+                    job.TemplateImageFile = templateImageFile.InputStream.FixedSizeImageStream(150, 150).ToByteArray();
+                    job.TemplateImageFileName = templateImageFile.FileName;
+                }
                 job.Title = String.Format("Saving of Template \"{0}\" from Site \"{1}\" by {2}",
                     job.FileName,
                     job.SourceSiteUrl,

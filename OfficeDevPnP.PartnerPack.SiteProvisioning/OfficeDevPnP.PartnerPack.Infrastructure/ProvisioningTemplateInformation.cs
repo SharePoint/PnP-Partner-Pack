@@ -25,5 +25,10 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
         /// Defines the URL of the source Site from which the Provisioning Template has been generated
         /// </summary>
         public String TemplateSourceUrl { get; set; }
+
+        /// <summary>
+        /// Defines the URL of the source Site from which the Provisioning Template has been generated
+        /// </summary>
+        public String TemplateImageUrl { get; set; }
     }
 }

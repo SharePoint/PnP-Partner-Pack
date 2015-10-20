@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -65,5 +66,15 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs
         /// Defines the URL of the Site that will store the Provisioning Template file
         /// </summary>
         public String StorageSiteLocationUrl { get; set; }
+
+        /// <summary>
+        /// The image preview for the current template
+        /// </summary>
+        public Byte[] TemplateImageFile { get; set; }
+
+        /// <summary>
+        /// The file name of the image preview for the current template
+        /// </summary>
+        public String TemplateImageFileName { get; set; }
     }
 }

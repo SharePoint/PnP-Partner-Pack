@@ -16,7 +16,7 @@
 }
 else
 {
-    using (Html.BeginForm())
+    using (Html.BeginForm("SaveSiteAsTemplate", "Home", "", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
 
@@ -107,6 +107,15 @@ else
                     <div class="checkbox">
                         @Html.EditorFor(model => model.Location)
                         @Html.ValidationMessageFor(model => model.Location, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2" for="templateImageFile">Provisioning Template Preview Image</label>
+                <div class="col-md-10">
+                    <div class="checkbox">
+                        <input type="file" name="templateImageFile" id="templateImageFile" />
                     </div>
                 </div>
             </div>

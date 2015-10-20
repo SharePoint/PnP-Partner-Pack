@@ -25,12 +25,73 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
 
         public ProvisioningTemplateInformation[] GetGlobalProvisioningTemplates(TemplateScope scope)
         {
-            throw new NotImplementedException();
+            return (GetLocalProvisioningTemplates(PnPPartnerPackSettings.InfrastructureSiteUrl, scope));
         }
 
         public ProvisioningTemplateInformation[] GetLocalProvisioningTemplates(string siteUrl, TemplateScope scope)
         {
-            throw new NotImplementedException();
+            List<ProvisioningTemplateInformation> result =
+                new List<ProvisioningTemplateInformation>();
+
+            // Connect to the Infrastructural Site Collection
+            using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(siteUrl))
+            {
+                // Get a reference to the target library
+                Web web = context.Web;
+                List list = web.Lists.GetByTitle(PnPPartnerPackConstants.PnPProvisioningTemplates);
+
+                // Get only Provisioning Templates documents with the specified Scope
+                CamlQuery query = new CamlQuery();
+                query.ViewXml =
+                    @"<View>
+                        <Query>
+                            <Where>
+                                <And>
+                                    <Eq>
+                                        <FieldRef Name='PnPProvisioningTemplateScope' />
+                                        <Value Type='Choice'>" + scope.ToString() + @"</Value>
+                                    </Eq>
+                                    <Eq>
+                                        <FieldRef Name='ContentType' />
+                                        <Value Type=''Computed''>PnPProvisioningTemplate</Value>
+                                    </Eq>
+                                </And>
+                            </Where>
+                        </Query>
+                        <ViewFields>
+                            <FieldRef Name='Title' />
+                            <FieldRef Name='PnPProvisioningTemplateScope' />
+                            <FieldRef Name='PnPProvisioningTemplateSourceUrl' />
+                        </ViewFields>
+                    </View>";
+
+                ListItemCollection items = list.GetItems(query);
+
+                foreach (ListItem item in items)
+                {
+                    result.Add(new ProvisioningTemplateInformation
+                    {
+                        Scope = (TemplateScope)Enum.Parse(typeof(TemplateScope), (String)item[PnPPartnerPackConstants.PnPProvisioningTemplateScope], true),
+                        TemplateSourceUrl = (String)item[PnPPartnerPackConstants.PnPProvisioningTemplateSourceUrl],
+                        TemplateFileUri = item.File.ServerRelativeUrl,
+                        TemplateImageUrl = GetImageUrlFromTemplate(context, web, item.File.ServerRelativeUrl)
+                    });
+                }
+            }
+
+            return (result.ToArray());
+        }
+
+        private String GetImageUrlFromTemplate(ClientContext context, Web web, String fileServerRelativeUrl)
+        {
+            // Configure the XML file system provider
+            XMLTemplateProvider provider =
+                new XMLSharePointTemplateProvider(context, web.Url,
+                    PnPPartnerPackConstants.PnPProvisioningTemplates);
+
+            ProvisioningTemplate template = provider.GetTemplate(fileServerRelativeUrl);
+
+            return (template.ImagePreviewUrl);
         }
 
         /// <summary>
@@ -72,7 +133,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
 
             // Configure the XML file system provider
             XMLTemplateProvider provider =
-                new XMLSharePointTemplateProvider(context, web.Url, 
+                new XMLSharePointTemplateProvider(context, web.Url,
                     PnPPartnerPackConstants.PnPProvisioningTemplates);
 
             ProvisioningTemplateCreationInformation ptci =
@@ -91,7 +152,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
             templateToSave.DisplayName = job.Title;
 
             // TODO: Implement this one
-            templateToSave.ImagePreviewUrl = "fake.png"; 
+            templateToSave.ImagePreviewUrl = "fake.png";
 
             // And save it on the file system
             provider.SaveAs(templateToSave, job.FileName);
@@ -116,12 +177,22 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
                 List list = web.Lists.GetByTitle(PnPPartnerPackConstants.PnPProvisioningJobs);
                 Microsoft.SharePoint.Client.File file = list.RootFolder.UploadFile(String.Format("{0}.job", jobId), stream, false);
 
+                Microsoft.SharePoint.Client.User ownerUser = web.EnsureUser(job.Owner);
+                context.Load(ownerUser);
+                context.ExecuteQueryRetry();
+
                 ListItem item = file.ListItemAllFields;
+
                 item[PnPPartnerPackConstants.ContentTypeIdField] = PnPPartnerPackConstants.PnPProvisioningJobContentTypeId;
                 item[PnPPartnerPackConstants.TitleField] = job.Title;
                 item[PnPPartnerPackConstants.PnPProvisioningJobStatus] = ProvisioningJobStatus.Pending.ToString();
                 item[PnPPartnerPackConstants.PnPProvisioningJobError] = String.Empty;
                 item[PnPPartnerPackConstants.PnPProvisioningJobType] = job.GetType().FullName;
+
+                FieldUserValue ownerUserValue = new FieldUserValue();
+                ownerUserValue.LookupId = ownerUser.Id;
+                item[PnPPartnerPackConstants.PnPProvisioningJobOwner] = ownerUserValue;
+
                 item.Update();
 
                 context.ExecuteQueryRetry();
@@ -130,19 +201,120 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
             return (jobId);
         }
 
-        public ProvisioningJob GetProvisioningJob(Guid jobId)
+        public ProvisioningJobInformation GetProvisioningJob(Guid jobId)
         {
-            throw new NotImplementedException();
+            // Connect to the Infrastructural Site Collection
+            using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(PnPPartnerPackSettings.InfrastructureSiteUrl))
+            {
+                // Get a reference to the target library
+                Web web = context.Web;
+                List list = web.Lists.GetByTitle(PnPPartnerPackConstants.PnPProvisioningJobs);
+
+                CamlQuery query = new CamlQuery();
+                query.ViewXml =
+                    @"<View>
+                        <Query>
+                            <Where>
+                                <Eq>
+                                    <FieldRef Name='Name' />
+                                    <Value Type='Text'>" + jobId + @".job</Value>
+                                </Eq>
+                            </Where>
+                        </Query>
+                    </View>";
+
+                ListItemCollection items = list.GetItems(query);
+                if (items.Count > 0)
+                {
+                    ListItem jobItem = items[0];
+                    return (PrepareJobInformationFromSharePoint(jobItem));
+                }
+                else
+                {
+                    return (null);
+                }
+            }
         }
 
-        public ProvisioningJob[] GetProvisioningJobs(ProvisioningJobStatus status, string owner = null)
+        public ProvisioningJobInformation[] GetProvisioningJobs(ProvisioningJobStatus status, string owner = null)
         {
-            throw new NotImplementedException();
+            List<ProvisioningJobInformation> result = new List<ProvisioningJobInformation>();
+
+            // Connect to the Infrastructural Site Collection
+            using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(PnPPartnerPackSettings.InfrastructureSiteUrl))
+            {
+                // Get a reference to the target library
+                Web web = context.Web;
+                List list = web.Lists.GetByTitle(PnPPartnerPackConstants.PnPProvisioningJobs);
+
+                CamlQuery query = new CamlQuery();
+                query.ViewXml =
+                    @"<View>
+                        <Query>
+                            <Where>
+                                <Eq>
+                                    <FieldRef Name='PnPProvisioningJobStatus' />
+                                    <Value Type='Text'>" + status + @"</Value>
+                                </Eq>
+                            </Where>
+                        </Query>
+                    </View>";
+
+                ListItemCollection items = list.GetItems(query);
+                foreach (var jobItem in items)
+                {
+                    result.Add(PrepareJobInformationFromSharePoint(jobItem));
+                }
+            }
+            return (result.ToArray());
         }
 
-        public void UpdateProvisioningJob(ProvisioningJob job)
+        private static ProvisioningJobInformation PrepareJobInformationFromSharePoint(ListItem jobItem)
         {
-            throw new NotImplementedException();
+            ProvisioningJobInformation resultItem = new ProvisioningJobInformation();
+            resultItem.JobId = Guid.Parse(((String)jobItem["LinkFilename"]).Substring(0, ((String)jobItem["LinkFilename"]).Length - 4));
+            resultItem.Title = (String)jobItem[PnPPartnerPackConstants.TitleField];
+            resultItem.Status = (ProvisioningJobStatus)Enum.Parse(typeof(ProvisioningJobStatus), (String)jobItem[PnPPartnerPackConstants.PnPProvisioningJobStatus]);
+            resultItem.ErrorMessage = (String)jobItem[PnPPartnerPackConstants.PnPProvisioningJobError];
+            resultItem.Type = (String)jobItem[PnPPartnerPackConstants.PnPProvisioningJobType];
+            resultItem.Owner = ((FieldUserValue)jobItem[PnPPartnerPackConstants.PnPProvisioningJobOwner]).LookupValue;
+            return resultItem;
+        }
+
+        public void UpdateProvisioningJob(Guid jobId, ProvisioningJobStatus status, String errorMessage = null)
+        {
+            // Connect to the Infrastructural Site Collection
+            using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(PnPPartnerPackSettings.InfrastructureSiteUrl))
+            {
+                // Get a reference to the target library
+                Web web = context.Web;
+                List list = web.Lists.GetByTitle(PnPPartnerPackConstants.PnPProvisioningJobs);
+
+                CamlQuery query = new CamlQuery();
+                query.ViewXml =
+                    @"<View>
+                        <Query>
+                            <Where>
+                                <Eq>
+                                    <FieldRef Name='Name' />
+                                    <Value Type='Text'>" + jobId + @".job</Value>
+                                </Eq>
+                            </Where>
+                        </Query>
+                    </View>";
+
+                ListItemCollection items = list.GetItems(query);
+                if (items.Count > 0)
+                {
+                    ListItem jobItem = items[0];
+
+                    jobItem[PnPPartnerPackConstants.PnPProvisioningJobStatus] = status;
+                    jobItem[PnPPartnerPackConstants.PnPProvisioningJobError] = errorMessage;
+
+                    jobItem.Update();
+                    context.ExecuteQueryRetry();
+                }
+            }
         }
     }
 }

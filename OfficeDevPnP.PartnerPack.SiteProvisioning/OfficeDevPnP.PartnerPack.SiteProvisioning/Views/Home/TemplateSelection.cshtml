@@ -2,9 +2,13 @@
 
 <div>
 
-    @Html.Hidden(Html.NameFor(model => model.Step).ToString(), Model.Step)
+    <input type="hidden" id="@Html.IdFor(model => model.Step)" name="@Html.NameFor(model => model.Step)" value="@Model.Step" />
 
-    <h1>Step 1</h1>
+    <div>
+        @Html.Partial("~/Views/Shared/EditorTemplates/TemplateSelector.cshtml")
+    </div>
+
+    <input type="hidden" id="@Html.IdFor(model => model.ProvisioningTemplateUrl)" name="@Html.NameFor(model => model.ProvisioningTemplateUrl)" value="FAKE-TEMPLATE" />
 
     <input type="button" class="btn-default btn NextStep" value="Next" />
 

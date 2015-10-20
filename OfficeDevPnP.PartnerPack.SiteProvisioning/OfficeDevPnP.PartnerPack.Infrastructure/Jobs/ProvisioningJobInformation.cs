@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs
 {
     /// <summary>
-    /// Defines the base abstract class for any Provisioning Job
+    /// Defines the common information for a Provisioning Job
     /// </summary>
-    public abstract class ProvisioningJob
+    public class ProvisioningJobInformation
     {
         /// <summary>
         /// The ID of the Provisioning Job
@@ -20,6 +20,11 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs
         /// The descriptive Title of the Provisioning Job
         /// </summary>
         public String Title { get; set; }
+
+        /// <summary>
+        /// The .NET Type of the Provisioning Job
+        /// </summary>
+        public String Type { get; set; }
 
         /// <summary>
         /// The Owner (creator) of the Provisioning Job

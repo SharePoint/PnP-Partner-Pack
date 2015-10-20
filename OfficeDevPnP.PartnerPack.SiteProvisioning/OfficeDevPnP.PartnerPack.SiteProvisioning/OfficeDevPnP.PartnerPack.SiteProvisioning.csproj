@@ -312,6 +312,7 @@
     <Content Include="Templates\Responsive\SPO-Responsive.xml" />
     <Content Include="Templates\Responsive\SPO-Responsive.css" />
     <Content Include="Templates\Responsive\SPO-Responsive.js" />
+    <Content Include="Templates\temp.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -345,6 +346,7 @@
     <Content Include="Views\Home\SiteInformation.cshtml" />
     <Content Include="Views\Home\TemplateParameters.cshtml" />
     <Content Include="Views\Home\CreateSite.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\TemplateSelector.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

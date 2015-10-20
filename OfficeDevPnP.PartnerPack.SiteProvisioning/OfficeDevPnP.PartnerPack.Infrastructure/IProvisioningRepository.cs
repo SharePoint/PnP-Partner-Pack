@@ -58,22 +58,22 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
         /// Updates a job in the queue
         /// </summary>
         /// <remarks>In case of failure it will throw an Exception</remarks>
-        /// <param name="job">The job to update</param>
-        void UpdateProvisioningJob(ProvisioningJob job);
-        
+        /// <param name="job">The information about the job to update</param>
+        void UpdateProvisioningJob(Guid jobId, ProvisioningJobStatus status, String errorMessage = null);
+
         /// <summary>
         /// Retrieves the list of Provisioning Jobs
         /// </summary>
         /// <param name="status">The status to use for filtering Provisioning Jobs</param>
         /// <param name="owner">The optional owner of the Provisioning Job</param>
-        /// <returns>The list of Provisioning Jobs, if any</returns>
-        ProvisioningJob[] GetProvisioningJobs(ProvisioningJobStatus status, String owner = null);
+        /// <returns>The list of information about the Provisioning Jobs, if any</returns>
+        ProvisioningJobInformation[] GetProvisioningJobs(ProvisioningJobStatus status, String owner = null);
 
         /// <summary>
         /// Retrieves a Provisioning Job by ID
         /// </summary>
         /// <param name="jobId">The ID of the job to retrieve</param>
-        /// <returns>The Provisioning Job, if any</returns>
-        ProvisioningJob GetProvisioningJob(Guid jobId);
+        /// <returns>The information about the Provisioning Job, if any</returns>
+        ProvisioningJobInformation GetProvisioningJob(Guid jobId);
     }
 }
