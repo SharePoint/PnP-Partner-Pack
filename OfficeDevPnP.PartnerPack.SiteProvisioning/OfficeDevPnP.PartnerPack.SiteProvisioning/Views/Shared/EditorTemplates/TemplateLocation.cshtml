@@ -1,0 +1,10 @@
+﻿@model System.String
+
+@{
+    var locations = new SelectListItem[] {
+        new SelectListItem { Text = "Local", Value = "Local" },
+        new SelectListItem { Text = "Global", Value = "Global" }
+    };
+}
+@Html.DropDownListFor(model => model, locations)
+@Html.ValidationMessageFor(model => model)

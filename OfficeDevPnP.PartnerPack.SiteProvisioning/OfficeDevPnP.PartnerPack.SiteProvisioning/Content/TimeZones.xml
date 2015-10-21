@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<timeZones>
+  <timeZone value="39" description="(UTC-12:00) International Date Line West" />
+  <timeZone value="95" description="(UTC-11:00) Coordinated Universal Time-11" />
+  <timeZone value="15" description="(UTC-10:00) Hawaii" />
+  <timeZone value="14" description="(UTC-09:00) Alaska" />
+  <timeZone value="78" description="(UTC-08:00) Baja California" />
+  <timeZone value="13" description="(UTC-08:00) Pacific Time (US and Canada)" />
+  <timeZone value="38" description="(UTC-07:00) Arizona" />
+  <timeZone value="77" description="(UTC-07:00) Chihuahua, La Paz, Mazatlan" />
+  <timeZone value="12" description="(UTC-07:00) Mountain Time (US and Canada)" />
+  <timeZone value="55" description="(UTC-06:00) Central America" />
+  <timeZone value="11" description="(UTC-06:00) Central Time (US and Canada)" />
+  <timeZone value="37" description="(UTC-06:00) Guadalajara, Mexico City, Monterrey" />
+  <timeZone value="36" description="(UTC-06:00) Saskatchewan" />
+  <timeZone value="35" description="(UTC-05:00) Bogota, Lima, Quito" />
+  <timeZone value="10" description="(UTC-05:00) Eastern Time (US and Canada)" />
+  <timeZone value="34" description="(UTC-05:00) Indiana (East)" />
+  <timeZone value="88" description="(UTC-04:30) Caracas" />
+  <timeZone value="91" description="(UTC-04:00) Asuncion" />
+  <timeZone value="9" description="(UTC-04:00) Atlantic Time (Canada)" />
+  <timeZone value="81" description="(UTC-04:00) Cuiaba" />
+  <timeZone value="33" description="(UTC-04:00) Georgetown, La Paz, Manaus, San Juan" />
+  <timeZone value="65" description="(UTC-04:00) Santiago" />
+  <timeZone value="28" description="(UTC-03:30) Newfoundland" />
+  <timeZone value="8" description="(UTC-03:00) Brasilia" />
+  <timeZone value="85" description="(UTC-03:00) Buenos Aires" />
+  <timeZone value="32" description="(UTC-03:00) Cayenne, Fortaleza" />
+  <timeZone value="60" description="(UTC-03:00) Greenland" />
+  <timeZone value="90" description="(UTC-03:00) Montevideo" />
+  <timeZone value="103" description="(UTC-03:00) Salvador" />
+  <timeZone value="96" description="(UTC-02:00) Coordinated Universal Time-02" />
+  <timeZone value="30" description="(UTC-02:00) Mid-Atlantic" />
+  <timeZone value="29" description="(UTC-01:00) Azores" />
+  <timeZone value="53" description="(UTC-01:00) Cabo Verde" />
+  <timeZone value="86" description="(UTC) Casablanca" />
+  <timeZone value="93" description="(UTC) Coordinated Universal Time" />
+  <timeZone value="2" description="(UTC) Dublin, Edinburgh, Lisbon, London" />
+  <timeZone value="31" description="(UTC) Monrovia, Reykjavik" />
+  <timeZone value="4" description="(UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna" />
+  <timeZone value="6" description="(UTC+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague" />
+  <timeZone value="3" description="(UTC+01:00) Brussels, Copenhagen, Madrid, Paris" />
+  <timeZone value="57" description="(UTC+01:00) Sarajevo, Skopje, Warsaw, Zagreb" />
+  <timeZone value="69" description="(UTC+01:00) West Central Africa" />
+  <timeZone value="83" description="(UTC+01:00) Windhoek" />
+  <timeZone value="79" description="(UTC+02:00) Amman" />
+  <timeZone value="5" description="(UTC+02:00) Athens, Bucharest, Istanbul" />
+  <timeZone value="80" description="(UTC+02:00) Beirut" />
+  <timeZone value="49" description="(UTC+02:00) Cairo" />
+  <timeZone value="98" description="(UTC+02:00) Damascus" />
+  <timeZone value="50" description="(UTC+02:00) Harare, Pretoria" />
+  <timeZone value="59" description="(UTC+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius" />
+  <timeZone value="101" description="(UTC+02:00) Istanbul" />
+  <timeZone value="27" description="(UTC+02:00) Jerusalem" />
+  <timeZone value="7" description="(UTC+02:00) Minsk (old)" />
+  <timeZone value="104" description="(UTC+02:00) E. Europe" />
+  <timeZone value="100" description="(UTC+02:00) Kaliningrad (RTZ 1)" />
+  <timeZone value="26" description="(UTC+03:00) Baghdad" />
+  <timeZone value="74" description="(UTC+03:00) Kuwait, Riyadh" />
+  <timeZone value="109" description="(UTC+03:00) Minsk" />
+  <timeZone value="51" description="(UTC+03:00) Moscow, St. Petersburg, Volgograd (RTZ 2)" />
+  <timeZone value="56" description="(UTC+03:00) Nairobi" />
+  <timeZone value="25" description="(UTC+03:30) Tehran" />
+  <timeZone value="24" description="(UTC+04:00) Abu Dhabi, Muscat" />
+  <timeZone value="54" description="(UTC+04:00) Baku" />
+  <timeZone value="106" description="(UTC+04:00) Izhevsk, Samara (RTZ 3)" />
+  <timeZone value="89" description="(UTC+04:00) Port Louis" />
+  <timeZone value="82" description="(UTC+04:00) Tbilisi" />
+  <timeZone value="84" description="(UTC+04:00) Yerevan" />
+  <timeZone value="48" description="(UTC+04:30) Kabul" />
+  <timeZone value="58" description="(UTC+05:00) Ekaterinburg (RTZ 4)" />
+  <timeZone value="87" description="(UTC+05:00) Islamabad, Karachi" />
+  <timeZone value="47" description="(UTC+05:00) Tashkent" />
+  <timeZone value="23" description="(UTC+05:30) Chennai, Kolkata, Mumbai, New Delhi" />
+  <timeZone value="66" description="(UTC+05:30) Sri Jayawardenepura" />
+  <timeZone value="62" description="(UTC+05:45) Kathmandu" />
+  <timeZone value="71" description="(UTC+06:00) Astana" />
+  <timeZone value="102" description="(UTC+06:00) Dhaka" />
+  <timeZone value="46" description="(UTC+06:00) Novosibirsk (RTZ 5)" />
+  <timeZone value="61" description="(UTC+06:30) Yangon (Rangoon)" />
+  <timeZone value="22" description="(UTC+07:00) Bangkok, Hanoi, Jakarta" />
+  <timeZone value="64" description="(UTC+07:00) Krasnoyarsk (RTZ 6)" />
+  <timeZone value="45" description="(UTC+08:00) Beijing, Chongqing, Hong Kong, Urumqi" />
+  <timeZone value="63" description="(UTC+08:00) Irkutsk (RTZ 7)" />
+  <timeZone value="21" description="(UTC+08:00) Kuala Lumpur, Singapore" />
+  <timeZone value="73" description="(UTC+08:00) Perth" />
+  <timeZone value="75" description="(UTC+08:00) Taipei" />
+  <timeZone value="94" description="(UTC+08:00) Ulaanbaatar" />
+  <timeZone value="20" description="(UTC+09:00) Osaka, Sapporo, Tokyo" />
+  <timeZone value="72" description="(UTC+09:00) Seoul" />
+  <timeZone value="70" description="(UTC+09:00) Yakutsk (RTZ 8)" />
+  <timeZone value="19" description="(UTC+09:30) Adelaide" />
+  <timeZone value="44" description="(UTC+09:30) Darwin" />
+  <timeZone value="18" description="(UTC+10:00) Brisbane" />
+  <timeZone value="76" description="(UTC+10:00) Canberra, Melbourne, Sydney" />
+  <timeZone value="43" description="(UTC+10:00) Guam, Port Moresby" />
+  <timeZone value="42" description="(UTC+10:00) Hobart" />
+  <timeZone value="99" description="(UTC+10:00) Magadan" />
+  <timeZone value="68" description="(UTC+10:00) Vladivostok, Magadan (RTZ 9)" />
+  <timeZone value="107" description="(UTC+11:00) Chokurdakh (RTZ 10)" />
+  <timeZone value="41" description="(UTC+11:00) Solomon Is., New Caledonia" />
+  <timeZone value="108" description="(UTC+12:00) Anadyr, Petropavlovsk-Kamchatsky (RTZ 11)" />
+  <timeZone value="17" description="(UTC+12:00) Auckland, Wellington" />
+  <timeZone value="97" description="(UTC+12:00) Coordinated Universal Time+12" />
+  <timeZone value="40" description="(UTC+12:00) Fiji" />
+  <timeZone value="92" description="(UTC+12:00) Petropavlovsk-Kamchatsky - Old" />
+  <timeZone value="67" description="(UTC+13:00) Nuku'alofa" />
+  <timeZone value="16" description="(UTC+13:00) Samoa" />
+</timeZones>

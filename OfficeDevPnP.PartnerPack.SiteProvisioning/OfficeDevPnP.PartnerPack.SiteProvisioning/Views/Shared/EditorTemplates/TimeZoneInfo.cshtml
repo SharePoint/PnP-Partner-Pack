@@ -1,0 +1,16 @@
+﻿@model System.Int32
+@using System.Xml.Linq
+
+@{
+    XElement timeZones = XElement.Load(Server.MapPath("/Content/TimeZones.xml"));
+
+    var timeZoneList = from t in timeZones.Descendants("timeZone")
+                       select new SelectListItem
+                       {
+                           Text = t.Attribute("description").Value,
+                           Value = t.Attribute("value").Value,
+                           Selected = Int32.Parse(t.Attribute("value").Value) == Model
+                       };
+}
+@Html.DropDownListFor(model => model, timeZoneList, new { @class = "form-control" })
+@Html.ValidationMessageFor(model => model)

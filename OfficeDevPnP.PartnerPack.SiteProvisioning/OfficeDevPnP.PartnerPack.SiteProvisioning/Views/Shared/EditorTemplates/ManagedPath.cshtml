@@ -1,0 +1,9 @@
+﻿@model System.String
+
+@{
+    var managedPaths = new SelectListItem[] {
+        new SelectListItem { Text = "/sites/", Value = "sites", Selected = Model == "sites" },
+        new SelectListItem { Text = "/teams/", Value = "teams", Selected = Model == "teams"  },
+    };
+}
+@Html.DropDownListFor(model => model, managedPaths, new { @class = "form-control", style = "width: 100px; display: inline;" })
