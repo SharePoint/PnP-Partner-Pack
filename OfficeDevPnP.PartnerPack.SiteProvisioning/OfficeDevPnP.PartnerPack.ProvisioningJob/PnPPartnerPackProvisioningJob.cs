@@ -30,34 +30,54 @@ namespace OfficeDevPnP.PartnerPack.ProvisioningJob
                 Console.WriteLine("Processing job: {0} - Owner: {1} - Title: {2}", 
                     pj.JobId, pj.Owner, pj.Title);
 
-                // Deserialize the job
-                var job = pj.JobFile.FromJsonStream(pj.Type);
+                try
+                {
+                    ProvisioningRepositoryFactory.Current.UpdateProvisioningJob(
+                        pj.JobId,
+                        ProvisioningJobStatus.Running,
+                        String.Empty);
 
-                // Process the job
-                if (job  is ApplyProvisioningTemplateJob)
-                {
-                    // Provisioning Template Application
-                }
-                else if (job is GetProvisioningTemplateJob)
-                {
-                    // Get Provisioning Template
-                    GetProvisioningTemplateJob gptj = job as GetProvisioningTemplateJob;
-                    if (gptj.Location == ProvisioningTemplateLocation.Global)
+                    // Deserialize the job
+                    var job = pj.JobFile.FromJsonStream(pj.Type);
+
+                    // Process the job
+                    if (job is ApplyProvisioningTemplateJob)
                     {
-                        ProvisioningRepositoryFactory.Current.SaveGlobalProvisioningTemplate(gptj);
+                        // Provisioning Template Application
                     }
-                    else
+                    else if (job is GetProvisioningTemplateJob)
                     {
-                        ProvisioningRepositoryFactory.Current.SaveLocalProvisioningTemplate(gptj.SourceSiteUrl, gptj);
+                        // Get Provisioning Template
+                        GetProvisioningTemplateJob gptj = job as GetProvisioningTemplateJob;
+                        if (gptj.Location == ProvisioningTemplateLocation.Global)
+                        {
+                            ProvisioningRepositoryFactory.Current.SaveGlobalProvisioningTemplate(gptj);
+                        }
+                        else
+                        {
+                            ProvisioningRepositoryFactory.Current.SaveLocalProvisioningTemplate(gptj.SourceSiteUrl, gptj);
+                        }
                     }
+                    else if (job is SiteCollectionProvisioningJob)
+                    {
+                        // Site Collection Provisioning
+                    }
+                    else if (job is SubSiteProvisioningJob)
+                    {
+                        // Sub-Site Provisioning
+                    }
+
+                    ProvisioningRepositoryFactory.Current.UpdateProvisioningJob(
+                        pj.JobId,
+                        ProvisioningJobStatus.Provisioned,
+                        String.Empty);
                 }
-                else if (job is SiteCollectionProvisioningJob)
+                catch (Exception ex)
                 {
-                    // Site Collection Provisioning
-                }
-                else if (job is SubSiteProvisioningJob)
-                {
-                    // Sub-Site Provisioning
+                    ProvisioningRepositoryFactory.Current.UpdateProvisioningJob(
+                        pj.JobId, 
+                        ProvisioningJobStatus.Failed, 
+                        ex.Message);
                 }
             }
 

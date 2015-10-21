@@ -358,7 +358,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
                         <Query>
                             <Where>
                                 <Eq>
-                                    <FieldRef Name='Name' />
+                                    <FieldRef Name='FileLeafRef' />
                                     <Value Type='Text'>" + jobId + @".job</Value>
                                 </Eq>
                             </Where>
@@ -373,7 +373,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
                 {
                     ListItem jobItem = items[0];
 
-                    jobItem[PnPPartnerPackConstants.PnPProvisioningJobStatus] = status;
+                    jobItem[PnPPartnerPackConstants.PnPProvisioningJobStatus] = status.ToString();
                     jobItem[PnPPartnerPackConstants.PnPProvisioningJobError] = errorMessage;
 
                     jobItem.Update();

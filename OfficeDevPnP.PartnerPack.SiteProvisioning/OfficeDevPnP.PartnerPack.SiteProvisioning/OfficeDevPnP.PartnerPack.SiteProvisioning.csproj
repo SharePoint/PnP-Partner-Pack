@@ -113,8 +113,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="OfficeDevPnP.Core, Version=1.7.1015.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OfficeDevPnPCore16.1.7.1015.1\lib\net45\OfficeDevPnP.Core.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\PaoloPia-PnP-Sites-Core\Core\OfficeDevPnP.Core\bin\Debug\OfficeDevPnP.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -347,6 +347,7 @@
     <Content Include="Views\Home\SiteCreated.cshtml" />
     <Content Include="Views\Home\SiteCollectionInformation.cshtml" />
     <Content Include="Views\Home\SubSiteInformation.cshtml" />
+    <Content Include="Views\Home\Error.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -25,7 +25,8 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
             using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(siteUrl))
             {
                 ApplyProvisioningTemplateToSite(context,
-                    HttpContext.Current.Server.MapPath("/Templates/Overrides"),
+                    PnPPartnerPackSettings.InfrastructureSiteUrl,
+                    "Overrides",
                     "PnP-Partner-Pack-Overrides.xml");
 
                 // Turn ON the customization flag
@@ -68,12 +69,13 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
             return (result);
         }
 
-        private static void ApplyProvisioningTemplateToSite(ClientContext context, String container, String fileName)
+        private static void ApplyProvisioningTemplateToSite(ClientContext context, String siteUrl, String folder, String fileName)
         {
             // Configure the XML file system provider
             XMLTemplateProvider provider =
-                new XMLFileSystemTemplateProvider(
-                    container, "");
+                new XMLSharePointTemplateProvider(context, siteUrl,
+                    PnPPartnerPackConstants.PnPProvisioningTemplates +
+                    (!String.IsNullOrEmpty(folder) ? "/" + folder : String.Empty));
 
             // Load the template from the XML stored copy
             ProvisioningTemplate template = provider.GetTemplate(fileName);
@@ -98,7 +100,8 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
                 catch (ServerException)
                 {
                     ApplyProvisioningTemplateToSite(context,
-                        HttpContext.Current.Server.MapPath("/Templates/Infrastructure"),
+                        PnPPartnerPackSettings.InfrastructureSiteUrl,
+                        "Infrastructure",
                         "PnP-Partner-Pack-Infrastructure-Templates.xml");
                 }
             }

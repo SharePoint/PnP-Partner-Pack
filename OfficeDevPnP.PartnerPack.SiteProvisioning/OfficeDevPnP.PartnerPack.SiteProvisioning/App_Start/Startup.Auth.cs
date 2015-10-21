@@ -55,7 +55,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning
                             string tenantID = context.AuthenticationTicket.Identity.FindFirst("http://schemas.microsoft.com/identity/claims/tenantid").Value;
                             string signedInUserID = context.AuthenticationTicket.Identity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-                            AuthenticationContext authContext = new AuthenticationContext(aadInstance + tenantID, new ADALTokenCache(signedInUserID));
+                            AuthenticationContext authContext = new AuthenticationContext(aadInstance + tenantID); //, new ADALTokenCache(signedInUserID));
                             AuthenticationResult result = authContext.AcquireTokenByAuthorizationCode(
                                 code, new Uri(HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Path)), credential, graphResourceID);
 

@@ -24,6 +24,8 @@
 
     <input type="hidden" id="@Html.IdFor(model => model.Step)" name="@Html.NameFor(model => model.Step)" value="@Model.Step" />
 
+    <h3>Select a Template</h3>
+
     <div>
 
         @foreach (var template in GetProvisioningTemplate())
