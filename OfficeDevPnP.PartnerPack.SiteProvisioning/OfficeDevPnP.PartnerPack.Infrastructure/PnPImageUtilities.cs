@@ -58,7 +58,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
                              imgPhoto.VerticalResolution);
 
             Graphics grPhoto = Graphics.FromImage(bmPhoto);
-            grPhoto.Clear(Color.Red);
+            grPhoto.Clear(Color.Gray);
             grPhoto.InterpolationMode =
                     InterpolationMode.HighQualityBicubic;
 

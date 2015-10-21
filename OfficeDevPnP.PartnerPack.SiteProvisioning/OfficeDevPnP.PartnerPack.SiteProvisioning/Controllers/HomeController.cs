@@ -59,6 +59,26 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
                     {
                         model.Step = CreateSiteStep.SiteInformation;
                     }
+                    else
+                    {
+                        if (!String.IsNullOrEmpty(model.ProvisioningTemplateUrl) &&
+                            model.ProvisioningTemplateUrl.IndexOf(PnPPartnerPackConstants.PnPProvisioningTemplates) > 0)
+                        {
+                            String templateSiteUrl = model.ProvisioningTemplateUrl.Substring(0, model.ProvisioningTemplateUrl.IndexOf(PnPPartnerPackConstants.PnPProvisioningTemplates));
+                            String templateFileName = model.ProvisioningTemplateUrl.Substring(model.ProvisioningTemplateUrl.IndexOf(PnPPartnerPackConstants.PnPProvisioningTemplates) + PnPPartnerPackConstants.PnPProvisioningTemplates.Length + 1);
+                            String templateFolder = String.Empty;
+
+                            if (templateFileName.IndexOf("/") > 0)
+                            {
+                                templateFolder = templateFileName.Substring(0, templateFileName.LastIndexOf("/") - 1);
+                                templateFileName = templateFileName.Substring(templateFolder.Length + 1);
+                            }
+                            model.TemplateParameters = PnPPartnerPackUtilities.GetProvisioningTemplateParameters(
+                                    templateSiteUrl,
+                                    templateFolder,
+                                    templateFileName);
+                        }
+                    }
                     break;
                 case CreateSiteStep.SiteCreated:
                     AntiForgery.Validate();
@@ -124,6 +144,26 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
                     if (!ModelState.IsValid)
                     {
                         model.Step = CreateSiteStep.SiteInformation;
+                    }
+                    else
+                    {
+                        if (!String.IsNullOrEmpty(model.ProvisioningTemplateUrl) &&
+                            model.ProvisioningTemplateUrl.IndexOf(PnPPartnerPackConstants.PnPProvisioningTemplates) > 0)
+                        {
+                            String templateSiteUrl = model.ProvisioningTemplateUrl.Substring(0, model.ProvisioningTemplateUrl.IndexOf(PnPPartnerPackConstants.PnPProvisioningTemplates));
+                            String templateFileName = model.ProvisioningTemplateUrl.Substring(model.ProvisioningTemplateUrl.IndexOf(PnPPartnerPackConstants.PnPProvisioningTemplates) + PnPPartnerPackConstants.PnPProvisioningTemplates.Length + 1);
+                            String templateFolder = String.Empty;
+
+                            if (templateFileName.IndexOf("/") > 0)
+                            {
+                                templateFolder = templateFileName.Substring(0, templateFileName.LastIndexOf("/") - 1);
+                                templateFileName = templateFileName.Substring(templateFolder.Length + 1);
+                            }
+                            model.TemplateParameters = PnPPartnerPackUtilities.GetProvisioningTemplateParameters(
+                                    templateSiteUrl,
+                                    templateFolder,
+                                    templateFileName);
+                        }
                     }
                     break;
                 case CreateSiteStep.SiteCreated:

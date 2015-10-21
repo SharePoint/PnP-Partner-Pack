@@ -3,7 +3,7 @@
 @using OfficeDevPnP.PartnerPack.Infrastructure
 
 @functions {
-    public ProvisioningTemplateInformation[] GetProvisioningTemplate()
+    public ProvisioningTemplateInformation[] GetProvisioningTemplates()
     {
         List<ProvisioningTemplateInformation> result = new List<ProvisioningTemplateInformation>();
 
@@ -28,7 +28,7 @@
 
     <div>
 
-        @foreach (var template in GetProvisioningTemplate())
+        @foreach (var template in GetProvisioningTemplates())
         {
             <div class="provtemplate" data-pnp-template-url="@template.TemplateFileUri">
                 <img alt="@template.DisplayName" src="@template.TemplateImageUrl" />
@@ -39,7 +39,7 @@
 
     </div>
 
-    <input type="hidden" id="@Html.IdFor(model => model.ProvisioningTemplateUrl)" name="@Html.NameFor(model => model.ProvisioningTemplateUrl)" value="FAKE-TEMPLATE" />
+    <input type="hidden" id="@Html.IdFor(model => model.ProvisioningTemplateUrl)" name="@Html.NameFor(model => model.ProvisioningTemplateUrl)" value="" />
 
     <input type="button" class="btn-primary btn NextStep" value="Next" />
 

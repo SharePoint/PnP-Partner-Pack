@@ -62,6 +62,18 @@ a:hover {
     margin-top: 6px;
 }
 
+.informationText {
+    margin-bottom: 50px;
+}
+
+.noOverflow {
+    overflow: hidden;
+}
+
+.gridHeader {
+    font-weight: bold;
+}
+
 /******* Template Selection Styles *******/
 
 .stepcontainer {

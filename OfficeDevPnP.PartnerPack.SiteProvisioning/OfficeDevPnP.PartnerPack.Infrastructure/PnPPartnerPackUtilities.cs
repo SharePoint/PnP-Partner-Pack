@@ -85,6 +85,29 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
             context.Site.RootWeb.ApplyProvisioningTemplate(template);
         }
 
+        public static ProvisioningTemplate GetProvisioningTemplate(ClientContext context, String siteUrl, String folder, String fileName)
+        {
+            // Configure the XML file system provider
+            XMLTemplateProvider provider =
+                new XMLSharePointTemplateProvider(context, siteUrl,
+                    PnPPartnerPackConstants.PnPProvisioningTemplates +
+                    (!String.IsNullOrEmpty(folder) ? "/" + folder : String.Empty));
+
+            // Load the template from the XML stored copy
+            ProvisioningTemplate template = provider.GetTemplate(fileName);
+
+            return (template);
+        }
+
+        public static Dictionary<String, String> GetProvisioningTemplateParameters(String siteUrl, String folder, String fileName)
+        {
+            using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(siteUrl))
+            {
+                ProvisioningTemplate template = GetProvisioningTemplate(context, siteUrl, folder, fileName);
+                return (template.Parameters);
+            }
+        }
+
         public static void EnablePartnerPackInfrastructureOnSite(String siteUrl)
         {
             using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(siteUrl))
@@ -105,6 +128,12 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
                         "PnP-Partner-Pack-Infrastructure-Templates.xml");
                 }
             }
+        }
+
+        public static Boolean UserIsTenantGlobalAdmin()
+        {
+            // TODO: Implement method UserIsTenantGlobalAdmin
+            return (true);
         }
     }
 }

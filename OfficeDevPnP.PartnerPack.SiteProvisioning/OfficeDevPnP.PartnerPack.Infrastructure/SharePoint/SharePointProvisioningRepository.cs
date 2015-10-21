@@ -170,13 +170,17 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
             context.Load(templatesFolder, f => f.ServerRelativeUrl, f => f.Name);
             context.ExecuteQueryRetry();
 
-            String previewImageFileName = job.FileName.Replace(".xml", "_preview.png");
-            templatesFolder.UploadFile(previewImageFileName,
-                job.TemplateImageFile.ToStream(), true);
+            // If there is a preview image
+            if (job.TemplateImageFile  != null)
+            {
+                String previewImageFileName = job.FileName.Replace(".xml", "_preview.png");
+                templatesFolder.UploadFile(previewImageFileName,
+                    job.TemplateImageFile.ToStream(), true);
 
-            // And store URL in the XML file
-            templateToSave.ImagePreviewUrl = String.Format("{0}/{1}/{2}",
-                web.Url, templatesFolder.Name, previewImageFileName);
+                // And store URL in the XML file
+                templateToSave.ImagePreviewUrl = String.Format("{0}/{1}/{2}",
+                    web.Url, templatesFolder.Name, previewImageFileName);
+            }
 
             // And save it on the file system
             provider.SaveAs(templateToSave, job.FileName);

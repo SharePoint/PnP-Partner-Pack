@@ -13,6 +13,10 @@
         @*<li class="ms-NavBar-item"><a class="ms-NavBar-link" href="/Home/CreateSubSite"><i class="ms-Icon ms-Icon--plus"></i> Create Sub Site</a></li>
         <li class="ms-NavBar-item"><a class="ms-NavBar-link" href="/Home/ApplyProvisioningTemplate"><i class="ms-Icon ms-Icon--tile"></i> Apply Provisioning Template</a></li>*@
         <li class="ms-NavBar-item"><a class="ms-NavBar-link" href="/Home/MyProvisionedSites"><i class="ms-Icon ms-Icon--listBullets"></i> My Provisioned Sites</a></li>
-        <li class="ms-NavBar-item ms-NavBar-item--right"><a class="ms-NavBar-link" href="/Home/Settings"><i class="ms-Icon ms-Icon--gear"></i> Settings</a></li>
+
+        @if (OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackUtilities.UserIsTenantGlobalAdmin())
+        {
+            <li class="ms-NavBar-item ms-NavBar-item--right"><a class="ms-NavBar-link" href="/Home/Settings"><i class="ms-Icon ms-Icon--gear"></i> Settings</a></li>
+        }
     </ul>
 </div>
