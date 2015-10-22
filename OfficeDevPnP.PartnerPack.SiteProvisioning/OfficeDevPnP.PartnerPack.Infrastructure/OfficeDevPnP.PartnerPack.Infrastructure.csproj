@@ -125,10 +125,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\PnPPartnerPackConfiguration.cs">
+      <DependentUpon>PnPPartnerPackConfiguration.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\PnPPartnerPackConfigurationSectionHandler.cs" />
+    <Compile Include="IConfigurable.cs" />
     <Compile Include="IProvisioningRepository.cs" />
     <Compile Include="JobStatus.cs" />
     <Compile Include="Jobs\ApplyProvisioningTemplateJob.cs" />
     <Compile Include="Jobs\GetProvisioningTemplateJob.cs" />
+    <Compile Include="Jobs\Handlers\ProvisioningTemplateJobHandler.cs" />
+    <Compile Include="Jobs\Handlers\ProvisioningJobHandler.cs" />
+    <Compile Include="Jobs\Handlers\SiteCollectionProvisioningJobHandler.cs" />
+    <Compile Include="Jobs\Handlers\SubSiteProvisioningJobHandler.cs" />
     <Compile Include="Jobs\JobExtensions.cs" />
     <Compile Include="Jobs\ProvisioningJob.cs" />
     <Compile Include="Jobs\ProvisioningJobInformation.cs" />
@@ -150,7 +159,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Configuration\PnPPartnerPackConfiguration.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Configuration\PnPPartnerPackSampleConfiguration.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

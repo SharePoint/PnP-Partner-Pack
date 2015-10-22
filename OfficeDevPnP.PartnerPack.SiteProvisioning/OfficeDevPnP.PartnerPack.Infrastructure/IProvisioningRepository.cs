@@ -10,13 +10,8 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
     /// <summary>
     /// Interface that defines the common behavior for any Sites Provisioning Repository
     /// </summary>
-    public interface IProvisioningRepository
+    public interface IProvisioningRepository : IConfigurable
     {
-        /// <summary>
-        /// Initializes the Provisioning Repository implementation
-        /// </summary>
-        void Init();
-
         /// <summary>
         /// Retrieves the list of Global Provisioning Templates
         /// </summary>

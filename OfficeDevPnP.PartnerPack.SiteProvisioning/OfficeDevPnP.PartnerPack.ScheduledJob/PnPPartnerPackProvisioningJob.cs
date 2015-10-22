@@ -19,6 +19,8 @@ namespace OfficeDevPnP.PartnerPack.ScheduledJob
         private void ExecuteProvisioningJobs(object sender, TimerJobRunEventArgs e)
         {
             Console.WriteLine("Starting job");
+
+            // Show the current context
             Web web = e.SiteClientContext.Web;
             web.EnsureProperty(w => w.Title);
             Console.WriteLine("Processing jobs in Site: {0}", web.Title);
@@ -32,51 +34,11 @@ namespace OfficeDevPnP.PartnerPack.ScheduledJob
                 Console.WriteLine("Processing job: {0} - Owner: {1} - Title: {2}",
                     job.JobId, job.Owner, job.Title);
 
-                try
-                {
-                    ProvisioningRepositoryFactory.Current.UpdateProvisioningJob(
-                        job.JobId,
-                        ProvisioningJobStatus.Running,
-                        String.Empty);
+                Type jobType = job.GetType();
 
-                    // Process the job
-                    if (job is ApplyProvisioningTemplateJob)
-                    {
-                        // Provisioning Template Application
-                    }
-                    else if (job is GetProvisioningTemplateJob)
-                    {
-                        // Get Provisioning Template
-                        GetProvisioningTemplateJob gptj = job as GetProvisioningTemplateJob;
-                        if (gptj.Location == ProvisioningTemplateLocation.Global)
-                        {
-                            ProvisioningRepositoryFactory.Current.SaveGlobalProvisioningTemplate(gptj);
-                        }
-                        else
-                        {
-                            ProvisioningRepositoryFactory.Current.SaveLocalProvisioningTemplate(gptj.SourceSiteUrl, gptj);
-                        }
-                    }
-                    else if (job is SiteCollectionProvisioningJob)
-                    {
-                        // Site Collection Provisioning
-                    }
-                    else if (job is SubSiteProvisioningJob)
-                    {
-                        // Sub-Site Provisioning
-                    }
-
-                    ProvisioningRepositoryFactory.Current.UpdateProvisioningJob(
-                        job.JobId,
-                        ProvisioningJobStatus.Provisioned,
-                        String.Empty);
-                }
-                catch (Exception ex)
+                if (PnPPartnerPackSettings.JobHandlers.ContainsKey(jobType))
                 {
-                    ProvisioningRepositoryFactory.Current.UpdateProvisioningJob(
-                        job.JobId, 
-                        ProvisioningJobStatus.Failed, 
-                        ex.Message);
+                    PnPPartnerPackSettings.JobHandlers[jobType].RunJob(job);
                 }
             }
 

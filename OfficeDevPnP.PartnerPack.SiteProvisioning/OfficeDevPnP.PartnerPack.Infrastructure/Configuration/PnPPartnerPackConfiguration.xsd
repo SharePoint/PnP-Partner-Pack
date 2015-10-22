@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema id="PnPPartnerPackConfiguration"
+    targetNamespace="http://schemas.dev.office.com/PnP/2015/10/PnPPartnerPackConfiguration"
+    elementFormDefault="qualified"
+    xmlns="http://schemas.dev.office.com/PnP/2015/10/PnPPartnerPackConfiguration"
+    xmlns:pnp="http://schemas.dev.office.com/PnP/2015/10/PnPPartnerPackConfiguration"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <xsd:element name="PnPPartnerPackConfiguration">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        This is the base element of PnP Partner Pack Configuration.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="TenantSettings">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+              Defines the tenant-level configuration settings
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:attribute name="tenant" type="xsd:string" use="required">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                  The name of the Office 365 Tenant.
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="infrastructureSiteUrl" type="xsd:string" use="required">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                  The URL of the Infrastructural Site Collection.
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="appOnlyCertificateThumbprint" type="xsd:string" use="required">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                  The thumbprint of the X.509 Certificate used for AppOnly Authentication against SharePoint Online.
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:attribute>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="ProvisioningRepository" type="pnp:DotNetHandlerType">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+              Defines the Provisioning engine Repository type and configuration, if any.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="JobsHandlers" minOccurs="0">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+              Defines the Handlers for Jobs managed by a WebJob on Azure, it is an optional section.
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="JobHandler" minOccurs="1" maxOccurs="unbounded">
+                <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                    Defines a Job Handler and its configuration, if any.
+                  </xsd:documentation>
+                </xsd:annotation>
+                <xsd:complexType>
+                  <xsd:complexContent>
+                    <xsd:extension base="pnp:DotNetHandlerType">
+                      <xsd:sequence>
+                        <xsd:element name="Jobs">
+                          <xsd:annotation>
+                            <xsd:documentation xml:lang="en">
+                              Defines the Jobs handled by the current Job Handler.
+                            </xsd:documentation>
+                          </xsd:annotation>
+                          <xsd:complexType>
+                            <xsd:sequence>
+                              <xsd:element name="Job" minOccurs="1" maxOccurs="unbounded">
+                                <xsd:annotation>
+                                  <xsd:documentation xml:lang="en">
+                                    Defines a single Jobs handled by the current Job Handler.
+                                  </xsd:documentation>
+                                </xsd:annotation>
+                                <xsd:complexType>
+                                  <xsd:attribute name="type" type="xsd:string" use="required">
+                                    <xsd:annotation>
+                                      <xsd:documentation xml:lang="en">
+                                        The .NET fully qualified name of the Job type.
+                                      </xsd:documentation>
+                                    </xsd:annotation>
+                                  </xsd:attribute>
+                                </xsd:complexType>
+                              </xsd:element>
+                            </xsd:sequence>
+                          </xsd:complexType>
+                        </xsd:element>
+                      </xsd:sequence>
+                    </xsd:extension>
+                  </xsd:complexContent>
+                </xsd:complexType>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:complexType name="DotNetHandlerType">
+    <xsd:sequence>
+      <xsd:element name="Configuration" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:any minOccurs="0" processContents="lax">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                  Optional XML configuration section for the current handler.
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:any>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="type" type="xsd:string" use="required">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+          The .NET fully qualified name of the type for the current handler.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+
+</xsd:schema>
