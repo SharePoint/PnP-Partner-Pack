@@ -42,7 +42,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         {
             CreateSiteCollectionViewModel model = new CreateSiteCollectionViewModel();
             model.Scope = TemplateScope.Site;
-            model.SiteCollectionUrl = String.Empty;
+            model.ParentSiteUrl = String.Empty;
             return View("CreateSite", model);
         }
 
@@ -127,7 +127,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         {
             CreateSubSiteViewModel model = new CreateSubSiteViewModel();
             model.Scope = TemplateScope.Web;
-            model.SiteCollectionUrl = HttpContext.Request["SPHostUrl"];
+            model.ParentSiteUrl = HttpContext.Request["SPHostUrl"];
             return View("CreateSite", model);
         }
 
@@ -177,6 +177,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
                         job.Description = model.Description;
                         job.Language = model.Language;
                         job.TimeZone = model.TimeZone;
+                        job.ParentSiteUrl = model.ParentSiteUrl;
                         job.RelativeUrl = model.RelativeUrl;
                         job.SitePolicy = model.SitePolicy;
                         job.Owner = ClaimsPrincipal.Current.Identity.Name;

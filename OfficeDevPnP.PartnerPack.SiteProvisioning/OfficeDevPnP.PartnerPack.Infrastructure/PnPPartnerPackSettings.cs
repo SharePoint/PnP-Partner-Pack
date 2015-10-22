@@ -73,12 +73,15 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
                         }
                     }
 
-                    // For each Job type associated with the current Job Handler
-                    foreach (var jobKind in jobHandlerKind.Jobs)
+                    if (jobHandlerKind.Jobs != null)
                     {
-                        // Associate the Job type with the Job Handler
-                        Type jobType = Type.GetType(jobKind.type, true);
-                        handlers.Add(jobType, jobHandler);
+                        // For each Job type associated with the current Job Handler
+                        foreach (var jobKind in jobHandlerKind.Jobs)
+                        {
+                            // Associate the Job type with the Job Handler
+                            Type jobType = Type.GetType(jobKind.type, true);
+                            handlers.Add(jobType, jobHandler);
+                        }
                     }
                 }
 

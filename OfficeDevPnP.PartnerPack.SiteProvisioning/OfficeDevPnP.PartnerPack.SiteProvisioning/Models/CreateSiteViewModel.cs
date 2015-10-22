@@ -50,7 +50,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
 
         public TemplateScope Scope { get; set; }
 
-        public String SiteCollectionUrl { get; set; }
+        public String ParentSiteUrl { get; set; }
     }
 
     public enum CreateSiteStep

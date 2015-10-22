@@ -10,7 +10,12 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
     {
         protected override void RunJobInternal(ProvisioningJob job)
         {
-            // TODO: Implement
+            SiteCollectionProvisioningJob scj = job as SiteCollectionProvisioningJob;
+            if (scj == null)
+            {
+                throw new ArgumentException("Invalid job type for SiteCollectionProvisioningJobHandler.");
+            }
+
             return;
         }
     }

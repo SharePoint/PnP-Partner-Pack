@@ -135,5 +135,21 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
             // TODO: Implement method UserIsTenantGlobalAdmin
             return (true);
         }
+
+        public static String GetSiteCollectionRootUrl(String siteUrl)
+        {
+            // Get the Site Collection root URL
+            System.Text.RegularExpressions.Regex regex =
+                new System.Text.RegularExpressions.Regex(
+                    PnPPartnerPackConstants.RegExSiteCollectionWithSubWebs);
+
+            var match = regex.Match(siteUrl);
+            if (match.Success)
+            {
+                siteUrl = match.Groups["siteCollectionUrl"].Value;
+            }
+
+            return (siteUrl);
+        }
     }
 }
