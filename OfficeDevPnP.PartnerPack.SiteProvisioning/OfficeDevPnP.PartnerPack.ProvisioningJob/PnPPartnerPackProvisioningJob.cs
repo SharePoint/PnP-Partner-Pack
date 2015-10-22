@@ -24,7 +24,9 @@ namespace OfficeDevPnP.PartnerPack.ProvisioningJob
             Console.WriteLine("Processing jobs in Site: {0}", web.Title);
 
             // Retrieve the list of pending jobs
-            var provisioningJobs = ProvisioningRepositoryFactory.Current.GetProvisioningJobs(ProvisioningJobStatus.Pending);
+            var provisioningJobs = ProvisioningRepositoryFactory.Current.GetProvisioningJobs(
+                ProvisioningJobStatus.Pending, 
+                includeStream: true);
             foreach (var pj in provisioningJobs)
             {
                 Console.WriteLine("Processing job: {0} - Owner: {1} - Title: {2}", 

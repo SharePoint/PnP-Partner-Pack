@@ -209,6 +209,10 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
             // Connect to the Infrastructural Site Collection
             using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(PnPPartnerPackSettings.InfrastructureSiteUrl))
             {
+                // Set the initial status of the Job
+                job.JobId = jobId;
+                job.Status = ProvisioningJobStatus.Pending;
+
                 // Convert the current Provisioning Job into a Stream
                 Stream stream = job.ToJsonStream();
 
@@ -241,7 +245,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
             return (jobId);
         }
 
-        public ProvisioningJobInformation GetProvisioningJob(Guid jobId)
+        public ProvisioningJobInformation GetProvisioningJob(Guid jobId, Boolean includeStream = false)
         {
             // Connect to the Infrastructural Site Collection
             using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(PnPPartnerPackSettings.InfrastructureSiteUrl))
@@ -270,7 +274,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
                 if (items.Count > 0)
                 {
                     ListItem jobItem = items[0];
-                    return (PrepareJobInformationFromSharePoint(context, jobItem, true));
+                    return (PrepareJobInformationFromSharePoint(context, jobItem, includeStream));
                 }
                 else
                 {
@@ -279,7 +283,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
             }
         }
 
-        public ProvisioningJobInformation[] GetProvisioningJobs(ProvisioningJobStatus status, string owner = null)
+        public ProvisioningJobInformation[] GetProvisioningJobs(ProvisioningJobStatus status, String jobType = null, Boolean includeStream = false, string owner = null)
         {
             List<ProvisioningJobInformation> result = new List<ProvisioningJobInformation>();
 
@@ -290,15 +294,76 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
                 Web web = context.Web;
                 List list = web.Lists.GetByTitle(PnPPartnerPackConstants.PnPProvisioningJobs);
 
+                StringBuilder sbCamlWhere = new StringBuilder();
+
+                // Generate the CAML query filter accordingly to the requested statuses
+                Boolean openCamlOr = true;
+                Int32 conditionCounter = 0;
+                foreach (var statusFlagName in Enum.GetNames(typeof(ProvisioningJobStatus)))
+                {
+                    var statusFlag = (ProvisioningJobStatus)Enum.Parse(typeof(ProvisioningJobStatus), statusFlagName);
+                    if ((statusFlag & status) == statusFlag)
+                    {
+                        conditionCounter++;
+                        if (openCamlOr)
+                        {
+                            // Add the first <Or /> CAML statement
+                            sbCamlWhere.Insert(0, "<Or>");
+                            openCamlOr = false;
+                        }
+                        sbCamlWhere.AppendFormat(
+                            @"<Eq>
+                                <FieldRef Name='PnPProvisioningJobStatus' />
+                                <Value Type='Text'>" + statusFlagName + @"</Value>
+                            </Eq>");
+
+                        if (conditionCounter >= 2)
+                        {
+                            // Close the current <Or /> CAML statement
+                            sbCamlWhere.Append("</Or>");
+                            openCamlOr = true;
+                        }
+                    }
+                }
+                // Remove the first <Or> CAML statement if it is useless
+                if (conditionCounter == 1)
+                {
+                    sbCamlWhere.Remove(0, 4);
+                }
+
+                // Add the jobType filter, if any
+                if (!String.IsNullOrEmpty(jobType))
+                {
+                    sbCamlWhere.Insert(0, "<And>");
+                    sbCamlWhere.AppendFormat(
+                        @"<Eq>
+                        <FieldRef Name='PnPProvisioningJobType' />
+                        <Value Type='Text'>" + jobType + @"</Value>
+                    </Eq>");
+                    sbCamlWhere.Append("</And>");
+                }
+
+                // Add the owner filter, if any
+                if (!String.IsNullOrEmpty(owner))
+                {
+                    Microsoft.SharePoint.Client.User ownerUser = web.EnsureUser(owner);
+                    context.Load(ownerUser, u => u.Id, u => u.Email, u => u.Title);
+                    context.ExecuteQueryRetry();
+
+                    sbCamlWhere.Insert(0, "<And>");
+                    sbCamlWhere.AppendFormat(
+                        @"<Eq>
+                        <FieldRef Name='PnPProvisioningJobOwner' />
+                        <Value Type='User'>" + ownerUser.Title + @"</Value>
+                    </Eq>");
+                    sbCamlWhere.Append("</And>");
+                }
+
                 CamlQuery query = new CamlQuery();
                 query.ViewXml =
                     @"<View>
                         <Query>
-                            <Where>
-                                <Eq>
-                                    <FieldRef Name='PnPProvisioningJobStatus' />
-                                    <Value Type='Text'>" + status + @"</Value>
-                                </Eq>
+                            <Where>" + sbCamlWhere.ToString() + @"
                             </Where>
                         </Query>
                     </View>";
@@ -309,10 +374,27 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
 
                 foreach (var jobItem in items)
                 {
-                    result.Add(PrepareJobInformationFromSharePoint(context, jobItem, true));
+                    result.Add(PrepareJobInformationFromSharePoint(context, jobItem, includeStream));
                 }
             }
             return (result.ToArray());
+        }
+
+        public ProvisioningJob[] GetTypedProvisioningJobs<TJob>(ProvisioningJobStatus status, String owner = null)
+            where TJob : ProvisioningJob
+        {
+            // Get the ProvisioningJobInformation array, eventually filtered by Job type
+            var jobInfoList = this.GetProvisioningJobs(status,
+                typeof(TJob).FullName == typeof(ProvisioningJob).FullName ? null : typeof(TJob).FullName, 
+                true, owner);
+            List<TJob> jobs = new List<TJob>();
+
+            foreach (var jobInfo in jobInfoList)
+            {
+                jobs.Add((TJob)jobInfo.JobFile.FromJsonStream(jobInfo.Type));
+            }
+
+            return (jobs.ToArray());
         }
 
         private static ProvisioningJobInformation PrepareJobInformationFromSharePoint(ClientContext context, ListItem jobItem, Boolean includeFileStream = false)
@@ -327,24 +409,28 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
 
             if (includeFileStream)
             {
-                jobItem.ParentList.RootFolder.EnsureProperty(f => f.ServerRelativeUrl);
-
-                Microsoft.SharePoint.Client.File jobFile = jobItem.ParentList.ParentWeb.GetFileByServerRelativeUrl(
-                    String.Format("{0}/{1}", jobItem.ParentList.RootFolder.ServerRelativeUrl, (String)jobItem["FileLeafRef"]));
-                context.Load(jobFile, jf => jf.ServerRelativeUrl);
-
-                var jobFileStream = jobFile.OpenBinaryStream();
-                context.ExecuteQueryRetry();
-
-                resultItem.JobServerRelativeUrl = jobFile.ServerRelativeUrl;
-
-                MemoryStream mem = new MemoryStream();
-                jobFileStream.Value.CopyTo(mem);
-                mem.Position = 0;
-                resultItem.JobFile = mem;
+                resultItem.JobFile = GetProvisioningJobStreamFromSharePoint(context, jobItem);
             }
 
             return resultItem;
+        }
+
+        private static Stream GetProvisioningJobStreamFromSharePoint(ClientContext context, ListItem jobItem)
+        {
+            jobItem.ParentList.RootFolder.EnsureProperty(f => f.ServerRelativeUrl);
+
+            Microsoft.SharePoint.Client.File jobFile = jobItem.ParentList.ParentWeb.GetFileByServerRelativeUrl(
+                String.Format("{0}/{1}", jobItem.ParentList.RootFolder.ServerRelativeUrl, (String)jobItem["FileLeafRef"]));
+            context.Load(jobFile, jf => jf.ServerRelativeUrl);
+
+            var jobFileStream = jobFile.OpenBinaryStream();
+            context.ExecuteQueryRetry();
+
+            MemoryStream mem = new MemoryStream();
+            jobFileStream.Value.CopyTo(mem);
+            mem.Position = 0;
+
+            return (mem);
         }
 
         public void UpdateProvisioningJob(Guid jobId, ProvisioningJobStatus status, String errorMessage = null)
@@ -355,6 +441,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
                 // Get a reference to the target library
                 Web web = context.Web;
                 List list = web.Lists.GetByTitle(PnPPartnerPackConstants.PnPProvisioningJobs);
+                context.Load(list, l => l.RootFolder);
 
                 CamlQuery query = new CamlQuery();
                 query.ViewXml =
@@ -370,18 +457,35 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
                     </View>";
 
                 ListItemCollection items = list.GetItems(query);
-                context.Load(items);
+                context.Load(items, 
+                    includes => includes.IncludeWithDefaultProperties(
+                        j => j[PnPPartnerPackConstants.PnPProvisioningJobStatus],
+                        j => j[PnPPartnerPackConstants.PnPProvisioningJobError],
+                        j => j[PnPPartnerPackConstants.PnPProvisioningJobType]),
+                    includes => includes.Include(j => j.File));
                 context.ExecuteQueryRetry();
 
                 if (items.Count > 0)
                 {
                     ListItem jobItem = items[0];
 
+                    // Update the ProvisioningJob object internal status
+                    ProvisioningJob job = GetProvisioningJobStreamFromSharePoint(context, jobItem)
+                        .FromJsonStream((String)jobItem[PnPPartnerPackConstants.PnPProvisioningJobType]);
+
+                    job.Status = status;
+                    job.ErrorMessage = errorMessage;
+
+                    // Update the SharePoint ListItem behind the Provisioning Job item
+                    // jobItem[PnPPartnerPackConstants.ContentTypeIdField] = PnPPartnerPackConstants.PnPProvisioningJobContentTypeId;
                     jobItem[PnPPartnerPackConstants.PnPProvisioningJobStatus] = status.ToString();
                     jobItem[PnPPartnerPackConstants.PnPProvisioningJobError] = errorMessage;
 
                     jobItem.Update();
                     context.ExecuteQueryRetry();
+
+                    // Update the file
+                    list.RootFolder.UploadFile(jobItem.File.Name, job.ToJsonStream(), true);
                 }
             }
         }

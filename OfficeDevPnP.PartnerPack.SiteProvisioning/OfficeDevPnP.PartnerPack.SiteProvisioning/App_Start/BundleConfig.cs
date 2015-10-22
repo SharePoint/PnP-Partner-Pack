@@ -29,6 +29,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
+                      "~/Content/Office365SuiteBar.css",
                       "~/Content/site.css"));
         }
     }

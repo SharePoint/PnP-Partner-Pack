@@ -65,15 +65,27 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
         /// Retrieves the list of Provisioning Jobs
         /// </summary>
         /// <param name="status">The status to use for filtering Provisioning Jobs</param>
+        /// <param name="includeStream">Defines whether to include the stream of the serialized job</param>
         /// <param name="owner">The optional owner of the Provisioning Job</param>
         /// <returns>The list of information about the Provisioning Jobs, if any</returns>
-        ProvisioningJobInformation[] GetProvisioningJobs(ProvisioningJobStatus status, String owner = null);
+        ProvisioningJobInformation[] GetProvisioningJobs(ProvisioningJobStatus status, String jobType = null, Boolean includeStream = false, String owner = null);
 
         /// <summary>
         /// Retrieves a Provisioning Job by ID
         /// </summary>
         /// <param name="jobId">The ID of the job to retrieve</param>
+        /// <param name="includeStream">Defines whether to include the stream of the serialized job</param>
         /// <returns>The information about the Provisioning Job, if any</returns>
-        ProvisioningJobInformation GetProvisioningJob(Guid jobId);
+        ProvisioningJobInformation GetProvisioningJob(Guid jobId, Boolean includeStream = false);
+
+        /// <summary>
+        /// Retrieves the list of Provisioning Jobs
+        /// </summary>
+        /// <param name="status">The status to use for filtering Provisioning Jobs</param>
+        /// <param name="owner">The optional owner of the Provisioning Job</param>
+        /// <typeparam name="TJob">Represents the type of the Provisioning Jobs to retrieve</typeparam>
+        /// <returns>The list of information about the Provisioning Jobs, if any</returns>
+        ProvisioningJob[] GetTypedProvisioningJobs<TJob>(ProvisioningJobStatus status, String owner = null)
+            where TJob : ProvisioningJob;
     }
 }
