@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B6B4B009-E0F9-4096-8DD2-260F49AC7D7A}</ProjectGuid>
+    <ProjectGuid>{EB640E2F-24DA-46FE-A1EA-FCC3C9B8B95F}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OfficeDevPnP.PartnerPack.ProvisioningJob</RootNamespace>
-    <AssemblyName>OfficeDevPnP.PartnerPack.ProvisioningJob</AssemblyName>
+    <RootNamespace>OfficeDevPnP.PartnerPack.ScheduledJob</RootNamespace>
+    <AssemblyName>OfficeDevPnP.PartnerPack.ScheduledJob</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -87,8 +87,7 @@
       <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.3912.1204\lib\net45\Microsoft.SharePoint.Client.WorkflowServices.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OfficeDevPnP.Core, Version=1.7.1015.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="OfficeDevPnP.Core">
       <HintPath>..\..\..\PaoloPia-PnP-Sites-Core\Core\OfficeDevPnP.Core\bin\Debug\OfficeDevPnP.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -153,6 +152,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="Properties\PublishProfiles\pnp-partner-pack.pubxml" />
     <None Include="Properties\webjob-publish-settings.json" />
   </ItemGroup>
   <ItemGroup>

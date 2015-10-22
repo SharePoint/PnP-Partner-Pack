@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OfficeDevPnP.PartnerPack.ProvisioningJob
+namespace OfficeDevPnP.PartnerPack.ScheduledJob
 {
     public class PnPPartnerPackProvisioningJob : TimerJob
     {
@@ -24,23 +24,20 @@ namespace OfficeDevPnP.PartnerPack.ProvisioningJob
             Console.WriteLine("Processing jobs in Site: {0}", web.Title);
 
             // Retrieve the list of pending jobs
-            var provisioningJobs = ProvisioningRepositoryFactory.Current.GetProvisioningJobs(
-                ProvisioningJobStatus.Pending, 
-                includeStream: true);
-            foreach (var pj in provisioningJobs)
+            var provisioningJobs = ProvisioningRepositoryFactory.Current.GetTypedProvisioningJobs<ProvisioningJob>(
+                ProvisioningJobStatus.Pending);
+
+            foreach (var job in provisioningJobs)
             {
-                Console.WriteLine("Processing job: {0} - Owner: {1} - Title: {2}", 
-                    pj.JobId, pj.Owner, pj.Title);
+                Console.WriteLine("Processing job: {0} - Owner: {1} - Title: {2}",
+                    job.JobId, job.Owner, job.Title);
 
                 try
                 {
                     ProvisioningRepositoryFactory.Current.UpdateProvisioningJob(
-                        pj.JobId,
+                        job.JobId,
                         ProvisioningJobStatus.Running,
                         String.Empty);
-
-                    // Deserialize the job
-                    var job = pj.JobFile.FromJsonStream(pj.Type);
 
                     // Process the job
                     if (job is ApplyProvisioningTemplateJob)
@@ -70,14 +67,14 @@ namespace OfficeDevPnP.PartnerPack.ProvisioningJob
                     }
 
                     ProvisioningRepositoryFactory.Current.UpdateProvisioningJob(
-                        pj.JobId,
+                        job.JobId,
                         ProvisioningJobStatus.Provisioned,
                         String.Empty);
                 }
                 catch (Exception ex)
                 {
                     ProvisioningRepositoryFactory.Current.UpdateProvisioningJob(
-                        pj.JobId, 
+                        job.JobId, 
                         ProvisioningJobStatus.Failed, 
                         ex.Message);
                 }
