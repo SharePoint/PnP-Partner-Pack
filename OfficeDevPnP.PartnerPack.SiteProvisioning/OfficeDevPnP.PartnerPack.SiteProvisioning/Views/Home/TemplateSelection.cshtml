@@ -12,7 +12,7 @@
 
         if (Model.Scope != TemplateScope.Site)
         {
-            var localTemplates = ProvisioningRepositoryFactory.Current.GetLocalProvisioningTemplates(Model.SiteCollectionUrl, Model.Scope);
+            var localTemplates = ProvisioningRepositoryFactory.Current.GetLocalProvisioningTemplates(Model.ParentSiteUrl, Model.Scope);
             result.AddRange(localTemplates);
         }
 

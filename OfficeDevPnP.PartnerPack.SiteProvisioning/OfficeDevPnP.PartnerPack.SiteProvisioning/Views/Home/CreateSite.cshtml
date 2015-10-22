@@ -17,6 +17,7 @@
     @Html.AntiForgeryToken()
 
     @Html.HiddenFor(model => model.Scope)
+    @Html.HiddenFor(model => model.ParentSiteUrl)
 
     <div id="SiteCreationWizard">
         <div id="@CreateSiteStep.TemplateSelection">

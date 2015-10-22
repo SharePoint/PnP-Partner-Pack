@@ -25,5 +25,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
         public static String PnPProvisioningJobOwner = "PnPProvisioningJobOwner";
 
         public static String PnPPartnerPackOverridesPropertyBag = "_PnP_PartnerPack_Overrides_Enabled";
+
+        public static String RegExSiteCollectionWithSubWebs = @"^(?<siteCollectionUrl>https\:\/\/(?<tenant>(\w|\-)+).sharepoint.com\/(sites|teams)\/(?<siteCollection>(\w|\-)+))(\/(?<subSite>(\w|\-)+))*";
     }
 }

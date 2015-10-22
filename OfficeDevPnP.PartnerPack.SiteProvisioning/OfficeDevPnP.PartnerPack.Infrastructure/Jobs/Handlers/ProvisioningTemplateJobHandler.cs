@@ -19,6 +19,10 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
             {
                 RunApplyProvisioningTemplateJob(job as ApplyProvisioningTemplateJob);
             }
+            else
+            {
+                throw new ArgumentException("Invalid job type for ProvisioningTemplateJobHandler.");
+            }
         }
 
         private void RunGetProvisioningTemplateJob(GetProvisioningTemplateJob job)

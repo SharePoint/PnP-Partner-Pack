@@ -34,6 +34,9 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
             List<ProvisioningTemplateInformation> result =
                 new List<ProvisioningTemplateInformation>();
 
+            // Retrieve the Root Site Collection URL
+            siteUrl = PnPPartnerPackUtilities.GetSiteCollectionRootUrl(siteUrl);
+
             // Connect to the Infrastructural Site Collection
             using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(siteUrl))
             {

@@ -12,6 +12,11 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs
     public class SubSiteProvisioningJob : SiteProvisioningJob
     {
         /// <summary>
+        /// Defines the URL of the Parent Web
+        /// </summary>
+        public String ParentSiteUrl { get; set; }
+
+        /// <summary>
         /// Declares whether to inherit permissions from the parent Site Collection during Site provisioning
         /// </summary>
         public Boolean InheritPermissions { get; set; }
