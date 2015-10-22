@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using OfficeDevPnP.PartnerPack.Infrastructure;
 
-namespace OfficeDevPnP.PartnerPack.ProvisioningJob
+namespace OfficeDevPnP.PartnerPack.ScheduledJob
 {
     class Program
     {

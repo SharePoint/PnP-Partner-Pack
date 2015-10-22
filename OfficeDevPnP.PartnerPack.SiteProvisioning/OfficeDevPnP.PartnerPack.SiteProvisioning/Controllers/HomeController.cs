@@ -110,8 +110,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
                             job.RelativeUrl,
                             job.Owner);
 
-                        // TODO: Implement handling of Template Parameters
-                        job.TemplateParameters = null;
+                        job.TemplateParameters = model.TemplateParameters;
 
                         model.JobId = ProvisioningRepositoryFactory.Current.EnqueueProvisioningJob(job);
                     }
@@ -188,8 +187,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
                             job.RelativeUrl,
                             job.Owner);
 
-                        // TODO: Implement handling of Template Parameters
-                        job.TemplateParameters = null;
+                        job.TemplateParameters = model.TemplateParameters;
 
                         model.JobId = ProvisioningRepositoryFactory.Current.EnqueueProvisioningJob(job);
                     }
