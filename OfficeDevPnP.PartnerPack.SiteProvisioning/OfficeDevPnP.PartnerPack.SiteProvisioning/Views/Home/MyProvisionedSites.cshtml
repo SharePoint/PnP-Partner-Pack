@@ -1,11 +1,13 @@
-﻿@{
-    ViewBag.Title = "My Provisioned Sites";
+﻿@using OfficeDevPnP.PartnerPack.Infrastructure.Jobs
+
+@{
+    ViewBag.Title = "My Site Collections";
 }
 
 <div class="table">
     <div class="row">
         <div class="col-md-12">
-            Here you can find the list of your provisioned sites.
+            Here you can find the list of your provisioned site collections.
         </div>
     </div>
     <div class="row">
@@ -13,41 +15,61 @@
             &nbsp;
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="table">
-                <div class="row gridHeader">
-                    <div class="col-md-4 noOverflow">Site URL</div>
-                    <div class="col-md-4 noOverflow">Title</div>
-                    <div class="col-md-1">Status</div>
-                    <div class="col-md-2">Details</div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4 noOverflow"><a href="https://piasysdev.sharepoint.com/sites/PnPProvisioningDemo">https://piasysdev.sharepoint.com/sites/PnPProvisioningDemo1</a></div>
-                    <div class="col-md-4 noOverflow">PnP Provisioning Demo 1</div>
-                    <div class="col-md-1">Provisioned</div>
-                    <div class="col-md-2">&nbsp;</div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4 noOverflow"><a href="https://piasysdev.sharepoint.com/sites/PnPProvisioningDemo">https://piasysdev.sharepoint.com/sites/PnPProvisioningDemo2</a></div>
-                    <div class="col-md-4 noOverflow">PnP Provisioning Demo 2</div>
-                    <div class="col-md-1">Pending</div>
-                    <div class="col-md-2">&nbsp;</div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4 noOverflow"><a href="https://piasysdev.sharepoint.com/sites/PnPProvisioningDemo">https://piasysdev.sharepoint.com/sites/PnPProvisioningDemo3</a></div>
-                    <div class="col-md-4 noOverflow">PnP Provisioning Demo 3</div>
-                    <div class="col-md-1">Running</div>
-                    <div class="col-md-2">&nbsp;</div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4 noOverflow"><a href="https://piasysdev.sharepoint.com/sites/PnPProvisioningDemo">https://piasysdev.sharepoint.com/sites/PnPProvisioningDemo4</a></div>
-                    <div class="col-md-4 noOverflow">PnP Provisioning Demo 4</div>
-                    <div class="col-md-1">Failed</div>
-                    <div class="col-md-2">Error bla bla bla</div>
-                </div>
-            </div>
+
+    <div>
+        <div id="WorkingOnIt" class="waitWorking">
+            <img width="32" height="32" src="data:image/gif;base64,R0lGODlhEAAQAIAAAFLOQv///yH/C05FVFNDQVBFMi4wAwEAAAAh+QQFCgABACwJAAIAAgACAAACAoRRACH5BAUKAAEALAwABQACAAIAAAIChFEAIfkEBQoAAQAsDAAJAAIAAgAAAgKEUQAh+QQFCgABACwJAAwAAgACAAACAoRRACH5BAUKAAEALAUADAACAAIAAAIChFEAIfkEBQoAAQAsAgAJAAIAAgAAAgKEUQAh+QQFCgABACwCAAUAAgACAAACAoRRACH5BAkKAAEALAIAAgAMAAwAAAINjAFne8kPo5y02ouzLQAh+QQJCgABACwCAAIADAAMAAACF4wBphvID1uCyNEZM7Ov4v1p0hGOZlAAACH5BAkKAAEALAIAAgAMAAwAAAIUjAGmG8gPW4qS2rscRPp1rH3H1BUAIfkECQoAAQAsAgACAAkADAAAAhGMAaaX64peiLJa6rCVFHdQAAAh+QQJCgABACwCAAIABQAMAAACDYwBFqiX3mJjUM63QAEAIfkECQoAAQAsAgACAAUACQAAAgqMARaol95iY9AUACH5BAkKAAEALAIAAgAFAAUAAAIHjAEWqJeuCgAh+QQJCgABACwFAAIAAgACAAACAoRRADs=" alt="Don't click on this, 'cause it will not disappear ;-) ..." />
+            <span class="ms-accentText" style="font-size: 36px; font-family: &quot;Segoe UI Light&quot;, &quot;Segoe UI&quot;, Tahoma, Helvetica, Arial, sans-serif">&nbsp;Working on it...</span>
+        </div>
+        <div id="SiteCollectionsList">
         </div>
     </div>
+
 </div>
+
+<div>
+    <a href="javascript:history.back();">Back</a>
+</div>
+
+<script language="javascript">
+
+    $(document).ready(function () {
+
+        // Hide the Site Collection details panel
+        $("#SiteCollectionsList").hide();
+        $("#WorkingOnIt").hide();
+
+        $(document).on("click", "#RefreshButton", refreshSiteCollectionsList);
+
+        refreshSiteCollectionsList();
+    });
+
+    function refreshSiteCollectionsList() {
+
+        // Hide the Site Collection details panel
+        $("#SiteCollectionsList").hide();
+        $("#WorkingOnIt").show();
+
+        // Query for site collection settings
+        $.ajax({
+            method: "POST",
+            url: "/Home/GetMyProvisionedSitesList",
+            success: function (result) {
+                if (result) {
+                    $("#SiteCollectionsList").html(result);
+
+                    $("#WorkingOnIt").hide();
+                    $("#SiteCollectionsList").show();
+                }
+            },
+            error: function (xhr, status, error) {
+                $("#WorkingOnIt").hide();
+                $("#SiteCollectionsList").hide();
+                alert("Error retrieving the list of Site Collections: " + error);
+            }
+        });
+    }
+
+</script>
+
 

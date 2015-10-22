@@ -260,6 +260,7 @@
     <Compile Include="Models\CreateSubSiteViewModel.cs" />
     <Compile Include="Models\IndexViewModel.cs" />
     <Compile Include="Models\JobViewModel.cs" />
+    <Compile Include="Models\MyProvisionedSitesViewModel.cs" />
     <Compile Include="Models\PeoplePickerUser.cs" />
     <Compile Include="Models\SaveTemplateViewModel.cs" />
     <Compile Include="Models\SettingsViewModel.cs" />
@@ -270,6 +271,7 @@
     <Content Include="AppIcon.png" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Office365SuiteBar.css" />
     <Content Include="Content\peoplepickercontrol.css" />
     <Content Include="Content\SupportedUILanguages.xml" />
     <Content Include="Content\TimeZones.xml" />
@@ -348,6 +350,7 @@
     <Content Include="Views\Home\SiteCollectionInformation.cshtml" />
     <Content Include="Views\Home\SubSiteInformation.cshtml" />
     <Content Include="Views\Home\Error.cshtml" />
+    <Content Include="Views\Home\MyProvisionedSitesGrid.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -18,11 +18,6 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs
         public Guid JobId { get; set; }
 
         /// <summary>
-        /// The Server Relative URL of the Provisioning Job file
-        /// </summary>
-        public String JobServerRelativeUrl { get; set; }
-
-        /// <summary>
         /// The descriptive Title of the Provisioning Job
         /// </summary>
         public String Title { get; set; }

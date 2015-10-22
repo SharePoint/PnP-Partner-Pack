@@ -15,22 +15,22 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
         /// <summary>
         /// The Provisioning Job is still pending
         /// </summary>
-        Pending,
+        Pending = 2,
         /// <summary>
         /// The Provisioning Job failed
         /// </summary>
-        Failed,
+        Failed = 4,
         /// <summary>
         /// The Provisioning Job has been cancelled
         /// </summary>
-        Cancelled,
+        Cancelled = 8,
         /// <summary>
         /// The Provisioning Job is running
         /// </summary>
-        Running,
+        Running = 16,
         /// <summary>
         /// The Provisioning Job as been completed
         /// </summary>
-        Provisioned,
+        Provisioned = 32,
     }
 }

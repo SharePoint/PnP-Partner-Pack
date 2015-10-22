@@ -344,6 +344,21 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         }
 
         [HttpPost]
+        public ActionResult GetMyProvisionedSitesList()
+        {
+            MyProvisionedSitesViewModel model = new MyProvisionedSitesViewModel();
+
+            // Get all the jobs related to Site Collections provisioning, enqueued by the current user
+            model.PersonalJobs = ProvisioningRepositoryFactory.Current.GetTypedProvisioningJobs<SiteCollectionProvisioningJob>(
+                ProvisioningJobStatus.Pending | ProvisioningJobStatus.Running |
+                ProvisioningJobStatus.Provisioned | ProvisioningJobStatus.Failed |
+                ProvisioningJobStatus.Cancelled,
+                ClaimsPrincipal.Current.Identity.Name);
+
+            return PartialView("MyProvisionedSitesGrid", model);
+        }
+
+        [HttpPost]
         public ActionResult GetPeoplePickerData()
         {
             return Json(PeoplePickerHelper.GetPeoplePickerSearchData());
