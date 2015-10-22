@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
 {
@@ -17,7 +18,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
     /// </summary>
     public class SharePointProvisioningRepository : IProvisioningRepository
     {
-        public void Init()
+        public void Init(XElement configuration)
         {
             // NOOP
             return;

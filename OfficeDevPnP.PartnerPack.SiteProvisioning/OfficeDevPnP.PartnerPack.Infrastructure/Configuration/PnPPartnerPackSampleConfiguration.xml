@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pnp:PnPPartnerPackConfiguration xmlns:pnp="http://schemas.dev.office.com/PnP/2015/10/PnPPartnerPackConfiguration">
+
+  <pnp:TenantSettings
+    tenant="sample.onmicrosoft.com"
+    appOnlyCertificateThumbprint="3BF6BD842C011E9E387F34734037C90488DB929C"
+    infrastructureSiteUrl="https://sample.sharepoint.com/sites/PnP-Partner-Pack/"
+    />
+
+  <pnp:ProvisioningRepository type="OfficeDevPnP.PartnerPack.Infrastructure.SharePoint.SharePointProvisioningRepository, OfficeDevPnP.PartnerPack.Infrastructure">
+    <pnp:Configuration>
+      <!-- Whatever you like here! :-) -->
+    </pnp:Configuration>
+  </pnp:ProvisioningRepository>
+
+  <pnp:JobsHandlers>
+    <pnp:JobHandler type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers.HandlerOne, OfficeDevPnP.PartnerPack.Infrastructure">
+      <pnp:Configuration>
+        <!-- Any optional handler configuration -->
+      </pnp:Configuration>
+      <pnp:Jobs>
+        <pnp:Job type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.SiteCollectionProvisioningJob"/>
+        <pnp:Job type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.GetProvisioningTemplateJob"/>
+      </pnp:Jobs>
+    </pnp:JobHandler>
+    <pnp:JobHandler type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers.HandlerTwo, OfficeDevPnP.PartnerPack.Infrastructure">
+      <pnp:Configuration>
+        <!-- Any optional handler configuration -->
+      </pnp:Configuration>
+      <pnp:Jobs>
+        <pnp:Job type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.SubSiteProvisioningJob"/>
+        <pnp:Job type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.ApplyProvisioningTemplateJob"/>
+      </pnp:Jobs>
+    </pnp:JobHandler>
+  </pnp:JobsHandlers>
+  
+</pnp:PnPPartnerPackConfiguration>

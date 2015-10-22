@@ -19,7 +19,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
                 IProvisioningRepository result = (IProvisioningRepository)Activator.CreateInstance(provisioningRepositoryType);
 
                 // Initializes the Provisioning Repository instance
-                result.Init();
+                result.Init(PnPPartnerPackSettings.ProvisioningRepositoryConfiguration);
 
                 return (result);
             });
