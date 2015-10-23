@@ -14,6 +14,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
         public String Title { get; set; }
 
         [DisplayName("Description")]
+        [DataType(DataType.MultilineText)]
         public String Description { get; set; }
 
         [Required(ErrorMessage = "Template File Name is a required field!")]

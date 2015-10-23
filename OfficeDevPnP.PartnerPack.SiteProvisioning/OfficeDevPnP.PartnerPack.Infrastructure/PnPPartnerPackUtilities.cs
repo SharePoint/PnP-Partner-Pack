@@ -110,6 +110,8 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
 
         public static void EnablePartnerPackInfrastructureOnSite(String siteUrl)
         {
+            siteUrl = PnPPartnerPackUtilities.GetSiteCollectionRootUrl(siteUrl);
+
             using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(siteUrl))
             {
                 try

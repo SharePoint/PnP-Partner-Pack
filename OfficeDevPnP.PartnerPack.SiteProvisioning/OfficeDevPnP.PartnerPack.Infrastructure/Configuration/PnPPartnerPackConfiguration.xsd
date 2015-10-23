@@ -51,57 +51,88 @@
             </xsd:documentation>
           </xsd:annotation>
         </xsd:element>
-        <xsd:element name="JobsHandlers" minOccurs="0">
+        <xsd:element name="ProvisioningJobs">
           <xsd:annotation>
             <xsd:documentation xml:lang="en">
-              Defines the Handlers for Jobs managed by a WebJob on Azure, it is an optional section.
+              Defines the Configuration related to Provisioning Jobs.
             </xsd:documentation>
           </xsd:annotation>
           <xsd:complexType>
             <xsd:sequence>
-              <xsd:element name="JobHandler" minOccurs="1" maxOccurs="unbounded">
+              <xsd:element name="JobHandlers">
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="JobHandler" type="pnp:DotNetHandlerType"
+                                 minOccurs="1" maxOccurs="unbounded">
+                      <xsd:annotation>
+                        <xsd:documentation xml:lang="en">
+                          Defines a Job Handler and its configuration, if any.
+                        </xsd:documentation>
+                      </xsd:annotation>
+                    </xsd:element>
+                  </xsd:sequence>
+                </xsd:complexType>                
+              </xsd:element>
+              <xsd:element name="JobTypes">
                 <xsd:annotation>
                   <xsd:documentation xml:lang="en">
-                    Defines a Job Handler and its configuration, if any.
+                    Defines the Job Types available for handling.
                   </xsd:documentation>
                 </xsd:annotation>
                 <xsd:complexType>
-                  <xsd:complexContent>
-                    <xsd:extension base="pnp:DotNetHandlerType">
-                      <xsd:sequence>
-                        <xsd:element name="Jobs">
+                  <xsd:sequence>
+                    <xsd:element name="JobType" minOccurs="1" maxOccurs="unbounded">
+                      <xsd:annotation>
+                        <xsd:documentation xml:lang="en">
+                          Defines a single Jobs Type handled by the current Job Handler.
+                        </xsd:documentation>
+                      </xsd:annotation>
+                      <xsd:complexType>
+                        <xsd:attribute name="type" type="xsd:string" use="required">
                           <xsd:annotation>
                             <xsd:documentation xml:lang="en">
-                              Defines the Jobs handled by the current Job Handler.
+                              The .NET fully qualified name of the Job Type.
                             </xsd:documentation>
                           </xsd:annotation>
-                          <xsd:complexType>
-                            <xsd:sequence>
-                              <xsd:element name="Job" minOccurs="1" maxOccurs="unbounded">
+                        </xsd:attribute>
+                        <xsd:attribute name="handler" type="xsd:IDREF" use="required">
+                          <xsd:annotation>
+                            <xsd:documentation xml:lang="en">
+                              The unique ID name of the Job Handler that will handle the current Job Type.
+                            </xsd:documentation>
+                          </xsd:annotation>
+                        </xsd:attribute>
+                        <xsd:attribute name="executionModel" use="required">
+                          <xsd:annotation>
+                            <xsd:documentation xml:lang="en">
+                              Defines the Execution Model for the current Job Type.
+                            </xsd:documentation>
+                          </xsd:annotation>
+                          <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                              <xsd:enumeration value="Continous">
                                 <xsd:annotation>
                                   <xsd:documentation xml:lang="en">
-                                    Defines a single Jobs handled by the current Job Handler.
+                                    The Job Type will be handled continously.
                                   </xsd:documentation>
                                 </xsd:annotation>
-                                <xsd:complexType>
-                                  <xsd:attribute name="type" type="xsd:string" use="required">
-                                    <xsd:annotation>
-                                      <xsd:documentation xml:lang="en">
-                                        The .NET fully qualified name of the Job type.
-                                      </xsd:documentation>
-                                    </xsd:annotation>
-                                  </xsd:attribute>
-                                </xsd:complexType>
-                              </xsd:element>
-                            </xsd:sequence>
-                          </xsd:complexType>
-                        </xsd:element>
-                      </xsd:sequence>
-                    </xsd:extension>
-                  </xsd:complexContent>
+                              </xsd:enumeration>
+                              <xsd:enumeration value="Scheduled">
+                                <xsd:annotation>
+                                  <xsd:documentation xml:lang="en">
+                                    The Job Type will be handled based on a pre-defined schedule.
+                                  </xsd:documentation>
+                                </xsd:annotation>
+                              </xsd:enumeration>
+                            </xsd:restriction>
+                          </xsd:simpleType>
+                        </xsd:attribute>
+                      </xsd:complexType>
+                    </xsd:element>
+                  </xsd:sequence>
                 </xsd:complexType>
               </xsd:element>
-            </xsd:sequence>
+            </xsd:sequence>            
           </xsd:complexType>
         </xsd:element>
       </xsd:sequence>
@@ -124,6 +155,13 @@
         </xsd:complexType>
       </xsd:element>
     </xsd:sequence>
+    <xsd:attribute name="name" type="xsd:ID" use="required">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+          A unique ID name for the current handler.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
     <xsd:attribute name="type" type="xsd:string" use="required">
       <xsd:annotation>
         <xsd:documentation xml:lang="en">

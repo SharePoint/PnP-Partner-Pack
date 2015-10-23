@@ -36,9 +36,9 @@ namespace OfficeDevPnP.PartnerPack.ScheduledJob
 
                 Type jobType = job.GetType();
 
-                if (PnPPartnerPackSettings.JobHandlers.ContainsKey(jobType))
+                if (PnPPartnerPackSettings.ScheduledJobHandlers.ContainsKey(jobType))
                 {
-                    PnPPartnerPackSettings.JobHandlers[jobType].RunJob(job);
+                    PnPPartnerPackSettings.ScheduledJobHandlers[jobType].RunJob(job);
                 }
             }
 
