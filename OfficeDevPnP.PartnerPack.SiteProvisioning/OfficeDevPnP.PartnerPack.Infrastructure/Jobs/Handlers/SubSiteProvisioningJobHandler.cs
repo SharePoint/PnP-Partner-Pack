@@ -68,6 +68,15 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                 ProvisioningTemplate template = provider.GetTemplate(templateFileName);
                 template.Connector = provider.Connector;
 
+                // Configure template parameters
+                foreach (var key in template.Parameters.Keys)
+                {
+                    if (job.TemplateParameters.ContainsKey(key))
+                    {
+                        template.Parameters[key] = job.TemplateParameters[key];
+                    }
+                }
+
                 // Apply the template to the target site
                 web.ApplyProvisioningTemplate(template);
 

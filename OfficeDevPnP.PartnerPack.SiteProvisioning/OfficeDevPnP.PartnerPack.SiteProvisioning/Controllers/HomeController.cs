@@ -44,6 +44,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
             model.Scope = TemplateScope.Site;
             model.ParentSiteUrl = String.Empty;
             model.PartnerPackExtensionsEnabled = true;
+            model.ResponsiveDesignEnabled = true;
             return View("CreateSite", model);
         }
 
@@ -58,6 +59,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
                     {
                         // Set initial value for PnP Partner Pack Extensions Enabled
                         model.PartnerPackExtensionsEnabled = true;
+                        model.ResponsiveDesignEnabled = true;
                     }
                     break;
                 case CreateSiteStep.TemplateParameters:
@@ -102,15 +104,16 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
                         job.SitePolicy = model.SitePolicy;
                         job.Owner = ClaimsPrincipal.Current.Identity.Name;
                         job.PrimarySiteCollectionAdmin = model.PrimarySiteCollectionAdmin != null &&
-                            model.PrimarySiteCollectionAdmin.Length > 0 ? model.PrimarySiteCollectionAdmin[0].Login : null;
+                            model.PrimarySiteCollectionAdmin.Length > 0 ? model.PrimarySiteCollectionAdmin[0].Email : null;
                         job.SecondarySiteCollectionAdmin = model.SecondarySiteCollectionAdmin != null &&
-                            model.SecondarySiteCollectionAdmin.Length > 0 ? model.SecondarySiteCollectionAdmin[0].Login : null;
+                            model.SecondarySiteCollectionAdmin.Length > 0 ? model.SecondarySiteCollectionAdmin[0].Email : null;
                         job.ProvisioningTemplateUrl = model.ProvisioningTemplateUrl;
                         job.StorageMaximumLevel = model.StorageMaximumLevel;
                         job.StorageWarningLevel = model.StorageWarningLevel;
                         job.UserCodeMaximumLevel = model.UserCodeMaximumLevel;
                         job.UserCodeWarningLevel = model.UserCodeWarningLevel;
                         job.ExternalSharingEnabled = model.ExternalSharingEnabled;
+                        job.ResponsiveDesignEnabled = model.ResponsiveDesignEnabled;
                         job.PartnerPackExtensionsEnabled = model.PartnerPackExtensionsEnabled;
                         job.Title = String.Format("Provisioning of Site Collection \"{1}\" with Template \"{0}\" by {2}",
                             job.ProvisioningTemplateUrl,
