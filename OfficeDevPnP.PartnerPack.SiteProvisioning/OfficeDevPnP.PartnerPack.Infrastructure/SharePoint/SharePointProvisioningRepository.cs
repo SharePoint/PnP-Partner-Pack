@@ -1,8 +1,12 @@
 ﻿using Microsoft.SharePoint.Client;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Queue;
+using Newtonsoft.Json;
 using OfficeDevPnP.Core.Framework.Provisioning.Model;
 using OfficeDevPnP.Core.Framework.Provisioning.ObjectHandlers;
 using OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml;
 using OfficeDevPnP.PartnerPack.Infrastructure.Jobs;
+using OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -262,6 +266,24 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
                 item.Update();
 
                 context.ExecuteQueryRetry();
+
+                // Check if we need to enqueue a message in the Azure Storage Queue, as well
+                // This happens when the Provisioning Job has to be executed in Continous mode
+                if (PnPPartnerPackSettings.ContinousJobHandlers.ContainsKey(job.GetType()))
+                {
+                    // Get the storage account for Azure Storage Queue
+                    CloudStorageAccount storageAccount =
+                        CloudStorageAccount.Parse(PnPPartnerPackSettings.StorageQueueConnectionString);
+
+                    // Get queue ... and create if it does not exist
+                    CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
+                    CloudQueue queue = queueClient.GetQueueReference(PnPPartnerPackSettings.StorageQueueName);
+                    queue.CreateIfNotExists();
+
+                    // Add entry to queue
+                    ContinousJobItem content = new ContinousJobItem { JobId = job.JobId };
+                    queue.AddMessage(new CloudQueueMessage(JsonConvert.SerializeObject(content)));
+                }
             }
 
             return (jobId);
@@ -282,8 +304,8 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
                         <Query>
                             <Where>
                                 <Eq>
-                                    <FieldRef Name='Name' />
-                                    <Value Type='Text'>" + jobId + @".job</Value>
+                                    <FieldRef Name='FileLeafRef' />
+                                    <Value Type='Text'>" + jobId.ToString("D") + @".job</Value>
                                 </Eq>
                             </Where>
                         </Query>

@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <pnp:PnPPartnerPackConfiguration xmlns:pnp="http://schemas.dev.office.com/PnP/2015/10/PnPPartnerPackConfiguration">
 
+  <pnp:GeneralSettings defaultSiteTemplate="STS#0" storageQueueName="pnppartnerpackjobsqueue" />
+
   <pnp:TenantSettings
     tenant="sample.onmicrosoft.com"
     appOnlyCertificateThumbprint="3BF6BD842C011E9E387F34734037C90488DB929C"
