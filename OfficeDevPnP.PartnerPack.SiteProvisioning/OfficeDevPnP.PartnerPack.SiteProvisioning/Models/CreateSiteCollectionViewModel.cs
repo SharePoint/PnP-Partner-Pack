@@ -35,6 +35,9 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
         [DisplayName("Enable Partner Pack Extensions")]
         public Boolean PartnerPackExtensionsEnabled { get; set; }
 
+        [DisplayName("Enable Responsive Design Extensions")]
+        public Boolean ResponsiveDesignEnabled { get; set; }
+
         [UIHint("ManagedPath")]
         public String ManagedPath { get; set; }
     }

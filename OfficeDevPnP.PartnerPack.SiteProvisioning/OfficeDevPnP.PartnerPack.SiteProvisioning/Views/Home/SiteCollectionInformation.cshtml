@@ -64,3 +64,10 @@
     </div>
 </div>
 
+<div class="form-group">
+    @Html.LabelFor(model => model.ResponsiveDesignEnabled, htmlAttributes: new { @class = "control-label col-md-3" })
+    <div class="col-md-9">
+        @Html.EditorFor(model => model.ResponsiveDesignEnabled)
+        @Html.ValidationMessageFor(model => model.ResponsiveDesignEnabled, "", new { @class = "text-danger" })
+    </div>
+</div>

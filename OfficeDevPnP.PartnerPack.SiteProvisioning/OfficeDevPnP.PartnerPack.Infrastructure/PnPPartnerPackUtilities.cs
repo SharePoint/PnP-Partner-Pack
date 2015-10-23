@@ -35,6 +35,17 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
             }
         }
 
+        public static void EnableResponsiveDesignOnSite(String siteUrl)
+        {
+            using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(siteUrl))
+            {
+                ApplyProvisioningTemplateToSite(context,
+                    PnPPartnerPackSettings.InfrastructureSiteUrl,
+                    "Responsive",
+                    "SPO-Responsive.xml");
+            }
+        }
+
         public static void DisablePartnerPackOnSite(String siteUrl)
         {
             using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(siteUrl))

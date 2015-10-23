@@ -284,7 +284,6 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Properties\PublishProfiles\pnp-partner-pack.pubxml" />
-    <Content Include="Properties\webjobs-list.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\csompeoplepickercontrol.js" />
     <Content Include="Scripts\custom.js" />
@@ -315,7 +314,6 @@
     <Content Include="Templates\Responsive\SPO-Responsive.xml" />
     <Content Include="Templates\Responsive\SPO-Responsive.css" />
     <Content Include="Templates\Responsive\SPO-Responsive.js" />
-    <Content Include="Templates\temp.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

@@ -50,5 +50,10 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs
         /// Defines whether to enable PnP Partner Pack extensions for the Site Collection to provisiong
         /// </summary>
         public Boolean PartnerPackExtensionsEnabled { get; set; }
+
+        /// <summary>
+        /// Defines whether to enable PnP Partner Pack extensions for Responsive Design
+        /// </summary>
+        public Boolean ResponsiveDesignEnabled { get; set; }
     }
 }
