@@ -7,6 +7,8 @@ using Microsoft.Azure.WebJobs;
 using OfficeDevPnP.Core.Framework.TimerJobs;
 using OfficeDevPnP.Core;
 using System.Configuration;
+using OfficeDevPnP.PartnerPack.Infrastructure.Jobs;
+using OfficeDevPnP.PartnerPack.Infrastructure;
 
 namespace OfficeDevPnP.PartnerPack.WebJobs.CheckAdminsWebJob
 {
@@ -19,9 +21,14 @@ namespace OfficeDevPnP.PartnerPack.WebJobs.CheckAdminsWebJob
         {
             var job = new EnforceTwoAdministratorsTimerJob();
 
-            job.AddSite("https://erwinmcm.sharepoint.com/sites/test");
+            var provisioningJobs = ProvisioningRepositoryFactory.Current.GetTypedProvisioningJobs<SiteCollectionProvisioningJob>(ProvisioningJobStatus.Provisioned);
 
-            //   job.SetEnumerationCredentials("erwinmcm");
+            foreach (SiteCollectionProvisioningJob provisioningJob in provisioningJobs)
+            {
+                var url = PnPPartnerPackSettings.InfrastructureSiteUrl.Substring(0, PnPPartnerPackSettings.InfrastructureSiteUrl.IndexOf(".com/") + 4) + provisioningJob.RelativeUrl;
+                job.AddSite(url);
+            }
+
             job.UseAzureADAppOnlyAuthentication(
                 ConfigurationManager.AppSettings["ClientId"],
                 ConfigurationManager.AppSettings["AzureTenant"],

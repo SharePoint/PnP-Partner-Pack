@@ -310,6 +310,7 @@
     <Content Include="Scripts\sppeoplepicker.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Templates\Overrides\PnP-Partner-Pack-Overrides.xml" />
+    <Content Include="Templates\PnP-Partner-Pack-Infrastructure-Contents.xml" />
     <Content Include="Templates\Responsive\SPO-Responsive.xml" />
     <Content Include="Templates\Responsive\SPO-Responsive.css" />
     <Content Include="Templates\Responsive\SPO-Responsive.js" />
