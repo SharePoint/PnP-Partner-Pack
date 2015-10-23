@@ -43,6 +43,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
             CreateSiteCollectionViewModel model = new CreateSiteCollectionViewModel();
             model.Scope = TemplateScope.Site;
             model.ParentSiteUrl = String.Empty;
+            model.PartnerPackExtensionsEnabled = true;
             return View("CreateSite", model);
         }
 
@@ -53,6 +54,11 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
             {
                 case CreateSiteStep.SiteInformation:
                     ModelState.Clear();
+                    if (String.IsNullOrEmpty(model.Title))
+                    {
+                        // Set initial value for PnP Partner Pack Extensions Enabled
+                        model.PartnerPackExtensionsEnabled = true;
+                    }
                     break;
                 case CreateSiteStep.TemplateParameters:
                     if (!ModelState.IsValid)
@@ -105,6 +111,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
                         job.UserCodeMaximumLevel = model.UserCodeMaximumLevel;
                         job.UserCodeWarningLevel = model.UserCodeWarningLevel;
                         job.ExternalSharingEnabled = model.ExternalSharingEnabled;
+                        job.PartnerPackExtensionsEnabled = model.PartnerPackExtensionsEnabled;
                         job.Title = String.Format("Provisioning of Site Collection \"{1}\" with Template \"{0}\" by {2}",
                             job.ProvisioningTemplateUrl,
                             job.RelativeUrl,
