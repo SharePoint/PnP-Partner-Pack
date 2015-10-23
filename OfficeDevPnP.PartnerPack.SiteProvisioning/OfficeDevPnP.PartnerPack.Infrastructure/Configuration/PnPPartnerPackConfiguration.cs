@@ -28,7 +28,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Configuration {
         
         private DotNetHandlerType provisioningRepositoryField;
         
-        private PnPPartnerPackConfigurationJobHandler[] jobsHandlersField;
+        private PnPPartnerPackConfigurationProvisioningJobs provisioningJobsField;
         
         /// <remarks/>
         public PnPPartnerPackConfigurationTenantSettings TenantSettings {
@@ -51,13 +51,12 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Configuration {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayItemAttribute("JobHandler", IsNullable=false)]
-        public PnPPartnerPackConfigurationJobHandler[] JobsHandlers {
+        public PnPPartnerPackConfigurationProvisioningJobs ProvisioningJobs {
             get {
-                return this.jobsHandlersField;
+                return this.provisioningJobsField;
             }
             set {
-                this.jobsHandlersField = value;
+                this.provisioningJobsField = value;
             }
         }
     }
@@ -120,6 +119,8 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Configuration {
         
         private System.Xml.XmlElement configurationField;
         
+        private string nameField;
+        
         private string typeField;
         
         /// <remarks/>
@@ -133,6 +134,17 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Configuration {
         }
         
         /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType="ID")]
+        public string name {
+            get {
+                return this.nameField;
+            }
+            set {
+                this.nameField = value;
+            }
+        }
+        
+        /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
         public string type {
             get {
@@ -150,18 +162,31 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Configuration {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://schemas.dev.office.com/PnP/2015/10/PnPPartnerPackConfiguration")]
-    public partial class PnPPartnerPackConfigurationJobHandler : DotNetHandlerType {
+    public partial class PnPPartnerPackConfigurationProvisioningJobs {
         
-        private PnPPartnerPackConfigurationJobHandlerJob[] jobsField;
+        private DotNetHandlerType[] jobHandlersField;
+        
+        private PnPPartnerPackConfigurationProvisioningJobsJobType[] jobTypesField;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayItemAttribute("Job", IsNullable=false)]
-        public PnPPartnerPackConfigurationJobHandlerJob[] Jobs {
+        [System.Xml.Serialization.XmlArrayItemAttribute("JobHandler", IsNullable=false)]
+        public DotNetHandlerType[] JobHandlers {
             get {
-                return this.jobsField;
+                return this.jobHandlersField;
             }
             set {
-                this.jobsField = value;
+                this.jobHandlersField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayItemAttribute("JobType", IsNullable=false)]
+        public PnPPartnerPackConfigurationProvisioningJobsJobType[] JobTypes {
+            get {
+                return this.jobTypesField;
+            }
+            set {
+                this.jobTypesField = value;
             }
         }
     }
@@ -172,10 +197,14 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Configuration {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://schemas.dev.office.com/PnP/2015/10/PnPPartnerPackConfiguration")]
-    public partial class PnPPartnerPackConfigurationJobHandlerJob {
+    public partial class PnPPartnerPackConfigurationProvisioningJobsJobType {
         
         private string typeField;
         
+        private string handlerField;
+        
+        private PnPPartnerPackConfigurationProvisioningJobsJobTypeExecutionModel executionModelField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
         public string type {
@@ -186,5 +215,40 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Configuration {
                 this.typeField = value;
             }
         }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType="IDREF")]
+        public string handler {
+            get {
+                return this.handlerField;
+            }
+            set {
+                this.handlerField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public PnPPartnerPackConfigurationProvisioningJobsJobTypeExecutionModel executionModel {
+            get {
+                return this.executionModelField;
+            }
+            set {
+                this.executionModelField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.33440")]
+    [System.SerializableAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://schemas.dev.office.com/PnP/2015/10/PnPPartnerPackConfiguration")]
+    public enum PnPPartnerPackConfigurationProvisioningJobsJobTypeExecutionModel {
+        
+        /// <remarks/>
+        Continous,
+        
+        /// <remarks/>
+        Scheduled,
     }
 }

@@ -116,13 +116,12 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
         /// Saves a Provisioning Template into the target Global repository
         /// </summary>
         /// <param name="job">The Provisioning Template to save</param>
-        /// <returns>The ID  of the saved Provisioning Template</returns>
-        public Guid SaveGlobalProvisioningTemplate(GetProvisioningTemplateJob job)
+        public void SaveGlobalProvisioningTemplate(GetProvisioningTemplateJob job)
         {
             // Connect to the Infrastructural Site Collection
             using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(PnPPartnerPackSettings.InfrastructureSiteUrl))
             {
-                return (SaveProvisioningTemplateInternal(context, job));
+                SaveProvisioningTemplateInternal(context, job, true);
             }
         }
 
@@ -131,78 +130,97 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
         /// </summary>
         /// <param name="siteUrl">The local Site Collection to save to</param>
         /// <param name="template">The Provisioning Template to save</param>
-        /// <returns>The ID  of the saved Provisioning Template</returns>
-        public Guid SaveLocalProvisioningTemplate(string siteUrl, GetProvisioningTemplateJob job)
+        public void SaveLocalProvisioningTemplate(string siteUrl, GetProvisioningTemplateJob job)
         {
             // Connect to the Local Site Collection
             using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(siteUrl))
             {
                 PnPPartnerPackUtilities.EnablePartnerPackInfrastructureOnSite(siteUrl);
-                return (SaveProvisioningTemplateInternal(context, job));
+                SaveProvisioningTemplateInternal(context, job, false);
             }
         }
 
-        private Guid SaveProvisioningTemplateInternal(ClientContext context, GetProvisioningTemplateJob job)
+        private void SaveProvisioningTemplateInternal(ClientContext context, GetProvisioningTemplateJob job, Boolean globalRepository = true)
         {
             // Get a reference to the target web site
             Web web = context.Web;
             context.Load(web, w => w.Url);
             context.ExecuteQueryRetry();
 
-            // Configure the XML file system provider
-            XMLTemplateProvider provider =
-                new XMLSharePointTemplateProvider(context, web.Url,
-                    PnPPartnerPackConstants.PnPProvisioningTemplates);
+            // Prepare the support variables
+            ClientContext repositoryContext = null;
+            Web repositoryWeb = null;
 
-            ProvisioningTemplateCreationInformation ptci =
-                new ProvisioningTemplateCreationInformation(web);
-            ptci.FileConnector = provider.Connector;
-            ptci.IncludeAllTermGroups = job.IncludeAllTermGroups;
-            ptci.IncludeSearchConfiguration = job.IncludeSearchConfiguration;
-            ptci.IncludeSiteCollectionTermGroup = job.IncludeSiteCollectionTermGroup;
-            ptci.IncludeSiteGroups = job.IncludeSiteGroups;
-            ptci.PersistComposedLookFiles = job.PersistComposedLookFiles;
-
-            // Extract the current template
-            ProvisioningTemplate templateToSave = web.GetProvisioningTemplate(ptci);
-
-            templateToSave.Description = job.Description;
-            templateToSave.DisplayName = job.Title;
-
-            // Save template image preview in folder
-            Folder templatesFolder = web.GetFolderByServerRelativeUrl(PnPPartnerPackConstants.PnPProvisioningTemplates);
-            context.Load(templatesFolder, f => f.ServerRelativeUrl, f => f.Name);
-            context.ExecuteQueryRetry();
-
-            // If there is a preview image
-            if (job.TemplateImageFile  != null)
+            // Define whether we need to use the global infrastructural repository or the local one
+            if (globalRepository)
             {
-                String previewImageFileName = job.FileName.Replace(".xml", "_preview.png");
-                templatesFolder.UploadFile(previewImageFileName,
-                    job.TemplateImageFile.ToStream(), true);
-
-                // And store URL in the XML file
-                templateToSave.ImagePreviewUrl = String.Format("{0}/{1}/{2}",
-                    web.Url, templatesFolder.Name, previewImageFileName);
+                // Get a reference to the global repository web site and context
+                repositoryContext = PnPPartnerPackContextProvider.GetAppOnlyClientContext(PnPPartnerPackSettings.InfrastructureSiteUrl);
+            }
+            else
+            {
+                // Get a reference to the local repository web site and context
+                repositoryContext = web.Context.GetSiteCollectionContext();
             }
 
-            // And save it on the file system
-            provider.SaveAs(templateToSave, job.FileName);
+            using (repositoryContext)
+            {
+                repositoryWeb = repositoryContext.Site.RootWeb;
+                repositoryContext.Load(repositoryWeb, w => w.Url);
+                repositoryContext.ExecuteQueryRetry();
 
-            Microsoft.SharePoint.Client.File templateFile = templatesFolder.GetFile(job.FileName);
-            ListItem item = templateFile.ListItemAllFields;
+                // Configure the XML SharePoint provider for the Infrastructural Site Collection
+                XMLTemplateProvider provider =
+                        new XMLSharePointTemplateProvider(repositoryContext, repositoryWeb.Url,
+                            PnPPartnerPackConstants.PnPProvisioningTemplates);
 
-            item[PnPPartnerPackConstants.ContentTypeIdField] = PnPPartnerPackConstants.PnPProvisioningTemplateContentTypeId;
-            item[PnPPartnerPackConstants.TitleField] = job.Title;
-            item[PnPPartnerPackConstants.PnPProvisioningTemplateScope] = job.Scope.ToString();
-            item[PnPPartnerPackConstants.PnPProvisioningTemplateSourceUrl] = job.SourceSiteUrl;
+                ProvisioningTemplateCreationInformation ptci =
+                    new ProvisioningTemplateCreationInformation(web);
+                ptci.FileConnector = provider.Connector;
+                ptci.IncludeAllTermGroups = job.IncludeAllTermGroups;
+                ptci.IncludeSearchConfiguration = job.IncludeSearchConfiguration;
+                ptci.IncludeSiteCollectionTermGroup = job.IncludeSiteCollectionTermGroup;
+                ptci.IncludeSiteGroups = job.IncludeSiteGroups;
+                ptci.PersistComposedLookFiles = job.PersistComposedLookFiles;
 
-            item.Update();
+                // Extract the current template
+                ProvisioningTemplate templateToSave = web.GetProvisioningTemplate(ptci);
 
-            context.ExecuteQueryRetry();
+                templateToSave.Description = job.Description;
+                templateToSave.DisplayName = job.Title;
 
-            // TODO: Replace with real ID of the file
-            return (Guid.NewGuid());
+                // Save template image preview in folder
+                Folder templatesFolder = repositoryWeb.GetFolderByServerRelativeUrl(PnPPartnerPackConstants.PnPProvisioningTemplates);
+                repositoryContext.Load(templatesFolder, f => f.ServerRelativeUrl, f => f.Name);
+                repositoryContext.ExecuteQueryRetry();
+
+                // If there is a preview image
+                if (job.TemplateImageFile != null)
+                {
+                    String previewImageFileName = job.FileName.Replace(".xml", "_preview.png");
+                    templatesFolder.UploadFile(previewImageFileName,
+                        job.TemplateImageFile.ToStream(), true);
+
+                    // And store URL in the XML file
+                    templateToSave.ImagePreviewUrl = String.Format("{0}/{1}/{2}",
+                        repositoryWeb.Url, templatesFolder.Name, previewImageFileName);
+                }
+
+                // And save it on the file system
+                provider.SaveAs(templateToSave, job.FileName);
+
+                Microsoft.SharePoint.Client.File templateFile = templatesFolder.GetFile(job.FileName);
+                ListItem item = templateFile.ListItemAllFields;
+
+                item[PnPPartnerPackConstants.ContentTypeIdField] = PnPPartnerPackConstants.PnPProvisioningTemplateContentTypeId;
+                item[PnPPartnerPackConstants.TitleField] = job.Title;
+                item[PnPPartnerPackConstants.PnPProvisioningTemplateScope] = job.Scope.ToString();
+                item[PnPPartnerPackConstants.PnPProvisioningTemplateSourceUrl] = job.SourceSiteUrl;
+
+                item.Update();
+
+                repositoryContext.ExecuteQueryRetry();
+            }
         }
 
         public Guid EnqueueProvisioningJob(ProvisioningJob job)

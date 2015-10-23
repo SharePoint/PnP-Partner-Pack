@@ -31,16 +31,14 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
         /// Saves a Provisioning Template into the target Global repository
         /// </summary>
         /// <param name="template">The Provisioning Template to save</param>
-        /// <returns>The ID  of the saved Provisioning Template</returns>
-        Guid SaveGlobalProvisioningTemplate(GetProvisioningTemplateJob job);
+        void SaveGlobalProvisioningTemplate(GetProvisioningTemplateJob job);
 
         /// <summary>
         /// Saves a Provisioning Template into the target Local repository
         /// </summary>
         /// <param name="siteUrl">The local Site Collection to save to</param>
         /// <param name="template">The Provisioning Template to save</param>
-        /// <returns>The ID  of the saved Provisioning Template</returns>
-        Guid SaveLocalProvisioningTemplate(String siteUrl, GetProvisioningTemplateJob job);
+        void SaveLocalProvisioningTemplate(String siteUrl, GetProvisioningTemplateJob job);
 
         /// <summary>
         /// Enqueues a new Provisioning Job

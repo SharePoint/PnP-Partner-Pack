@@ -32,6 +32,9 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
         [DisplayName("External Sharing")]
         public Boolean ExternalSharingEnabled { get; set; }
 
+        [DisplayName("Enable Partner Pack Extensions")]
+        public Boolean PartnerPackExtensionsEnabled { get; set; }
+
         [UIHint("ManagedPath")]
         public String ManagedPath { get; set; }
     }

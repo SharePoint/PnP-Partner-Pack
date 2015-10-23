@@ -48,13 +48,16 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
                 return (appOnlyCertificate);
             });
 
-        private static readonly Lazy<IReadOnlyDictionary<Type, ProvisioningJobHandler>> _jobHandlers =
-            new Lazy<IReadOnlyDictionary<Type, ProvisioningJobHandler>>(() => {
+        private static IReadOnlyDictionary<Type, ProvisioningJobHandler> GetJobHandlersByExecutionModel(
+            PnPPartnerPackConfigurationProvisioningJobsJobTypeExecutionModel executionModel)
+        {
+            Dictionary<Type, ProvisioningJobHandler> handlers = new Dictionary<Type, ProvisioningJobHandler>();
 
-                Dictionary<Type, ProvisioningJobHandler> handlers = new Dictionary<Type, ProvisioningJobHandler>();
-
-                // Browse through the configured Job Handlers
-                foreach (var jobHandlerKind in _configuration.JobsHandlers)
+            // Browse through the configured Job Handlers
+            if (_configuration.ProvisioningJobs != null &&
+                _configuration.ProvisioningJobs.JobHandlers != null)
+            {
+                foreach (var jobHandlerKind in _configuration.ProvisioningJobs.JobHandlers)
                 {
                     // Create an instance of the Job Handler
                     Type jobHandlerType = Type.GetType(jobHandlerKind.type, true);
@@ -67,16 +70,18 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
                         using (XmlReader reader = new XmlNodeReader(jobHandlerKind.Configuration))
                         {
                             XElement configuration = XElement.Load(reader);
- 
+
                             // Initialize the Job Handler
                             jobHandler.Init(configuration);
                         }
                     }
 
-                    if (jobHandlerKind.Jobs != null)
+                    if (_configuration.ProvisioningJobs != null &&
+                        _configuration.ProvisioningJobs.JobTypes != null)
                     {
                         // For each Job type associated with the current Job Handler
-                        foreach (var jobKind in jobHandlerKind.Jobs)
+                        foreach (var jobKind in _configuration.ProvisioningJobs.JobTypes
+                            .Where(j => j.executionModel == executionModel &&  j.handler == jobHandlerKind.name))
                         {
                             // Associate the Job type with the Job Handler
                             Type jobType = Type.GetType(jobKind.type, true);
@@ -84,9 +89,18 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
                         }
                     }
                 }
+            }
 
-                return (handlers);
-            });
+            return (handlers);
+        }
+
+        private static readonly Lazy<IReadOnlyDictionary<Type, ProvisioningJobHandler>> _scheduledJobHandlers =
+            new Lazy<IReadOnlyDictionary<Type, ProvisioningJobHandler>>(() => 
+            GetJobHandlersByExecutionModel(PnPPartnerPackConfigurationProvisioningJobsJobTypeExecutionModel.Scheduled));
+
+        private static readonly Lazy<IReadOnlyDictionary<Type, ProvisioningJobHandler>> _continousJobHandlers =
+            new Lazy<IReadOnlyDictionary<Type, ProvisioningJobHandler>>(() =>
+            GetJobHandlersByExecutionModel(PnPPartnerPackConfigurationProvisioningJobsJobTypeExecutionModel.Continous));
 
         /// <summary>
         /// Provides the Azure AD Client ID
@@ -183,11 +197,25 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
             }
         }
 
-        public static IReadOnlyDictionary<Type, ProvisioningJobHandler> JobHandlers
+        /// <summary>
+        /// Provides the list of Job Handlers running Continously
+        /// </summary>
+        public static IReadOnlyDictionary<Type, ProvisioningJobHandler> ContinousJobHandlers
         {
             get
             {
-                return (_jobHandlers.Value);
+                return (_continousJobHandlers.Value);
+            }
+        }
+
+        /// <summary>
+        /// Provides the list of Job Handlers running based on a Schedule
+        /// </summary>
+        public static IReadOnlyDictionary<Type, ProvisioningJobHandler> ScheduledJobHandlers
+        {
+            get
+            {
+                return (_scheduledJobHandlers.Value);
             }
         }
     }
