@@ -43,7 +43,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                 newWeb.Title = job.SiteTitle;
                 newWeb.Url = subSiteUrl;
                 newWeb.UseSamePermissionsAsParentSite = job.InheritPermissions;
-                newWeb.WebTemplate = "STS#0"; // TODO: Make it as a parameter?
+                newWeb.WebTemplate = PnPPartnerPackSettings.DefaultSiteTemplate;
 
                 Web web = parentWeb.Webs.Add(newWeb);
                 context.ExecuteQueryRetry();

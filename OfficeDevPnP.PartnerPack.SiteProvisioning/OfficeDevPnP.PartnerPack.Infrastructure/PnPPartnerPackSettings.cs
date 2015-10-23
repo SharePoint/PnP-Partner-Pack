@@ -218,5 +218,39 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
                 return (_scheduledJobHandlers.Value);
             }
         }
+
+        /// <summary>
+        /// The name of the Site Template to use while creating new Sites
+        /// </summary>
+        public static String DefaultSiteTemplate
+        {
+            get
+            {
+                return (_configuration.GeneralSettings.defaultSiteTemplate);
+            }
+        }
+
+        /// <summary>
+        /// The name of the Azure Storage Queue used for Continously running Jobs
+        /// </summary>
+        public static String StorageQueueConnectionString
+        {
+            get
+            {
+                if (ConfigurationManager.ConnectionStrings["AzureWebJobsStorage"] != null)
+                {
+                    return (ConfigurationManager.ConnectionStrings["AzureWebJobsStorage"].ConnectionString);
+                }
+                else
+                {
+                    return (null);
+                }
+            }
+        }
+
+        /// <summary>
+        /// The name of the Azure Storage Queue used for Continously running Jobs
+        /// </summary>
+        public const String StorageQueueName = "pnppartnerpackjobsqueue";
     }
 }

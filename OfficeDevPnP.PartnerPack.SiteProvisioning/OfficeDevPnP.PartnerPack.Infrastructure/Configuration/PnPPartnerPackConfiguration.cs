@@ -24,11 +24,23 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Configuration {
     [System.Xml.Serialization.XmlRootAttribute(Namespace="http://schemas.dev.office.com/PnP/2015/10/PnPPartnerPackConfiguration", IsNullable=false)]
     public partial class PnPPartnerPackConfiguration {
         
+        private PnPPartnerPackConfigurationGeneralSettings generalSettingsField;
+        
         private PnPPartnerPackConfigurationTenantSettings tenantSettingsField;
         
         private DotNetHandlerType provisioningRepositoryField;
         
         private PnPPartnerPackConfigurationProvisioningJobs provisioningJobsField;
+        
+        /// <remarks/>
+        public PnPPartnerPackConfigurationGeneralSettings GeneralSettings {
+            get {
+                return this.generalSettingsField;
+            }
+            set {
+                this.generalSettingsField = value;
+            }
+        }
         
         /// <remarks/>
         public PnPPartnerPackConfigurationTenantSettings TenantSettings {
@@ -57,6 +69,75 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Configuration {
             }
             set {
                 this.provisioningJobsField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.33440")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://schemas.dev.office.com/PnP/2015/10/PnPPartnerPackConfiguration")]
+    public partial class PnPPartnerPackConfigurationGeneralSettings {
+        
+        private string defaultSiteTemplateField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string defaultSiteTemplate {
+            get {
+                return this.defaultSiteTemplateField;
+            }
+            set {
+                this.defaultSiteTemplateField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.33440")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.dev.office.com/PnP/2015/10/PnPPartnerPackConfiguration")]
+    public partial class DotNetHandlerType {
+        
+        private System.Xml.XmlElement configurationField;
+        
+        private string nameField;
+        
+        private string typeField;
+        
+        /// <remarks/>
+        public System.Xml.XmlElement Configuration {
+            get {
+                return this.configurationField;
+            }
+            set {
+                this.configurationField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType="ID")]
+        public string name {
+            get {
+                return this.nameField;
+            }
+            set {
+                this.nameField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string type {
+            get {
+                return this.typeField;
+            }
+            set {
+                this.typeField = value;
             }
         }
     }
@@ -105,53 +186,6 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Configuration {
             }
             set {
                 this.appOnlyCertificateThumbprintField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.33440")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.dev.office.com/PnP/2015/10/PnPPartnerPackConfiguration")]
-    public partial class DotNetHandlerType {
-        
-        private System.Xml.XmlElement configurationField;
-        
-        private string nameField;
-        
-        private string typeField;
-        
-        /// <remarks/>
-        public System.Xml.XmlElement Configuration {
-            get {
-                return this.configurationField;
-            }
-            set {
-                this.configurationField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType="ID")]
-        public string name {
-            get {
-                return this.nameField;
-            }
-            set {
-                this.nameField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string type {
-            get {
-                return this.typeField;
-            }
-            set {
-                this.typeField = value;
             }
         }
     }

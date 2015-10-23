@@ -14,6 +14,22 @@
     </xsd:annotation>
     <xsd:complexType>
       <xsd:sequence>
+        <xsd:element name="GeneralSettings">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+              General Settings section for PnP Partner Pack.
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:attribute name="defaultSiteTemplate" type="xsd:string" use="required">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                  The name of the Site Template to use while creating new Sites.
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:attribute>
+          </xsd:complexType>
+        </xsd:element>
         <xsd:element name="TenantSettings">
           <xsd:annotation>
             <xsd:documentation xml:lang="en">
