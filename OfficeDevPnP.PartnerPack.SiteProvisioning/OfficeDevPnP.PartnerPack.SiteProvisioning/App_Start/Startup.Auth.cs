@@ -51,14 +51,14 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning
                         {
                             var code = context.Code;
 
-                            ClientCredential credential = new ClientCredential(clientId, appKey);
+                            /*ClientCredential credential = new ClientCredential(clientId, appKey);
                             string tenantID = context.AuthenticationTicket.Identity.FindFirst("http://schemas.microsoft.com/identity/claims/tenantid").Value;
                             string signedInUserID = context.AuthenticationTicket.Identity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
                             AuthenticationContext authContext = new AuthenticationContext(aadInstance + tenantID); //, new ADALTokenCache(signedInUserID));
                             AuthenticationResult result = authContext.AcquireTokenByAuthorizationCode(
                                 code, new Uri(HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Path)), credential, graphResourceID);
-
+                                */
                             return Task.FromResult(0);
                         },
                         AuthenticationFailed = (context) =>

@@ -173,6 +173,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ValidateExternalUsersTimerJob.cs" />
     <Compile Include="EnforceTwoAdministratorsTimerJob.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -193,6 +194,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.Infrastructure\OfficeDevPnP.PartnerPack.Infrastructure.csproj">
+      <Project>{af195497-cafd-444e-9b7b-d3b0acac455c}</Project>
+      <Name>OfficeDevPnP.PartnerPack.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Web.WebJobs.Publish.1.0.4\tools\webjobs.targets" Condition="Exists('..\packages\Microsoft.Web.WebJobs.Publish.1.0.4\tools\webjobs.targets')" />
