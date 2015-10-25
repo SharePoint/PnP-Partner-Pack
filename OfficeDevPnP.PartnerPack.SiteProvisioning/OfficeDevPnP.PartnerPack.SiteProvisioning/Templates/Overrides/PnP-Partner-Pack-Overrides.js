@@ -29,7 +29,7 @@ function replaceLinks() {
 
             var currentScriptUrl = $('#PnPPartnerPackOverrides').attr('src');
             var addInSiteUrl = currentScriptUrl.substring(0, currentScriptUrl.indexOf("/Templates/Overrides/"));
-            addInSiteUrl = "https://localhost:44300";
+            // addInSiteUrl = "https://localhost:44300";
             var hostWebUrl = web.get_url();
 
             // Customize the viewlsts.aspx page
