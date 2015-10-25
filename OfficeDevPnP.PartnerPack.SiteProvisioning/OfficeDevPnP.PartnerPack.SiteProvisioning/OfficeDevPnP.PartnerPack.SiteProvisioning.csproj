@@ -283,6 +283,7 @@
     <Content Include="PnP-O365-App-Icon.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Properties\PublishProfiles\Local-File-System.pubxml" />
     <None Include="Properties\PublishProfiles\pnp-partner-pack.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\csompeoplepickercontrol.js" />
