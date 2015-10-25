@@ -219,9 +219,9 @@ Here follows an excerpt of the PowerShell script to provision these artifacts:
 ```PowerShell
 Connect-SPOnline "https://[tenant]-admin.sharepoint.com/"
 
-Apply-SPOProvisioningTemplate -Path C:\github\PaoloPia-PnP-Partner-Pack\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning\Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Jobs.xml
-Apply-SPOProvisioningTemplate -Path C:\github\PaoloPia-PnP-Partner-Pack\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning\Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Templates.xml
-Apply-SPOProvisioningTemplate -Path C:\github\PaoloPia-PnP-Partner-Pack\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning\Templates\PnP-Partner-Pack-Infrastructure-Contents.xml
+Apply-SPOProvisioningTemplate -Path "C:\github\PaoloPia-PnP-Partner-Pack\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning\Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Jobs.xml"
+Apply-SPOProvisioningTemplate -Path "C:\github\PaoloPia-PnP-Partner-Pack\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning\Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Templates.xml"
+Apply-SPOProvisioningTemplate -Path "C:\github\PaoloPia-PnP-Partner-Pack\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning\Templates\PnP-Partner-Pack-Infrastructure-Contents.xml"
 ```
 
 
