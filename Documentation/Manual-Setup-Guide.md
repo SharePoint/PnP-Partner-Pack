@@ -200,6 +200,31 @@ Save the updated manifest and upload it back to Azure AD, by using the "Upload M
 
 <a name="sitecollection"></a>
 ###Infrastructural Site Collection provisioning
+It is now time to create an infrastructural Site Collection in your Office 365 tenant. You
+can do that using the SharePoint Online Admin Center, or you can use a bunch of PowerShell.
+Here you can see a sample excerpt of a PowerShell script that uses the wonderful PnP
+PowerShell extensions made by <a href="https://twitter.com/erwinvanhunen">Erwin</a> and available <a href="github.com/OfficeDev/PnP-PowerShell">here</a>.
+
+```PowerShell
+Connect-SPOnline "https://[tenant]-admin.sharepoint.com/"
+
+New-SPOTenantSite -Title "PnP Partner Pack - Infrastructural Site" -Url "https://[tenant].sharepoint.com/sites/PnP-Partner-Pack-Infrastructure" -Owner "[admin_account]@[tenant].onmicrosoft.com" -Lcid 1033 -Template "STS#0" -TimeZone 4 -RemoveDeletedSite
+```
+
+Just after having created the site, you will have to provision some artifacts to hold
+infrastructural information. In order to do that, you simply need to apply three PnP
+Provisioning Templates that are available in the PnP Partner Pack repository on GitHub.
+Here follows an excerpt of the PowerShell script to provision these artifacts:
+
+```PowerShell
+Connect-SPOnline "https://[tenant]-admin.sharepoint.com/"
+
+Apply-SPOProvisioningTemplate -Path C:\github\PaoloPia-PnP-Partner-Pack\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning\Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Jobs.xml
+Apply-SPOProvisioningTemplate -Path C:\github\PaoloPia-PnP-Partner-Pack\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning\Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Templates.xml
+Apply-SPOProvisioningTemplate -Path C:\github\PaoloPia-PnP-Partner-Pack\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning\Templates\PnP-Partner-Pack-Infrastructure-Contents.xml
+```
+
+
 
 <a name="azurewebapp"></a>
 ###Azure Web App provisioning and configuration
