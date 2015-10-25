@@ -123,7 +123,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
         public void SaveGlobalProvisioningTemplate(GetProvisioningTemplateJob job)
         {
             // Connect to the Infrastructural Site Collection
-            using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(PnPPartnerPackSettings.InfrastructureSiteUrl))
+            using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(job.SourceSiteUrl))
             {
                 SaveProvisioningTemplateInternal(context, job, true);
             }
