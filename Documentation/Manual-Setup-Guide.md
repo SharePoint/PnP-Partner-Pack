@@ -29,6 +29,7 @@ The manual installation requires to accomplish the following steps:
 * [Azure Active Directory Application registration, as Office 365 Add-In](#azuread)
 * [App Only certificate configuration in the Azure AD Application](#apponlyazuread)
 * [Infrastructural Site Collection provisioning](#sitecollection)
+* [Azure Blob Storage creation](#azureblob)
 * [Azure Web App provisioning and configuration](#azurewebapp)
 * [App Only certificate configuration in the Azure Web App](#apponlywebapp)
 * [Azure Web Jobs provisioning](#webjobs)
@@ -208,29 +209,160 @@ PowerShell extensions made by <a href="https://twitter.com/erwinvanhunen">Erwin<
 ```PowerShell
 Connect-SPOnline "https://[tenant]-admin.sharepoint.com/"
 
-New-SPOTenantSite -Title "PnP Partner Pack - Infrastructural Site" -Url "https://[tenant].sharepoint.com/sites/PnP-Partner-Pack-Infrastructure" -Owner "[admin_account]@[tenant].onmicrosoft.com" -Lcid 1033 -Template "STS#0" -TimeZone 4 -RemoveDeletedSite
+New-SPOTenantSite -Title "PnP Partner Pack - Infrastructural Site" -Url "https://[tenant].sharepoint.com/sites/PnP-Partner-Pack-Infrastructure" -Owner "[admin_account]" -Lcid 1033 -Template "STS#0" -TimeZone 4 -RemoveDeletedSite
 ```
 
+Of course, you can call the Site Collection with whatever name and URL you like.
 Just after having created the site, you will have to provision some artifacts to hold
 infrastructural information. In order to do that, you simply need to apply three PnP
 Provisioning Templates that are available in the PnP Partner Pack repository on GitHub.
 Here follows an excerpt of the PowerShell script to provision these artifacts:
 
 ```PowerShell
-Connect-SPOnline "https://[tenant]-admin.sharepoint.com/"
+Connect-SPOnline "https://[tenant].sharepoint.com/sites/PnP-Partner-Pack-Infrastructure"
 
 Apply-SPOProvisioningTemplate -Path "C:\github\PaoloPia-PnP-Partner-Pack\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning\Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Jobs.xml"
 Apply-SPOProvisioningTemplate -Path "C:\github\PaoloPia-PnP-Partner-Pack\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning\Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Templates.xml"
 Apply-SPOProvisioningTemplate -Path "C:\github\PaoloPia-PnP-Partner-Pack\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning\Templates\PnP-Partner-Pack-Infrastructure-Contents.xml"
 ```
 
+These Provisioning Templates will create a couple of libraries, including some infrastructural 
+content types, that will store the Provisioning Templates, as well as the Provisioning Jobs
+leveraged by the infrastructure of PnP Partner Pack. You will find two libraries (PnPProvisioningJobs
+and PnPProvisioningTemplates), hidden from the UI and used to store infrastructural data.
 
+To have a look at these libraries, you can open links like the following ones:
+* https://[tenant].sharepoint.com/sites/PnP-Partner-Pack-Infrastructure/PnPProvisioningJobs
+* https://[tenant].sharepoint.com/sites/PnP-Partner-Pack-Infrastructure/PnPProvisioningTemplates
+
+In the latter library, you will find already uploaded a bunch of Provisioning Templates, 
+organized in sub-folders. You will use them later in this setup guide.
+
+<a name="azureblob"></a>
+###Azure Blob Storage configuration
+To handle some asynchronous tasks, the PnP Partner Pack uses an Azure Blob Storage service
+to queue items. Thus, you will need to configure an Azure Blob Storage accoung.
+
+Open the Microsoft Azure Management Portal, with a valid Microsoft Azure 
+subscription, and create a new Azure Blob Storage account. For example, you can call
+the Azure Blob Storage account with a name like pnppartnerpack[tenant], or whatever else
+you like. After having created the Azure Blob Storage account, open the "Manage Access Keys"
+popup screen and copy the values of "Storage Account Name", and "Primary Access Key".
 
 <a name="azurewebapp"></a>
 ###Azure Web App provisioning and configuration
+You will also need to provision an Azure Web App that will host both the Azure Web Site for
+the PnP Partner Pack main web application, and the various Web Jobs under the cover of the
+PnP Partner Pack.
 
+Back to the Microsoft Azure Management Portal, with a valid Microsoft Azure 
+subscription, create a new Azure Web App. Call it with whatever name you like. For 
+example, you can call it pnp-partner-pack-[tenant].azurewebsites.net. See the next figure
+for a sample configuration.
+ 
+![Azure Web App - Creation](./Figures/Fig-10-Azure-Web-App-01.png)
+
+Now, open the web.config file of the Web Application called OfficeDevPnP.PartnerPack.SiteProvisioning and
+available on GitHub at <a href="../OfficeDevPnP.PartnerPack.SiteProvisioning/OfficeDevPnP.PartnerPack.SiteProvisioning">this URL</a>.
+
+Edit the following sections:
+
+```XML
+  <connectionStrings>
+    <add name="DefaultConnection" connectionString="Data Source=(LocalDb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\aspnet-OfficeDevPnP.PartnerPack.SiteProvisioning-20151015100837.mdf;Initial Catalog=aspnet-OfficeDevPnP.PartnerPack.SiteProvisioning-20151015100837;Integrated Security=True" providerName="System.Data.SqlClient" />
+    <add name="AzureWebJobsStorage" connectionString="DefaultEndpointsProtocol=https;AccountName=[Storage Account Name];AccountKey=[Storage Account Primary Access Key]"/>
+  </connectionStrings>
+  <appSettings>
+
+    <!-- Azure AD Settings -->
+    <add key="ida:ClientId" value="[Your App Client ID]" />
+    <add key="ida:AADInstance" value="https://login.microsoftonline.com/" />
+    <add key="ida:ClientSecret" value="[Your App Client Secret]" />
+
+  </appSettings>
+
+  <!-- PnP Partner Pack Settings -->
+  <PnPPartnerPackConfiguration xmlns="http://schemas.dev.office.com/PnP/2015/10/PnPPartnerPackConfiguration">
+
+    <GeneralSettings defaultSiteTemplate="STS#0" />
+
+    <TenantSettings tenant="[tenant].onmicrosoft.com" appOnlyCertificateThumbprint="[X.509 Self-Signed Certificate Thumbprint]" infrastructureSiteUrl="https://[tenant].sharepoint.com/sites/PnP-Partner-Pack-Infrastructure/" />
+
+    <ProvisioningRepository name="SharePointProvisioningRepository" type="OfficeDevPnP.PartnerPack.Infrastructure.SharePoint.SharePointProvisioningRepository, OfficeDevPnP.PartnerPack.Infrastructure" />
+
+    <ProvisioningJobs>
+      <JobHandlers>
+        <JobHandler name="ProvisioningTemplateJobHandler" type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers.ProvisioningTemplateJobHandler, OfficeDevPnP.PartnerPack.Infrastructure" />
+        <JobHandler name="SiteCollectionProvisioningJobHandler" type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers.SiteCollectionProvisioningJobHandler, OfficeDevPnP.PartnerPack.Infrastructure" />
+        <JobHandler name="SubSiteProvisioningJobHandler" type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers.SubSiteProvisioningJobHandler, OfficeDevPnP.PartnerPack.Infrastructure" />
+      </JobHandlers>
+      <JobTypes>
+        <JobType handler="ProvisioningTemplateJobHandler" executionModel="Scheduled" type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.GetProvisioningTemplateJob" />
+        <JobType handler="ProvisioningTemplateJobHandler" executionModel="Continous" type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.ApplyProvisioningTemplateJob" />
+        <JobType handler="SiteCollectionProvisioningJobHandler" executionModel="Scheduled" type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.SiteCollectionProvisioningJob" />
+        <JobType handler="SubSiteProvisioningJobHandler" executionModel="Continous" type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.SubSiteProvisioningJob" />
+      </JobTypes>
+    </ProvisioningJobs>
+
+  </PnPPartnerPackConfiguration>
+
+```
+
+All the values surrounded by [name] have to be replaced with the corresponding values,
+which you got in one or more of the previous setup steps.
+
+Upload the Azure Web App to the target repository. You can use any of the available
+techniques for doing that (GitHub repository, FTP, Visual Studio Publish, etc.).
+ 
 <a name="apponlywebapp"></a>
 ###App Only certificate configuration in the Azure Web App
+Once you have created and configured the Azure Web App, open the "Scale" tab and change the pricing tier 
+at least to level "BASIC". For further details, see the next figure.
+
+![Azure Web App - BASIC Pricing Level](./Figures/Fig-11-Azure-Web-App-02.png)
+
+You need at least the "BASIC" pricing plan, because you will need to upload the .PFX file
+of the self-signed certificate to create the App Only context, and the "BASIC" level is 
+the minimum level that allows management of custom X.509 certificates. Thus, go into the
+"Configuration" tab and add a new X.509 certificate to the Azure Web App, through the proper
+configuration section, which is highlighted in the following figure.
+
+![Azure Web App - X.509 Certificate](./Figures/Fig-12-Azure-Web-App-03.png)
+
+After that, scroll a little bit to the "App Settings" section. There, you will have to configure
+a setting called *WEBSITE_LOAD_CERTIFICATES* with a value of ***. In the following figure
+you can see a sample configuration.
+
+![Azure Web App - SSL Certificates Setting](./Figures/Fig-13-Azure-Web-App-04.png)
+
+This last setting allows the Azure Web App to access the service account's personal certificate
+store to read the App Only X.509 certificate.
+You are now ready to play with your Office 365 Add-In. Simply open an Office 365 user session,
+click on the App Launcher and select the "My Apps" command.
+
+![Office 365 App Launcher - My Apps](./Figures/Fig-14-O365-App-Launcher.png)
+
+From there, you can directly start the PnP Partner Pack web application, by clicking on the
+app icon, or you can even pin the app into the App Launcher.
+
+![Office 365 App Launcher - My Apps - PnP Partner Pack App](./Figures/Fig-15-O365-PnP-Partner-Pack-App-Icon.png)
+
+You will see the Home Page of the PnP Partner Pack.
+
+![Office 365 App Launcher - My Apps - PnP Partner Pack App](./Figures/Fig-16-PnP-Partner-Pack-Home-Page.png)
 
 <a name="webjobs"></a>
 ###Azure Web Jobs provisioning
+In order to automate the provisioning processes, as well as the governance rules enforcement
+you have to provision some Azure Web Jobs. Here is the list:
+* ScheduledJob: is a Job scheduled (the scheduling is up to you) that creates Site Collections,
+and Applies Provisioning Templates to Sites. This job is available <a href="../OfficeDevPnP.PartnerPack.SiteProvisioning/OfficeDevPnP.PartnerPack.ScheduledJob">here</a>.
+* ContinousJob: is a continously running Job that creates Sub Sites and Extracts Provisioning
+Templates in near-real-time. This job is available <a href="../OfficeDevPnP.PartnerPack.SiteProvisioning/OfficeDevPnP.PartnerPack.ContinousJob">here</a>.
+
+In order to publish the Jobs, you will need to configure the App.Config of the jobs, providing 
+almost the same parameters that you configured for the Web Application.
+Moreover, you will have to publish them into the Azure Web App.
+
+> Further details about how to publish the Azure Web Jobs into a target Azure Web App will
+be provided shortly. In the meantime you can read the following article: <a href="https://azure.microsoft.com/en-gb/documentation/articles/websites-dotnet-deploy-webjobs/">Deploy WebJobs using Visual Studio</a>.
