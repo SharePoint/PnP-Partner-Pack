@@ -99,7 +99,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
                         result.Add(new ProvisioningTemplateInformation
                         {
                             Scope = (TemplateScope)Enum.Parse(typeof(TemplateScope), (String)item[PnPPartnerPackConstants.PnPProvisioningTemplateScope], true),
-                            TemplateSourceUrl = ((FieldUrlValue)item[PnPPartnerPackConstants.PnPProvisioningTemplateSourceUrl]).Url,
+                            TemplateSourceUrl = item[PnPPartnerPackConstants.PnPProvisioningTemplateSourceUrl] != null ? ((FieldUrlValue)item[PnPPartnerPackConstants.PnPProvisioningTemplateSourceUrl]).Url : null,
                             TemplateFileUri = String.Format("{0}/{1}/{2}", web.Url, PnPPartnerPackConstants.PnPProvisioningTemplates, item.File.Name),
                             TemplateImageUrl = template.ImagePreviewUrl,
                             DisplayName = template.DisplayName,

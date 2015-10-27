@@ -215,6 +215,8 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         {
             SaveTemplateViewModel model = new SaveTemplateViewModel();
             model.SourceSiteUrl = spHostUrl;
+            model.IncludeAllTermGroups = false;
+            model.IncludeSiteCollectionTermGroup = false;
             return View(model);
         }
 
