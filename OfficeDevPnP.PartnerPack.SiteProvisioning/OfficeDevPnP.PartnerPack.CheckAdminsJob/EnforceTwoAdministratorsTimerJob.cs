@@ -1,14 +1,12 @@
-﻿using Microsoft.Online.SharePoint.TenantAdministration;
-using OfficeDevPnP.Core.Framework.TimerJobs;
+﻿using OfficeDevPnP.Core.Framework.TimerJobs;
 using Microsoft.SharePoint.Client;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.SharePoint.Client.Utilities;
+using System.Text;
+using System.Collections.Generic;
 
-namespace OfficeDevPnP.PartnerPack.WebJobs.CheckAdminsWebJob
+namespace OfficeDevPnP.PartnerPack.CheckAdminsJob
 {
     class EnforceTwoAdministratorsTimerJob : TimerJob
     {
@@ -37,7 +35,12 @@ namespace OfficeDevPnP.PartnerPack.WebJobs.CheckAdminsWebJob
 
                 EmailProperties mailProps = new EmailProperties();
                 mailProps.Subject = "Action required: assign an additional site administrator to your site";
-                mailProps.Body = string.Format("Your site with address {0} has only one site administrator defined, you. Please assign an additional sign administrator.", e.SiteClientContext.Web.Url);
+                StringBuilder bodyBuilder = new StringBuilder();
+                bodyBuilder.Append("<html><body style=\"font-family:sans-serif\">");
+                bodyBuilder.AppendFormat("<p>Your site with address <a href=\"{0}\">{0}</a> has only one site administrator defined: you. Please assign an additional site administrator.</p>", e.SiteClientContext.Web.Url);
+                bodyBuilder.AppendFormat("<p>Click here to <a href=\"{0}/_layouts/mngsiteadmin.aspx\">assign an additional site collection adminstrator.</a></p>", e.SiteClientContext.Web.Url);
+                bodyBuilder.Append("</body></html>");
+                mailProps.Body = bodyBuilder.ToString();
                 mailProps.To = new[] { adminUser.Email };
                 Utility.SendEmail(e.SiteClientContext, mailProps);
                 e.SiteClientContext.ExecuteQueryRetry();

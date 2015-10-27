@@ -4,22 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
-using OfficeDevPnP.Core.Framework.TimerJobs;
-using OfficeDevPnP.Core;
-using System.Configuration;
-using OfficeDevPnP.PartnerPack.Infrastructure.Jobs;
 using OfficeDevPnP.PartnerPack.Infrastructure;
+using OfficeDevPnP.PartnerPack.Infrastructure.Jobs;
+using System.Configuration;
 
-namespace OfficeDevPnP.PartnerPack.WebJobs.CheckAdminsWebJob
+namespace OfficeDevPnP.PartnerPack.WebJobs.ExternalUsersWebJob
 {
     // To learn more about Microsoft Azure WebJobs SDK, please see http://go.microsoft.com/fwlink/?LinkID=320976
     class Program
     {
-        // Please set the following connection strings in app.config for this WebJob to run:
-        // AzureWebJobsDashboard and AzureWebJobsStorage
         static void Main()
         {
-            var job = new EnforceTwoAdministratorsTimerJob();
+            var job = new ValidateExternalUsersTimerJob();
 
             var provisioningJobs = ProvisioningRepositoryFactory.Current.GetTypedProvisioningJobs<SiteCollectionProvisioningJob>(ProvisioningJobStatus.Provisioned);
 
@@ -30,10 +26,9 @@ namespace OfficeDevPnP.PartnerPack.WebJobs.CheckAdminsWebJob
             }
 
             job.UseAzureADAppOnlyAuthentication(
-                ConfigurationManager.AppSettings["ClientId"],
-                ConfigurationManager.AppSettings["AzureTenant"],
-                ConfigurationManager.AppSettings["CertificatePath"],
-                ConfigurationManager.ConnectionStrings["CertificatePassword"].ConnectionString);
+                PnPPartnerPackSettings.ClientId,
+                PnPPartnerPackSettings.Tenant,
+                PnPPartnerPackSettings.AppOnlyCertificate);
 
             job.Run();
 

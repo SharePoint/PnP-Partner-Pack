@@ -24,6 +24,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfficeDevPnP.PartnerPack.Sc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfficeDevPnP.PartnerPack.ContinousJob", "OfficeDevPnP.PartnerPack.ContinousJob\OfficeDevPnP.PartnerPack.ContinousJob.csproj", "{4C073AEE-8996-4DDF-A7AD-4B5E49FCFE52}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfficeDevPnP.PartnerPack.CheckAdminsJob", "OfficeDevPnP.PartnerPack.CheckAdminsJob\OfficeDevPnP.PartnerPack.CheckAdminsJob.csproj", "{8EEAA71A-F2F4-422F-8ABE-235A31BF5EE1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfficeDevPnP.PartnerPack.ExternalUsersJob", "OfficeDevPnP.PartnerPack.ExternalUsersJob\OfficeDevPnP.PartnerPack.ExternalUsersJob.csproj", "{F85FA0E0-FF3B-40FD-BC72-D406E7BAB62F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +54,14 @@ Global
 		{4C073AEE-8996-4DDF-A7AD-4B5E49FCFE52}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C073AEE-8996-4DDF-A7AD-4B5E49FCFE52}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4C073AEE-8996-4DDF-A7AD-4B5E49FCFE52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EEAA71A-F2F4-422F-8ABE-235A31BF5EE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EEAA71A-F2F4-422F-8ABE-235A31BF5EE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EEAA71A-F2F4-422F-8ABE-235A31BF5EE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EEAA71A-F2F4-422F-8ABE-235A31BF5EE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F85FA0E0-FF3B-40FD-BC72-D406E7BAB62F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F85FA0E0-FF3B-40FD-BC72-D406E7BAB62F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F85FA0E0-FF3B-40FD-BC72-D406E7BAB62F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F85FA0E0-FF3B-40FD-BC72-D406E7BAB62F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
