@@ -124,10 +124,14 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                     ProvisioningTemplate template = provider.GetTemplate(templateFileName);
                     template.Connector = provider.Connector;
 
+                    // We do intentionally remove taxonomies, which are not supported in the AppOnly Authorization model
+                    // For further details, see the PnP Partner Pack documentation 
+                    template.TermGroups.Clear();
+
                     // Configure template parameters
                     if (job.TemplateParameters != null)
                     {
-                        foreach (var key in template.Parameters.Keys)
+                        foreach (var key in job.TemplateParameters.Keys)
                         {
                             if (job.TemplateParameters.ContainsKey(key))
                             {

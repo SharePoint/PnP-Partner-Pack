@@ -23,6 +23,8 @@ else
 
         @Html.HiddenFor(model => model.SourceSiteUrl)
         @Html.HiddenFor(model => model.ProvisioningTemplateId)
+        @Html.HiddenFor(model => model.IncludeAllTermGroups)
+        @Html.HiddenFor(model => model.IncludeSiteCollectionTermGroup)
 
         <div class="form-horizontal">
             <hr />
@@ -48,26 +50,6 @@ else
                 <div class="col-md-6">
                     @Html.EditorFor(model => model.FileName, new { htmlAttributes = new { @class = "form-control" } })
                     @Html.ValidationMessageFor(model => model.FileName, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.IncludeAllTermGroups, htmlAttributes: new { @class = "control-label col-md-3" })
-                <div class="col-md-6">
-                    <div class="checkbox">
-                        @Html.EditorFor(model => model.IncludeAllTermGroups)
-                        @Html.ValidationMessageFor(model => model.IncludeAllTermGroups, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.IncludeSiteCollectionTermGroup, htmlAttributes: new { @class = "control-label col-md-3" })
-                <div class="col-md-6">
-                    <div class="checkbox">
-                        @Html.EditorFor(model => model.IncludeSiteCollectionTermGroup)
-                        @Html.ValidationMessageFor(model => model.IncludeSiteCollectionTermGroup, "", new { @class = "text-danger" })
-                    </div>
                 </div>
             </div>
 

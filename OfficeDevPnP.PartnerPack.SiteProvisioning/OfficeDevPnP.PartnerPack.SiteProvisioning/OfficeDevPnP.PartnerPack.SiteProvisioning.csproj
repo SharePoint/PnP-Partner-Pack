@@ -349,7 +349,6 @@
     <Content Include="Views\Home\SiteCreated.cshtml" />
     <Content Include="Views\Home\SiteCollectionInformation.cshtml" />
     <Content Include="Views\Home\SubSiteInformation.cshtml" />
-    <Content Include="Views\Home\Error.cshtml" />
     <Content Include="Views\Home\MyProvisionedSitesGrid.cshtml" />
     <Content Include="Views\Shared\_WorkingOnIt.cshtml" />
   </ItemGroup>

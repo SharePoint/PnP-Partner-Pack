@@ -215,6 +215,8 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         {
             SaveTemplateViewModel model = new SaveTemplateViewModel();
             model.SourceSiteUrl = spHostUrl;
+            model.IncludeAllTermGroups = false;
+            model.IncludeSiteCollectionTermGroup = false;
             return View(model);
         }
 
@@ -393,19 +395,5 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
 
             return PartialView("GetSiteCollectionSettings", PnPPartnerPackUtilities.GetSiteCollectionSettings(siteCollectionUri));
         }
-
-        //protected override void OnException(ExceptionContext filterContext)
-        //{
-        //    Exception ex = filterContext.Exception;
-        //    filterContext.ExceptionHandled = true;
-
-        //    var model = new HandleErrorInfo(ex, "Home", "Index");
-
-        //    filterContext.Result = new ViewResult()
-        //    {
-        //        ViewName = "Error",
-        //        ViewData = new ViewDataDictionary(model)
-        //    };
-        //}
     }
 }
