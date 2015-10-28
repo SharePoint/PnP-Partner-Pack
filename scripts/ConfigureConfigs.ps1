@@ -10,6 +10,8 @@ $ClientSecret = ""
 $ADTenant = ""
 # The full path to the certificate file that you uploaded to the azure web site for app authentication
 $CertificatePath = ""
+# Or the certificate thumbprint value
+$CertificateThumbprint = ""
 # The full url to your tenant administration site
 $InfrastructureSiteUrl = ""
 
@@ -43,8 +45,15 @@ foreach($configFile in $configFiles)
 
     $tenantSettingsNode = $configDoc.configuration.PnPPartnerPackConfiguration.TenantSettings
     $tenantSettingsNode.tenant = $ADTenant
-    $cert = Get-PfxCertificate $CertificatePath
-    $tenantSettingsNode.appOnlyCertificateThumbprint = $cert.Thumbprint
+    if ($CertificateThumbprint -ne "") 
+    {
+        $tenantSettingsNode.appOnlyCertificateThumbprint = $CertificateThumbprint
+    }
+    else 
+    {
+        $cert = Get-PfxCertificate $CertificatePath
+        $tenantSettingsNode.appOnlyCertificateThumbprint = $cert.Thumbprint
+    }
     $tenantSettingsNode.infrastructureSiteUrl = $InfrastructureSiteUrl
 
     $configDoc.Save("$basePath\$configFile")
