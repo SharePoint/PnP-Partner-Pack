@@ -2,7 +2,7 @@
 #
 #
 $InfrastructureSiteUrl = ""
-$AzureWebSiteUrl = "https://erwinmcmtest.azurewebsites.net"
+$AzureWebSiteUrl = ""
 
 
 # DO NOT MODIFY BELOW
