@@ -1,17 +1,17 @@
 ﻿# The name of your storage account
-$AzureStorageAccountName = ""; 
+$AzureStorageAccountName = "erwinvanhunen"; 
 # The primary account key of your Azure Storage instance
-$AzureStoragePrimaryAccountKey = "";
+$AzureStoragePrimaryAccountKey = "m3ePix42HPUfs2Ul8zksiwNm/7lYOXFrj2wuhcZ4QM40ELFxhhTn3G/NaNKtdL8o1NYLeICvywER7sycMCKg9g==";
 # The Client Id
-$ClientId= ""
+$ClientId= "c4d6366f-8625-4f7a-b745-bd0f3597a782"
 # The Client Secret
-$ClientSecret = ""
+$ClientSecret = "1idhGLO64QSNeaXVcP3JyddMZ9VDixl75cppgdQwbgE="
 # Your AD Tenant
-$ADTenant = ""
+$ADTenant = "erwinmcm.onmicrosoft.com"
 # The full path to the certificate file that you uploaded to the azure web site for app authentication
-$CertificatePath = ""
+$CertificatePath = "c:\temp\pnp-partnerpack.cer"
 # The full url to your tenant administration site
-$InfrastructureSiteUrl = ""
+$InfrastructureSiteUrl = "https://erwinmcm.sharepoint.com/sites/pnp-partner-pack"
 
 # DO NOT MODIFY BELOW
 $basePath = "$(convert-path ..)\OfficeDevPnP.PartnerPack.SiteProvisioning"
