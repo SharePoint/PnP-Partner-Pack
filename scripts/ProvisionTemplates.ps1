@@ -1,9 +1,10 @@
 ﻿# Provision Contents
 #
 #
+# Provide URL to the infrastructure site. Site needs to be created. For example: https://yourtenant.sharepoint.com/sites/infrastructure
 $InfrastructureSiteUrl = ""
+# Provide URL to the azureweb site hosting the app. For example: https://yourprovisioningapp.azurewebsites.net
 $AzureWebSiteUrl = ""
-
 
 # DO NOT MODIFY BELOW
 
@@ -17,6 +18,7 @@ while($AzureWebSiteUrl -eq "" -or $AzureWebSiteUrl -eq $null -or $AzureWebSiteUr
     $AzureWebSiteUrl = Read-Host -Prompt "Enter azure web site url (e.g. https://yourprovisioningapp.azurewebsites.net)"
 }
 
+Write-Host -ForegroundColor Yellow "Modifying Templates"
 $basePath = "$(convert-path ..)\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning\templates"
 
 # CUSTOMBAR
@@ -55,5 +57,6 @@ $composedLook.AlternateCSS = $composedLook.AlternateCSS.Replace("[AZUREWEBSITE]"
 
 $provisioningTemplate.Save("$basePath\Responsive\SPO-Responsive.xml")
 
+Write-Host -ForegroundColor Yellow "Provisioning Templates"
 Connect-SPOnline $InfrastructureSiteUrl
-Apply-SPOProvisioningTemplate C:\repos\PnP-Partner-Pack\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning\templates\PnP-Partner-Pack-Infrastructure-Contents.xml
+Apply-SPOProvisioningTemplate $basePath\PnP-Partner-Pack-Infrastructure-Contents.xml
