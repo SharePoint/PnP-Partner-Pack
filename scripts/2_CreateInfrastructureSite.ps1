@@ -20,7 +20,7 @@ Connect-SPOnline -Url "https://$siteHost" -Credentials $creds
 $infrastructureSiteInfo = Get-SPOTenantSite -Url $InfrastructureSiteUrl -ErrorAction SilentlyContinue
 if($InfrastructureSiteInfo -eq $null)
 {
-    Write-Host -ForegroundColor Cyan "Infrastructure Site does not exist. Please create site collection first through the UI, or use New-SPOTenantSite url"
+    Write-Host -ForegroundColor Cyan "Infrastructure Site does not exist. Please create site collection first through the UI, or use New-SPOTenantSite"
 } else {
     Connect-SPOnline -Url $InfrastructureSiteUrl -Credentials $creds
     Apply-SPOProvisioningTemplate -Path "$basePath\Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Jobs.xml"
