@@ -12,7 +12,7 @@ while($InfrastructureSiteUrl -eq "" -or $InfrastructureSiteUrl -eq $null -or $In
     $InfrastructureSiteUrl = Read-Host -Prompt "Enter infrastructure site url (e.g. https://yourtenant.sharepoint.com/sites/infrastructure)"
 }
 
-while($AzureWebSiteUrl -eq "" -or $AzureWebSiteUrl -eq $null -or $AzureWebSiteUrl.ToLower(() -notlike "https://*")
+while($AzureWebSiteUrl -eq "" -or $AzureWebSiteUrl -eq $null -or $AzureWebSiteUrl.ToLower() -notlike "https://*")
 {
     $AzureWebSiteUrl = Read-Host -Prompt "Enter azure web site url (e.g. https://yourprovisioningapp.azurewebsites.net)"
 }
