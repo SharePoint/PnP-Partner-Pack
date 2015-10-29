@@ -8,12 +8,12 @@
           <pnp:CustomAction Name="jQueryLink" Description="jQueryLink" Location="ScriptLink" Sequence="1" Rights="0" ScriptBlock="&#xD;&#xA;                var headID = document.getElementsByTagName('head')[0]; &#xD;&#xA;                var&#xD;&#xA;                newScript = document.createElement('script');&#xD;&#xA;                newScript.type = 'text/javascript';&#xD;&#xA;                newScript.src = 'https://code.jquery.com/jquery-1.11.3.min.js';&#xD;&#xA;                newScript.id = 'jQueryLink';&#xD;&#xA;                headID.appendChild(newScript);">
             <pnp:CommandUIExtension />
           </pnp:CustomAction>
-          <pnp:CustomAction Name="spoCustomBar" Description="spoCustomBar" Location="ScriptLink" Sequence="3" Rights="0" ScriptBlock="&#xD;&#xA;                var headID = document.getElementsByTagName('head')[0]; &#xD;&#xA;                var&#xD;&#xA;                newScript = document.createElement('script');&#xD;&#xA;                newScript.type = 'text/javascript';&#xD;&#xA;                newScript.src = '[AZUREWEBSITES]:443/Templates/CustomBar/SPO-CustomBar.js';&#xD;&#xA;                newScript.id = 'spoResponsive';&#xD;&#xA;                headID.appendChild(newScript);">
+          <pnp:CustomAction Name="spoCustomBar" Description="spoCustomBar" Location="ScriptLink" Sequence="3" Rights="0" ScriptBlock="&#xD;&#xA;                var headID = document.getElementsByTagName('head')[0]; &#xD;&#xA;                var&#xD;&#xA;                newScript = document.createElement('script');&#xD;&#xA;                newScript.type = 'text/javascript';&#xD;&#xA;                newScript.src = '[AZUREWEBSITE]:443/Templates/CustomBar/SPO-CustomBar.js';&#xD;&#xA;                newScript.id = 'spoResponsive';&#xD;&#xA;                headID.appendChild(newScript);">
             <pnp:CommandUIExtension />
           </pnp:CustomAction>
         </pnp:SiteCustomActions>
       </pnp:CustomActions>
-      <pnp:ComposedLook Name="Office" ColorFile="" FontFile="" BackgroundFile="" AlternateCSS="[AZUREWEBSITES]:443/Templates/Responsive/SPO-Responsive.css" Version="0" />
+      <pnp:ComposedLook Name="Office" ColorFile="" FontFile="" BackgroundFile="" AlternateCSS="[AZUREWEBSITE]:443/Templates/Responsive/SPO-Responsive.css" Version="0" />
     </pnp:ProvisioningTemplate>
   </pnp:Templates>
 </pnp:Provisioning>
