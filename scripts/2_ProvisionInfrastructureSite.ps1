@@ -1,4 +1,4 @@
-﻿# CREATE INFRASTRUCTURE SITE
+﻿# PROVISION INFRASTRUCTURE SITE
 $InfrastructureSiteUrl = ""
 
 # DO NOT MODIFY BELOW
@@ -24,5 +24,19 @@ if($InfrastructureSiteInfo -eq $null)
 } else {
     Connect-SPOnline -Url $InfrastructureSiteUrl -Credentials $creds
     Apply-SPOProvisioningTemplate -Path "$basePath\Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Jobs.xml"
-    Apply-SPOProvisioningTemplate -Path "$basePath\Templates\Infrastructure\PnP-Partner-Pack-Templates.xml"
+    Apply-SPOProvisioningTemplate -Path "$basePath\Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Templates.xml"
+
+    # Unhide the 2 infrastructure lists
+    $l = Get-SPOList "PnPProvisioningTemplates"
+    $l.Hidden = $false
+    $l.OnQuickLaunch = $true
+    $l.Update()
+    Execute-SPOQuery
+
+    $l = Get-SPOList "PnPPRovisioningJobs"
+    $l.Hidden = $false
+    $l.OnQuickLaunch = $true
+    $l.Update()
+    Execute-SPOQuery
+    
 }
