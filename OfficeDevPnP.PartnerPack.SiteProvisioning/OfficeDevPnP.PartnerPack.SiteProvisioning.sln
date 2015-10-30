@@ -28,6 +28,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfficeDevPnP.PartnerPack.Ch
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfficeDevPnP.PartnerPack.ExternalUsersJob", "OfficeDevPnP.PartnerPack.ExternalUsersJob\OfficeDevPnP.PartnerPack.ExternalUsersJob.csproj", "{F85FA0E0-FF3B-40FD-BC72-D406E7BAB62F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{17065892-0FA9-4BBE-85CF-14C3D0BC9C3C}"
+	ProjectSection(SolutionItems) = preProject
+		..\scripts\999_ResetConfigs.ps1 = ..\scripts\999_ResetConfigs.ps1
+		..\scripts\Configure-Configs.ps1 = ..\scripts\Configure-Configs.ps1
+		..\scripts\Provision-InfrastructureSiteArtifacts.ps1 = ..\scripts\Provision-InfrastructureSiteArtifacts.ps1
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
