@@ -1,8 +1,8 @@
 # PnP Partner Pack - Manual Setup Guide
 
 ##Solution Overview
-PnP Partner pack allows you to extend the out of the box experience of Office 365 and 
-SharePoint Online, by providing the following capabilities:
+PnP Partner pack allows you to extend the out of the box experience of Microsoft Office 365 and 
+Microsoft SharePoint Online, by providing the following capabilities:
 * Save Site as Provisioning Template feature in Site Settings
 * Sub-Site creation  with custom UI and PnP Provisioning Template selection
 * Site Collection creation for non-admin users with custom UI and PnP Provisioning Template selection
