@@ -31,7 +31,9 @@
         @foreach (var template in GetProvisioningTemplates())
         {
             <div class="provtemplate" data-pnp-template-url="@template.TemplateFileUri">
-                <img alt="@template.DisplayName" src="@template.TemplateImageUrl" />
+                <div class="roundmask">
+                    <img alt="@template.DisplayName" src="@template.TemplateImageUrl" />
+                </div>
                 <h1>@template.DisplayName</h1>
                 <span>@template.Description</span>
             </div>
