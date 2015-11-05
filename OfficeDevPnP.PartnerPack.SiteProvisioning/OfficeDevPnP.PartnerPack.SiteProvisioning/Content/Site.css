@@ -143,7 +143,9 @@ a:hover {
     color: #000;
 }
 
-
+.provtemplate.active h1, .provtemplate.active span {
+    color: #fff;
+}
 input[type=checkbox], input[type=radio] {
     margin: 10px 0 0;
 }
