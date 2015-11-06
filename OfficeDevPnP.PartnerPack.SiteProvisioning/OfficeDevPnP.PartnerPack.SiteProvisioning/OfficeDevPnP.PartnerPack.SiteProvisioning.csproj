@@ -305,12 +305,12 @@
     <Content Include="Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Templates.xml" />
     <Content Include="Templates\Infrastructure\PnP.png" />
     <Content Include="Templates\CustomBar\SPO-CustomBar.js" />
+    <Content Include="Templates\Overrides\PnP-Partner-Pack-Overrides.xml" />
     <Content Include="Templates\Overrides\PnP-Partner-Pack-Overrides.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\sppeoplepicker.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Templates\Overrides\PnP-Partner-Pack-Overrides.xml" />
     <Content Include="Templates\PnP-Partner-Pack-Infrastructure-Contents.xml" />
     <Content Include="Templates\Responsive\SPO-Responsive.xml" />
     <Content Include="Templates\Responsive\SPO-Responsive.css" />
