@@ -16,5 +16,9 @@ Partner pack – Level set the partner ecosystem and customers on how to get sta
 * Each partner would have starting point for their customizations
 * Each partner would have ready to use demo based on PnP guidance
 * Level setting community with the model
+<<<<<<< HEAD
 * Concentration on sufficient guidance on getting started – even idiots will learn how to use Office 365 and Azure together
+=======
+* Concentration on sufficient guidance on getting started as easily as possible for learning purposes
+>>>>>>> e11f81f... Small edit to push it also to master branch
 
