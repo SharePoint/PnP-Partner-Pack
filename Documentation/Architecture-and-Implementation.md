@@ -234,8 +234,26 @@ Here follows a sample excerpt of the XML configuration section for the PnP Partn
 ```XML
   <!-- PnP Partner Pack Settings -->
   <PnPPartnerPackConfiguration xmlns="http://schemas.dev.office.com/PnP/2015/10/PnPPartnerPackConfiguration">
-
-    <GeneralSettings defaultSiteTemplate="STS#0" />
+    <GeneralSettings defaultSiteTemplate="STS#0"
+                     Title="PnP Partner Pack"
+                     LogoUrl="/AppIcon.png">
+      <WelcomeMessage>
+        <![CDATA[
+          Welcome to the PnP Partner Pack, which is a project managed by the <a href="http://aka.ms/OfficeDevPnP" target="_blank">Office 365 Developers Patterns &amp; Practices</a> team!<br />
+          This is a sample solution, including source code, that illustrates to the partners' ecosystem and customers how to get started truly on the transformation, and with typical SP add-in model implementations.<br />
+          Here you can find samples about how to manage the provisioning of Site Collection or Sub Sites, applying one or more provisioning templates.<br />
+          The provisioning is based on the new Remote Provisioning technique, by leveraging the PnP Provisioning Engine.<br />
+          Let's play with this sample solution and enjoy the new Add-In Model for Microsoft SharePoint andd Microsoft Office 365.
+        ]]>
+      </WelcomeMessage>
+      <FooterMessage>
+        <![CDATA[
+          <p>
+            &copy; <a href="http://aka.ms/OfficeDevPnP">Office 365 Developers Patterns &amp; Practices</a>
+          </p>
+        ]]>
+      </FooterMessage>
+    </GeneralSettings>
 
     <TenantSettings tenant="[tenant].onmicrosoft.com" 
       appOnlyCertificateThumbprint="[X.509 Self-Signed Certificate Thumbprint]" 
@@ -265,6 +283,9 @@ As you can see the main configuration elements are:
 * *GeneralSettings*: defines the default site template to use when provisioning a new site, and before
 applying the PnP Provisioning Template. We suggest using the STS#0 (SharePoint "Team Site"), which is
 the most commonly used and the one that we tested more. Of course, you are free to change this option.
+It also defines the LogoUrl and the Title that will be used to rendere the pages of the PnP Partner Pack.
+Moreover, it defines the Welcome Message and the Footer Messagge for the Home Page and the global layout
+view of the MVC site that renders the Site Provisioning engine.
 * *TenantSettings*: defines the information about the target Office 365 tenant, the thumbprint of the
 X.509 certificate to use for AppOnly authentication against Azure AD and the target SharePoint Online, 
 and the URL of the Infrastructural Site Collection.

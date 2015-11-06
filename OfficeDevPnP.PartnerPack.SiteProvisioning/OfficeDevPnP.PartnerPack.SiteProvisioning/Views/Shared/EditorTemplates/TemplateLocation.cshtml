@@ -2,8 +2,8 @@
 
 @{
     var locations = new SelectListItem[] {
-        new SelectListItem { Text = "Local", Value = "Local" },
-        new SelectListItem { Text = "Global", Value = "Global" }
+        new SelectListItem { Text = "Site Collection", Value = "Local" },
+        new SelectListItem { Text = "Tenant", Value = "Global" }
     };
 }
 @Html.DropDownListFor(model => model, locations)

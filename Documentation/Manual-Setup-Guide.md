@@ -283,8 +283,26 @@ Edit the following sections:
 
   <!-- PnP Partner Pack Settings -->
   <PnPPartnerPackConfiguration xmlns="http://schemas.dev.office.com/PnP/2015/10/PnPPartnerPackConfiguration">
-
-    <GeneralSettings defaultSiteTemplate="STS#0" />
+    <GeneralSettings defaultSiteTemplate="STS#0"
+                     Title="PnP Partner Pack"
+                     LogoUrl="/AppIcon.png">
+      <WelcomeMessage>
+        <![CDATA[
+          Welcome to the PnP Partner Pack, which is a project managed by the <a href="http://aka.ms/OfficeDevPnP" target="_blank">Office 365 Developers Patterns &amp; Practices</a> team!<br />
+          This is a sample solution, including source code, that illustrates to the partners' ecosystem and customers how to get started truly on the transformation, and with typical SP add-in model implementations.<br />
+          Here you can find samples about how to manage the provisioning of Site Collection or Sub Sites, applying one or more provisioning templates.<br />
+          The provisioning is based on the new Remote Provisioning technique, by leveraging the PnP Provisioning Engine.<br />
+          Let's play with this sample solution and enjoy the new Add-In Model for Microsoft SharePoint andd Microsoft Office 365.
+        ]]>
+      </WelcomeMessage>
+      <FooterMessage>
+        <![CDATA[
+          <p>
+            &copy; <a href="http://aka.ms/OfficeDevPnP">Office 365 Developers Patterns &amp; Practices</a>
+          </p>
+        ]]>
+      </FooterMessage>
+    </GeneralSettings>
 
     <TenantSettings tenant="[tenant].onmicrosoft.com" appOnlyCertificateThumbprint="[X.509 Self-Signed Certificate Thumbprint]" infrastructureSiteUrl="https://[tenant].sharepoint.com/sites/PnP-Partner-Pack-Infrastructure/" />
 
@@ -309,7 +327,10 @@ Edit the following sections:
 ```
 
 All the values surrounded by [name] have to be replaced with the corresponding values,
-which you got in one or more of the previous setup steps.
+which you got in one or more of the previous setup steps. You can even use the 
+<a href="../Scripts/Configure-Configs.ps1">Configure-Configs.ps1</a> PowerShell script file
+that is available in the 
+<a href="../Scripts/">Scripts folder</a> of this repository.
 
 Upload the Azure Web App to the target repository. You can use any of the available
 techniques for doing that (GitHub repository, FTP, Visual Studio Publish, etc.).

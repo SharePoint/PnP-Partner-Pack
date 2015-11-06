@@ -81,7 +81,57 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Configuration {
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="http://schemas.dev.office.com/PnP/2015/10/PnPPartnerPackConfiguration")]
     public partial class PnPPartnerPackConfigurationGeneralSettings {
         
+        private System.Xml.XmlNode welcomeMessageField;
+        
+        private System.Xml.XmlNode footerMessageField;
+        
+        private string logoUrlField;
+        
+        private string titleField;
+        
         private string defaultSiteTemplateField;
+        
+        /// <remarks/>
+        public System.Xml.XmlNode WelcomeMessage {
+            get {
+                return this.welcomeMessageField;
+            }
+            set {
+                this.welcomeMessageField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public System.Xml.XmlNode FooterMessage {
+            get {
+                return this.footerMessageField;
+            }
+            set {
+                this.footerMessageField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string LogoUrl {
+            get {
+                return this.logoUrlField;
+            }
+            set {
+                this.logoUrlField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Title {
+            get {
+                return this.titleField;
+            }
+            set {
+                this.titleField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
