@@ -1,4 +1,12 @@
-﻿$ClientId= "[CLIENT ID]"
+﻿#################################################################################################
+#
+#
+# Use this script to reset the app.config and web.config files to their original unmodified state
+#
+#
+#################################################################################################
+
+$ClientId= "[CLIENT ID]"
 $ClientSecret = "[CLIENT SECRET]"
 $ADTenant = "[TENANT].onmicrosoft.com"
 $InfrastructureSiteUrl = "[INFRASTRUCTURE SITE URL]"

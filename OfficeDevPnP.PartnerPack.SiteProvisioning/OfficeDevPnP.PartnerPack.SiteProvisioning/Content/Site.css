@@ -85,32 +85,36 @@ a:hover {
 
 .provtemplate {
     display: inline-block;
-    border: solid 1px #ccc;
-    padding: 5px;
+    padding: 10px;
     margin: 0 15px 15px 0;
     width: 330px;
-    height: 310px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
+    height: 300px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
     vertical-align: top;
     overflow: hidden;
 }
 .provtemplate:hover {
-    border: solid 1px #888;
     background-color: #efefef;
     cursor: pointer;
 }
 .provtemplate.active {
-    border: solid 1px #094AB2;
     background-color: #0A5BC4;
     color: #fff;
+}
+.provtemplate .roundmask {
+    width: 180px;
+    height: 180px;
+    background: #ddd;
+    margin: 0 auto 7px;
+    border: solid 1px #fff;
+    overflow: hidden;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
 }
 .provtemplate img {
     width: 320px;
     height: 180px;
-    background: #ddd;
-    margin-bottom: 7px;
-    border: solid 1px #ddd;
 }
 .provtemplate h1 {
     display: block;
@@ -118,12 +122,29 @@ a:hover {
     font-weight: bold;
     padding: 5px;
     margin: 0;
+    text-align: center;
+    color: #666;
 }
 .provtemplate span {
     display: block;
     font-size: 0.9em;
     padding: 5px;
     margin: 0;
+    text-align: center;
+    color: #999;
+}
+.provtemplate:hover .roundmask {
+    border: solid 1px #888;
+}
+.provtemplate:active .roundmask {
+    border: solid 1px #094AB2;
+}
+.provtemplate:hover h1, .provtemplate:active h1, .provtemplate:hover span, .provtemplate:active span {
+    color: #000;
+}
+
+.provtemplate.active h1, .provtemplate.active span {
+    color: #fff;
 }
 input[type=checkbox], input[type=radio] {
     margin: 10px 0 0;
