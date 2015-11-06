@@ -21,6 +21,46 @@
             </xsd:documentation>
           </xsd:annotation>
           <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="WelcomeMessage" minOccurs="1" maxOccurs="1">
+                <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                    The Welcome Message used in the Home Page of the application. 
+                  </xsd:documentation>
+                </xsd:annotation>
+                <xsd:complexType mixed="true">
+                  <xsd:sequence>
+                    <xsd:any namespace="##any" minOccurs="0" maxOccurs="1"/>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+              <xsd:element name="FooterMessage" minOccurs="1" maxOccurs="1">
+                <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                    The Footer Message used in the pages of the application.
+                  </xsd:documentation>
+                </xsd:annotation>
+                <xsd:complexType mixed="true">
+                  <xsd:sequence>
+                    <xsd:any namespace="##any" minOccurs="0" maxOccurs="1"/>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+            </xsd:sequence>
+            <xsd:attribute name="LogoUrl" type="xsd:string" use="optional">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                  The URL of the application logo in the UI. It is an optional attribute and by default the PnP logo will be used.
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="Title" type="xsd:string" use="optional">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                  The Title of the application in the UI. It is an optional attribute and by default the name "PnP Partner Pack" will be used.
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:attribute>
             <xsd:attribute name="defaultSiteTemplate" type="xsd:string" use="required">
               <xsd:annotation>
                 <xsd:documentation xml:lang="en">

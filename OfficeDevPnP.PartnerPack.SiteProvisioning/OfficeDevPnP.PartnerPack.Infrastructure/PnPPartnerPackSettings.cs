@@ -220,6 +220,84 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
         }
 
         /// <summary>
+        /// The URL of the application logo in the UI.
+        /// </summary>
+        /// <remarks>
+        /// It is an optional attribute and by default the PnP logo will be used.
+        /// </remarks>
+        public static String LogoUrl
+        {
+            get
+            {
+                if (!String.IsNullOrEmpty(_configuration.GeneralSettings.LogoUrl))
+                {
+                    return (_configuration.GeneralSettings.LogoUrl);
+                }
+                else
+                {
+                    return ("/AppIcon.png");
+                }
+            }
+        }
+
+        /// <summary>
+        /// The Title of the application in the UI.
+        /// </summary>
+        /// <remarks>
+        /// It is an optional attribute and by default the name "PnP Partner Pack" will be used.
+        /// </remarks>
+        public static String Title
+        {
+            get
+            {
+                if (!String.IsNullOrEmpty(_configuration.GeneralSettings.Title))
+                {
+                    return (_configuration.GeneralSettings.Title);
+                }
+                else
+                {
+                    return ("PnP Partner Pack");
+                }
+            }
+        }
+
+        /// <summary>
+        /// The Welcome Message used in the Home Page of the application. 
+        /// </summary>
+        public static String WelcomeMessage
+        {
+            get
+            {
+                if (_configuration.GeneralSettings.WelcomeMessage != null)
+                {
+                    return (_configuration.GeneralSettings.WelcomeMessage.InnerText);
+                }
+                else
+                {
+                    return (String.Empty);
+                }
+            }
+        }
+
+        /// <summary>
+        /// The Footer Message used in the pages of the application.
+        /// </summary>
+        public static String FooterMessage
+        {
+            get
+            {
+                if (_configuration.GeneralSettings.FooterMessage != null)
+                {
+                    return (_configuration.GeneralSettings.FooterMessage.InnerText);
+                }
+                else
+                {
+                    return (String.Empty);
+                }
+            }
+        }
+
+        /// <summary>
         /// The name of the Site Template to use while creating new Sites
         /// </summary>
         public static String DefaultSiteTemplate
