@@ -138,6 +138,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
             CreateSubSiteViewModel model = new CreateSubSiteViewModel();
             model.Scope = TemplateScope.Web;
             model.ParentSiteUrl = HttpContext.Request["SPHostUrl"];
+
             return View("CreateSite", model);
         }
 
@@ -148,6 +149,21 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
             {
                 case CreateSiteStep.SiteInformation:
                     ModelState.Clear();
+
+                    // If it is the first time that we are here
+                    if (String.IsNullOrEmpty(model.Title))
+                    {
+                        model.InheritPermissions = true;
+                        using (var ctx = PnPPartnerPackContextProvider.GetAppOnlyClientContext(model.ParentSiteUrl))
+                        {
+                            Web web = ctx.Web;
+                            ctx.Load(web, w => w.Language, w => w.RegionalSettings.TimeZone);
+                            ctx.ExecuteQueryRetry();
+
+                            model.Language = (Int32)web.Language;
+                            model.TimeZone = web.RegionalSettings.TimeZone.Id;
+                        }
+                    }
                     break;
                 case CreateSiteStep.TemplateParameters:
                     if (!ModelState.IsValid)
