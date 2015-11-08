@@ -204,7 +204,7 @@ Save the updated manifest and upload it back to Azure AD, by using the "Upload M
 It is now time to create an infrastructural Site Collection in your Office 365 tenant. You
 can do that using the SharePoint Online Admin Center, or you can use a bunch of PowerShell.
 Here you can see a sample excerpt of a PowerShell script that uses the wonderful PnP
-PowerShell extensions made by <a href="https://twitter.com/erwinvanhunen">Erwin</a> and available <a href="github.com/OfficeDev/PnP-PowerShell">here</a>.
+PowerShell extensions made by <a href="https://twitter.com/erwinvanhunen">Erwin</a> and available <a href="https://github.com/OfficeDev/PnP-PowerShell">here</a>.
 
 ```PowerShell
 Connect-SPOnline "https://[tenant]-admin.sharepoint.com/"
@@ -328,9 +328,9 @@ Edit the following sections:
 
 All the values surrounded by [name] have to be replaced with the corresponding values,
 which you got in one or more of the previous setup steps. You can even use the 
-<a href="../Scripts/Configure-Configs.ps1">Configure-Configs.ps1</a> PowerShell script file
+<a href="../scripts/Configure-Configs.ps1">Configure-Configs.ps1</a> PowerShell script file
 that is available in the 
-<a href="../Scripts/">Scripts folder</a> of this repository.
+<a href="../scripts/">Scripts folder</a> of this repository.
 
 Upload the Azure Web App to the target repository. You can use any of the available
 techniques for doing that (GitHub repository, FTP, Visual Studio Publish, etc.).
@@ -386,12 +386,12 @@ If the check fails, the job sends and email alert to the unique Site Collection 
 
 In order to publish the Jobs, you will need to configure the App.Config of the jobs, providing 
 almost the same parameters that you configured for the Web Application and/or the other Jobs.
-To configured the jobs, you can also use the <a href="../Scripts/Configure-Configs.ps1">Configure-Configs.ps1</a> PowerShell script file
-that is available in the <a href="../Scripts/">Scripts folder</a> of this repository.
+To configured the jobs, you can also use the <a href="../scripts/Configure-Configs.ps1">Configure-Configs.ps1</a> PowerShell script file
+that is available in the <a href="../scripts/">Scripts folder</a> of this repository.
 
 Moreover, you will have to publish them into the Azure Web App. To provision the Governance Jobs (*CheckAdminJob* and *ExternalUsersJob*) you can also use
-the <a href="../Scripts/Provision-GovernanceTimerJobs.ps1">Provision-GovernanceTimerJobs.ps1</a> PowerShell script file
-that is available in the <a href="../Scripts/">Scripts folder</a> of this repository.
+the <a href="../scripts/Provision-GovernanceTimerJobs.ps1">Provision-GovernanceTimerJobs.ps1</a> PowerShell script file
+that is available in the <a href="../scripts/">Scripts folder</a> of this repository.
 
 > Further details about how to publish the Azure Web Jobs into a target Azure Web App will
 be provided shortly. In the meantime you can read the following article: <a href="https://azure.microsoft.com/en-gb/documentation/articles/websites-dotnet-deploy-webjobs/">Deploy WebJobs using Visual Studio</a>.
