@@ -380,10 +380,18 @@ you have to provision some Azure Web Jobs. Here is the list:
 and Applies Provisioning Templates to Sites. This job is available <a href="../OfficeDevPnP.PartnerPack.SiteProvisioning/OfficeDevPnP.PartnerPack.ScheduledJob">here</a>.
 * ContinousJob: is a continously running Job that creates Sub Sites and Extracts Provisioning
 Templates in near-real-time. This job is available <a href="../OfficeDevPnP.PartnerPack.SiteProvisioning/OfficeDevPnP.PartnerPack.ContinousJob">here</a>.
+* CheckAdminJob: it is a scheduled Job, which checks that every Site Collection provisioned using the PnP Partner Pack has at least two Site Collection Administrators. 
+If the check fails, the job sends and email alert to the unique Site Collection Administrator.
+* ExternalUsersJob: this scheduled Job checks the status of the External Users for every Site Collection provisioned using the PnP Partner Pack.
 
 In order to publish the Jobs, you will need to configure the App.Config of the jobs, providing 
-almost the same parameters that you configured for the Web Application.
-Moreover, you will have to publish them into the Azure Web App.
+almost the same parameters that you configured for the Web Application and/or the other Jobs.
+To configured the jobs, you can also use the <a href="../Scripts/Configure-Configs.ps1">Configure-Configs.ps1</a> PowerShell script file
+that is available in the <a href="../Scripts/">Scripts folder</a> of this repository.
+
+Moreover, you will have to publish them into the Azure Web App. To provision the Governance Jobs (*CheckAdminJob* and *ExternalUsersJob*) you can also use
+the <a href="../Scripts/Provision-GovernanceTimerJobs.ps1">Provision-GovernanceTimerJobs.ps1</a> PowerShell script file
+that is available in the <a href="../Scripts/">Scripts folder</a> of this repository.
 
 > Further details about how to publish the Azure Web Jobs into a target Azure Web App will
 be provided shortly. In the meantime you can read the following article: <a href="https://azure.microsoft.com/en-gb/documentation/articles/websites-dotnet-deploy-webjobs/">Deploy WebJobs using Visual Studio</a>.
