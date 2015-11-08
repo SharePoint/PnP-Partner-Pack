@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pnp:PnPPartnerPackConfiguration xmlns:pnp="http://schemas.dev.office.com/PnP/2015/10/PnPPartnerPackConfiguration">
+
+  <pnp:GeneralSettings defaultSiteTemplate="STS#0" storageQueueName="pnppartnerpackjobsqueue" />
+
+  <pnp:TenantSettings
+    tenant="sample.onmicrosoft.com"
+    appOnlyCertificateThumbprint="3BF6BD842C011E9E387F34734037C90488DB929C"
+    infrastructureSiteUrl="https://sample.sharepoint.com/sites/PnP-Partner-Pack/"  />
+
+  <pnp:ProvisioningRepository
+    name="SharePointProvisioningRepository"
+    type="OfficeDevPnP.PartnerPack.Infrastructure.SharePoint.SharePointProvisioningRepository, OfficeDevPnP.PartnerPack.Infrastructure">
+    <pnp:Configuration>
+      <!-- Whatever you like here! :-) -->
+    </pnp:Configuration>
+  </pnp:ProvisioningRepository>
+
+  <pnp:ProvisioningJobs>
+    <pnp:JobHandlers>
+      <pnp:JobHandler 
+        name="HandlerOne"
+        type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers.HandlerOne, OfficeDevPnP.PartnerPack.Infrastructure">
+        <pnp:Configuration>
+          <!-- Any optional handler configuration -->
+        </pnp:Configuration>
+      </pnp:JobHandler>
+      <pnp:JobHandler
+        name="HandlerTwo"
+        type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers.HandlerTwo, OfficeDevPnP.PartnerPack.Infrastructure">
+        <pnp:Configuration>
+          <!-- Another optional handler configuration -->
+        </pnp:Configuration>
+      </pnp:JobHandler>
+    </pnp:JobHandlers>
+    <pnp:JobTypes>
+      <pnp:JobType
+        handler="HandlerOne"
+        executionModel="Scheduled"
+        type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.GetProvisioningTemplateJob"/>
+      <pnp:JobType
+        handler="HandlerOne"
+        executionModel="Scheduled"
+        type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.ApplyProvisioningTemplateJob"/>
+      <pnp:JobType
+        handler="HandlerTwo"
+        executionModel="Scheduled"
+        type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.SiteCollectionProvisioningJob" />
+      <pnp:JobType
+        handler="HandlerTwo"
+        executionModel="Continous"
+        type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.SubSiteProvisioningJob"/>
+    </pnp:JobTypes>
+  </pnp:ProvisioningJobs>
+  
+</pnp:PnPPartnerPackConfiguration>

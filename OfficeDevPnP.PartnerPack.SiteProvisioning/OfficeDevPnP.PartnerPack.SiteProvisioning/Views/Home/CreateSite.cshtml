@@ -1,0 +1,109 @@
+﻿@model OfficeDevPnP.PartnerPack.SiteProvisioning.Models.CreateSiteViewModel
+@using OfficeDevPnP.PartnerPack.SiteProvisioning.Models
+
+@{
+    if (Model.Scope != OfficeDevPnP.PartnerPack.Infrastructure.TemplateScope.Site)
+    {
+        ViewBag.Title = "Create Sub Site";
+    }
+    else
+    {
+        ViewBag.Title = "Create Site Collection";
+    }
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(model => model.Scope)
+    @Html.HiddenFor(model => model.ParentSiteUrl)
+
+    <div>
+        @Html.Partial("~/Views/Shared/_WorkingOnIt.cshtml")
+        <div id="SiteCreationWizard">
+            <div id="@CreateSiteStep.TemplateSelection">
+                @Html.Partial("TemplateSelection")
+            </div>
+            <div id="@CreateSiteStep.SiteInformation">
+            </div>
+            <div id="@CreateSiteStep.TemplateParameters">
+            </div>
+            <div id="@CreateSiteStep.SiteCreated">
+            </div>
+        </div>
+    </div>
+    }
+
+    <div>&nbsp;</div>
+
+    <div>
+        <a href="javascript:history.back();">Back</a>
+    </div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(function () {
+
+            // Hide the Working On It panel
+            $("#WorkingOnIt").hide();
+
+            // Handle wizard steps
+            $(document).on("click", ".NextStep,.PreviousStep", moveWizardStep);
+
+            // Handle template selection
+            $(document).on("click", ".provtemplate", function () {
+                $("#@Html.IdFor(model => model.ProvisioningTemplateUrl)")
+                    .val($(this).attr("data-pnp-template-url"));
+                $(".provtemplate").removeClass("active");
+                $(this).addClass("active");
+            });
+        });
+
+        function moveWizardStep() {
+
+            var direction = $(this).hasClass("NextStep") ? "forward" : "backward";
+            $("#SiteCreationWizard > div").hide();
+            $("#WorkingOnIt").show();
+
+            var currentStep = $("#@Html.IdFor(model => model.Step)").val();
+            switch (currentStep) {
+                case "@CreateSiteStep.TemplateSelection":
+                    currentStep = "@CreateSiteStep.SiteInformation";
+                    break;
+                case "@CreateSiteStep.SiteInformation":
+                    currentStep = direction == "forward" ? "@CreateSiteStep.TemplateParameters" : "@CreateSiteStep.TemplateSelection";
+                    break;
+                case "@CreateSiteStep.TemplateParameters":
+                    currentStep = direction == "forward" ? "@CreateSiteStep.SiteCreated" : "@CreateSiteStep.SiteInformation";
+                    break;
+            }
+
+            $("#@Html.IdFor(model => model.Step)").val(currentStep);
+
+            $.ajax({
+                method: "POST",
+                url: "@Url.Action(Model.Scope == OfficeDevPnP.PartnerPack.Infrastructure.TemplateScope.Site ? "CreateSiteCollection" : "CreateSubSite")",
+                data: $("form").serialize(),
+                success: function (result) {
+                    if (result) {
+                        $("#@Html.IdFor(model => model.Step)").remove();
+
+                        var htmlResult = $.parseHTML(result);
+                        var newStep = $("#@Html.IdFor(model => model.Step )", htmlResult).val();
+                        $("#WorkingOnIt").hide();
+                        $("#" + newStep).html(result).show();
+
+                        spApp.setup();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert("Error stepping through Site creation: " + error);
+                }
+            });
+        }
+
+    </script>
+}

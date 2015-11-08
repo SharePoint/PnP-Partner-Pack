@@ -1,0 +1,49 @@
+﻿@model OfficeDevPnP.PartnerPack.SiteProvisioning.Models.CreateSiteViewModel
+
+@using OfficeDevPnP.PartnerPack.Infrastructure
+
+@functions {
+    public ProvisioningTemplateInformation[] GetProvisioningTemplates()
+    {
+        List<ProvisioningTemplateInformation> result = new List<ProvisioningTemplateInformation>();
+
+        var globalTemplates = ProvisioningRepositoryFactory.Current.GetGlobalProvisioningTemplates(Model.Scope);
+        result.AddRange(globalTemplates);
+
+        if (Model.Scope != TemplateScope.Site)
+        {
+            var localTemplates = ProvisioningRepositoryFactory.Current.GetLocalProvisioningTemplates(Model.ParentSiteUrl, Model.Scope);
+            result.AddRange(localTemplates);
+        }
+
+        return (result.ToArray());
+    }
+}
+
+<div class="stepcontainer">
+
+    <input type="hidden" id="@Html.IdFor(model => model.Step)" name="@Html.NameFor(model => model.Step)" value="@Model.Step" />
+
+    <h3>Select a Template</h3>
+
+    <div>
+
+        @foreach (var template in GetProvisioningTemplates())
+        {
+            <div class="provtemplate" data-pnp-template-url="@template.TemplateFileUri">
+                <div class="roundmask">
+                    <img alt="@template.DisplayName" src="@template.TemplateImageUrl" />
+                </div>
+                <h1>@template.DisplayName</h1>
+                <span>@template.Description</span>
+            </div>
+        }
+
+    </div>
+
+    <input type="hidden" id="@Html.IdFor(model => model.ProvisioningTemplateUrl)" name="@Html.NameFor(model => model.ProvisioningTemplateUrl)" value="" />
+
+    <input type="button" class="btn-primary btn NextStep" value="Next" />
+
+</div>
+

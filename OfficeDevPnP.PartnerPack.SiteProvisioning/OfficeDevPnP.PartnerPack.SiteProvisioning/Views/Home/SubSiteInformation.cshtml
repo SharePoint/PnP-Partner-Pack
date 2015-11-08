@@ -1,0 +1,10 @@
+﻿@model OfficeDevPnP.PartnerPack.SiteProvisioning.Models.CreateSubSiteViewModel
+
+<div class="form-group">
+    @Html.LabelFor(model => model.InheritPermissions, htmlAttributes: new { @class = "control-label col-md-3" })
+    <div class="col-md-6">
+        @Html.EditorFor(model => model.InheritPermissions)
+        @Html.ValidationMessageFor(model => model.InheritPermissions, "", new { @class = "radio" })
+    </div>
+</div>
+

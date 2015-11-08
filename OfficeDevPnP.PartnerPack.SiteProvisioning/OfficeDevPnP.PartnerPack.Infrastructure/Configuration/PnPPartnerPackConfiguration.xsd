@@ -1,0 +1,230 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema id="PnPPartnerPackConfiguration"
+    targetNamespace="http://schemas.dev.office.com/PnP/2015/10/PnPPartnerPackConfiguration"
+    elementFormDefault="qualified"
+    xmlns="http://schemas.dev.office.com/PnP/2015/10/PnPPartnerPackConfiguration"
+    xmlns:pnp="http://schemas.dev.office.com/PnP/2015/10/PnPPartnerPackConfiguration"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <xsd:element name="PnPPartnerPackConfiguration">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        This is the base element of PnP Partner Pack Configuration.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="GeneralSettings">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+              General Settings section for PnP Partner Pack.
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="WelcomeMessage" minOccurs="1" maxOccurs="1">
+                <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                    The Welcome Message used in the Home Page of the application. 
+                  </xsd:documentation>
+                </xsd:annotation>
+                <xsd:complexType mixed="true">
+                  <xsd:sequence>
+                    <xsd:any namespace="##any" minOccurs="0" maxOccurs="1"/>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+              <xsd:element name="FooterMessage" minOccurs="1" maxOccurs="1">
+                <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                    The Footer Message used in the pages of the application.
+                  </xsd:documentation>
+                </xsd:annotation>
+                <xsd:complexType mixed="true">
+                  <xsd:sequence>
+                    <xsd:any namespace="##any" minOccurs="0" maxOccurs="1"/>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+            </xsd:sequence>
+            <xsd:attribute name="LogoUrl" type="xsd:string" use="optional">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                  The URL of the application logo in the UI. It is an optional attribute and by default the PnP logo will be used.
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="Title" type="xsd:string" use="optional">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                  The Title of the application in the UI. It is an optional attribute and by default the name "PnP Partner Pack" will be used.
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="defaultSiteTemplate" type="xsd:string" use="required">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                  The name of the Site Template to use while creating new Sites.
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:attribute>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="TenantSettings">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+              Defines the tenant-level configuration settings
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:attribute name="tenant" type="xsd:string" use="required">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                  The name of the Office 365 Tenant.
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="infrastructureSiteUrl" type="xsd:string" use="required">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                  The URL of the Infrastructural Site Collection.
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="appOnlyCertificateThumbprint" type="xsd:string" use="required">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                  The thumbprint of the X.509 Certificate used for AppOnly Authentication against SharePoint Online.
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:attribute>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="ProvisioningRepository" type="pnp:DotNetHandlerType">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+              Defines the Provisioning engine Repository type and configuration, if any.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="ProvisioningJobs" minOccurs="0">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+              Defines the Configuration related to Provisioning Jobs.
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="JobHandlers">
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="JobHandler" type="pnp:DotNetHandlerType"
+                                 minOccurs="1" maxOccurs="unbounded">
+                      <xsd:annotation>
+                        <xsd:documentation xml:lang="en">
+                          Defines a Job Handler and its configuration, if any.
+                        </xsd:documentation>
+                      </xsd:annotation>
+                    </xsd:element>
+                  </xsd:sequence>
+                </xsd:complexType>                
+              </xsd:element>
+              <xsd:element name="JobTypes">
+                <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                    Defines the Job Types available for handling.
+                  </xsd:documentation>
+                </xsd:annotation>
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="JobType" minOccurs="1" maxOccurs="unbounded">
+                      <xsd:annotation>
+                        <xsd:documentation xml:lang="en">
+                          Defines a single Jobs Type handled by the current Job Handler.
+                        </xsd:documentation>
+                      </xsd:annotation>
+                      <xsd:complexType>
+                        <xsd:attribute name="type" type="xsd:string" use="required">
+                          <xsd:annotation>
+                            <xsd:documentation xml:lang="en">
+                              The .NET fully qualified name of the Job Type.
+                            </xsd:documentation>
+                          </xsd:annotation>
+                        </xsd:attribute>
+                        <xsd:attribute name="handler" type="xsd:IDREF" use="required">
+                          <xsd:annotation>
+                            <xsd:documentation xml:lang="en">
+                              The unique ID name of the Job Handler that will handle the current Job Type.
+                            </xsd:documentation>
+                          </xsd:annotation>
+                        </xsd:attribute>
+                        <xsd:attribute name="executionModel" use="required">
+                          <xsd:annotation>
+                            <xsd:documentation xml:lang="en">
+                              Defines the Execution Model for the current Job Type.
+                            </xsd:documentation>
+                          </xsd:annotation>
+                          <xsd:simpleType>
+                            <xsd:restriction base="xsd:string">
+                              <xsd:enumeration value="Continous">
+                                <xsd:annotation>
+                                  <xsd:documentation xml:lang="en">
+                                    The Job Type will be handled continously.
+                                  </xsd:documentation>
+                                </xsd:annotation>
+                              </xsd:enumeration>
+                              <xsd:enumeration value="Scheduled">
+                                <xsd:annotation>
+                                  <xsd:documentation xml:lang="en">
+                                    The Job Type will be handled based on a pre-defined schedule.
+                                  </xsd:documentation>
+                                </xsd:annotation>
+                              </xsd:enumeration>
+                            </xsd:restriction>
+                          </xsd:simpleType>
+                        </xsd:attribute>
+                      </xsd:complexType>
+                    </xsd:element>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+            </xsd:sequence>            
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:complexType name="DotNetHandlerType">
+    <xsd:sequence>
+      <xsd:element name="Configuration" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:any minOccurs="0" processContents="lax">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                  Optional XML configuration section for the current handler.
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:any>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="name" type="xsd:ID" use="required">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+          A unique ID name for the current handler.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="type" type="xsd:string" use="required">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en">
+          The .NET fully qualified name of the type for the current handler.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+
+</xsd:schema>

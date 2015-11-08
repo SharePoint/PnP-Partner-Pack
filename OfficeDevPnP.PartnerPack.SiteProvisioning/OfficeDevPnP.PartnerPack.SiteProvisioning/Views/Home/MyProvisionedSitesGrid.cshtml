@@ -1,0 +1,55 @@
+﻿@model OfficeDevPnP.PartnerPack.SiteProvisioning.Models.MyProvisionedSitesViewModel
+@using OfficeDevPnP.PartnerPack.Infrastructure.Jobs
+
+
+@functions {
+    String getAbsoluteSiteUrl(SiteCollectionProvisioningJob jobItem)
+    {
+        if (jobItem.Status == OfficeDevPnP.PartnerPack.Infrastructure.ProvisioningJobStatus.Provisioned)
+        {
+            return (OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackSettings.InfrastructureSiteUrl.Substring(0,
+                OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackSettings.InfrastructureSiteUrl.IndexOf(".com/") + 4) + jobItem.RelativeUrl);
+        }
+        else
+        {
+            return (string.Empty);
+        }
+    }
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="table">
+            <div class="row gridHeader">
+                <div class="col-md-8 noOverflow">Title</div>
+                <div class="col-md-1">Status</div>
+                <div class="col-md-2">Details</div>
+            </div>
+            @foreach (var job in Model.PersonalJobs.Cast<SiteCollectionProvisioningJob>())
+            {
+                <div class="row">
+                    <div class="col-md-8 noOverflow">
+                        @if (job.Status == OfficeDevPnP.PartnerPack.Infrastructure.ProvisioningJobStatus.Pending ||
+                            job.Status == OfficeDevPnP.PartnerPack.Infrastructure.ProvisioningJobStatus.Running)
+                        {
+                            <span>@job.SiteTitle</span>
+                            <img width="16" height="16" src="data:image/gif;base64,R0lGODlhEAAQAIAAAFLOQv///yH/C05FVFNDQVBFMi4wAwEAAAAh+QQFCgABACwJAAIAAgACAAACAoRRACH5BAUKAAEALAwABQACAAIAAAIChFEAIfkEBQoAAQAsDAAJAAIAAgAAAgKEUQAh+QQFCgABACwJAAwAAgACAAACAoRRACH5BAUKAAEALAUADAACAAIAAAIChFEAIfkEBQoAAQAsAgAJAAIAAgAAAgKEUQAh+QQFCgABACwCAAUAAgACAAACAoRRACH5BAkKAAEALAIAAgAMAAwAAAINjAFne8kPo5y02ouzLQAh+QQJCgABACwCAAIADAAMAAACF4wBphvID1uCyNEZM7Ov4v1p0hGOZlAAACH5BAkKAAEALAIAAgAMAAwAAAIUjAGmG8gPW4qS2rscRPp1rH3H1BUAIfkECQoAAQAsAgACAAkADAAAAhGMAaaX64peiLJa6rCVFHdQAAAh+QQJCgABACwCAAIABQAMAAACDYwBFqiX3mJjUM63QAEAIfkECQoAAQAsAgACAAUACQAAAgqMARaol95iY9AUACH5BAkKAAEALAIAAgAFAAUAAAIHjAEWqJeuCgAh+QQJCgABACwFAAIAAgACAAACAoRRADs=" />
+                        }
+                        else if (job.Status == OfficeDevPnP.PartnerPack.Infrastructure.ProvisioningJobStatus.Provisioned)
+                        {
+                            <a href="@getAbsoluteSiteUrl(job)">@job.SiteTitle</a>
+                        }
+                        else if (job.Status == OfficeDevPnP.PartnerPack.Infrastructure.ProvisioningJobStatus.Failed ||
+                            job.Status == OfficeDevPnP.PartnerPack.Infrastructure.ProvisioningJobStatus.Cancelled)
+                        {
+                            <span>@job.SiteTitle</span>
+                        }
+                    </div>
+                    <div class="col-md-1">@job.Status</div>
+                    <div class="col-md-2">@job.ErrorMessage</div>
+                </div>
+            }
+        </div>
+        <input type="button" id="RefreshButton" value="Refresh" class="btn btn-primary" />
+    </div>
+</div>

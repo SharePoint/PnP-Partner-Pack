@@ -1,0 +1,38 @@
+﻿@model CreateSiteViewModel
+@using OfficeDevPnP.PartnerPack.SiteProvisioning.Models
+
+<div>
+
+    <input type="hidden" id="@Html.IdFor(model => model.Step)" name="@Html.NameFor(model => model.Step)" value="@Model.Step" />
+
+    <h3>Template Parameters</h3>
+
+    @if (Model.Step == CreateSiteStep.TemplateParameters && (Model.TemplateParameters == null || Model.TemplateParameters.Count == 0))
+    {
+        <div class="informationText">There are no template parameters. You can simply proceed with Site creation.</div>
+    }
+    else
+    {
+        <div class="form-horizontal">
+            <hr />
+            @{
+                int i = 0;
+                foreach (var parameter in Model.TemplateParameters)
+                {
+                    <div class="form-group">
+                        <input type="hidden" name="TemplateParameters[@i].Key" value="@parameter.Key" />
+                        <label class="control-label col-md-3" for="templateImageFile">@parameter.Key</label>
+                        <div class="col-md-6">
+                            <input name="TemplateParameters[@i].Value" value="@parameter.Value" class="form-control" />
+                        </div>
+                    </div>
+                    i++;
+                }
+            }
+        </div>
+    }
+
+    <input type="button" class="btn-default btn PreviousStep" value="Previous" />
+    <input type="button" class="btn-primary btn NextStep" value="Create" />
+
+    </div>

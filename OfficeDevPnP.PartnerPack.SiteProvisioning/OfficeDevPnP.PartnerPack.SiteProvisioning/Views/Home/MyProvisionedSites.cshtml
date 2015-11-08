@@ -1,0 +1,72 @@
+﻿@using OfficeDevPnP.PartnerPack.Infrastructure.Jobs
+
+@{
+    ViewBag.Title = "My Site Collections";
+}
+
+<div class="table">
+    <div class="row">
+        <div class="col-md-12">
+            Here you can find the list of your provisioned site collections.
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            &nbsp;
+        </div>
+    </div>
+
+    <div>
+        @Html.Partial("~/Views/Shared/_WorkingOnIt.cshtml")
+        <div id="SiteCollectionsList">
+        </div>
+    </div>
+
+</div>
+
+<div>
+    <a href="javascript:history.back();">Back</a>
+</div>
+
+<script language="javascript">
+
+    $(document).ready(function () {
+
+        // Hide the Site Collection details panel
+        $("#SiteCollectionsList").hide();
+        $("#WorkingOnIt").hide();
+
+        $(document).on("click", "#RefreshButton", refreshSiteCollectionsList);
+
+        refreshSiteCollectionsList();
+    });
+
+    function refreshSiteCollectionsList() {
+
+        // Hide the Site Collection details panel
+        $("#SiteCollectionsList").hide();
+        $("#WorkingOnIt").show();
+
+        // Query for site collection settings
+        $.ajax({
+            method: "POST",
+            url: "/Home/GetMyProvisionedSitesList",
+            success: function (result) {
+                if (result) {
+                    $("#SiteCollectionsList").html(result);
+
+                    $("#WorkingOnIt").hide();
+                    $("#SiteCollectionsList").show();
+                }
+            },
+            error: function (xhr, status, error) {
+                $("#WorkingOnIt").hide();
+                $("#SiteCollectionsList").hide();
+                alert("Error retrieving the list of Site Collections: " + error);
+            }
+        });
+    }
+
+</script>
+
+

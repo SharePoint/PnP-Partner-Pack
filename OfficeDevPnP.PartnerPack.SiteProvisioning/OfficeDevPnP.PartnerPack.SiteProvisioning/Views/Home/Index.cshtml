@@ -1,0 +1,24 @@
+﻿@model OfficeDevPnP.PartnerPack.SiteProvisioning.Models.IndexViewModel
+@{
+    ViewBag.Title = String.Format("Welcome to the {0}!", OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackSettings.Title);
+}
+
+<div class="table">
+    <div class="row">
+        <div class="col-sm-12">
+            @Html.Raw(OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackSettings.WelcomeMessage)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">&nbsp;</div>
+    </div>
+    @if (Model != null && !String.IsNullOrEmpty(Model.InfrastructuralSiteUrl))
+    {
+        <div class="row">
+            <div class="col-sm-12">
+                Go to the <a target="_blank" href="@Model.InfrastructuralSiteUrl">Infrastructural Site Collection</a>.
+            </div>
+        </div>
+    }
+    
+</div>
