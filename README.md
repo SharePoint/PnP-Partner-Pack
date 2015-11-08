@@ -5,7 +5,7 @@ Partner pack – Level set the partner ecosystem and customers on how to get sta
   * Only way we can ensure that code is stable enough and does compile
 * Documentation and automated scripts for deployment
   * Step-by-Step <a href="./Documentation/Manual-Setup-Guide.md">guidance</a> on how to setup apps to Office 365 tenant and Azure
-  * Architectural <a href="./DocumentationArchitecture-and-Implementation.md">documentation</a> about architecture and development
+  * Architectural <a href="./Documentation/Architecture-and-Implementation.md">documentation</a> about architecture and development
 
 ## Contents
 * Site provisioning solution for site collections and sub sites, including “Save site as provisioning template” capability and centralized view.
