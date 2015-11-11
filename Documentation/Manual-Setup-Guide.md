@@ -221,9 +221,9 @@ Here follows an excerpt of the PowerShell script to provision these artifacts:
 ```PowerShell
 Connect-SPOnline "https://[tenant].sharepoint.com/sites/PnP-Partner-Pack-Infrastructure"
 
-Apply-SPOProvisioningTemplate -Path "C:\github\PaoloPia-PnP-Partner-Pack\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning\Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Jobs.xml"
-Apply-SPOProvisioningTemplate -Path "C:\github\PaoloPia-PnP-Partner-Pack\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning\Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Templates.xml"
-Apply-SPOProvisioningTemplate -Path "C:\github\PaoloPia-PnP-Partner-Pack\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning\Templates\PnP-Partner-Pack-Infrastructure-Contents.xml"
+Apply-SPOProvisioningTemplate -Path "[Partner-Pack-Source-Code-Folder]\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning\Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Jobs.xml"
+Apply-SPOProvisioningTemplate -Path "[Partner-Pack-Source-Code-Folder]\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning\Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Templates.xml"
+Apply-SPOProvisioningTemplate -Path "[Partner-Pack-Source-Code-Folder]\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning\Templates\PnP-Partner-Pack-Infrastructure-Contents.xml"
 ```
 
 These Provisioning Templates will create a couple of libraries, including some infrastructural 
@@ -237,6 +237,12 @@ To have a look at these libraries, you can open links like the following ones:
 
 In the latter library, you will find already uploaded a bunch of Provisioning Templates, 
 organized in sub-folders. You will use them later in this setup guide.
+
+> Notice that the previous code excerpts are just examples, to show you how you should invoke the
+cmdlets. As a suitable alternative, you can use the 
+<a href="../scripts/Provision-InfrastructureSiteArtifacts.ps1">Provision-InfrastructureSiteArtifacts.ps1</a> PowerShell script file
+that is available in the 
+<a href="../scripts/">Scripts folder</a> of this repository.
 
 <a name="azureblob"></a>
 ###Azure Blob Storage configuration
