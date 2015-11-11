@@ -331,7 +331,6 @@
     <Content Include="Views\Home\SaveSiteAsTemplate.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\LocaleID.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\PeoplePickerUser[].cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\ProvisioningTemplate.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SitePolicy.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\TimeZoneInfo.cshtml" />
     <Content Include="Views\Shared\_Office365SuiteBar.cshtml" />
