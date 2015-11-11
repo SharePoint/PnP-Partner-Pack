@@ -356,10 +356,6 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         public ActionResult Settings(SettingsViewModel model)
         {
             AntiForgery.Validate();
-            if (ModelState.IsValid)
-            {
-                PnPPartnerPackUtilities.EnablePartnerPackOnSite("https://piasysdev.sharepoint.com/sites/PnPProvisioningTarget03/");
-            }
 
             return View("Index");
         }
