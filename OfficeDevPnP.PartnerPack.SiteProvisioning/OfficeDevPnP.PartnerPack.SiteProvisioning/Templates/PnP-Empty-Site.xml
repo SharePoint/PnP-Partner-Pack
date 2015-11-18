@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<pnp:Provisioning xmlns:pnp="http://schemas.dev.office.com/PnP/2015/08/ProvisioningSchema">
+  <pnp:Preferences Generator="OfficeDevPnP.Core, Version=1.8.1115.0, Culture=neutral, PublicKeyToken=null" />
+  <pnp:Templates ID="CONTAINER-PNP-PARTNER-PACK-EMPTY">
+    <pnp:ProvisioningTemplate ID="PNP-PARTNER-PACK-EMPTY" Version="1" ImagePreviewUrl="" DisplayName="Empty Site Template" Description="This is a ready to go empty site template for creating a new site collection.">
+      <pnp:RegionalSettings AdjustHijriDays="0" AlternateCalendarType="None" CalendarType="None" Collation="25" FirstDayOfWeek="Sunday" FirstWeekOfYear="0" LocaleId="1033" ShowWeeks="false" Time24="false" TimeZone="13" WorkDayEndHour="5:00PM" WorkDays="62" WorkDayStartHour="8:00AM" />
+      <pnp:SupportedUILanguages>
+        <pnp:SupportedUILanguage LCID="1033" />
+      </pnp:SupportedUILanguages>
+    </pnp:ProvisioningTemplate>
+  </pnp:Templates>
+</pnp:Provisioning>

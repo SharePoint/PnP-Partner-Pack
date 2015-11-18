@@ -4,6 +4,18 @@
   <pnp:Templates ID="PNP-PARTNER-PACK-INFRASTRUCTURE-CONTENTS-CONTAINER">
     <pnp:ProvisioningTemplate ID="PNP-PARTNER-PACK-INFRASTRUCTURE-CONTENTS" Version="1">
       <pnp:Files>
+        <pnp:File Folder="/PnPProvisioningTemplates" Src="PnP-Empty-Site.xml" Overwrite="true">
+          <pnp:Properties>
+            <pnp:Property Key="ContentTypeId" Value="0x010100498154DED7C84F4AB61A4029018F9048"/>
+            <pnp:Property Key="PnPProvisioningTemplateScope" Value="Site"/>
+          </pnp:Properties>
+        </pnp:File>
+        <pnp:File Folder="/PnPProvisioningTemplates" Src="PnP-Empty-Sub-Site.xml" Overwrite="true">
+          <pnp:Properties>
+            <pnp:Property Key="ContentTypeId" Value="0x010100498154DED7C84F4AB61A4029018F9048"/>
+            <pnp:Property Key="PnPProvisioningTemplateScope" Value="Web"/>
+          </pnp:Properties>
+        </pnp:File>
         <pnp:File Folder="/PnPProvisioningTemplates/CustomBar" Src="CustomBar\SPO-CustomBar.js" Overwrite="true">
         </pnp:File>
         <pnp:File Folder="/PnPProvisioningTemplates/CustomBar" Src="CustomBar\SPO-CustomBar.xml" Overwrite="true">

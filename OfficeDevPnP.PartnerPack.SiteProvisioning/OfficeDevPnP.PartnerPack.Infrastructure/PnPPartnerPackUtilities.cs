@@ -80,7 +80,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
             return (result);
         }
 
-        private static void ApplyProvisioningTemplateToSite(ClientContext context, String siteUrl, String folder, String fileName)
+        private static void ApplyProvisioningTemplateToSite(ClientContext context, String siteUrl, String folder, String fileName, Dictionary<String, String> parameters = null)
         {
             // Configure the XML file system provider
             XMLTemplateProvider provider =
@@ -91,6 +91,15 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
             // Load the template from the XML stored copy
             ProvisioningTemplate template = provider.GetTemplate(fileName);
             template.Connector = provider.Connector;
+
+            // Handle any custom parameter
+            if (parameters != null)
+            {
+                foreach (var parameter in parameters)
+                {
+                    template.Parameters.Add(parameter.Key, parameter.Value);
+                }
+            }
 
             // Apply the template to the target site
             context.Site.RootWeb.ApplyProvisioningTemplate(template);
