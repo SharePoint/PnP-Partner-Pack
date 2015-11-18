@@ -1,4 +1,4 @@
-# PnP-Partner-Pack
+# PnP-Partner-Pack 
 Partner pack – Level set the partner ecosystem and customers on how to get started truly on the transformation and with typical SharePoint Add-In model implementations.
 * Own repo as “PnP Partner Pack”
 * Own version of the code, which uses PnP Core Nuget package

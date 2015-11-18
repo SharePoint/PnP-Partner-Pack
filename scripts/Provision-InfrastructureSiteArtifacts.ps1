@@ -17,6 +17,10 @@ param
     [String]
     $InfrastructureSiteUrl,
 
+    [Parameter(Mandatory = $true, HelpMessage="The URL of your Azure Web site")]
+    [String]
+    $AzureWebSiteUrl,
+
 	[Parameter(Mandatory = $false, HelpMessage="Optional tenant administration credentials")]
 	[PSCredential]
 	$Credentials
@@ -26,6 +30,12 @@ param
 
 # DO NOT MODIFY BELOW
 $basePath = "$(convert-path ..)\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning"
+
+# Modify Responsive design template to include Azure WebSite Url
+$responsiveTemplate = (Get-Content "$basePath\Templates\Responsive\SPO-Responsive.xml") -As [Xml]
+$parameter = $responsiveTemplate.Provisioning.Preferences.Parameters.Parameter | ?{$_.Key -eq "AzureWebSiteUrl"}
+$parameter.'#text' = $AzureWebSiteUrl
+$responsiveTemplate.Save("$basePath\Templates\Responsive\SPO-Responsive.xml");
 
 if($Credentials -eq $null)
 {
