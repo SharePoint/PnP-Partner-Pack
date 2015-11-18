@@ -34,7 +34,7 @@ $basePath = "$(convert-path ..)\OfficeDevPnP.PartnerPack.SiteProvisioning\Office
 # Modify Responsive design template to include Azure WebSite Url
 $responsiveTemplate = (Get-Content "$basePath\Templates\Responsive\SPO-Responsive.xml") -As [Xml]
 $parameter = $responsiveTemplate.Provisioning.Preferences.Parameters.Parameter | ?{$_.Key -eq "AzureWebSiteUrl"}
-$parameter.'#text' = $AzureWebSiteUrl
+$parameter.InnerText = $AzureWebSiteUrl
 $responsiveTemplate.Save("$basePath\Templates\Responsive\SPO-Responsive.xml");
 
 if($Credentials -eq $null)
