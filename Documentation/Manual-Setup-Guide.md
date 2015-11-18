@@ -242,7 +242,8 @@ organized in sub-folders. You will use them later in this setup guide.
 cmdlets. As a suitable alternative, you can use the 
 <a href="../scripts/Provision-InfrastructureSiteArtifacts.ps1">Provision-InfrastructureSiteArtifacts.ps1</a> PowerShell script file
 that is available in the 
-<a href="../scripts/">Scripts folder</a> of this repository.
+<a href="../scripts/">Scripts folder</a> of this repository. The script will do everything for you, including replacing
+any parameter within the provisioning templates, in order to make it easier for you to setup the entire solution. 
 
 <a name="azureblob"></a>
 ###Azure Blob Storage configuration

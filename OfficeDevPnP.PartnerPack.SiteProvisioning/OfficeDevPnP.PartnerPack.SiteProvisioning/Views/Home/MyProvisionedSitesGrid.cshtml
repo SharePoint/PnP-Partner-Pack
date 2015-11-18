@@ -37,7 +37,7 @@
                         }
                         else if (job.Status == OfficeDevPnP.PartnerPack.Infrastructure.ProvisioningJobStatus.Provisioned)
                         {
-                            <a href="@getAbsoluteSiteUrl(job)">@job.SiteTitle</a>
+                            <a href="@getAbsoluteSiteUrl(job)" target="_blank">@job.SiteTitle</a>
                         }
                         else if (job.Status == OfficeDevPnP.PartnerPack.Infrastructure.ProvisioningJobStatus.Failed ||
                             job.Status == OfficeDevPnP.PartnerPack.Infrastructure.ProvisioningJobStatus.Cancelled)
