@@ -17,6 +17,10 @@ param
     [String]
     $InfrastructureSiteUrl,
 
+    [Parameter(Mandatory = $true, HelpMessage="The URL of your Azure Web site")]
+    [String]
+    $AzureWebSiteUrl,
+
 	[Parameter(Mandatory = $false, HelpMessage="Optional tenant administration credentials")]
 	[PSCredential]
 	$Credentials
@@ -27,15 +31,29 @@ param
 # DO NOT MODIFY BELOW
 $basePath = "$(convert-path ..)\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning"
 
+# Modify Responsive design template to include Azure WebSite Url
+$responsiveTemplate = (Get-Content "$basePath\Templates\Responsive\SPO-Responsive.xml") -As [Xml]
+$parameter = $responsiveTemplate.Provisioning.Preferences.Parameters.Parameter | ?{$_.Key -eq "AzureWebSiteUrl"}
+$parameter.InnerText = $AzureWebSiteUrl.Trim('/')
+$responsiveTemplate.Save("$basePath\Templates\Responsive\SPO-Responsive.xml");
+
+# Modify PnP Partner Pack Overrides template to include Azure WebSite Url
+$responsiveTemplate = (Get-Content "$basePath\Templates\Overrides\PnP-Partner-Pack-Overrides.xml") -As [Xml]
+$parameter = $responsiveTemplate.Provisioning.Preferences.Parameters.Parameter | ?{$_.Key -eq "AzureWebSiteUrl"}
+$parameter.InnerText = $AzureWebSiteUrl.Trim('/')
+$responsiveTemplate.Save("$basePath\Templates\Overrides\PnP-Partner-Pack-Overrides.xml");
+
 if($Credentials -eq $null)
 {
 	$Credentials = Get-Credential -Message "Enter Tenant Admin Credentials"
 }
 
+$InfrastructureSiteUrl = $InfrastructureSiteUrl.Trim('/')
 $uri = [System.Uri]$InfrastructureSiteUrl
 
 $siteHost = $uri.Host.ToLower()
-$siteHost = $siteHost.Replace(".sharepoint.com","-admin.sharepoint.com");
+$siteHost = $siteHost.Replace(".sharepoint.com","-admin.sharepoint.com")
+$siteHost = $siteHost.Trim('/')
 
 Connect-SPOnline -Url "https://$siteHost" -Credentials $Credentials
 $infrastructureSiteInfo = Get-SPOTenantSite -Url $InfrastructureSiteUrl -ErrorAction SilentlyContinue
