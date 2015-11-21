@@ -27,6 +27,7 @@ PnP Partner Pack in your own environment.
 ## Manual Installation Steps
 The manual installation requires to accomplish the following steps:
 * [Azure Active Directory Application registration, as Office 365 Add-In](#azuread)
+* [Create the self-signed certificate](#createcertificate)
 * [App Only certificate configuration in the Azure AD Application](#apponlyazuread)
 * [Infrastructural Site Collection provisioning](#sitecollection)
 * [Azure Blob Storage creation](#azureblob)
@@ -112,8 +113,8 @@ Pack solution there are operations executed as App Only, and other execute throu
 delegation, you have to select the same permissions also for the "Delegated Permissions"
 section. Then, click one more time the "Save" button.
 
-<a name="apponlyazuread"></a>
-###App Only certificate configuration in the Azure AD Application
+<a name="createcertificate"></a>
+###Create the self signed certificate
 You are now ready to configure the Azure AD Application for invoking SharePoint Online with
 an App Only access token. In order to do that, you have to create and configure a self-signed
 X.509 certificate, which will be used to authenticate your Application against Azure AD, while
@@ -157,7 +158,8 @@ To create a self signed certificate with this script:
 
 You will be asked to provide a password to encrypt your private key, and both the .PFX file and .CER file will be exported to the current folder.
 
-
+<a name="apponlyazuread"></a>
+### Configure the certificate in the Azure AD application manifest
 Start a PowerShell command window, and execute the following instructions:
 
 ```PowerShell
