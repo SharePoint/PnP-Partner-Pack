@@ -114,8 +114,8 @@ function ExportPFXFile()
     }
     $cert = Get-ChildItem -Path Cert:\LocalMachine\my | where-object{$_.Subject -eq "CN=$CommonName"}
     
-    Export-PfxCertificate -Cert $c -Password $Password -FilePath "$($CommonName).pfx"
-    Export-Certificate -Cert $c -Type CERT -FilePath "$CommonName.cer"
+    Export-PfxCertificate -Cert $cert -Password $Password -FilePath "$($CommonName).pfx"
+    Export-Certificate -Cert $cert -Type CERT -FilePath "$CommonName.cer"
 }
 
 function RemoveCertsFromStore()
