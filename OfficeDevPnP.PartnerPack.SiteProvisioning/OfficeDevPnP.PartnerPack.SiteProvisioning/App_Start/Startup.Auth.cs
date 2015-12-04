@@ -28,7 +28,9 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning
             
             app.SetDefaultSignInAsAuthenticationType(CookieAuthenticationDefaults.AuthenticationType);
 
-            app.UseCookieAuthentication(new CookieAuthenticationOptions { });
+            app.UseCookieAuthentication(new CookieAuthenticationOptions {
+                CookieManager = new Components.SystemWebCookieManager()
+            });
 
             app.UseOpenIdConnectAuthentication(
                 new OpenIdConnectAuthenticationOptions

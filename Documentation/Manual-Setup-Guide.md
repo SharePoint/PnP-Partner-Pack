@@ -27,6 +27,7 @@ PnP Partner Pack in your own environment.
 ## Manual Installation Steps
 The manual installation requires to accomplish the following steps:
 * [Azure Active Directory Application registration, as Office 365 Add-In](#azuread)
+* [Create the self-signed certificate](#createcertificate)
 * [App Only certificate configuration in the Azure AD Application](#apponlyazuread)
 * [Infrastructural Site Collection provisioning](#sitecollection)
 * [Azure Blob Storage creation](#azureblob)
@@ -112,16 +113,18 @@ Pack solution there are operations executed as App Only, and other execute throu
 delegation, you have to select the same permissions also for the "Delegated Permissions"
 section. Then, click one more time the "Save" button.
 
-<a name="apponlyazuread"></a>
-###App Only certificate configuration in the Azure AD Application
+<a name="createcertificate"></a>
+###Create the self signed certificate
 You are now ready to configure the Azure AD Application for invoking SharePoint Online with
 an App Only access token. In order to do that, you have to create and configure a self-signed
 X.509 certificate, which will be used to authenticate your Application against Azure AD, while
 requesting the App Only access token. 
 
 First of all, you have to create the self-signer X.509 Certificate, which can be created 
-using the makecert.exe tool that is available in the Windows SDK. If you have Microsoft
-Visual Studio 2013/2015 installed on your enviroment, you already have the makecert tool, as well.
+using the makecert.exe tool that is available in the Windows SDK or through a provided PowerShell script which does not have a dependency to makecert. 
+
+####Using makecert
+If you have Microsoft Visual Studio 2013/2015 installed on your enviroment, you already have the makecert tool, as well.
 Otherwise, you will have to download from MSDN and to install the Windows SDK for your current
 version of Windows Operating System.
 
@@ -143,6 +146,20 @@ In the Current User's Personal folder of Certificates, select the just created c
 Select to export the private key into a .PFX file. Provide a password to protect the private key of the certificate.
 Repeat the same process as before, but this time export the certificate as a .CER file, which does not include the private key value.
 
+####Using the Create-SelfSignedCertificate PowerShell Script
+Alternatively you can use a provided PowerShell script which does not have a dependency to makecert.exe. The script is called <a href="../scripts/Create-SelfSignedCertificate.ps1">Create-SelfSignedCertificate.ps1</a> and is available in the 
+<a href="../scripts/">Scripts folder</a> of this repository.
+
+To create a self signed certificate with this script:
+
+```PowerShell
+.\Create-SelfSignedCertificate.ps1 -CommonName "MyCompanyName" -StartDate 2015-10-25 -EndDate 2016-10-25
+```
+
+You will be asked to provide a password to encrypt your private key, and both the .PFX file and .CER file will be exported to the current folder.
+
+<a name="apponlyazuread"></a>
+### Configure the certificate in the Azure AD application manifest
 Start a PowerShell command window, and execute the following instructions:
 
 ```PowerShell
@@ -172,6 +189,15 @@ Write-Host "Certificate Thumbprint:" $cert.Thumbprint
 
 Copy the output value into a text file, you will use it pretty soon.
 
+
+Alternatively you can execute 
+
+```PowerShell
+Get-SPOAzureADManifestKeyCredentials -CertPath <path to your .cer file> | clip
+```
+
+which will generate the required snippet and copy it to the clipboard.
+
 Go back to the Azure AD Application that you created in the previous step and select the
 "Manage Manifest" button in the lower area of the screen, then select the "Download Manifest" 
 option in order to download the application manifest as a JSON file.
@@ -179,7 +205,7 @@ option in order to download the application manifest as a JSON file.
 ![Azure AD - Application Configuration - Client Secret](./Figures/Fig-09-Azure-AD-App-Config-04.png)
 
 Open the just downloaded file using any text editor, search for the *keyCredentials* property and replace 
-it with the following value.
+it with the snippet you generated above by either running the PowerShell script or the Get-SPOAzureADManifestKeyCredentials cmdlet.
 
 ```JSON
   "keyCredentials": [
