@@ -70,5 +70,28 @@ if($InfrastructureSiteInfo -eq $null)
     $l.Update()
     Execute-SPOQuery
     
-	Apply-SPOProvisioningTemplate $basePath\Templates\PnP-Partner-Pack-Infrastructure-Contents.xml
+    Apply-SPOProvisioningTemplate $basePath\Templates\PnP-Partner-Pack-Infrastructure-Contents.xml
+
+	
+    # Due to an issue in core, we have to loop through the items in the provisioning template list and set the correct content type
+    # Find the content type in the list
+    $ctx = Get-SPOContext
+    $l = Get-SPOList "PnPProvisioningTemplates"
+    $ctx.Load($l.ContentTypes)
+    Execute-SPOQuery
+    $ct = $l.ContentTypes | ?{$_.Name -eq "PnpProvisioningTemplate"}
+
+    $items = Get-SPOListItem -List "PnPProvisioningTemplates" -Fields "FileLeafRef"
+    foreach($item in $items)
+    {
+	$filename = $item["FileLeafRef"]
+	if($filename -eq "SPO-CustomBar.xml" -or $filename -eq "PnP-Partner-Pack-Overrides.xml" -or $filename -eq "SPO-Responsive.xml" -or $filename -eq "PnP-Partner-Pack-Infrastructure-Jobs.xml")
+	{
+		Write-Host -ForeGroundColor DarkGray "Setting content type on $filename"
+		$item["ContentTypeId"] = $ct.Id
+		$item.Update()
+		Execute-SPOQuery
+	}
+    }
+    
 }
