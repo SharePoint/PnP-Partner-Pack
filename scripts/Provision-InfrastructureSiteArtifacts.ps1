@@ -93,7 +93,7 @@ if($InfrastructureSiteInfo -eq $null)
     foreach($item in $items)
     {
 	$filename = $item["FileLeafRef"]
-	if($filename -eq "SPO-CustomBar.xml" -or $filename -eq "PnP-Partner-Pack-Overrides.xml" -or $filename -eq "SPO-Responsive.xml" -or $filename -eq "PnP-Partner-Pack-Infrastructure-Jobs.xml")
+	if($filename -eq "SPO-CustomBar.xml" -or $filename -eq "PnP-Partner-Pack-Overrides.xml" -or $filename -eq "SPO-Responsive.xml" -or $filename -eq "PnP-Partner-Pack-Infrastructure-Jobs.xml" -or $filename -eq "PnP-Empty-Site.xml" -or $filename -eq "PnP-Empty-Sub-Site.xml")
 	{
 		Write-Host -ForeGroundColor DarkGray "Setting content type on $filename"
 		$item["ContentTypeId"] = $ct.Id
