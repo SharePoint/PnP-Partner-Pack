@@ -329,19 +329,19 @@
           </pnp:Views>
           <pnp:DataRows>
             <pnp:DataRow>
-              <pnp:DataValue FieldName="Title">low</pnp:DataValue>
+              <pnp:DataValue FieldName="Title">Low</pnp:DataValue>
             </pnp:DataRow>
             <pnp:DataRow>
-              <pnp:DataValue FieldName="Title">normal</pnp:DataValue>
+              <pnp:DataValue FieldName="Title">Normal</pnp:DataValue>
             </pnp:DataRow>
             <pnp:DataRow>
-              <pnp:DataValue FieldName="Title">medium</pnp:DataValue>
+              <pnp:DataValue FieldName="Title">Medium</pnp:DataValue>
             </pnp:DataRow>
             <pnp:DataRow>
-              <pnp:DataValue FieldName="Title">high</pnp:DataValue>
+              <pnp:DataValue FieldName="Title">High</pnp:DataValue>
             </pnp:DataRow>
             <pnp:DataRow>
-              <pnp:DataValue FieldName="Title">very high</pnp:DataValue>
+              <pnp:DataValue FieldName="Title">Very High</pnp:DataValue>
             </pnp:DataRow>
           </pnp:DataRows>
         </pnp:ListInstance>
@@ -588,13 +588,13 @@
           </pnp:Views>
           <pnp:DataRows>
             <pnp:DataRow>
-              <pnp:DataValue FieldName="Title">default</pnp:DataValue>
+              <pnp:DataValue FieldName="Title">Default</pnp:DataValue>
             </pnp:DataRow>
             <pnp:DataRow>
-              <pnp:DataValue FieldName="Title">incident</pnp:DataValue>
+              <pnp:DataValue FieldName="Title">Incident</pnp:DataValue>
             </pnp:DataRow>
             <pnp:DataRow>
-              <pnp:DataValue FieldName="Title">problem</pnp:DataValue>
+              <pnp:DataValue FieldName="Title">Problem</pnp:DataValue>
             </pnp:DataRow>
             <pnp:DataRow>
               <pnp:DataValue FieldName="Title">RFC</pnp:DataValue>

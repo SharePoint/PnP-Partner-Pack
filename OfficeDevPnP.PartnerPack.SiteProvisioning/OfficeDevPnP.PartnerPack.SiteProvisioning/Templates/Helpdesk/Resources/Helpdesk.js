@@ -86,6 +86,12 @@ $(document).ready(function () {
                 },
                 success: function (data) {
                     PnPHelpDesk.UploadFile(randomticketID, PnPHelpDesk.HELPDESK_LIST_NAME, PnPHelpDesk.SiteURL, "attachment");
+                    var ticketFieldsArray = [];
+                    ticketFieldsArray.push(item.TicketNumber);
+                    ticketFieldsArray.push(item.Subject);
+                    ticketFieldsArray.push('New');
+                    ticketFieldsArray.push(item.TicketNumber);
+                    PnPHelpDesk.displayTicketsList.push(ticketFieldsArray);
                     console.log('Item is added successfully');
                 },
                 error: function (data) {
@@ -266,7 +272,6 @@ $(document).ready(function () {
                     $("#view-ticket-To").html(ticketObj.TicketTo.Title);
                     $("#view-ticket-Subject").html(ticketObj.Subject);
                     $("#view-ticket-Description").html(ticketObj.Description);
-                    $("#view-ticket-Attachment").html("No File is uploaded");
                     $("#view-ticket-Priority").html(ticketObj.Priority.Title);
                     $("#view-ticket-Workstation").html(ticketObj.Workstation);
                     PnPHelpDesk.viewDialog.dialog("open");
@@ -385,18 +390,20 @@ $(document).ready(function () {
         if (isvalid) {
             $("#div_error").hide();
             PnPHelpDesk.SaveNewTicketInfo();
-            PnPHelpDesk.RetrieveTickets();
+            PnPHelpDesk.DisplayMyTickets(PnPHelpDesk.displayTicketsList);
             PnPHelpDesk.FormReset();
+            return false;
         } else {
             $("#div_error").show();
+            return false;
         }
-        return false;
     });
 
     PnPHelpDesk.RetrieveTickets();
 
     $("#reset-ticket").click(function () {
         PnPHelpDesk.FormReset();
+        return false;
     });
 
     PnPHelpDesk.editDialog = $("#dialog-form").dialog({
