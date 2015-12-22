@@ -1,0 +1,625 @@
+<?xml version="1.0"?>
+<pnp:Provisioning xmlns:pnp="http://schemas.dev.office.com/PnP/2015/08/ProvisioningSchema">
+  <pnp:Preferences Generator="OfficeDevPnP.Core, Version=1.8.1115.0, Culture=neutral, PublicKeyToken=null" />
+  <pnp:Templates ID="CONTAINER-PNP-PARTNER-PACK-RESPONSIVE">
+    <pnp:ProvisioningTemplate ID="PNP-PARTNER-PACK-RESPONSIVE" Version="1" DisplayName="HelpDesk Template" Description="HelpDesk Template">
+      <pnp:RegionalSettings AdjustHijriDays="0" AlternateCalendarType="None" CalendarType="None" Collation="25" FirstDayOfWeek="Sunday" FirstWeekOfYear="0" LocaleId="1033" ShowWeeks="false" Time24="false" TimeZone="23" WorkDayEndHour="5:00PM" WorkDays="62" WorkDayStartHour="8:00AM" />
+      <pnp:SupportedUILanguages>
+        <pnp:SupportedUILanguage LCID="1033" />
+      </pnp:SupportedUILanguages>
+      <pnp:PropertyBagEntries>
+        <pnp:PropertyBagEntry Key="_PnP_PartnerPack_Overrides_Enabled" Value="true" />
+      </pnp:PropertyBagEntries>
+      <pnp:Security>
+        <pnp:AdditionalAdministrators>
+          <pnp:User Name="i:0#.f|membership|a.b@contoso.com" />
+        </pnp:AdditionalAdministrators>
+        <pnp:SiteGroups>
+          <pnp:SiteGroup Title="Excel Services Viewers" Description="Members of this group can view pages, list items, and documents.  If the document has a server rendering available, they can only view the document using the server rendering." Owner="SHAREPOINT\system" AllowMembersEditMembership="false" AllowRequestToJoinLeave="false" AutoAcceptRequestToJoinLeave="false" OnlyAllowMembersViewMembership="true" />
+        </pnp:SiteGroups>
+        <pnp:Permissions />
+      </pnp:Security>
+
+      <pnp:Files>
+        <pnp:File Src="Helpdesk.min.js" Folder="SiteAssets"  Overwrite="true">
+        </pnp:File>
+        <pnp:File  Src="Helpdesk.css" Folder="SiteAssets" Overwrite="true">
+        </pnp:File>
+      </pnp:Files>
+
+      <pnp:Pages WelcomePage="/Pages/Home.aspx">
+        <pnp:Page Layout="OneColumn" Overwrite="true" Url="~site/sitepages/home.aspx">
+          <pnp:WebParts>
+            <pnp:WebPart Column="1" Row="1" Title="Script Editor">
+              <pnp:Contents>
+                <![CDATA[
+            <webParts><webPart xmlns="http://schemas.microsoft.com/WebPart/v3"><metaData><type name="Microsoft.SharePoint.WebPartPages.ScriptEditorWebPart, Microsoft.SharePoint, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" /><importErrorMessage>Cannot import this Web Part.</importErrorMessage>
+    </metaData>
+    <data>
+      <properties>
+        <property name="ExportMode" type="exportmode">All</property>
+        <property name="HelpUrl" type="string" />
+        <property name="Hidden" type="bool">False</property>
+        <property name="Description" type="string">Allows authors to insert HTML snippets or scripts.</property>
+        <property name="Content" type="string">
+      &lt;link href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" rel = "stylesheet" /&gt;
+&lt;link href="//cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css" rel = "stylesheet" /&gt;
+&lt;script&gt;
+    SP.SOD.executeOrDelayUntilScriptLoaded(LoadHelpdeskScript, 'sp.js');
+    function LoadHelpdeskScript() {
+        currWebUrl = _spPageContextInfo.webServerRelativeUrl;
+        LoadJSNCSS(currWebUrl + "/SiteAssets/helpdesk.css", "css");
+        LoadJSNCSS("//code.jquery.com/jquery-1.11.3.min.js","js");
+        LoadJSNCSS("//code.jquery.com/ui/1.11.4/jquery-ui.js", "js");
+        LoadJSNCSS("//cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js", "js");
+        LoadJSNCSS(currWebUrl + "/SiteAssets/Helpdesk.min.js", "js");
+    }
+    function LoadJSNCSS(filePath, type) {
+        if (type == "js") {
+            var js = document.createElement("script");
+            js.type = "text/javascript";
+            js.src = filePath;
+            js.defer = "defer";
+            js.async = false;
+            document.getElementsByTagName('head')[0].appendChild(js);
+        }
+        else {
+            var css = document.createElement("link");
+            css.rel = "stylesheet";
+            css.href = filePath;
+            document.getElementsByTagName('head')[0].appendChild(css);
+        }
+    }
+&lt;/script&gt;
+
+
+&lt;div class='table'&gt;
+    &lt;div class='row'&gt;
+        &lt;div class='cell'&gt;
+            &lt;h2&gt;NEW TICKET&lt;/h2&gt;
+            &lt;div class='newticket'&gt;
+                &lt;div class='form-div'&gt;
+                    &lt;label class='form-label'&gt;Type &lt;span&gt;*&lt;/span&gt;&lt;/label&gt;
+                    &lt;select name="ticket_type" id="ticket_type" class="NewTicketInputSelect"&gt;&lt;/select&gt;
+                &lt;/div&gt;
+                &lt;div class='form-div'&gt;
+                    &lt;label class='form-label'&gt;To &lt;span&gt;*&lt;/span&gt;&lt;/label&gt;
+                    &lt;select name="ticket_to" id="ticket_to" class="NewTicketInputSelect"&gt;&lt;/select&gt;
+                &lt;/div&gt;
+                &lt;div class='form-div'&gt;
+                    &lt;label class='form-label'&gt;Priority&lt;/label&gt;
+                    &lt;select name="priority" id="priority" class="NewTicketInputSelect"&gt;&lt;/select&gt;
+                &lt;/div&gt;
+                &lt;div class='form-div'&gt;
+                    &lt;label class='form-label'&gt;Subject &lt;span&gt;*&lt;/span&gt;&lt;/label&gt;
+                    &lt;input type="text" name="subject" id="subject" maxlength="50" class="NewTicketInputSelect"&gt;
+                &lt;/div&gt;
+                &lt;div class='form-div'&gt;
+                    &lt;label class='form-label'&gt;Description &lt;span&gt;*&lt;/span&gt;&lt;/label&gt;
+                    &lt;textarea name="ticket_description" id="ticket_description" maxlength="150" class="NewTicketInputSelect"&gt;&lt;/textarea&gt;
+                &lt;/div&gt;
+                &lt;div class='form-div'&gt;
+                    &lt;label class='form-label'&gt;Workstation &lt;span&gt;*&lt;/span&gt;&lt;/label&gt;
+                    &lt;input type="text" name="workstation" id="workstation" maxlength="10" class="NewTicketInputSelect"&gt;
+                &lt;/div&gt;
+                &lt;div class='form-div'&gt;
+                    &lt;label class='form-label'&gt;Attachment&lt;/label&gt;
+                    &lt;input type="file" name="attachment" id="attachment"&gt;
+                &lt;/div&gt;
+                &lt;div class='form-div' id="div_error"&gt;
+                    &lt;p&gt;Fields with * are required&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div class='form-div btnSubmitReset'&gt;
+                    &lt;button id="create-ticket" href"#"=""&gt;Submit&lt;/button&gt;
+                    &lt;button id="reset-ticket" href"#"=""&gt;Reset&lt;/button&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class='cell'&gt;
+            &lt;h2&gt;My TICKETS&lt;/h2&gt;
+            &lt;div&gt;
+                &lt;table id="tblMyTickets" class='mytickets_table'&gt;&lt;/table&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div id="dialog-form" title="Edit Ticket" class="edit-view-form"&gt;
+            &lt;div class='form-div'&gt;
+                &lt;label class='form-label'&gt;Type &lt;span&gt;*&lt;/span&gt;&lt;/label&gt;
+                &lt;select name="ticket_type" id="ticket_dialg_type" class="NewTicketInputSelect"&gt;&lt;/select&gt;
+            &lt;/div&gt;
+            &lt;div class='form-div'&gt;
+                &lt;label class='form-label'&gt;To &lt;span&gt;*&lt;/span&gt;&lt;/label&gt;
+                &lt;select name="ticket_to" id="ticket_dialg_to" class="NewTicketInputSelect"&gt;&lt;/select&gt;
+            &lt;/div&gt;
+            &lt;div class='form-div'&gt;
+                &lt;label class='form-label'&gt;Priority&lt;/label&gt;
+                &lt;select name="priority" id="priority_dialg" class="NewTicketInputSelect"&gt;&lt;/select&gt;
+            &lt;/div&gt;
+            &lt;div class='form-div'&gt;
+                &lt;label class='form-label'&gt;Subject &lt;span&gt;*&lt;/span&gt;&lt;/label&gt;
+                &lt;input type="text" name="subject" id="subject_dialg" maxlength="50" class="NewTicketInputSelect"&gt;
+            &lt;/div&gt;
+            &lt;div class='form-div'&gt;
+                &lt;label class='form-label'&gt;Description &lt;span&gt;*&lt;/span&gt;&lt;/label&gt;
+                &lt;textarea name="ticket_description" id="ticket_dialg_description" maxlength="150" class="NewTicketInputSelect"&gt;&lt;/textarea&gt;
+            &lt;/div&gt;
+            &lt;div class='form-div'&gt;
+                &lt;label class='form-label'&gt;Workstation &lt;span&gt;*&lt;/span&gt;&lt;/label&gt;
+                &lt;input type="text" name="workstation" id="workstation_dialg" maxlength="10" class="NewTicketInputSelect"&gt;
+            &lt;/div&gt;
+            &lt;div class='form-div'&gt;
+                &lt;label class='form-label'&gt;Attachment&lt;/label&gt;
+                &lt;input type="file" name="editattachment" id="editattachment" class="NewTicketInputSelect"&gt;
+            &lt;/div&gt;
+            &lt;div&gt;
+                &lt;input type="hidden" name="dialg_ticketNumber" id="dialg_ticketNumber"&gt;
+                &lt;input type="hidden" name="dialg_ticketId" id="dialg_ticketId"&gt;
+            &lt;/div&gt;
+            &lt;div class='form-div' id="div_dialg_error"&gt;
+                &lt;p&gt;Fields with * are required&lt;/p&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div id="dialog-view" title="Ticket Information"&gt;
+            &lt;div class='form-div'&gt;
+                &lt;label class='form-label'&gt;Type&lt;/label&gt;
+                &lt;label id="view-ticket-type"&gt;Type&lt;/label&gt;
+            &lt;/div&gt;
+            &lt;div class='form-div'&gt;
+                &lt;label class='form-label'&gt;To&lt;/label&gt;
+                &lt;label id="view-ticket-To"&gt;To&lt;/label&gt;
+            &lt;/div&gt;
+            &lt;div class='form-div'&gt;
+                &lt;label class='form-label'&gt;Subject&lt;/label&gt;
+                &lt;label id="view-ticket-Subject"&gt;Subject&lt;/label&gt;
+            &lt;/div&gt;
+            &lt;div class='form-div'&gt;
+                &lt;label class='form-label'&gt;Description&lt;/label&gt;
+                &lt;div id="view-ticket-Description"&gt;Description&lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class='form-div'&gt;
+                &lt;label class='form-label'&gt;Priority&lt;/label&gt;
+                &lt;label id="view-ticket-Priority"&gt;Priority&lt;/label&gt;
+            &lt;/div&gt;
+            &lt;div class='form-div'&gt;
+                &lt;label class='form-label'&gt;Workstation&lt;/label&gt;
+                &lt;label id="view-ticket-Workstation"&gt;Workstation&lt;/label&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+       </property>
+        <property name="CatalogIconImageUrl" type="string" />
+        <property name="Title" type="string">Script Editor</property>
+        <property name="AllowHide" type="bool">True</property>
+        <property name="AllowMinimize" type="bool">True</property>
+        <property name="AllowZoneChange" type="bool">True</property>
+        <property name="TitleUrl" type="string" />
+        <property name="ChromeType" type="chrometype">None</property>
+        <property name="AllowConnect" type="bool">True</property>
+        <property name="Width" type="unit" />
+        <property name="Height" type="unit" />
+        <property name="HelpMode" type="helpmode">Navigate</property>
+        <property name="AllowEdit" type="bool">True</property>
+        <property name="TitleIconImageUrl" type="string" />
+        <property name="Direction" type="direction">NotSet</property>
+        <property name="AllowClose" type="bool">True</property>
+        <property name="ChromeState" type="chromestate">Normal</property>
+      </properties>
+    </data>
+  </webPart>
+</webParts>
+            ]]>
+              </pnp:Contents>
+            </pnp:WebPart>
+          </pnp:WebParts>
+        </pnp:Page>
+      </pnp:Pages>
+      <pnp:SiteFields>
+        <Field ID="{E2A3861F-C216-47D7-820F-7CB638862AB2}" Name="_ShortcutWebId" SourceID="http://schemas.microsoft.com/sharepoint/v3" StaticName="_ShortcutWebId" DisplayName="Shortcut Web Id" Group="_Hidden" Hidden="TRUE" Type="Guid" />
+        <Field ID="{47B1B86F-9F8A-4DBE-A75E-CA5D9B0F566C}" Name="_ShortcutUrl" SourceID="http://schemas.microsoft.com/sharepoint/v3" StaticName="_ShortcutUrl" DisplayName="Shortcut URL" Group="_Hidden" Hidden="TRUE" Type="URL" />
+        <Field ID="{2662AD77-2410-4938-B01C-E5E43321BAD4}" Name="_ShortcutSiteId" SourceID="http://schemas.microsoft.com/sharepoint/v3" StaticName="_ShortcutSiteId" DisplayName="Shortcut Site Id" Group="_Hidden" Hidden="TRUE" Type="Guid" />
+        <Field ID="{ef991a83-108d-4407-8ee5-ccc0c3d836b9}" Type="UserMulti" DisplayName="Shared With" Mult="TRUE" Name="SharedWithUsers" StaticName="SharedWithUsers" Group="_Hidden" Sealed="TRUE" AllowDeletion="FALSE" ReadOnly="TRUE" ShowInDisplayForm="FALSE" ShowInEditForm="FALSE" ShowInListSettings="FALSE" Viewable="FALSE" SourceID="{fe4296a1-5406-4b4a-9075-6f77c6fa89e7}" />
+        <Field ID="{E8FEA999-553D-4F45-BE52-D941627E9FE5}" Name="_ShortcutUniqueId" SourceID="http://schemas.microsoft.com/sharepoint/v3" StaticName="_ShortcutUniqueId" DisplayName="Shortcut Unique Id" Group="_Hidden" Hidden="TRUE" Type="Guid" />
+        <Field ID="{d3c9caf7-044c-4c71-ae64-092981e54b33}" Type="Note" DisplayName="Shared With Details" Name="SharedWithDetails" StaticName="SharedWithDetails" Group="_Hidden" Sealed="TRUE" AllowDeletion="FALSE" ReadOnly="TRUE" ShowInDisplayForm="FALSE" ShowInEditForm="FALSE" ShowInListSettings="FALSE" Viewable="FALSE" SourceID="{fe4296a1-5406-4b4a-9075-6f77c6fa89e7}" />
+      </pnp:SiteFields>
+      <pnp:Lists>
+        <pnp:ListInstance Title="Content and Structure Reports" Description="Use the reports list to customize the queries that appear in the Content and Structure Tool views" DocumentTemplate="" TemplateType="100" Url="Reports List" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-de22-43b2-a848-c05709900100" EnableAttachments="false" EnableFolderCreation="false">
+          <pnp:ContentTypeBindings>
+            <pnp:ContentTypeBinding ContentTypeID="0x01" Default="true" />
+            <pnp:ContentTypeBinding ContentTypeID="0x0120" />
+          </pnp:ContentTypeBindings>
+          <pnp:Views>
+            <View Name="{3AEB6D83-75D7-4C48-A7D2-D9CFEE31E07C}" DefaultView="TRUE" MobileView="TRUE" MobileDefaultView="TRUE" Type="HTML" DisplayName="All Items" Url="/sites/temphelpdesksite/Reports List/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/generic.png?rev=41">
+              <Query>
+                <OrderBy>
+                  <FieldRef Name="ID" />
+                </OrderBy>
+              </Query>
+              <ViewFields>
+                <FieldRef Name="LinkTitle" />
+              </ViewFields>
+              <RowLimit Paged="TRUE">30</RowLimit>
+              <JSLink>clienttemplates.js</JSLink>
+            </View>
+          </pnp:Views>
+        </pnp:ListInstance>
+
+
+        <pnp:ListInstance Title="Helpdesk" Description="" DocumentTemplate="" TemplateType="100" Url="Lists/Helpdesk" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-de22-43b2-a848-c05709900100" EnableFolderCreation="false">
+          <pnp:ContentTypeBindings>
+            <pnp:ContentTypeBinding ContentTypeID="0x01" Default="true" />
+            <pnp:ContentTypeBinding ContentTypeID="0x0120" />
+          </pnp:ContentTypeBindings>
+          <pnp:Views>
+            <View Name="{BD4DE6CE-86A2-4712-8F0F-F2BC0E9EADDB}" DefaultView="TRUE" MobileView="TRUE" MobileDefaultView="TRUE" Type="HTML" DisplayName="All Items" Url="/sites/temphelpdesksite/Lists/Helpdesk/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/generic.png?rev=41">
+              <Query>
+                <OrderBy>
+                  <FieldRef Name="ID" />
+                </OrderBy>
+              </Query>
+              <ViewFields>
+                <FieldRef Name="LinkTitle" />
+                <FieldRef Name="Subject" />
+                <FieldRef Name="Description" />
+                <FieldRef Name="Workstation" />
+                <FieldRef Name="TicketType" />
+                <FieldRef Name="TicketTo" />
+                <FieldRef Name="Priority" />
+                <FieldRef Name="TicketNumber" />
+                <FieldRef Name="Status" />
+                <FieldRef Name="TicketFrom" />
+              </ViewFields>
+              <RowLimit Paged="TRUE">30</RowLimit>
+              <JSLink>clienttemplates.js</JSLink>
+            </View>
+          </pnp:Views>
+          <pnp:Fields>
+            <Field Type="Text" DisplayName="Subject" Required="TRUE" EnforceUniqueValues="FALSE" Indexed="FALSE" MaxLength="255" ID="{5b4204ce-99b0-4eb2-b5bb-418d37fabc4e}" SourceID="{21be33e0-48fd-4ad7-bd37-d5aba9ef982c}" StaticName="Subject" Name="Subject" ColName="nvarchar3" RowOrdinal="0" Version="1" />
+            <Field Type="Note" DisplayName="Description" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" NumLines="6" RichText="FALSE" RichTextMode="Compatible" IsolateStyles="FALSE" Sortable="FALSE" ID="{8ce63a0e-83fe-4ccf-993d-f24c372969ea}" SourceID="{21be33e0-48fd-4ad7-bd37-d5aba9ef982c}" StaticName="Description" Name="Description" ColName="ntext2" RowOrdinal="0" Version="2" RestrictedMode="TRUE" AppendOnly="FALSE" />
+            <Field Type="Text" DisplayName="Workstation" Required="TRUE" EnforceUniqueValues="FALSE" Indexed="FALSE" MaxLength="255" ID="{ffc2f49b-2553-43fa-aafc-a13c4926b864}" SourceID="{21be33e0-48fd-4ad7-bd37-d5aba9ef982c}" StaticName="Workstation" Name="Workstation" ColName="nvarchar4" RowOrdinal="0" Version="1" />
+            <Field Type="Lookup" DisplayName="TicketType" Required="FALSE" EnforceUniqueValues="FALSE" List="Lists/TicketType" ShowField="Title" UnlimitedLengthInDocumentLibrary="FALSE" RelationshipDeleteBehavior="None" ID="{0df9d2a5-e4a2-4b33-8da9-019506c219ee}" SourceID="{21be33e0-48fd-4ad7-bd37-d5aba9ef982c}" StaticName="TicketType" Name="TicketType" ColName="int1" RowOrdinal="0" Version="1" />
+            <Field Type="Lookup" DisplayName="TicketTo" Required="FALSE" EnforceUniqueValues="FALSE" List="Lists/TicketTo" ShowField="Title" UnlimitedLengthInDocumentLibrary="FALSE" RelationshipDeleteBehavior="None" ID="{f9b78a00-db3a-4206-a98a-0fe0cd2166bc}" SourceID="{21be33e0-48fd-4ad7-bd37-d5aba9ef982c}" StaticName="TicketTo" Name="TicketTo" ColName="int2" RowOrdinal="0" Version="1" />
+            <Field Type="Lookup" DisplayName="Priority" Required="FALSE" EnforceUniqueValues="FALSE" List="Lists/Priority" ShowField="Title" UnlimitedLengthInDocumentLibrary="FALSE" RelationshipDeleteBehavior="None" ID="{58a84417-328d-4c88-9c51-8861dd6d7261}" SourceID="{21be33e0-48fd-4ad7-bd37-d5aba9ef982c}" StaticName="Priority" Name="Priority" ColName="int3" RowOrdinal="0" Version="1" />
+            <Field Type="Text" DisplayName="TicketNumber" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" MaxLength="255" ID="{7d189888-9316-431b-bb9c-998678658e11}" SourceID="{21be33e0-48fd-4ad7-bd37-d5aba9ef982c}" StaticName="TicketNumber" Name="TicketNumber" ColName="nvarchar5" RowOrdinal="0" Version="1" />
+            <Field Type="Lookup" DisplayName="Status" Required="FALSE" EnforceUniqueValues="FALSE" List="Lists/TicketStatus" ShowField="Title" UnlimitedLengthInDocumentLibrary="FALSE" RelationshipDeleteBehavior="None" ID="{1939ec26-fa17-446d-af40-d7163beb6c9c}" SourceID="{21be33e0-48fd-4ad7-bd37-d5aba9ef982c}" StaticName="Status" Name="Status" ColName="int4" RowOrdinal="0" Version="1" />
+            <Field Type="User" DisplayName="TicketFrom" List="UserInfo" Required="FALSE" EnforceUniqueValues="FALSE" ShowField="ImnName" UserSelectionMode="PeopleOnly" UserSelectionScope="0" ID="{a7e7f7fa-1ab8-4798-9cc3-27bda30ad8e8}" SourceID="{21be33e0-48fd-4ad7-bd37-d5aba9ef982c}" StaticName="TicketFrom" Name="TicketFrom" ColName="int5" RowOrdinal="0" Version="1" />
+          </pnp:Fields>
+        </pnp:ListInstance>
+        <pnp:ListInstance Title="Pages" Description="This system library was created by the Publishing feature to store pages that are created in this site." DocumentTemplate="" TemplateType="850" Url="Pages" EnableVersioning="true" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="22a9ef51-737b-4ff2-9346-694633fe4416" ContentTypesEnabled="true" EnableAttachments="false">
+          <pnp:ContentTypeBindings>
+            <pnp:ContentTypeBinding ContentTypeID="0x0101" Default="true" />
+            <pnp:ContentTypeBinding ContentTypeID="0x0120" />
+          </pnp:ContentTypeBindings>
+          <pnp:Views>
+            <View Name="{DD8A4AF9-A985-483C-B129-AAE4D35F93BE}" DefaultView="TRUE" MobileView="TRUE" MobileDefaultView="TRUE" Type="HTML" DisplayName="All Documents" Url="/sites/temphelpdesksite/Pages/Forms/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/dlicon.png?rev=41">
+              <Query>
+                <OrderBy>
+                  <FieldRef Name="FileLeafRef" />
+                </OrderBy>
+              </Query>
+              <ViewFields>
+                <FieldRef Name="DocIcon" />
+                <FieldRef Name="LinkFilename" />
+                <FieldRef Name="Modified" />
+                <FieldRef Name="Editor" />
+              </ViewFields>
+              <RowLimit Paged="TRUE">30</RowLimit>
+              <JSLink>clienttemplates.js</JSLink>
+            </View>
+          </pnp:Views>
+        </pnp:ListInstance>
+        <pnp:ListInstance Title="Priority" Description="" DocumentTemplate="" TemplateType="100" Url="Lists/Priority" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-de22-43b2-a848-c05709900100" EnableFolderCreation="false">
+          <pnp:ContentTypeBindings>
+            <pnp:ContentTypeBinding ContentTypeID="0x01" Default="true" />
+            <pnp:ContentTypeBinding ContentTypeID="0x0120" />
+          </pnp:ContentTypeBindings>
+          <pnp:Views>
+            <View Name="{AB78E2CF-570C-4918-959A-FC4242BACE65}" DefaultView="TRUE" MobileView="TRUE" MobileDefaultView="TRUE" Type="HTML" DisplayName="All Items" Url="/sites/temphelpdesksite/Lists/Priority/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/generic.png?rev=41">
+              <Query>
+                <OrderBy>
+                  <FieldRef Name="ID" />
+                </OrderBy>
+              </Query>
+              <ViewFields>
+                <FieldRef Name="LinkTitle" />
+              </ViewFields>
+              <RowLimit Paged="TRUE">30</RowLimit>
+              <JSLink>clienttemplates.js</JSLink>
+            </View>
+          </pnp:Views>
+          <pnp:DataRows>
+            <pnp:DataRow>
+              <pnp:DataValue FieldName="Title">low</pnp:DataValue>
+            </pnp:DataRow>
+            <pnp:DataRow>
+              <pnp:DataValue FieldName="Title">normal</pnp:DataValue>
+            </pnp:DataRow>
+            <pnp:DataRow>
+              <pnp:DataValue FieldName="Title">medium</pnp:DataValue>
+            </pnp:DataRow>
+            <pnp:DataRow>
+              <pnp:DataValue FieldName="Title">high</pnp:DataValue>
+            </pnp:DataRow>
+            <pnp:DataRow>
+              <pnp:DataValue FieldName="Title">very high</pnp:DataValue>
+            </pnp:DataRow>
+          </pnp:DataRows>
+        </pnp:ListInstance>
+        <pnp:ListInstance Title="Reusable Content" Description="Items in this list contain HTML or text content which can be inserted into web pages. If an item has automatic update selected, the content will be inserted into web pages as a read-only reference, and the content will update if the item is changed. If the item does not have automatic update selected, the content will be inserted as a copy in the web page, and the content will not update if the item is changed." DocumentTemplate="" TemplateType="100" Url="ReusableContent" EnableVersioning="true" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-de22-43b2-a848-c05709900100" ContentTypesEnabled="true" EnableAttachments="false">
+          <pnp:ContentTypeBindings>
+            <pnp:ContentTypeBinding ContentTypeID="0x01" Default="true" />
+            <pnp:ContentTypeBinding ContentTypeID="0x0120" />
+          </pnp:ContentTypeBindings>
+          <pnp:Views>
+            <View Name="{1CEC9134-3836-4611-BBDC-2E7C9E1D828F}" DefaultView="TRUE" MobileView="TRUE" MobileDefaultView="TRUE" Type="HTML" DisplayName="All Items" Url="/sites/temphelpdesksite/ReusableContent/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/generic.png?rev=41">
+              <Query>
+                <OrderBy>
+                  <FieldRef Name="ID" />
+                </OrderBy>
+              </Query>
+              <ViewFields>
+                <FieldRef Name="DocIcon" />
+                <FieldRef Name="LinkTitle" />
+              </ViewFields>
+              <RowLimit Paged="TRUE">30</RowLimit>
+              <JSLink>clienttemplates.js</JSLink>
+            </View>
+          </pnp:Views>
+        </pnp:ListInstance>
+        <pnp:ListInstance Title="Site Collection Documents" Description="This system library was created by the Publishing Resources feature to store documents that are used throughout the site collection." DocumentTemplate="{site}/SiteCollectionDocuments/Forms/template.dotx" TemplateType="101" Url="SiteCollectionDocuments" EnableVersioning="true" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-e717-4e80-aa17-d0c71b360101" EnableAttachments="false">
+          <pnp:ContentTypeBindings>
+            <pnp:ContentTypeBinding ContentTypeID="0x0101" Default="true" />
+            <pnp:ContentTypeBinding ContentTypeID="0x0120" />
+          </pnp:ContentTypeBindings>
+          <pnp:Views>
+            <View Name="{18F74893-EC30-400B-BF36-86D907EC3400}" DefaultView="TRUE" MobileView="TRUE" MobileDefaultView="TRUE" Type="HTML" DisplayName="All Documents" Url="/sites/temphelpdesksite/SiteCollectionDocuments/Forms/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/dlicon.png?rev=41">
+              <Query>
+                <OrderBy>
+                  <FieldRef Name="FileLeafRef" />
+                </OrderBy>
+              </Query>
+              <ViewFields>
+                <FieldRef Name="DocIcon" />
+                <FieldRef Name="LinkFilename" />
+                <FieldRef Name="Modified" />
+                <FieldRef Name="Editor" />
+              </ViewFields>
+              <RowLimit Paged="TRUE">30</RowLimit>
+              <JSLink>clienttemplates.js</JSLink>
+            </View>
+          </pnp:Views>
+          <pnp:FieldRefs>
+            <pnp:FieldRef ID="3881510a-4e4a-4ee8-b102-8ee8e2d0dd4b" Name="CheckoutUser" DisplayName="Checked Out To" />
+          </pnp:FieldRefs>
+        </pnp:ListInstance>
+        <pnp:ListInstance Title="Site Collection Images" Description="This system library was created by the Publishing Resources feature to store images that are used throughout the site collection." DocumentTemplate="" TemplateType="851" Url="SiteCollectionImages" EnableVersioning="true" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="4bcccd62-dcaf-46dc-a7d4-e38277ef33f4" ContentTypesEnabled="true" EnableAttachments="false">
+          <pnp:ContentTypeBindings>
+            <pnp:ContentTypeBinding ContentTypeID="0x0101009148F5A04DDD49CBA7127AADA5FB792B00AADE34325A8B49CDA8BB4DB53328F214" Default="true" />
+            <pnp:ContentTypeBinding ContentTypeID="0x0101009148F5A04DDD49CBA7127AADA5FB792B006973ACD696DC4858A76371B2FB2F439A" />
+            <pnp:ContentTypeBinding ContentTypeID="0x0101009148F5A04DDD49CBA7127AADA5FB792B00291D173ECE694D56B19D111489C4369D" />
+            <pnp:ContentTypeBinding ContentTypeID="0x0101" />
+            <pnp:ContentTypeBinding ContentTypeID="0x0120" />
+            <pnp:ContentTypeBinding ContentTypeID="0x0120D520A808" />
+          </pnp:ContentTypeBindings>
+          <pnp:Views>
+            <View Name="{8A6464D7-861C-4F70-B21A-A5E80678D373}" Type="HTML" DisplayName="All Assets" Url="/sites/temphelpdesksite/SiteCollectionImages/Forms/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/dlicon.png?rev=41">
+              <Query>
+                <OrderBy>
+                  <FieldRef Name="LinkFilename" />
+                </OrderBy>
+              </Query>
+              <ViewFields>
+                <FieldRef Name="ContentType" />
+                <FieldRef Name="DocIcon" />
+                <FieldRef Name="LinkFilename" />
+                <FieldRef Name="ThumbnailOnForm" />
+                <FieldRef Name="Modified" />
+                <FieldRef Name="Editor" />
+                <FieldRef Name="MediaLengthInSeconds" />
+                <FieldRef Name="_ModerationStatus" />
+                <FieldRef Name="PublishingStartDate" />
+                <FieldRef Name="PublishingExpirationDate" />
+                <FieldRef Name="ImageWidth" Explicit="TRUE" />
+                <FieldRef Name="ImageHeight" Explicit="TRUE" />
+                <FieldRef Name="PreviewOnForm" Explicit="TRUE" />
+                <FieldRef Name="_Comments" Explicit="TRUE" />
+                <FieldRef Name="PeopleInMedia" Explicit="TRUE" />
+                <FieldRef Name="VideoSetDescription" Explicit="TRUE" />
+                <FieldRef Name="VideoSetUserOverrideEncoding" Explicit="TRUE" />
+                <FieldRef Name="VideoSetDefaultEncoding" Explicit="TRUE" />
+                <FieldRef Name="VideoSetExternalLink" Explicit="TRUE" />
+                <FieldRef Name="VideoSetShowDownloadLink" Explicit="TRUE" />
+                <FieldRef Name="VideoSetShowEmbedLink" Explicit="TRUE" />
+                <FieldRef Name="VideoSetRenditionsInfo" Explicit="TRUE" />
+              </ViewFields>
+              <RowLimit Paged="TRUE">20</RowLimit>
+              <JSLink>clienttemplates.js</JSLink>
+            </View>
+            <View Name="{98DBE8AC-8E81-476C-A30F-FD5327FD38F8}" DefaultView="TRUE" MobileView="TRUE" MobileDefaultView="TRUE" Type="HTML" DisplayName="Thumbnails" Url="/sites/temphelpdesksite/SiteCollectionImages/Forms/Thumbnails.aspx" Level="1" BaseViewID="40" ContentTypeID="0x" ImageUrl="/_layouts/15/images/dlicon.png?rev=41">
+              <Query>
+                <OrderBy>
+                  <FieldRef Name="LinkFilename" />
+                </OrderBy>
+              </Query>
+              <ViewFields>
+                <FieldRef Name="ContentType" />
+                <FieldRef Name="DocIcon" />
+                <FieldRef Name="LinkFilenameNoMenu" />
+                <FieldRef Name="Modified" />
+                <FieldRef Name="Editor" />
+                <FieldRef Name="MediaLengthInSeconds" />
+                <FieldRef Name="NameOrTitle" Explicit="TRUE" CalloutMenu="TRUE" />
+                <FieldRef Name="FileSizeDisplay" Explicit="TRUE" />
+                <FieldRef Name="ImageSize" Explicit="TRUE" />
+                <FieldRef Name="ImageWidth" Explicit="TRUE" />
+                <FieldRef Name="ImageHeight" Explicit="TRUE" />
+                <FieldRef Name="VideoWidthInPixels" Explicit="TRUE" />
+                <FieldRef Name="VideoHeightInPixels" Explicit="TRUE" />
+                <FieldRef Name="PreviewOnForm" Explicit="TRUE" />
+                <FieldRef Name="Created_x0020_Date" Explicit="TRUE" />
+                <FieldRef Name="Author" Explicit="TRUE" />
+                <FieldRef Name="_Comments" Explicit="TRUE" />
+                <FieldRef Name="PeopleInMedia" Explicit="TRUE" />
+                <FieldRef Name="VideoSetDescription" Explicit="TRUE" />
+                <FieldRef Name="VideoSetOwner" Explicit="TRUE" />
+                <FieldRef Name="VideoSetUserOverrideEncoding" Explicit="TRUE" />
+                <FieldRef Name="VideoSetDefaultEncoding" Explicit="TRUE" />
+                <FieldRef Name="VideoSetExternalLink" Explicit="TRUE" />
+                <FieldRef Name="VideoSetShowDownloadLink" Explicit="TRUE" />
+                <FieldRef Name="VideoSetShowEmbedLink" Explicit="TRUE" />
+                <FieldRef Name="VideoSetRenditionsInfo" Explicit="TRUE" />
+              </ViewFields>
+              <RowLimit Paged="TRUE">20</RowLimit>
+              <JSLink>clienttemplates.js|SP.UI.TileView.js|SP.UI.AssetLibrary.js|callout.js</JSLink>
+            </View>
+          </pnp:Views>
+          <pnp:Fields>
+            <Field ID="{51d39414-03dc-4bd0-b777-d3e20cb350f7}" Name="PublishingStartDate" StaticName="PublishingStartDate" SourceID="http://schemas.microsoft.com/sharepoint/v3" Group="Publishing Columns" DisplayName="Scheduling Start Date" Type="PublishingScheduleStartDateFieldType" Required="FALSE" CanToggleHidden="TRUE" Sealed="TRUE" StorageTZ="UTC" ColName="datetime2" />
+            <Field ID="{a990e64f-faa3-49c1-aafa-885fda79de62}" Name="PublishingExpirationDate" StaticName="PublishingExpirationDate" SourceID="http://schemas.microsoft.com/sharepoint/v3" Group="Publishing Columns" DisplayName="Scheduling End Date" Type="PublishingScheduleEndDateFieldType" Required="FALSE" CanToggleHidden="TRUE" Sealed="TRUE" StorageTZ="UTC" ColName="datetime3" />
+          </pnp:Fields>
+          <pnp:FieldRefs>
+            <pnp:FieldRef ID="8c0d0aac-9b76-4951-927a-2490abe13c0b" Name="PreviewOnForm" DisplayName="Preview" />
+            <pnp:FieldRef ID="9941082a-4160-46a1-a5b2-03394bfdf7ee" Name="ThumbnailOnForm" DisplayName="Thumbnail Preview" />
+            <pnp:FieldRef ID="246d0907-637c-46b7-9aa0-0bb914daa832" Name="_Author" DisplayName="Author" />
+            <pnp:FieldRef ID="922551b8-c7e0-46a6-b7e3-3cf02917f68a" Name="ImageSize" DisplayName="Picture Size" />
+            <pnp:FieldRef ID="fa564e0f-0c70-4ab9-b863-0177e6ddd247" Name="Title" DisplayName="Title" />
+            <pnp:FieldRef ID="7e68a0f9-af76-404c-9613-6f82bc6dc28c" Name="ImageWidth" DisplayName="Width" />
+            <pnp:FieldRef ID="1944c034-d61b-42af-aa84-647f2e74ca70" Name="ImageHeight" DisplayName="Height" />
+            <pnp:FieldRef ID="a5d2f824-bc53-422e-87fd-765939d863a5" Name="ImageCreateDate" DisplayName="Date Picture Taken" />
+            <pnp:FieldRef ID="52578fc3-1f01-4f4d-b016-94ccbcf428cf" Name="_Comments" DisplayName="Comments" />
+            <pnp:FieldRef ID="b66e9b50-a28e-469b-b1a0-af0e45486874" Name="Keywords" DisplayName="Keywords" />
+            <pnp:FieldRef ID="f08ab41d-9a03-49ae-9413-6cd284a15625" Name="wic_System_Copyright" DisplayName="Copyright" />
+            <pnp:FieldRef ID="f39d44af-d3f3-4ae6-b43f-ac7330b5e9bd" Name="AlternateThumbnailUrl" DisplayName="Preview Image URL" />
+            <pnp:FieldRef ID="de38f937-8578-435e-8cd3-50be3ea59253" Name="MediaLengthInSeconds" DisplayName="Length (seconds)" />
+            <pnp:FieldRef ID="59cd571e-e2d9-485d-bb5d-e70d12f8d0b7" Name="VideoWidthInPixels" DisplayName="Frame Width" />
+            <pnp:FieldRef ID="84cd09bd-85a9-461f-86e3-4c3c1738ad6b" Name="VideoHeightInPixels" DisplayName="Frame Height" />
+            <pnp:FieldRef ID="fd7ef3c2-486e-40cd-b651-6be6d1abbe25" Name="VideoRenditionLabel" DisplayName="Label" />
+            <pnp:FieldRef ID="cf42542f-df94-4136-a0ac-29326fccd565" Name="VideoRenditionBitRate" DisplayName="Bit Rate" />
+            <pnp:FieldRef ID="b76b58ec-0549-4f00-9575-2fd28bd55010" Name="VideoSetDescription" DisplayName="Description" />
+            <pnp:FieldRef ID="2de1df7b-48e1-4c8e-be0f-f00e504b9948" Name="VideoSetOwner" DisplayName="Owner" />
+            <pnp:FieldRef ID="9cb4d391-367f-4342-8f17-ac808799784a" Name="VideoSetShowDownloadLink" DisplayName="Show Download Link" />
+            <pnp:FieldRef ID="6e4ee0c4-4d06-4c04-8d02-58d10fdf912d" Name="VideoSetShowEmbedLink" DisplayName="Show Embed Link" />
+            <pnp:FieldRef ID="bcd999a7-9dca-4824-a515-878bee641ed3" Name="PeopleInMedia" DisplayName="People In Video" />
+          </pnp:FieldRefs>
+        </pnp:ListInstance>
+        <pnp:ListInstance Title="TicketStatus" Description="" DocumentTemplate="" TemplateType="100" Url="Lists/TicketStatus" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-de22-43b2-a848-c05709900100" EnableFolderCreation="false">
+          <pnp:ContentTypeBindings>
+            <pnp:ContentTypeBinding ContentTypeID="0x01" Default="true" />
+            <pnp:ContentTypeBinding ContentTypeID="0x0120" />
+          </pnp:ContentTypeBindings>
+          <pnp:Views>
+            <View Name="{718503A1-F1AF-4F20-96AD-F3BB9E6AE632}" DefaultView="TRUE" MobileView="TRUE" MobileDefaultView="TRUE" Type="HTML" DisplayName="All Items" Url="/sites/temphelpdesksite/Lists/TicketStatus/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/generic.png?rev=41">
+              <Query>
+                <OrderBy>
+                  <FieldRef Name="ID" />
+                </OrderBy>
+              </Query>
+              <ViewFields>
+                <FieldRef Name="LinkTitle" />
+              </ViewFields>
+              <RowLimit Paged="TRUE">30</RowLimit>
+              <JSLink>clienttemplates.js</JSLink>
+            </View>
+          </pnp:Views>
+          <pnp:DataRows>
+            <pnp:DataRow>
+              <pnp:DataValue FieldName="Title">New</pnp:DataValue>
+            </pnp:DataRow>
+            <pnp:DataRow>
+              <pnp:DataValue FieldName="Title">In Progress</pnp:DataValue>
+            </pnp:DataRow>
+            <pnp:DataRow>
+              <pnp:DataValue FieldName="Title">Closed</pnp:DataValue>
+            </pnp:DataRow>
+          </pnp:DataRows>
+        </pnp:ListInstance>
+        <pnp:ListInstance Title="TicketTo" Description="" DocumentTemplate="" TemplateType="100" Url="Lists/TicketTo" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-de22-43b2-a848-c05709900100" EnableFolderCreation="false">
+          <pnp:ContentTypeBindings>
+            <pnp:ContentTypeBinding ContentTypeID="0x01" Default="true" />
+            <pnp:ContentTypeBinding ContentTypeID="0x0120" />
+          </pnp:ContentTypeBindings>
+          <pnp:Views>
+            <View Name="{1C8730B1-0A18-4A43-9516-B9EE7F2226BD}" DefaultView="TRUE" MobileView="TRUE" MobileDefaultView="TRUE" Type="HTML" DisplayName="All Items" Url="/sites/temphelpdesksite/Lists/TicketTo/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/generic.png?rev=41">
+              <Query>
+                <OrderBy>
+                  <FieldRef Name="ID" />
+                </OrderBy>
+              </Query>
+              <ViewFields>
+                <FieldRef Name="LinkTitle" />
+              </ViewFields>
+              <RowLimit Paged="TRUE">30</RowLimit>
+              <JSLink>clienttemplates.js</JSLink>
+            </View>
+          </pnp:Views>
+          <pnp:DataRows>
+            <pnp:DataRow>
+              <pnp:DataValue FieldName="Title">IT Support</pnp:DataValue>
+            </pnp:DataRow>
+            <pnp:DataRow>
+              <pnp:DataValue FieldName="Title">Facility Support</pnp:DataValue>
+            </pnp:DataRow>
+            <pnp:DataRow>
+              <pnp:DataValue FieldName="Title">HR Support</pnp:DataValue>
+            </pnp:DataRow>
+            <pnp:DataRow>
+              <pnp:DataValue FieldName="Title">Apps Support</pnp:DataValue>
+            </pnp:DataRow>
+          </pnp:DataRows>
+        </pnp:ListInstance>
+        <pnp:ListInstance Title="TicketType" Description="" DocumentTemplate="" TemplateType="100" Url="Lists/TicketType" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-de22-43b2-a848-c05709900100" EnableFolderCreation="false">
+          <pnp:ContentTypeBindings>
+            <pnp:ContentTypeBinding ContentTypeID="0x01" Default="true" />
+            <pnp:ContentTypeBinding ContentTypeID="0x0120" />
+          </pnp:ContentTypeBindings>
+          <pnp:Views>
+            <View Name="{CB23AA41-90E2-40E2-9AA2-BBEBEAD85E12}" DefaultView="TRUE" MobileView="TRUE" MobileDefaultView="TRUE" Type="HTML" DisplayName="All Items" Url="/sites/temphelpdesksite/Lists/TicketType/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/generic.png?rev=41">
+              <Query>
+                <OrderBy>
+                  <FieldRef Name="ID" />
+                </OrderBy>
+              </Query>
+              <ViewFields>
+                <FieldRef Name="LinkTitle" />
+              </ViewFields>
+              <RowLimit Paged="TRUE">30</RowLimit>
+              <JSLink>clienttemplates.js</JSLink>
+            </View>
+          </pnp:Views>
+          <pnp:DataRows>
+            <pnp:DataRow>
+              <pnp:DataValue FieldName="Title">default</pnp:DataValue>
+            </pnp:DataRow>
+            <pnp:DataRow>
+              <pnp:DataValue FieldName="Title">incident</pnp:DataValue>
+            </pnp:DataRow>
+            <pnp:DataRow>
+              <pnp:DataValue FieldName="Title">problem</pnp:DataValue>
+            </pnp:DataRow>
+            <pnp:DataRow>
+              <pnp:DataValue FieldName="Title">RFC</pnp:DataValue>
+            </pnp:DataRow>
+          </pnp:DataRows>
+        </pnp:ListInstance>
+      </pnp:Lists>
+      <pnp:Features>
+        <pnp:WebFeatures>
+          <pnp:Feature ID="87294c72-f260-42f3-a41b-981a2ffce37a" Deactivate="true" Description="MDSFeature" />
+        </pnp:WebFeatures>
+      </pnp:Features>
+      <pnp:CustomActions>
+        <pnp:SiteCustomActions>
+          <pnp:CustomAction Name="PnPPartnerPackOverrides" Location="ScriptLink" Sequence="0" Rights="0" ScriptBlock=" var headID = document.getElementsByTagName('head')[0]; &#xD;&#xA;var scripts = document.getElementsByTagName('script');&#xD;&#xA;var scriptsSrc = [];&#xD;&#xA;for(var i = 0; i &lt; scripts.length; i++) {&#xD;&#xA;    if(scripts[i].type === 'text/javascript'){&#xD;&#xA;        scriptsSrc.push(scripts[i].src);&#xD;&#xA;    }&#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;if (scriptsSrc.indexOf('https://yourwebsite.azurewebsites.net/Templates/Overrides/PnP-Partner-Pack-Overrides.js?rev=457cefaa69cc4d6d9d37cecc6cb04dc3') === -1)  {  &#xD;&#xA;    var newScript = document.createElement('script');&#xD;&#xA;    newScript.id = 'PnPPartnerPackOverrides';&#xD;&#xA;    newScript.type = 'text/javascript';&#xD;&#xA;    newScript.src = 'https://yourwebsite.azurewebsites.net/Templates/Overrides/PnP-Partner-Pack-Overrides.js?rev=457cefaa69cc4d6d9d37cecc6cb04dc3';&#xD;&#xA;    headID.appendChild(newScript);&#xD;&#xA;    scriptsSrc.push('https://yourwebsite.azurewebsites.net/Templates/Overrides/PnP-Partner-Pack-Overrides.js?rev=457cefaa69cc4d6d9d37cecc6cb04dc3');&#xD;&#xA;}">
+            <pnp:CommandUIExtension />
+          </pnp:CustomAction>
+          <pnp:CustomAction Name="jQueryLink" Description="jQueryLink" Location="ScriptLink" Sequence="0" Rights="0" ScriptBlock="&#xD;&#xA;                var headID = document.getElementsByTagName('head')[0]; &#xD;&#xA;                var&#xD;&#xA;                newScript = document.createElement('script');&#xD;&#xA;                newScript.type = 'text/javascript';&#xD;&#xA;                newScript.src = 'https://code.jquery.com/jquery-1.11.3.min.js';&#xD;&#xA;                newScript.id = 'jQueryLink';&#xD;&#xA;                headID.appendChild(newScript);">
+            <pnp:CommandUIExtension />
+          </pnp:CustomAction>
+          <pnp:CustomAction Name="spoResponsive" Description="spoResponsive" Location="ScriptLink" Sequence="0" Rights="0" ScriptBlock="&#xD;&#xA;                var headID = document.getElementsByTagName('head')[0]; &#xD;&#xA;                var&#xD;&#xA;                newScript = document.createElement('script');&#xD;&#xA;                newScript.type = 'text/javascript';&#xD;&#xA;                newScript.src = 'https://yourwebsite.azurewebsites.net/Templates/Responsive/SPO-Responsive.js';&#xD;&#xA;                newScript.id = 'spoResponsive';&#xD;&#xA;                headID.appendChild(newScript);">
+            <pnp:CommandUIExtension />
+          </pnp:CustomAction>
+        </pnp:SiteCustomActions>
+      </pnp:CustomActions>
+    </pnp:ProvisioningTemplate>
+  </pnp:Templates>
+</pnp:Provisioning>
