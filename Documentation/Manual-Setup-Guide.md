@@ -94,7 +94,7 @@ the "Permissions to other applications" section, which is illustrated in the fol
 
 ![Azure AD - Application Configuration - Client Secret](./Figures/Fig-07-Azure-AD-App-Config-02.png)
 
-Click the "Add Application" button, a popup screen will appera. Select "Office 365 SharePoint Online"
+Click the "Add Application" button, a popup screen will appear. Select "Office 365 SharePoint Online"
 and click the confirmation button. In the main configuration screen you have to configure
 the following application permissions:
 
@@ -108,10 +108,7 @@ For further details, see the following figure.
 The "Application Permissions" are those granted to the application when running as App Only.
 The other dropdown of permissions, called "Delegated Permissions", defines the permissions
 granted to the application when running under a specific user's account delegation (using
-and app and user access token, from an OAuth 2.0 perspective). Because in the PnP Partner
-Pack solution there are operations executed as App Only, and other execute through user's
-delegation, you have to select the same permissions also for the "Delegated Permissions"
-section. Then, click one more time the "Save" button.
+and app and user access token, from an OAuth 2.0 perspective).
 
 <a name="createcertificate"></a>
 ###Create the self signed certificate
