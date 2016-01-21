@@ -8,7 +8,10 @@
         <pnp:SupportedUILanguage LCID="1033" />
       </pnp:SupportedUILanguages>
       <pnp:PropertyBagEntries>
+        <pnp:PropertyBagEntry Key="Microsoft.SharePoint.WorkflowServices.SPWebApplicationIdentifier" Value="ec185f40-c87e-47b1-8434-5b3a30e7d755@843da9a1-1b5c-4cd9-af48-823ecdba3a26" />
         <pnp:PropertyBagEntry Key="_PnP_PartnerPack_Overrides_Enabled" Value="true" />
+        <pnp:PropertyBagEntry Key="Microsoft.SharePoint.WorkflowServices.SPWebScopeUri" Value="https://pramatitechnology.sharepoint.com{site}" />
+        <pnp:PropertyBagEntry Key="Microsoft.SharePoint.WorkflowServices.SPWebScopeProperties" Value="India Standard Time;330;(UTC+05:30) Chennai, Kolkata, Mumbai, New Delhi;India Standard Time;India Daylight Time;;UTC;0;UTC;UTC;UTC;;en-US" />
       </pnp:PropertyBagEntries>
       <pnp:Security>
         <pnp:AdditionalAdministrators>
@@ -19,11 +22,18 @@
         </pnp:SiteGroups>
         <pnp:Permissions />
       </pnp:Security>
-
       <pnp:Files>
         <pnp:File Src="Helpdesk.min.js" Folder="SiteAssets"  Overwrite="true">
         </pnp:File>
         <pnp:File  Src="Helpdesk.css" Folder="SiteAssets" Overwrite="true">
+        </pnp:File>
+        <pnp:File Src="peoplepickercontrol.js" Folder="SiteAssets"  Overwrite="true">
+        </pnp:File>
+        <pnp:File Src="peoplepickercontrol.css" Folder="SiteAssets"  Overwrite="true">
+        </pnp:File>
+        <pnp:File Src="app.js" Folder="SiteAssets"  Overwrite="true">
+        </pnp:File>
+        <pnp:File Src="peoplepickercontrol_resources.en.js" Folder="SiteAssets"  Overwrite="true">
         </pnp:File>
       </pnp:Files>
 
@@ -42,16 +52,21 @@
         <property name="Hidden" type="bool">False</property>
         <property name="Description" type="string">Allows authors to insert HTML snippets or scripts.</property>
         <property name="Content" type="string">
-      &lt;link href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" rel = "stylesheet" /&gt;
-&lt;link href="//cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css" rel = "stylesheet" /&gt;
+		
+&lt;link href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" rel="stylesheet" /&gt;
+&lt;link href="//cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css" rel="stylesheet" /&gt;
 &lt;script&gt;
     SP.SOD.executeOrDelayUntilScriptLoaded(LoadHelpdeskScript, 'sp.js');
     function LoadHelpdeskScript() {
         currWebUrl = _spPageContextInfo.webServerRelativeUrl;
+        LoadJSNCSS(currWebUrl + "/SiteAssets/peoplepickercontrol.css", "css");
         LoadJSNCSS(currWebUrl + "/SiteAssets/helpdesk.css", "css");
-        LoadJSNCSS("//code.jquery.com/jquery-1.11.3.min.js","js");
+        LoadJSNCSS("//code.jquery.com/jquery-1.11.3.min.js", "js");
         LoadJSNCSS("//code.jquery.com/ui/1.11.4/jquery-ui.js", "js");
         LoadJSNCSS("//cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js", "js");
+        LoadJSNCSS(currWebUrl + "/SiteAssets/app.js?rev=1", "js");
+        LoadJSNCSS(currWebUrl + "/SiteAssets/peoplepickercontrol.js?rev=3", "js");
+        LoadJSNCSS(currWebUrl + "/SiteAssets/peoplepickercontrol_resources.en.js", "js");
         LoadJSNCSS(currWebUrl + "/SiteAssets/Helpdesk.min.js", "js");
     }
     function LoadJSNCSS(filePath, type) {
@@ -72,6 +87,7 @@
     }
 &lt;/script&gt;
 
+&lt;a id="itManagerWorkFlow" href="#"&gt;Configure IT Manager Workflow&lt;/a&gt;&lt;br /&gt;
 &lt;div class='form-label' id='statusDiv'&gt;&lt;span id='spanStatus'&gt;&lt;/span&gt;&lt;/div&gt;
 &lt;div class='table'&gt;
     &lt;div class='row'&gt;
@@ -106,6 +122,19 @@
                     &lt;label class='form-label'&gt;Attachment&lt;/label&gt;
                     &lt;input type="file" name="attachment" id="attachment"&gt;
                 &lt;/div&gt;
+                &lt;div class='form-div'&gt;
+                    &lt;label class='form-label'&gt;Manager &lt;span&gt;*&lt;/span&gt;&lt;/label&gt;
+                    &lt;div id="divFieldOwners"&gt;
+                        &lt;div id="divManager" class="ms-core-form-line"&gt;
+                            &lt;div id="divManagerAdministrators" class="cam-peoplepicker-userlookup-single ms-fullWidth"&gt;
+                                &lt;span id="spanAdministrators"&gt;&lt;/span&gt;
+                                &lt;input type="text" id="inputAdministrators" CssClass="cam-peoplepicker-edit" Width="70"&gt;
+                            &lt;/div&gt;
+                            &lt;div id="divAdministratorsSearch" class="cam-peoplepicker-usersearch ms-emphasisBorder"&gt;&lt;/div&gt;
+                            &lt;input type="hidden" id="hdnAdministrators"&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
                 &lt;div class='form-div' id="div_error"&gt;
                     &lt;p&gt;Fields with * are required&lt;/p&gt;
                 &lt;/div&gt;
@@ -116,7 +145,10 @@
             &lt;/div&gt;
         &lt;/div&gt;
         &lt;div class='cell'&gt;
-            &lt;h2&gt;My TICKETS&lt;/h2&gt;
+            &lt;div class='form-div'&gt;
+                &lt;h2 class="myTickets"&gt;My TICKETS&lt;/h2&gt;
+                &lt;button id="Refresh-tickets" href="#"&gt;Refresh&lt;/button&gt;
+            &lt;/div&gt;
             &lt;div&gt;
                 &lt;table id="tblMyTickets" class='mytickets_table'&gt;&lt;/table&gt;
             &lt;/div&gt;
@@ -184,10 +216,26 @@
                 &lt;label id="view-ticket-Workstation"&gt;Workstation&lt;/label&gt;
             &lt;/div&gt;
         &lt;/div&gt;
+        &lt;div id="it-dialog-form" title="IT Manager Configuration"&gt;
+            &lt;div class='form-div'&gt;
+                &lt;label class='form-label'&gt;IT Manager Email:&lt;span&gt;*&lt;/span&gt;&lt;/label&gt;
+                &lt;div id="divFieldOwners"&gt;
+                    &lt;div id="divITManager" class="ms-core-form-line"&gt;
+                        &lt;div id="divITManagerAdministrators" class="cam-peoplepicker-userlookup-single ms-fullWidth"&gt;
+                            &lt;span id="spanAdministrators1"&gt;&lt;/span&gt;
+                            &lt;input type="text" id="inputAdministrators1" CssClass="cam-peoplepicker-edit" Width="70"&gt;
+                        &lt;/div&gt;
+                        &lt;div id="divAdministratorsSearch1" class="cam-peoplepicker-usersearch ms-emphasisBorder"&gt;&lt;/div&gt;
+                        &lt;input type="hidden" id="hdnAdministrators1"&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+        &lt;/div&gt;
     &lt;/div&gt;
 &lt;/div&gt;
 
-       </property>
+		</property>
         <property name="CatalogIconImageUrl" type="string" />
         <property name="Title" type="string">Script Editor</property>
         <property name="AllowHide" type="bool">True</property>
@@ -218,10 +266,140 @@
         <Field ID="{E2A3861F-C216-47D7-820F-7CB638862AB2}" Name="_ShortcutWebId" SourceID="http://schemas.microsoft.com/sharepoint/v3" StaticName="_ShortcutWebId" DisplayName="Shortcut Web Id" Group="_Hidden" Hidden="TRUE" Type="Guid" />
         <Field ID="{47B1B86F-9F8A-4DBE-A75E-CA5D9B0F566C}" Name="_ShortcutUrl" SourceID="http://schemas.microsoft.com/sharepoint/v3" StaticName="_ShortcutUrl" DisplayName="Shortcut URL" Group="_Hidden" Hidden="TRUE" Type="URL" />
         <Field ID="{2662AD77-2410-4938-B01C-E5E43321BAD4}" Name="_ShortcutSiteId" SourceID="http://schemas.microsoft.com/sharepoint/v3" StaticName="_ShortcutSiteId" DisplayName="Shortcut Site Id" Group="_Hidden" Hidden="TRUE" Type="Guid" />
-        <Field ID="{ef991a83-108d-4407-8ee5-ccc0c3d836b9}" Type="UserMulti" DisplayName="Shared With" Mult="TRUE" Name="SharedWithUsers" StaticName="SharedWithUsers" Group="_Hidden" Sealed="TRUE" AllowDeletion="FALSE" ReadOnly="TRUE" ShowInDisplayForm="FALSE" ShowInEditForm="FALSE" ShowInListSettings="FALSE" Viewable="FALSE" SourceID="{fe4296a1-5406-4b4a-9075-6f77c6fa89e7}" />
+        <Field ID="{ef991a83-108d-4407-8ee5-ccc0c3d836b9}" Type="UserMulti" DisplayName="Shared With" Mult="TRUE" Name="SharedWithUsers" StaticName="SharedWithUsers" Group="_Hidden" Sealed="TRUE" AllowDeletion="FALSE" ReadOnly="TRUE" ShowInDisplayForm="FALSE" ShowInEditForm="FALSE" ShowInListSettings="FALSE" Viewable="FALSE" SourceID="{ec185f40-c87e-47b1-8434-5b3a30e7d755}" />
         <Field ID="{E8FEA999-553D-4F45-BE52-D941627E9FE5}" Name="_ShortcutUniqueId" SourceID="http://schemas.microsoft.com/sharepoint/v3" StaticName="_ShortcutUniqueId" DisplayName="Shortcut Unique Id" Group="_Hidden" Hidden="TRUE" Type="Guid" />
-        <Field ID="{d3c9caf7-044c-4c71-ae64-092981e54b33}" Type="Note" DisplayName="Shared With Details" Name="SharedWithDetails" StaticName="SharedWithDetails" Group="_Hidden" Sealed="TRUE" AllowDeletion="FALSE" ReadOnly="TRUE" ShowInDisplayForm="FALSE" ShowInEditForm="FALSE" ShowInListSettings="FALSE" Viewable="FALSE" SourceID="{fe4296a1-5406-4b4a-9075-6f77c6fa89e7}" />
+        <Field ID="{d3c9caf7-044c-4c71-ae64-092981e54b33}" Type="Note" DisplayName="Shared With Details" Name="SharedWithDetails" StaticName="SharedWithDetails" Group="_Hidden" Sealed="TRUE" AllowDeletion="FALSE" ReadOnly="TRUE" ShowInDisplayForm="FALSE" ShowInEditForm="FALSE" ShowInListSettings="FALSE" Viewable="FALSE" SourceID="{ec185f40-c87e-47b1-8434-5b3a30e7d755}" />
       </pnp:SiteFields>
+      <pnp:ContentTypes>
+        <pnp:ContentType ID="0x01080100C9C9515DE4E24001905074F980F93160000EEA96BE7C83464C9211129CD27F0409" Name="Collect Feedback Workflow Task (en-US)" Description="A work item created by an workflow that you or your team needs to complete." Group="_Hidden" NewFormUrl="" EditFormUrl="~layouts/WrkTaskIP.aspx" DisplayFormUrl="~layouts/WrkTaskIP.aspx">
+          <pnp:FieldRefs>
+            <pnp:FieldRef ID="c042a256-787d-4a6f-8a8a-cf6ab767f12d" Name="ContentType" />
+            <pnp:FieldRef ID="fa564e0f-0c70-4ab9-b863-0177e6ddd247" Name="Title" />
+            <pnp:FieldRef ID="64cd368d-2f95-4bfc-a1f9-8d4324ecb007" Name="StartDate" />
+            <pnp:FieldRef ID="cd21b4c2-6841-4f9e-a23a-738a65f99889" Name="DueDate" />
+            <pnp:FieldRef ID="53101f38-dd2e-458c-b245-0c236cc13d1a" Name="AssignedTo" />
+            <pnp:FieldRef ID="d2311440-1ed6-46ea-b46d-daa643dc3886" Name="PercentComplete" />
+            <pnp:FieldRef ID="7662cd2c-f069-4dba-9e35-082cf976e170" Name="Body" />
+            <pnp:FieldRef ID="c3a92d97-2b77-4a25-9698-3ab54874bc6f" Name="Predecessors" />
+            <pnp:FieldRef ID="a8eb573e-9e11-481a-a8c9-1104a54b2fbd" Name="Priority" />
+            <pnp:FieldRef ID="c15b34c3-ce7d-490a-b133-3f4de8801b76" Name="Status" />
+            <pnp:FieldRef ID="d2a04afc-9a05-48c8-a7fa-fa98f9496141" Name="RelatedItems" />
+            <pnp:FieldRef ID="58ddda52-c2a3-4650-9178-3bbc1f6e36da" Name="Link" />
+            <pnp:FieldRef ID="16b6952f-3ce6-45e0-8f4e-42dac6e12441" Name="OffsiteParticipant" />
+            <pnp:FieldRef ID="4a799ba5-f449-4796-b43e-aa5186c3c414" Name="OffsiteParticipantReason" />
+            <pnp:FieldRef ID="18e1c6fa-ae37-4102-890a-cfb0974ef494" Name="WorkflowOutcome" />
+            <pnp:FieldRef ID="e506d6ca-c2da-4164-b858-306f1c41c9ec" Name="WorkflowName" />
+            <pnp:FieldRef ID="ae069f25-3ac2-4256-b9c3-15dbc15da0e0" Name="GUID" />
+            <pnp:FieldRef ID="8d96aa48-9dff-46cf-8538-84c747ffa877" Name="TaskType" />
+            <pnp:FieldRef ID="17ca3a22-fdfe-46eb-99b5-9646baed3f16" Name="FormURN" />
+            <pnp:FieldRef ID="78eae64a-f5f2-49af-b416-3247b76f46a1" Name="FormData" />
+            <pnp:FieldRef ID="8cbb9252-1035-4156-9c35-f54e9056c65a" Name="EmailBody" />
+            <pnp:FieldRef ID="47f68c3b-8930-406f-bde2-4a8c669ee87c" Name="HasCustomEmailBody" />
+            <pnp:FieldRef ID="cb2413f2-7de9-4afc-8587-1ca3f563f624" Name="SendEmailNotification" />
+            <pnp:FieldRef ID="4d2444c2-0e97-476c-a2a3-e9e4a9c73009" Name="PendingModTime" />
+            <pnp:FieldRef ID="35363960-d998-4aad-b7e8-058dfe2c669e" Name="Completed" />
+            <pnp:FieldRef ID="1bfee788-69b7-4765-b109-d4d9c31d1ac1" Name="WorkflowListId" />
+            <pnp:FieldRef ID="8e234c69-02b0-42d9-8046-d5f49bf0174f" Name="WorkflowItemId" />
+            <pnp:FieldRef ID="1c5518e2-1e99-49fe-bfc6-1a8de3ba16e2" Name="ExtendedProperties" />
+          </pnp:FieldRefs>
+        </pnp:ContentType>
+        <pnp:ContentType ID="0x01080100C9C9515DE4E24001905074F980F93160002E9DB43AC527439AB853AE4FC8360409" Name="Collect Signatures Workflow Task (en-US)" Description="A work item created by an workflow that you or your team needs to complete." Group="_Hidden" NewFormUrl="" EditFormUrl="~layouts/WrkTaskIP.aspx" DisplayFormUrl="~layouts/WrkTaskIP.aspx">
+          <pnp:FieldRefs>
+            <pnp:FieldRef ID="c042a256-787d-4a6f-8a8a-cf6ab767f12d" Name="ContentType" />
+            <pnp:FieldRef ID="fa564e0f-0c70-4ab9-b863-0177e6ddd247" Name="Title" />
+            <pnp:FieldRef ID="64cd368d-2f95-4bfc-a1f9-8d4324ecb007" Name="StartDate" />
+            <pnp:FieldRef ID="cd21b4c2-6841-4f9e-a23a-738a65f99889" Name="DueDate" />
+            <pnp:FieldRef ID="53101f38-dd2e-458c-b245-0c236cc13d1a" Name="AssignedTo" />
+            <pnp:FieldRef ID="d2311440-1ed6-46ea-b46d-daa643dc3886" Name="PercentComplete" />
+            <pnp:FieldRef ID="7662cd2c-f069-4dba-9e35-082cf976e170" Name="Body" />
+            <pnp:FieldRef ID="c3a92d97-2b77-4a25-9698-3ab54874bc6f" Name="Predecessors" />
+            <pnp:FieldRef ID="a8eb573e-9e11-481a-a8c9-1104a54b2fbd" Name="Priority" />
+            <pnp:FieldRef ID="c15b34c3-ce7d-490a-b133-3f4de8801b76" Name="Status" />
+            <pnp:FieldRef ID="d2a04afc-9a05-48c8-a7fa-fa98f9496141" Name="RelatedItems" />
+            <pnp:FieldRef ID="58ddda52-c2a3-4650-9178-3bbc1f6e36da" Name="Link" />
+            <pnp:FieldRef ID="16b6952f-3ce6-45e0-8f4e-42dac6e12441" Name="OffsiteParticipant" />
+            <pnp:FieldRef ID="4a799ba5-f449-4796-b43e-aa5186c3c414" Name="OffsiteParticipantReason" />
+            <pnp:FieldRef ID="18e1c6fa-ae37-4102-890a-cfb0974ef494" Name="WorkflowOutcome" />
+            <pnp:FieldRef ID="e506d6ca-c2da-4164-b858-306f1c41c9ec" Name="WorkflowName" />
+            <pnp:FieldRef ID="ae069f25-3ac2-4256-b9c3-15dbc15da0e0" Name="GUID" />
+            <pnp:FieldRef ID="8d96aa48-9dff-46cf-8538-84c747ffa877" Name="TaskType" />
+            <pnp:FieldRef ID="17ca3a22-fdfe-46eb-99b5-9646baed3f16" Name="FormURN" />
+            <pnp:FieldRef ID="78eae64a-f5f2-49af-b416-3247b76f46a1" Name="FormData" />
+            <pnp:FieldRef ID="8cbb9252-1035-4156-9c35-f54e9056c65a" Name="EmailBody" />
+            <pnp:FieldRef ID="47f68c3b-8930-406f-bde2-4a8c669ee87c" Name="HasCustomEmailBody" />
+            <pnp:FieldRef ID="cb2413f2-7de9-4afc-8587-1ca3f563f624" Name="SendEmailNotification" />
+            <pnp:FieldRef ID="4d2444c2-0e97-476c-a2a3-e9e4a9c73009" Name="PendingModTime" />
+            <pnp:FieldRef ID="35363960-d998-4aad-b7e8-058dfe2c669e" Name="Completed" />
+            <pnp:FieldRef ID="1bfee788-69b7-4765-b109-d4d9c31d1ac1" Name="WorkflowListId" />
+            <pnp:FieldRef ID="8e234c69-02b0-42d9-8046-d5f49bf0174f" Name="WorkflowItemId" />
+            <pnp:FieldRef ID="1c5518e2-1e99-49fe-bfc6-1a8de3ba16e2" Name="ExtendedProperties" />
+          </pnp:FieldRefs>
+        </pnp:ContentType>
+        <pnp:ContentType ID="0x01080100C9C9515DE4E24001905074F980F93160003A15057E2AF34B67B32E14B94EB70409" Name="Approval Workflow Task (en-US)" Description="A work item created by an workflow that you or your team needs to complete." Group="_Hidden" NewFormUrl="" EditFormUrl="~layouts/WrkTaskIP.aspx" DisplayFormUrl="~layouts/WrkTaskIP.aspx">
+          <pnp:FieldRefs>
+            <pnp:FieldRef ID="c042a256-787d-4a6f-8a8a-cf6ab767f12d" Name="ContentType" />
+            <pnp:FieldRef ID="fa564e0f-0c70-4ab9-b863-0177e6ddd247" Name="Title" />
+            <pnp:FieldRef ID="64cd368d-2f95-4bfc-a1f9-8d4324ecb007" Name="StartDate" />
+            <pnp:FieldRef ID="cd21b4c2-6841-4f9e-a23a-738a65f99889" Name="DueDate" />
+            <pnp:FieldRef ID="53101f38-dd2e-458c-b245-0c236cc13d1a" Name="AssignedTo" />
+            <pnp:FieldRef ID="d2311440-1ed6-46ea-b46d-daa643dc3886" Name="PercentComplete" />
+            <pnp:FieldRef ID="7662cd2c-f069-4dba-9e35-082cf976e170" Name="Body" />
+            <pnp:FieldRef ID="c3a92d97-2b77-4a25-9698-3ab54874bc6f" Name="Predecessors" />
+            <pnp:FieldRef ID="a8eb573e-9e11-481a-a8c9-1104a54b2fbd" Name="Priority" />
+            <pnp:FieldRef ID="c15b34c3-ce7d-490a-b133-3f4de8801b76" Name="Status" />
+            <pnp:FieldRef ID="d2a04afc-9a05-48c8-a7fa-fa98f9496141" Name="RelatedItems" />
+            <pnp:FieldRef ID="58ddda52-c2a3-4650-9178-3bbc1f6e36da" Name="Link" />
+            <pnp:FieldRef ID="16b6952f-3ce6-45e0-8f4e-42dac6e12441" Name="OffsiteParticipant" />
+            <pnp:FieldRef ID="4a799ba5-f449-4796-b43e-aa5186c3c414" Name="OffsiteParticipantReason" />
+            <pnp:FieldRef ID="18e1c6fa-ae37-4102-890a-cfb0974ef494" Name="WorkflowOutcome" />
+            <pnp:FieldRef ID="e506d6ca-c2da-4164-b858-306f1c41c9ec" Name="WorkflowName" />
+            <pnp:FieldRef ID="ae069f25-3ac2-4256-b9c3-15dbc15da0e0" Name="GUID" />
+            <pnp:FieldRef ID="8d96aa48-9dff-46cf-8538-84c747ffa877" Name="TaskType" />
+            <pnp:FieldRef ID="17ca3a22-fdfe-46eb-99b5-9646baed3f16" Name="FormURN" />
+            <pnp:FieldRef ID="78eae64a-f5f2-49af-b416-3247b76f46a1" Name="FormData" />
+            <pnp:FieldRef ID="8cbb9252-1035-4156-9c35-f54e9056c65a" Name="EmailBody" />
+            <pnp:FieldRef ID="47f68c3b-8930-406f-bde2-4a8c669ee87c" Name="HasCustomEmailBody" />
+            <pnp:FieldRef ID="cb2413f2-7de9-4afc-8587-1ca3f563f624" Name="SendEmailNotification" />
+            <pnp:FieldRef ID="4d2444c2-0e97-476c-a2a3-e9e4a9c73009" Name="PendingModTime" />
+            <pnp:FieldRef ID="35363960-d998-4aad-b7e8-058dfe2c669e" Name="Completed" />
+            <pnp:FieldRef ID="1bfee788-69b7-4765-b109-d4d9c31d1ac1" Name="WorkflowListId" />
+            <pnp:FieldRef ID="8e234c69-02b0-42d9-8046-d5f49bf0174f" Name="WorkflowItemId" />
+            <pnp:FieldRef ID="1c5518e2-1e99-49fe-bfc6-1a8de3ba16e2" Name="ExtendedProperties" />
+          </pnp:FieldRefs>
+        </pnp:ContentType>
+        <pnp:ContentType ID="0x01080100C9C9515DE4E24001905074F980F9316001" Name="Signatures Workflow Task Deprecated" Description="Deprecated" Group="_Hidden" NewFormUrl="" EditFormUrl="~layouts/WrkTaskIP.aspx" DisplayFormUrl="~layouts/WrkTaskIP.aspx">
+          <pnp:FieldRefs>
+            <pnp:FieldRef ID="c042a256-787d-4a6f-8a8a-cf6ab767f12d" Name="ContentType" />
+            <pnp:FieldRef ID="fa564e0f-0c70-4ab9-b863-0177e6ddd247" Name="Title" />
+            <pnp:FieldRef ID="64cd368d-2f95-4bfc-a1f9-8d4324ecb007" Name="StartDate" />
+            <pnp:FieldRef ID="cd21b4c2-6841-4f9e-a23a-738a65f99889" Name="DueDate" />
+            <pnp:FieldRef ID="53101f38-dd2e-458c-b245-0c236cc13d1a" Name="AssignedTo" />
+            <pnp:FieldRef ID="d2311440-1ed6-46ea-b46d-daa643dc3886" Name="PercentComplete" />
+            <pnp:FieldRef ID="7662cd2c-f069-4dba-9e35-082cf976e170" Name="Body" />
+            <pnp:FieldRef ID="c3a92d97-2b77-4a25-9698-3ab54874bc6f" Name="Predecessors" />
+            <pnp:FieldRef ID="a8eb573e-9e11-481a-a8c9-1104a54b2fbd" Name="Priority" />
+            <pnp:FieldRef ID="c15b34c3-ce7d-490a-b133-3f4de8801b76" Name="Status" />
+            <pnp:FieldRef ID="d2a04afc-9a05-48c8-a7fa-fa98f9496141" Name="RelatedItems" />
+            <pnp:FieldRef ID="58ddda52-c2a3-4650-9178-3bbc1f6e36da" Name="Link" />
+            <pnp:FieldRef ID="16b6952f-3ce6-45e0-8f4e-42dac6e12441" Name="OffsiteParticipant" />
+            <pnp:FieldRef ID="4a799ba5-f449-4796-b43e-aa5186c3c414" Name="OffsiteParticipantReason" />
+            <pnp:FieldRef ID="18e1c6fa-ae37-4102-890a-cfb0974ef494" Name="WorkflowOutcome" />
+            <pnp:FieldRef ID="e506d6ca-c2da-4164-b858-306f1c41c9ec" Name="WorkflowName" />
+            <pnp:FieldRef ID="ae069f25-3ac2-4256-b9c3-15dbc15da0e0" Name="GUID" />
+            <pnp:FieldRef ID="8d96aa48-9dff-46cf-8538-84c747ffa877" Name="TaskType" />
+            <pnp:FieldRef ID="17ca3a22-fdfe-46eb-99b5-9646baed3f16" Name="FormURN" />
+            <pnp:FieldRef ID="78eae64a-f5f2-49af-b416-3247b76f46a1" Name="FormData" />
+            <pnp:FieldRef ID="8cbb9252-1035-4156-9c35-f54e9056c65a" Name="EmailBody" />
+            <pnp:FieldRef ID="47f68c3b-8930-406f-bde2-4a8c669ee87c" Name="HasCustomEmailBody" />
+            <pnp:FieldRef ID="cb2413f2-7de9-4afc-8587-1ca3f563f624" Name="SendEmailNotification" />
+            <pnp:FieldRef ID="4d2444c2-0e97-476c-a2a3-e9e4a9c73009" Name="PendingModTime" />
+            <pnp:FieldRef ID="35363960-d998-4aad-b7e8-058dfe2c669e" Name="Completed" />
+            <pnp:FieldRef ID="1bfee788-69b7-4765-b109-d4d9c31d1ac1" Name="WorkflowListId" />
+            <pnp:FieldRef ID="8e234c69-02b0-42d9-8046-d5f49bf0174f" Name="WorkflowItemId" />
+            <pnp:FieldRef ID="1c5518e2-1e99-49fe-bfc6-1a8de3ba16e2" Name="ExtendedProperties" />
+          </pnp:FieldRefs>
+        </pnp:ContentType>
+      </pnp:ContentTypes>
       <pnp:Lists>
         <pnp:ListInstance Title="Content and Structure Reports" Description="Use the reports list to customize the queries that appear in the Content and Structure Tool views" DocumentTemplate="" TemplateType="100" Url="Reports List" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-de22-43b2-a848-c05709900100" EnableAttachments="false" EnableFolderCreation="false">
           <pnp:ContentTypeBindings>
@@ -229,7 +407,7 @@
             <pnp:ContentTypeBinding ContentTypeID="0x0120" />
           </pnp:ContentTypeBindings>
           <pnp:Views>
-            <View Name="{3AEB6D83-75D7-4C48-A7D2-D9CFEE31E07C}" DefaultView="TRUE" MobileView="TRUE" MobileDefaultView="TRUE" Type="HTML" DisplayName="All Items" Url="/sites/temphelpdesksite/Reports List/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/generic.png?rev=41">
+            <View Name="{A8F07D0C-1259-4CAE-A0D0-407FFC368D80}" DefaultView="TRUE" Type="HTML" DisplayName="All Items" Url="/sites/DemoHelpDesk_1/Reports List/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/generic.png?rev=41">
               <Query>
                 <OrderBy>
                   <FieldRef Name="ID" />
@@ -243,15 +421,13 @@
             </View>
           </pnp:Views>
         </pnp:ListInstance>
-
-
         <pnp:ListInstance Title="Helpdesk" Description="" DocumentTemplate="" TemplateType="100" Url="Lists/Helpdesk" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-de22-43b2-a848-c05709900100" EnableFolderCreation="false">
           <pnp:ContentTypeBindings>
             <pnp:ContentTypeBinding ContentTypeID="0x01" Default="true" />
             <pnp:ContentTypeBinding ContentTypeID="0x0120" />
           </pnp:ContentTypeBindings>
           <pnp:Views>
-            <View Name="{BD4DE6CE-86A2-4712-8F0F-F2BC0E9EADDB}" DefaultView="TRUE" MobileView="TRUE" MobileDefaultView="TRUE" Type="HTML" DisplayName="All Items" Url="/sites/temphelpdesksite/Lists/Helpdesk/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/generic.png?rev=41">
+            <View Name="{55F50E72-015A-4354-9217-4881212B0C0D}" DefaultView="TRUE" Type="HTML" DisplayName="All Items" Url="/sites/DemoHelpDesk_1/Lists/Helpdesk/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/generic.png?rev=41">
               <Query>
                 <OrderBy>
                   <FieldRef Name="ID" />
@@ -262,27 +438,55 @@
                 <FieldRef Name="Subject" />
                 <FieldRef Name="Description" />
                 <FieldRef Name="Workstation" />
-                <FieldRef Name="TicketType" />
-                <FieldRef Name="TicketTo" />
-                <FieldRef Name="Priority" />
                 <FieldRef Name="TicketNumber" />
-                <FieldRef Name="Status" />
-                <FieldRef Name="TicketFrom" />
+                <FieldRef Name="Manager" />
+                <FieldRef Name="Modified" />
+                <FieldRef Name="Author" />
+                <FieldRef Name="TicketStatus" />
+                <FieldRef Name="Helpdesk_x0020_State_x0020_Workf" />
               </ViewFields>
               <RowLimit Paged="TRUE">30</RowLimit>
+              <Aggregations Value="Off" />
               <JSLink>clienttemplates.js</JSLink>
             </View>
           </pnp:Views>
           <pnp:Fields>
-            <Field Type="Text" DisplayName="Subject" Required="TRUE" EnforceUniqueValues="FALSE" Indexed="FALSE" MaxLength="255" ID="{5b4204ce-99b0-4eb2-b5bb-418d37fabc4e}" SourceID="{21be33e0-48fd-4ad7-bd37-d5aba9ef982c}" StaticName="Subject" Name="Subject" ColName="nvarchar3" RowOrdinal="0" Version="1" />
-            <Field Type="Note" DisplayName="Description" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" NumLines="6" RichText="FALSE" RichTextMode="Compatible" IsolateStyles="FALSE" Sortable="FALSE" ID="{8ce63a0e-83fe-4ccf-993d-f24c372969ea}" SourceID="{21be33e0-48fd-4ad7-bd37-d5aba9ef982c}" StaticName="Description" Name="Description" ColName="ntext2" RowOrdinal="0" Version="2" RestrictedMode="TRUE" AppendOnly="FALSE" />
-            <Field Type="Text" DisplayName="Workstation" Required="TRUE" EnforceUniqueValues="FALSE" Indexed="FALSE" MaxLength="255" ID="{ffc2f49b-2553-43fa-aafc-a13c4926b864}" SourceID="{21be33e0-48fd-4ad7-bd37-d5aba9ef982c}" StaticName="Workstation" Name="Workstation" ColName="nvarchar4" RowOrdinal="0" Version="1" />
-            <Field Type="Lookup" DisplayName="TicketType" Required="FALSE" EnforceUniqueValues="FALSE" List="Lists/TicketType" ShowField="Title" UnlimitedLengthInDocumentLibrary="FALSE" RelationshipDeleteBehavior="None" ID="{0df9d2a5-e4a2-4b33-8da9-019506c219ee}" SourceID="{21be33e0-48fd-4ad7-bd37-d5aba9ef982c}" StaticName="TicketType" Name="TicketType" ColName="int1" RowOrdinal="0" Version="1" />
-            <Field Type="Lookup" DisplayName="TicketTo" Required="FALSE" EnforceUniqueValues="FALSE" List="Lists/TicketTo" ShowField="Title" UnlimitedLengthInDocumentLibrary="FALSE" RelationshipDeleteBehavior="None" ID="{f9b78a00-db3a-4206-a98a-0fe0cd2166bc}" SourceID="{21be33e0-48fd-4ad7-bd37-d5aba9ef982c}" StaticName="TicketTo" Name="TicketTo" ColName="int2" RowOrdinal="0" Version="1" />
-            <Field Type="Lookup" DisplayName="Priority" Required="FALSE" EnforceUniqueValues="FALSE" List="Lists/Priority" ShowField="Title" UnlimitedLengthInDocumentLibrary="FALSE" RelationshipDeleteBehavior="None" ID="{58a84417-328d-4c88-9c51-8861dd6d7261}" SourceID="{21be33e0-48fd-4ad7-bd37-d5aba9ef982c}" StaticName="Priority" Name="Priority" ColName="int3" RowOrdinal="0" Version="1" />
-            <Field Type="Text" DisplayName="TicketNumber" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" MaxLength="255" ID="{7d189888-9316-431b-bb9c-998678658e11}" SourceID="{21be33e0-48fd-4ad7-bd37-d5aba9ef982c}" StaticName="TicketNumber" Name="TicketNumber" ColName="nvarchar5" RowOrdinal="0" Version="1" />
-            <Field Type="Lookup" DisplayName="Status" Required="FALSE" EnforceUniqueValues="FALSE" List="Lists/TicketStatus" ShowField="Title" UnlimitedLengthInDocumentLibrary="FALSE" RelationshipDeleteBehavior="None" ID="{1939ec26-fa17-446d-af40-d7163beb6c9c}" SourceID="{21be33e0-48fd-4ad7-bd37-d5aba9ef982c}" StaticName="Status" Name="Status" ColName="int4" RowOrdinal="0" Version="1" />
-            <Field Type="User" DisplayName="TicketFrom" List="UserInfo" Required="FALSE" EnforceUniqueValues="FALSE" ShowField="ImnName" UserSelectionMode="PeopleOnly" UserSelectionScope="0" ID="{a7e7f7fa-1ab8-4798-9cc3-27bda30ad8e8}" SourceID="{21be33e0-48fd-4ad7-bd37-d5aba9ef982c}" StaticName="TicketFrom" Name="TicketFrom" ColName="int5" RowOrdinal="0" Version="1" />
+            <Field Type="Text" DisplayName="Subject" Required="TRUE" EnforceUniqueValues="FALSE" Indexed="FALSE" MaxLength="255" ID="{5b4204ce-99b0-4eb2-b5bb-418d37fabc4e}" SourceID="{21be33e0-48fd-4ad7-bd37-d5aba9ef982c}" StaticName="Subject" Name="Subject" ColName="nvarchar3" RowOrdinal="0" Version="2" />
+            <Field Type="Note" DisplayName="Description" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" NumLines="6" RichText="FALSE" RichTextMode="Compatible" IsolateStyles="FALSE" Sortable="FALSE" ID="{8ce63a0e-83fe-4ccf-993d-f24c372969ea}" SourceID="{21be33e0-48fd-4ad7-bd37-d5aba9ef982c}" StaticName="Description" Name="Description" ColName="ntext2" RowOrdinal="0" Version="3" RestrictedMode="TRUE" AppendOnly="FALSE" />
+            <Field Type="Text" DisplayName="Workstation" Required="TRUE" EnforceUniqueValues="FALSE" Indexed="FALSE" MaxLength="255" ID="{ffc2f49b-2553-43fa-aafc-a13c4926b864}" SourceID="{21be33e0-48fd-4ad7-bd37-d5aba9ef982c}" StaticName="Workstation" Name="Workstation" ColName="nvarchar4" RowOrdinal="0" Version="2" />
+            <Field Type="Lookup" DisplayName="TicketType" Required="FALSE" EnforceUniqueValues="FALSE" ShowField="Title" UnlimitedLengthInDocumentLibrary="FALSE" ID="{0df9d2a5-e4a2-4b33-8da9-019506c219ee}" SourceID="ec185f40-c87e-47b1-8434-5b3a30e7d755" StaticName="TicketType" Name="TicketType" ColName="int1" RowOrdinal="0" Version="4" List="Lists/TicketType" WebId="ec185f40-c87e-47b1-8434-5b3a30e7d755" RelationshipDeleteBehavior="None" />
+            <Field Type="Lookup" DisplayName="TicketTo" Required="FALSE" EnforceUniqueValues="FALSE" ShowField="Title" UnlimitedLengthInDocumentLibrary="FALSE" ID="{f9b78a00-db3a-4206-a98a-0fe0cd2166bc}" SourceID="ec185f40-c87e-47b1-8434-5b3a30e7d755" StaticName="TicketTo" Name="TicketTo" ColName="int2" RowOrdinal="0" Version="4" List="Lists/TicketTo" WebId="ec185f40-c87e-47b1-8434-5b3a30e7d755" RelationshipDeleteBehavior="None" />
+            <Field Type="Lookup" DisplayName="Priority" Required="FALSE" EnforceUniqueValues="FALSE" ShowField="Title" UnlimitedLengthInDocumentLibrary="FALSE" ID="{58a84417-328d-4c88-9c51-8861dd6d7261}" SourceID="ec185f40-c87e-47b1-8434-5b3a30e7d755" StaticName="Priority" Name="Priority" ColName="int3" RowOrdinal="0" Version="4" List="Lists/Priority" WebId="ec185f40-c87e-47b1-8434-5b3a30e7d755" RelationshipDeleteBehavior="None" />
+            <Field Type="Text" DisplayName="TicketNumber" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" MaxLength="255" ID="{7d189888-9316-431b-bb9c-998678658e11}" SourceID="{21be33e0-48fd-4ad7-bd37-d5aba9ef982c}" StaticName="TicketNumber" Name="TicketNumber" ColName="nvarchar5" RowOrdinal="0" Version="2" />
+            <Field Type="User" DisplayName="TicketFrom" Required="FALSE" EnforceUniqueValues="FALSE" ShowField="ImnName" UserSelectionMode="PeopleOnly" UserSelectionScope="0" ID="{a7e7f7fa-1ab8-4798-9cc3-27bda30ad8e8}" SourceID="{21be33e0-48fd-4ad7-bd37-d5aba9ef982c}" StaticName="TicketFrom" Name="TicketFrom" ColName="int5" RowOrdinal="0" Version="2" />
+            <Field Type="User" DisplayName="Manager" List="UserInfo" Required="FALSE" EnforceUniqueValues="FALSE" ShowField="ImnName" UserSelectionMode="PeopleOnly" UserSelectionScope="0" ID="{7dea6ba9-06d4-4ec5-ab83-5608210752bb}" SourceID="{f5b7115d-6f17-4aeb-9be2-e22274f1f90b}" StaticName="Manager" Name="Manager" ColName="int6" RowOrdinal="0" Version="10" Group="" />
+            <Field Type="Text" DisplayName="TicketStatus" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" MaxLength="255" ID="{240b3bbc-c101-42cd-a44d-57ad6cbddf1e}" SourceID="{f5b7115d-6f17-4aeb-9be2-e22274f1f90b}" StaticName="TicketStatus" Name="TicketStatus" ColName="nvarchar8" RowOrdinal="0" Version="1" />
+            <Field DisplayName="Helpdesk State Workflow" Type="URL" Required="FALSE" ID="{d8951f92-cd43-43e5-84f8-d53b53e29c1f}" SourceID="{f5b7115d-6f17-4aeb-9be2-e22274f1f90b}" StaticName="Helpdesk_x0020_State_x0020_Workf" Name="Helpdesk_x0020_State_x0020_Workf" ColName="nvarchar9" RowOrdinal="0" ColName2="nvarchar10" RowOrdinal2="0" Version="2" ShowInDisplayForm="FALSE" ShowInEditForm="FALSE" ShowInNewForm="FALSE" />
+          </pnp:Fields>
+        </pnp:ListInstance>
+        <pnp:ListInstance Title="ITManagerWorkflow" Description="" DocumentTemplate="" TemplateType="100" Url="Lists/ITManagerWorkflow" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-de22-43b2-a848-c05709900100" EnableFolderCreation="false">
+          <pnp:ContentTypeBindings>
+            <pnp:ContentTypeBinding ContentTypeID="0x01" Default="true" />
+            <pnp:ContentTypeBinding ContentTypeID="0x0120" />
+          </pnp:ContentTypeBindings>
+          <pnp:Views>
+            <View Name="{77FE0BC1-2985-4219-A3AF-643472EFC98A}" DefaultView="TRUE" MobileView="TRUE" MobileDefaultView="TRUE" Type="HTML" DisplayName="All Items" Url="/sites/DemoHelpDesk_1/Lists/ITManagerWorkflow/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/generic.png?rev=41">
+              <Query>
+                <OrderBy>
+                  <FieldRef Name="ID" />
+                </OrderBy>
+              </Query>
+              <ViewFields>
+                <FieldRef Name="ID" />
+                <FieldRef Name="ITManager" />
+              </ViewFields>
+              <RowLimit Paged="TRUE">30</RowLimit>
+              <Aggregations Value="Off" />
+              <JSLink>clienttemplates.js</JSLink>
+            </View>
+          </pnp:Views>
+          <pnp:Fields>
+            <Field Type="User" DisplayName="ITManager" List="UserInfo" Required="TRUE" EnforceUniqueValues="FALSE" ShowField="ImnName" UserSelectionMode="PeopleOnly" UserSelectionScope="0" ID="{4e195bfe-f357-4c5a-891d-76a33ba0054d}" SourceID="{bff2e61e-4da7-4004-bbd0-cfd7dde380f4}" StaticName="ITManager" Name="ITManager" ColName="int1" RowOrdinal="0" Version="1" />
           </pnp:Fields>
         </pnp:ListInstance>
         <pnp:ListInstance Title="Pages" Description="This system library was created by the Publishing feature to store pages that are created in this site." DocumentTemplate="" TemplateType="850" Url="Pages" EnableVersioning="true" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="22a9ef51-737b-4ff2-9346-694633fe4416" ContentTypesEnabled="true" EnableAttachments="false">
@@ -291,7 +495,7 @@
             <pnp:ContentTypeBinding ContentTypeID="0x0120" />
           </pnp:ContentTypeBindings>
           <pnp:Views>
-            <View Name="{DD8A4AF9-A985-483C-B129-AAE4D35F93BE}" DefaultView="TRUE" MobileView="TRUE" MobileDefaultView="TRUE" Type="HTML" DisplayName="All Documents" Url="/sites/temphelpdesksite/Pages/Forms/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/dlicon.png?rev=41">
+            <View Name="{D886B834-FC56-4702-9746-91DC54341D32}" DefaultView="TRUE" Type="HTML" DisplayName="All Documents" Url="/sites/DemoHelpDesk_1/Pages/Forms/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/dlicon.png?rev=41">
               <Query>
                 <OrderBy>
                   <FieldRef Name="FileLeafRef" />
@@ -314,7 +518,7 @@
             <pnp:ContentTypeBinding ContentTypeID="0x0120" />
           </pnp:ContentTypeBindings>
           <pnp:Views>
-            <View Name="{AB78E2CF-570C-4918-959A-FC4242BACE65}" DefaultView="TRUE" MobileView="TRUE" MobileDefaultView="TRUE" Type="HTML" DisplayName="All Items" Url="/sites/temphelpdesksite/Lists/Priority/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/generic.png?rev=41">
+            <View Name="{96553A2C-7053-4263-B533-4AC6CE515C33}" DefaultView="TRUE" Type="HTML" DisplayName="All Items" Url="/sites/DemoHelpDesk_1/Lists/Priority/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/generic.png?rev=41">
               <Query>
                 <OrderBy>
                   <FieldRef Name="ID" />
@@ -351,7 +555,7 @@
             <pnp:ContentTypeBinding ContentTypeID="0x0120" />
           </pnp:ContentTypeBindings>
           <pnp:Views>
-            <View Name="{1CEC9134-3836-4611-BBDC-2E7C9E1D828F}" DefaultView="TRUE" MobileView="TRUE" MobileDefaultView="TRUE" Type="HTML" DisplayName="All Items" Url="/sites/temphelpdesksite/ReusableContent/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/generic.png?rev=41">
+            <View Name="{E416738D-DE3B-4EAA-A05F-F335CBD62614}" DefaultView="TRUE" Type="HTML" DisplayName="All Items" Url="/sites/DemoHelpDesk_1/ReusableContent/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/generic.png?rev=41">
               <Query>
                 <OrderBy>
                   <FieldRef Name="ID" />
@@ -372,7 +576,7 @@
             <pnp:ContentTypeBinding ContentTypeID="0x0120" />
           </pnp:ContentTypeBindings>
           <pnp:Views>
-            <View Name="{18F74893-EC30-400B-BF36-86D907EC3400}" DefaultView="TRUE" MobileView="TRUE" MobileDefaultView="TRUE" Type="HTML" DisplayName="All Documents" Url="/sites/temphelpdesksite/SiteCollectionDocuments/Forms/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/dlicon.png?rev=41">
+            <View Name="{40EBF44A-EEA5-4EF5-9D4C-935FB09022E9}" DefaultView="TRUE" Type="HTML" DisplayName="All Documents" Url="/sites/DemoHelpDesk_1/SiteCollectionDocuments/Forms/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/dlicon.png?rev=41">
               <Query>
                 <OrderBy>
                   <FieldRef Name="FileLeafRef" />
@@ -402,7 +606,7 @@
             <pnp:ContentTypeBinding ContentTypeID="0x0120D520A808" />
           </pnp:ContentTypeBindings>
           <pnp:Views>
-            <View Name="{8A6464D7-861C-4F70-B21A-A5E80678D373}" Type="HTML" DisplayName="All Assets" Url="/sites/temphelpdesksite/SiteCollectionImages/Forms/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/dlicon.png?rev=41">
+            <View Name="{5B9911A3-D905-4450-A095-F85F97765763}" Type="HTML" DisplayName="All Assets" Url="/sites/DemoHelpDesk_1/SiteCollectionImages/Forms/AllItems.aspx" Level="1" BaseViewID="40" ContentTypeID="0x" ImageUrl="/_layouts/15/images/dlicon.png?rev=41">
               <Query>
                 <OrderBy>
                   <FieldRef Name="LinkFilename" />
@@ -419,23 +623,23 @@
                 <FieldRef Name="_ModerationStatus" />
                 <FieldRef Name="PublishingStartDate" />
                 <FieldRef Name="PublishingExpirationDate" />
-                <FieldRef Name="ImageWidth" Explicit="TRUE" />
-                <FieldRef Name="ImageHeight" Explicit="TRUE" />
-                <FieldRef Name="PreviewOnForm" Explicit="TRUE" />
-                <FieldRef Name="_Comments" Explicit="TRUE" />
-                <FieldRef Name="PeopleInMedia" Explicit="TRUE" />
-                <FieldRef Name="VideoSetDescription" Explicit="TRUE" />
-                <FieldRef Name="VideoSetUserOverrideEncoding" Explicit="TRUE" />
-                <FieldRef Name="VideoSetDefaultEncoding" Explicit="TRUE" />
-                <FieldRef Name="VideoSetExternalLink" Explicit="TRUE" />
-                <FieldRef Name="VideoSetShowDownloadLink" Explicit="TRUE" />
-                <FieldRef Name="VideoSetShowEmbedLink" Explicit="TRUE" />
-                <FieldRef Name="VideoSetRenditionsInfo" Explicit="TRUE" />
+                <FieldRef Name="ImageWidth" />
+                <FieldRef Name="ImageHeight" />
+                <FieldRef Name="PreviewOnForm" />
+                <FieldRef Name="_Comments" />
+                <FieldRef Name="PeopleInMedia" />
+                <FieldRef Name="VideoSetDescription" />
+                <FieldRef Name="VideoSetUserOverrideEncoding" />
+                <FieldRef Name="VideoSetDefaultEncoding" />
+                <FieldRef Name="VideoSetExternalLink" />
+                <FieldRef Name="VideoSetShowDownloadLink" />
+                <FieldRef Name="VideoSetShowEmbedLink" />
+                <FieldRef Name="VideoSetRenditionsInfo" />
               </ViewFields>
               <RowLimit Paged="TRUE">20</RowLimit>
               <JSLink>clienttemplates.js</JSLink>
             </View>
-            <View Name="{98DBE8AC-8E81-476C-A30F-FD5327FD38F8}" DefaultView="TRUE" MobileView="TRUE" MobileDefaultView="TRUE" Type="HTML" DisplayName="Thumbnails" Url="/sites/temphelpdesksite/SiteCollectionImages/Forms/Thumbnails.aspx" Level="1" BaseViewID="40" ContentTypeID="0x" ImageUrl="/_layouts/15/images/dlicon.png?rev=41">
+            <View Name="{C3CF8AFB-1865-42D4-8BE3-FC3B2B2BFE3B}" DefaultView="TRUE" Type="HTML" DisplayName="Thumbnails" Url="/sites/DemoHelpDesk_1/SiteCollectionImages/Forms/Thumbnails.aspx" Level="1" BaseViewID="40" ContentTypeID="0x" ImageUrl="/_layouts/15/images/dlicon.png?rev=41">
               <Query>
                 <OrderBy>
                   <FieldRef Name="LinkFilename" />
@@ -448,26 +652,26 @@
                 <FieldRef Name="Modified" />
                 <FieldRef Name="Editor" />
                 <FieldRef Name="MediaLengthInSeconds" />
-                <FieldRef Name="NameOrTitle" Explicit="TRUE" CalloutMenu="TRUE" />
-                <FieldRef Name="FileSizeDisplay" Explicit="TRUE" />
-                <FieldRef Name="ImageSize" Explicit="TRUE" />
-                <FieldRef Name="ImageWidth" Explicit="TRUE" />
-                <FieldRef Name="ImageHeight" Explicit="TRUE" />
-                <FieldRef Name="VideoWidthInPixels" Explicit="TRUE" />
-                <FieldRef Name="VideoHeightInPixels" Explicit="TRUE" />
-                <FieldRef Name="PreviewOnForm" Explicit="TRUE" />
-                <FieldRef Name="Created_x0020_Date" Explicit="TRUE" />
-                <FieldRef Name="Author" Explicit="TRUE" />
-                <FieldRef Name="_Comments" Explicit="TRUE" />
-                <FieldRef Name="PeopleInMedia" Explicit="TRUE" />
-                <FieldRef Name="VideoSetDescription" Explicit="TRUE" />
-                <FieldRef Name="VideoSetOwner" Explicit="TRUE" />
-                <FieldRef Name="VideoSetUserOverrideEncoding" Explicit="TRUE" />
-                <FieldRef Name="VideoSetDefaultEncoding" Explicit="TRUE" />
-                <FieldRef Name="VideoSetExternalLink" Explicit="TRUE" />
-                <FieldRef Name="VideoSetShowDownloadLink" Explicit="TRUE" />
-                <FieldRef Name="VideoSetShowEmbedLink" Explicit="TRUE" />
-                <FieldRef Name="VideoSetRenditionsInfo" Explicit="TRUE" />
+                <FieldRef Name="NameOrTitle" />
+                <FieldRef Name="FileSizeDisplay" />
+                <FieldRef Name="ImageSize" />
+                <FieldRef Name="ImageWidth" />
+                <FieldRef Name="ImageHeight" />
+                <FieldRef Name="VideoWidthInPixels" />
+                <FieldRef Name="VideoHeightInPixels" />
+                <FieldRef Name="PreviewOnForm" />
+                <FieldRef Name="Created_x0020_Date" />
+                <FieldRef Name="Author" />
+                <FieldRef Name="_Comments" />
+                <FieldRef Name="PeopleInMedia" />
+                <FieldRef Name="VideoSetDescription" />
+                <FieldRef Name="VideoSetOwner" />
+                <FieldRef Name="VideoSetUserOverrideEncoding" />
+                <FieldRef Name="VideoSetDefaultEncoding" />
+                <FieldRef Name="VideoSetExternalLink" />
+                <FieldRef Name="VideoSetShowDownloadLink" />
+                <FieldRef Name="VideoSetShowEmbedLink" />
+                <FieldRef Name="VideoSetRenditionsInfo" />
               </ViewFields>
               <RowLimit Paged="TRUE">20</RowLimit>
               <JSLink>clienttemplates.js|SP.UI.TileView.js|SP.UI.AssetLibrary.js|callout.js</JSLink>
@@ -502,36 +706,174 @@
             <pnp:FieldRef ID="bcd999a7-9dca-4824-a515-878bee641ed3" Name="PeopleInMedia" DisplayName="People In Video" />
           </pnp:FieldRefs>
         </pnp:ListInstance>
-        <pnp:ListInstance Title="TicketStatus" Description="" DocumentTemplate="" TemplateType="100" Url="Lists/TicketStatus" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-de22-43b2-a848-c05709900100" EnableFolderCreation="false">
+        <pnp:ListInstance Title="Tasks" Description="Task list for workflow." DocumentTemplate="" TemplateType="107" Url="Lists/Tasks" EnableVersioning="true" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-a83e-497e-9ba0-7a5c597d0107" ContentTypesEnabled="true" EnableFolderCreation="false">
           <pnp:ContentTypeBindings>
-            <pnp:ContentTypeBinding ContentTypeID="0x01" Default="true" />
+            <pnp:ContentTypeBinding ContentTypeID="0x0108" Default="true" />
             <pnp:ContentTypeBinding ContentTypeID="0x0120" />
+            <pnp:ContentTypeBinding ContentTypeID="0x012004" />
+            <pnp:ContentTypeBinding ContentTypeID="0x01080100C9C9515DE4E24001905074F980F93160003A15057E2AF34B67B32E14B94EB70409" />
+            <pnp:ContentTypeBinding ContentTypeID="0x0108003365C4474CAE8C42BCE396314E88E51F" />
           </pnp:ContentTypeBindings>
           <pnp:Views>
-            <View Name="{718503A1-F1AF-4F20-96AD-F3BB9E6AE632}" DefaultView="TRUE" MobileView="TRUE" MobileDefaultView="TRUE" Type="HTML" DisplayName="All Items" Url="/sites/temphelpdesksite/Lists/TicketStatus/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/generic.png?rev=41">
+            <View Name="{11A63749-D524-4DA5-B85C-578AF15EBF15}" DefaultView="TRUE" MobileView="TRUE" Type="HTML" DisplayName="All Tasks" Url="/sites/DemoHelpDesk_1/Lists/Tasks/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/issues.png?rev=41">
               <Query>
                 <OrderBy>
                   <FieldRef Name="ID" />
                 </OrderBy>
               </Query>
               <ViewFields>
+                <FieldRef Name="DocIcon" />
                 <FieldRef Name="LinkTitle" />
+                <FieldRef Name="AssignedTo" />
+                <FieldRef Name="Status" />
+                <FieldRef Name="Priority" />
+                <FieldRef Name="DueDate" />
+                <FieldRef Name="PercentComplete" />
+                <FieldRef Name="Predecessors" />
+                <FieldRef Name="WorkflowLink" />
+                <FieldRef Name="WorkflowOutcome" />
+              </ViewFields>
+              <RowLimit Paged="TRUE">30</RowLimit>
+              <JSLink>clienttemplates.js</JSLink>
+            </View>
+            <View Name="{DFC17DE7-4BD5-4274-9123-262943E7BEC5}" MobileView="TRUE" MobileDefaultView="TRUE" Type="HTML" DisplayName="My Tasks" Url="/sites/DemoHelpDesk_1/Lists/Tasks/MyItems.aspx" Level="1" BaseViewID="2" ContentTypeID="0x" ImageUrl="/_layouts/15/images/issues.png?rev=41">
+              <Query>
+                <Where>
+                  <Eq>
+                    <FieldRef Name="AssignedTo" />
+                    <Value Type="Integer">
+                      <UserID />
+                    </Value>
+                  </Eq>
+                </Where>
+                <OrderBy>
+                  <FieldRef Name="Status" />
+                  <FieldRef Name="Priority" />
+                </OrderBy>
+              </Query>
+              <ViewFields>
+                <FieldRef Name="LinkTitle" />
+                <FieldRef Name="Status" />
+                <FieldRef Name="Priority" />
+                <FieldRef Name="DueDate" />
+                <FieldRef Name="PercentComplete" />
+              </ViewFields>
+              <RowLimit Paged="TRUE">30</RowLimit>
+              <JSLink>clienttemplates.js</JSLink>
+            </View>
+            <View Name="{88F11F32-EECB-4BCB-B650-6FF02EB09415}" Type="HTML" DisplayName="Due Today" Url="/sites/DemoHelpDesk_1/Lists/Tasks/duetoday.aspx" Level="1" BaseViewID="3" ContentTypeID="0x" ImageUrl="/_layouts/15/images/issues.png?rev=41">
+              <Query>
+                <Where>
+                  <Eq>
+                    <FieldRef Name="DueDate" />
+                    <Value Type="DateTime">
+                      <Today />
+                    </Value>
+                  </Eq>
+                </Where>
+                <OrderBy>
+                  <FieldRef Name="ID" />
+                </OrderBy>
+              </Query>
+              <ViewFields>
+                <FieldRef Name="LinkTitle" />
+                <FieldRef Name="AssignedTo" />
+                <FieldRef Name="Status" />
+                <FieldRef Name="Priority" />
+                <FieldRef Name="PercentComplete" />
+                <FieldRef Name="Predecessors" />
+              </ViewFields>
+              <RowLimit Paged="TRUE">30</RowLimit>
+              <JSLink>clienttemplates.js</JSLink>
+            </View>
+            <View Name="{6CF4CB3D-C576-4D7F-B849-A46C84941F5F}" Type="HTML" DisplayName="Active Tasks" Url="/sites/DemoHelpDesk_1/Lists/Tasks/active.aspx" Level="1" BaseViewID="4" ContentTypeID="0x" ImageUrl="/_layouts/15/images/issues.png?rev=41">
+              <Query>
+                <Where>
+                  <Neq>
+                    <FieldRef Name="Status" />
+                    <Value Type="Text">Completed</Value>
+                  </Neq>
+                </Where>
+                <OrderBy>
+                  <FieldRef Name="ID" />
+                </OrderBy>
+              </Query>
+              <ViewFields>
+                <FieldRef Name="LinkTitle" />
+                <FieldRef Name="AssignedTo" />
+                <FieldRef Name="Status" />
+                <FieldRef Name="Priority" />
+                <FieldRef Name="DueDate" />
+                <FieldRef Name="PercentComplete" />
+                <FieldRef Name="Predecessors" />
+              </ViewFields>
+              <RowLimit Paged="TRUE">30</RowLimit>
+              <JSLink>clienttemplates.js</JSLink>
+            </View>
+            <View Name="{B0FF5D5E-6B10-4D3D-A0BD-9DE73E4F2C64}" Type="HTML" DisplayName="By Assigned To" Url="/sites/DemoHelpDesk_1/Lists/Tasks/byowner.aspx" Level="1" BaseViewID="5" ContentTypeID="0x" ImageUrl="/_layouts/15/images/issues.png?rev=41">
+              <Query>
+                <OrderBy>
+                  <FieldRef Name="AssignedTo" />
+                  <FieldRef Name="Status" />
+                </OrderBy>
+              </Query>
+              <ViewFields>
+                <FieldRef Name="LinkTitle" />
+                <FieldRef Name="AssignedTo" />
+                <FieldRef Name="Status" />
+                <FieldRef Name="Priority" />
+                <FieldRef Name="DueDate" />
+                <FieldRef Name="PercentComplete" />
+                <FieldRef Name="Predecessors" />
+              </ViewFields>
+              <RowLimit Paged="TRUE">30</RowLimit>
+              <JSLink>clienttemplates.js</JSLink>
+            </View>
+            <View Name="{A2A21A10-5FE3-4D0B-9C42-D5590E386F99}" Type="HTML" DisplayName="By My Groups" Url="/sites/DemoHelpDesk_1/Lists/Tasks/MyGrTsks.aspx" Level="1" BaseViewID="8" ContentTypeID="0x" ImageUrl="/_layouts/15/images/issues.png?rev=41">
+              <Query>
+                <Where>
+                  <Membership Type="CurrentUserGroups">
+                    <FieldRef Name="AssignedTo" />
+                  </Membership>
+                </Where>
+                <GroupBy Collapse="FALSE">
+                  <FieldRef Name="AssignedTo" />
+                </GroupBy>
+                <OrderBy>
+                  <FieldRef Name="AssignedTo" />
+                  <FieldRef Name="Status" />
+                  <FieldRef Name="Priority" />
+                </OrderBy>
+              </Query>
+              <ViewFields>
+                <FieldRef Name="LinkTitle" />
+                <FieldRef Name="Status" />
+                <FieldRef Name="Priority" />
+                <FieldRef Name="DueDate" />
+                <FieldRef Name="PercentComplete" />
+                <FieldRef Name="Predecessors" />
               </ViewFields>
               <RowLimit Paged="TRUE">30</RowLimit>
               <JSLink>clienttemplates.js</JSLink>
             </View>
           </pnp:Views>
-          <pnp:DataRows>
-            <pnp:DataRow>
-              <pnp:DataValue FieldName="Title">New</pnp:DataValue>
-            </pnp:DataRow>
-            <pnp:DataRow>
-              <pnp:DataValue FieldName="Title">In Progress</pnp:DataValue>
-            </pnp:DataRow>
-            <pnp:DataRow>
-              <pnp:DataValue FieldName="Title">Closed</pnp:DataValue>
-            </pnp:DataRow>
-          </pnp:DataRows>
+          <pnp:FieldRefs>
+            <pnp:FieldRef ID="c3a92d97-2b77-4a25-9698-3ab54874bc6f" Name="Predecessors" DisplayName="Predecessors" />
+            <pnp:FieldRef ID="a8eb573e-9e11-481a-a8c9-1104a54b2fbd" Name="Priority" DisplayName="Priority" />
+            <pnp:FieldRef ID="c15b34c3-ce7d-490a-b133-3f4de8801b76" Name="Status" DisplayName="Status" />
+            <pnp:FieldRef ID="d2311440-1ed6-46ea-b46d-daa643dc3886" Name="PercentComplete" DisplayName="% Complete" />
+            <pnp:FieldRef ID="53101f38-dd2e-458c-b245-0c236cc13d1a" Name="AssignedTo" DisplayName="Assigned To" />
+            <pnp:FieldRef ID="7662cd2c-f069-4dba-9e35-082cf976e170" Name="Body" DisplayName="Description" />
+            <pnp:FieldRef ID="64cd368d-2f95-4bfc-a1f9-8d4324ecb007" Name="StartDate" DisplayName="Start Date" />
+            <pnp:FieldRef ID="cd21b4c2-6841-4f9e-a23a-738a65f99889" Name="DueDate" DisplayName="Due Date" />
+            <pnp:FieldRef ID="d2a04afc-9a05-48c8-a7fa-fa98f9496141" Name="RelatedItems" DisplayName="Related Items" />
+            <pnp:FieldRef ID="58ddda52-c2a3-4650-9178-3bbc1f6e36da" Name="WorkflowLink" DisplayName="Related Content" />
+            <pnp:FieldRef ID="16b6952f-3ce6-45e0-8f4e-42dac6e12441" Name="OffsiteParticipant" DisplayName="External Participant" />
+            <pnp:FieldRef ID="4a799ba5-f449-4796-b43e-aa5186c3c414" Name="OffsiteParticipantReason" DisplayName="External Participant Reason" />
+            <pnp:FieldRef ID="18e1c6fa-ae37-4102-890a-cfb0974ef494" Name="WorkflowOutcome" DisplayName="Outcome" />
+            <pnp:FieldRef ID="e506d6ca-c2da-4164-b858-306f1c41c9ec" Name="WorkflowName" DisplayName="Workflow Name" />
+            <pnp:FieldRef ID="55b29417-1042-47f0-9dff-ce8156667f96" Name="TaskOutcome" DisplayName="Task Outcome" />
+          </pnp:FieldRefs>
         </pnp:ListInstance>
         <pnp:ListInstance Title="TicketTo" Description="" DocumentTemplate="" TemplateType="100" Url="Lists/TicketTo" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-de22-43b2-a848-c05709900100" EnableFolderCreation="false">
           <pnp:ContentTypeBindings>
@@ -539,7 +881,7 @@
             <pnp:ContentTypeBinding ContentTypeID="0x0120" />
           </pnp:ContentTypeBindings>
           <pnp:Views>
-            <View Name="{1C8730B1-0A18-4A43-9516-B9EE7F2226BD}" DefaultView="TRUE" MobileView="TRUE" MobileDefaultView="TRUE" Type="HTML" DisplayName="All Items" Url="/sites/temphelpdesksite/Lists/TicketTo/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/generic.png?rev=41">
+            <View Name="{6E547223-1D26-4F1F-A4BA-50D6009C52F9}" DefaultView="TRUE" Type="HTML" DisplayName="All Items" Url="/sites/DemoHelpDesk_1/Lists/TicketTo/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/generic.png?rev=41">
               <Query>
                 <OrderBy>
                   <FieldRef Name="ID" />
@@ -573,7 +915,7 @@
             <pnp:ContentTypeBinding ContentTypeID="0x0120" />
           </pnp:ContentTypeBindings>
           <pnp:Views>
-            <View Name="{CB23AA41-90E2-40E2-9AA2-BBEBEAD85E12}" DefaultView="TRUE" MobileView="TRUE" MobileDefaultView="TRUE" Type="HTML" DisplayName="All Items" Url="/sites/temphelpdesksite/Lists/TicketType/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/generic.png?rev=41">
+            <View Name="{804D1468-D8D2-4C31-82FD-FE8FA412A98A}" DefaultView="TRUE" Type="HTML" DisplayName="All Items" Url="/sites/DemoHelpDesk_1/Lists/TicketType/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/generic.png?rev=41">
               <Query>
                 <OrderBy>
                   <FieldRef Name="ID" />
@@ -601,18 +943,73 @@
             </pnp:DataRow>
           </pnp:DataRows>
         </pnp:ListInstance>
+        <pnp:ListInstance Title="Workflow History" Description="History list for workflow." DocumentTemplate="" TemplateType="140" Url="Lists/Workflow History" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-4ea5-48d4-a4ad-305cf7030140" Hidden="true" EnableAttachments="false" EnableFolderCreation="false">
+          <pnp:ContentTypeBindings>
+            <pnp:ContentTypeBinding ContentTypeID="0x0109" Default="true" />
+          </pnp:ContentTypeBindings>
+          <pnp:Views>
+            <View Name="{AEB611F5-AD50-4682-B0D5-E90B059C4704}" DefaultView="TRUE" Type="HTML" DisplayName="All History" Url="/sites/DemoHelpDesk_1/Lists/Workflow History/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/generic.png?rev=41">
+              <Query>
+                <OrderBy>
+                  <FieldRef Name="Occurred" />
+                </OrderBy>
+              </Query>
+              <ViewFields>
+                <FieldRef Name="WorkflowInstance" />
+                <FieldRef Name="WorkflowAssociation" />
+                <FieldRef Name="WorkflowTemplate" />
+                <FieldRef Name="List" />
+                <FieldRef Name="Item" />
+                <FieldRef Name="User" />
+                <FieldRef Name="Occurred" />
+                <FieldRef Name="Event" />
+                <FieldRef Name="Group" />
+                <FieldRef Name="Outcome" />
+                <FieldRef Name="Duration" />
+                <FieldRef Name="Description" />
+                <FieldRef Name="Data" />
+              </ViewFields>
+              <RowLimit Paged="TRUE">30</RowLimit>
+              <JSLink>clienttemplates.js</JSLink>
+            </View>
+          </pnp:Views>
+          <pnp:FieldRefs>
+            <pnp:FieldRef ID="20a1a5b1-fddf-4420-ac68-9701490e09af" Name="Event" Required="true" DisplayName="Event Type" />
+            <pnp:FieldRef ID="de21c770-a12b-4f88-af4b-aeebd897c8c2" Name="WorkflowInstance" Required="true" DisplayName="Workflow History Parent Instance" />
+            <pnp:FieldRef ID="8d426880-8d96-459b-ae48-e8b3836d8b9d" Name="WorkflowAssociation" Required="true" DisplayName="Workflow Association ID" />
+            <pnp:FieldRef ID="bfb1589e-2016-4b98-ae62-e91979c3224f" Name="WorkflowTemplate" Required="true" DisplayName="Workflow Template ID" />
+            <pnp:FieldRef ID="f44e428b-61c8-4100-a911-a3a635f43bb5" Name="List" Required="true" DisplayName="List ID" />
+            <pnp:FieldRef ID="92b8e9d0-a11b-418f-bf1c-c44aaa73075d" Name="Item" DisplayName="Primary Item ID" />
+            <pnp:FieldRef ID="5928ff1f-daa1-406c-b4a9-190485a448cb" Name="User" Required="true" DisplayName="User ID" />
+            <pnp:FieldRef ID="5602dc33-a60a-4dec-bd23-d18dfcef861d" Name="Occurred" Required="true" DisplayName="Date Occurred" />
+            <pnp:FieldRef ID="c86a2f7f-7680-4a0b-8907-39c4f4855a35" Name="Group" DisplayName="Group Type" />
+            <pnp:FieldRef ID="dcde7b1f-918b-4ed5-819f-9798f8abac37" Name="Outcome" DisplayName="Outcome" />
+            <pnp:FieldRef ID="4d54445d-1c84-4a6d-b8db-a51ded4e1acc" Name="Duration" DisplayName="Duration" />
+            <pnp:FieldRef ID="2fd53156-ff9d-4cc3-b0ac-fe8a7bc82283" Name="Description" DisplayName="Description" />
+            <pnp:FieldRef ID="38269294-165e-448a-a6b9-f0e09688f3f9" Name="Data" DisplayName="Data" />
+          </pnp:FieldRefs>
+        </pnp:ListInstance>
       </pnp:Lists>
       <pnp:Features>
+        <pnp:SiteFeatures>
+          <pnp:Feature ID="c4773de6-ba70-4583-b751-2a7b1dc67e3a" />
+          <pnp:Feature ID="a42f749f-8633-48b7-9b22-403b40190409" />
+          <pnp:Feature ID="0af5989a-3aea-4519-8ab0-85d91abe39ff" />
+          <pnp:Feature ID="b5934f65-a844-4e67-82e5-92f66aafe912" />
+          <pnp:Feature ID="3bc0c1e1-b7d5-4e82-afd7-9f7e59b60409" />
+          <pnp:Feature ID="c6561405-ea03-40a9-a57f-f25472942a22" />
+        </pnp:SiteFeatures>
         <pnp:WebFeatures>
+          <pnp:Feature ID="8c6f9096-388d-4eed-96ff-698b3ec46fc4" />
           <pnp:Feature ID="87294c72-f260-42f3-a41b-981a2ffce37a" Deactivate="true" Description="MDSFeature" />
         </pnp:WebFeatures>
       </pnp:Features>
       <pnp:CustomActions>
         <pnp:SiteCustomActions>
-          <pnp:CustomAction Name="PnPPartnerPackOverrides" Location="ScriptLink" Sequence="0" Rights="0" ScriptBlock=" var headID = document.getElementsByTagName('head')[0]; &#xD;&#xA;var scripts = document.getElementsByTagName('script');&#xD;&#xA;var scriptsSrc = [];&#xD;&#xA;for(var i = 0; i &lt; scripts.length; i++) {&#xD;&#xA;    if(scripts[i].type === 'text/javascript'){&#xD;&#xA;        scriptsSrc.push(scripts[i].src);&#xD;&#xA;    }&#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;if (scriptsSrc.indexOf('https://yourwebsite.azurewebsites.net/Templates/Overrides/PnP-Partner-Pack-Overrides.js?rev=457cefaa69cc4d6d9d37cecc6cb04dc3') === -1)  {  &#xD;&#xA;    var newScript = document.createElement('script');&#xD;&#xA;    newScript.id = 'PnPPartnerPackOverrides';&#xD;&#xA;    newScript.type = 'text/javascript';&#xD;&#xA;    newScript.src = 'https://yourwebsite.azurewebsites.net/Templates/Overrides/PnP-Partner-Pack-Overrides.js?rev=457cefaa69cc4d6d9d37cecc6cb04dc3';&#xD;&#xA;    headID.appendChild(newScript);&#xD;&#xA;    scriptsSrc.push('https://yourwebsite.azurewebsites.net/Templates/Overrides/PnP-Partner-Pack-Overrides.js?rev=457cefaa69cc4d6d9d37cecc6cb04dc3');&#xD;&#xA;}">
+          <pnp:CustomAction Name="jQueryLink" Description="jQueryLink" Location="ScriptLink" Sequence="0" Rights="0" ScriptBlock="&#xD;&#xA;                var headID = document.getElementsByTagName('head')[0]; &#xD;&#xA;                var&#xD;&#xA;                newScript = document.createElement('script');&#xD;&#xA;                newScript.type = 'text/javascript';&#xD;&#xA;                newScript.src = 'https://code.jquery.com/jquery-1.11.3.min.js';&#xD;&#xA;                newScript.id = 'jQueryLink';&#xD;&#xA;                headID.appendChild(newScript);">
             <pnp:CommandUIExtension />
           </pnp:CustomAction>
-          <pnp:CustomAction Name="jQueryLink" Description="jQueryLink" Location="ScriptLink" Sequence="0" Rights="0" ScriptBlock="&#xD;&#xA;                var headID = document.getElementsByTagName('head')[0]; &#xD;&#xA;                var&#xD;&#xA;                newScript = document.createElement('script');&#xD;&#xA;                newScript.type = 'text/javascript';&#xD;&#xA;                newScript.src = 'https://code.jquery.com/jquery-1.11.3.min.js';&#xD;&#xA;                newScript.id = 'jQueryLink';&#xD;&#xA;                headID.appendChild(newScript);">
+          <pnp:CustomAction Name="PnPPartnerPackOverrides" Location="ScriptLink" Sequence="0" Rights="0" ScriptBlock=" var headID = document.getElementsByTagName('head')[0]; &#xD;&#xA;var scripts = document.getElementsByTagName('script');&#xD;&#xA;var scriptsSrc = [];&#xD;&#xA;for(var i = 0; i &lt; scripts.length; i++) {&#xD;&#xA;    if(scripts[i].type === 'text/javascript'){&#xD;&#xA;        scriptsSrc.push(scripts[i].src);&#xD;&#xA;    }&#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;if (scriptsSrc.indexOf('https://yourwebsite.azurewebsites.net/Templates/Overrides/PnP-Partner-Pack-Overrides.js?rev=457cefaa69cc4d6d9d37cecc6cb04dc3') === -1)  {  &#xD;&#xA;    var newScript = document.createElement('script');&#xD;&#xA;    newScript.id = 'PnPPartnerPackOverrides';&#xD;&#xA;    newScript.type = 'text/javascript';&#xD;&#xA;    newScript.src = 'https://yourwebsite.azurewebsites.net/Templates/Overrides/PnP-Partner-Pack-Overrides.js?rev=457cefaa69cc4d6d9d37cecc6cb04dc3';&#xD;&#xA;    headID.appendChild(newScript);&#xD;&#xA;    scriptsSrc.push('https://yourwebsite.azurewebsites.net/Templates/Overrides/PnP-Partner-Pack-Overrides.js?rev=457cefaa69cc4d6d9d37cecc6cb04dc3');&#xD;&#xA;}">
             <pnp:CommandUIExtension />
           </pnp:CustomAction>
           <pnp:CustomAction Name="spoResponsive" Description="spoResponsive" Location="ScriptLink" Sequence="0" Rights="0" ScriptBlock="&#xD;&#xA;                var headID = document.getElementsByTagName('head')[0]; &#xD;&#xA;                var&#xD;&#xA;                newScript = document.createElement('script');&#xD;&#xA;                newScript.type = 'text/javascript';&#xD;&#xA;                newScript.src = 'https://yourwebsite.azurewebsites.net/Templates/Responsive/SPO-Responsive.js';&#xD;&#xA;                newScript.id = 'spoResponsive';&#xD;&#xA;                headID.appendChild(newScript);">
@@ -620,6 +1017,203 @@
           </pnp:CustomAction>
         </pnp:SiteCustomActions>
       </pnp:CustomActions>
+      <pnp:Workflows>
+        <pnp:WorkflowDefinitions>
+          <pnp:WorkflowDefinition Id="7ab46f32-d9d3-4e67-8a58-3b75b270ff23" Description="" DisplayName="Helpdesk State Workflow" InitiationUrl="" Published="true" RequiresAssociationForm="false" RequiresInitiationForm="false" RestrictToScope="{listid:Helpdesk}" RestrictToType="List" XamlPath="7ab46f32-d9d3-4e67-8a58-3b75b270ff23.xaml">
+            <pnp:Properties>
+              <pnp:Property Key="WSPublishState" Value="3" />
+              <pnp:Property Key="RestrictToScope" Value="{listid:Helpdesk}" />
+              <pnp:Property Key="SPDConfig.StartOnCreate" Value="true" />
+              <pnp:Property Key="HistoryListId" Value="{listid:Workflow History}" />
+              <pnp:Property Key="ContentTypeId" Value="0x01002A2479FF33DD4BC3B1533A012B653717000E5EF10971A20C43A389B68EC6ED795E" />
+              <pnp:Property Key="Definition.Description" Value="" />
+              <pnp:Property Key="vti_modifiedby" Value="i:0#.f|membership|a.b@contoso.com" />
+              <pnp:Property Key="vti_parserversion" Value="16.0.0.4803" />
+              <pnp:Property Key="SubscriptionId" Value="{BA431C87-ECA1-454F-BF5F-BBA0483B26AE}" />
+              <pnp:Property Key="WSPublishError" Value="Microsoft.Workflow.Client.ActivityValidationException: Workflow XAML failed validation due to the following errors:&#xA;The private implementation of activity '1: DynamicActivity' has the following validation error:   Value for a required activity argument 'Source' was not supplied.&#xA; HTTP headers received from the server - ActivityId: 8f760afe-0306-4deb-81b4-e4843886774f. NodeId: . Scope: . Client ActivityId : a0bb569d-e0cc-2000-22dc-072f902c167e. ---&gt; System.Net.WebException: The remote server returned an error: (400) Bad Request.&#xD;&#xA;   at Microsoft.Workflow.Common.AsyncResult.End[TAsyncResult](IAsyncResult result)&#xD;&#xA;   at Microsoft.Workflow.Client.HttpGetResponseAsyncResult`1.End(IAsyncResult result)&#xD;&#xA;   at Microsoft.Workflow.Client.ClientHelpers.SendRequest[T](HttpWebRequest request, T content)&#xD;&#xA;   --- End of inner exception stack trace ---&#xD;&#xA;   at Microsoft.Workflow.Client.ClientHelpers.SendRequest[T](HttpWebRequest request, T content)&#xD;&#xA;   at Microsoft.Workflow.Client.WorkflowManagementClient.SendRequest[T](HttpWebRequest request, T content)&#xD;&#xA;   at Microsoft.Workflow.Client.ActivityManager.Publish(ActivityDescription description, Boolean overwriteXClassName, Boolean terminateDependentInstances)&#xD;&#xA;   at Microsoft.SharePoint.WorkflowServices.FabricWorkflowManagementClient.PublishActivity(String serviceGroupName, ActivityDescription activity, Boolean overwriteXClass, Nullable`1 terminateInstances)&#xD;&#xA;   at Microsoft.SharePoint.WorkflowServices.FabricWorkflowDeploymentProvider.PublishActivity(FabricWorkflowManagementClient client, ActivityDescription activityDefinition, String serviceGroupName)&#xD;&#xA;   at Microsoft.SharePoint.WorkflowServices.FabricWorkflowDeploymentProvider.&lt;&gt;c__DisplayClass5.&lt;PublishDefinition&gt;b__4()&#xD;&#xA;   at Microsoft.SharePoint.WorkflowServices.WorkflowServiceContextExtensions.InvokeWithEcosystemRetry(WorkflowServicesContext context, EcosystemRequiredMethod method)&#xD;&#xA;   at Microsoft.SharePoint.WorkflowServices.FabricWorkflowDeploymentProvider.PublishDefinition(WorkflowDefinition workflowDefinition)&#xD;&#xA;   at Microsoft.SharePoint.WorkflowServices.WorkflowDefinitionStorageEventReceiver.PublishDefinition(SPItemEventProperties properties)" />
+              <pnp:Property Key="FormField" Value="&lt;Fields/&gt;&#xD;&#xA;" />
+              <pnp:Property Key="vti_author" Value="i:0#.f|membership|a.b@contoso.com" />
+              <pnp:Property Key="vti_foldersubfolderitemcount" Value="0" />
+              <pnp:Property Key="InitiationUrl" Value="" />
+              <pnp:Property Key="Definition.DisplayName" Value="Helpdesk State Workflow" />
+              <pnp:Property Key="IsProjectMode" Value="false" />
+              <pnp:Property Key="SubscriptionName" Value="Helpdesk State Workflow" />
+              <pnp:Property Key="SPDConfig.LastEditMode" Value="TextBased" />
+              <pnp:Property Key="isReusable" Value="false" />
+              <pnp:Property Key="AutosetStatusToStageName" Value="true" />
+              <pnp:Property Key="SPDConfig.StartOnChange" Value="true" />
+              <pnp:Property Key="vti_folderitemcount" Value="0" />
+              <pnp:Property Key="SPDConfig.StartManually" Value="false" />
+              <pnp:Property Key="Definition.Id" Value="7ab46f32-d9d3-4e67-8a58-3b75b270ff23" />
+              <pnp:Property Key="RequiresInitiationForm" Value="false" />
+              <pnp:Property Key="RestrictToType" Value="List" />
+              <pnp:Property Key="TaskListId" Value="{listid:Tasks}" />
+              <pnp:Property Key="Definition.Name" Value="workflow.xaml" />
+              <pnp:Property Key="Definition.ListItemId" Value="9" />
+              <pnp:Property Key="ContentType" Value="WorkflowServiceDefinition" />
+              <pnp:Property Key="Definition.CreatedDate" Value="1/14/2016 1:25:14 PM" />
+              <pnp:Property Key="Definition.AuthorId" Value="9;#a b,#i:0#.f|membership|a.b@contoso.com,#a.b@contoso.com,#a.b@contoso.com,#a b" />
+              <pnp:Property Key="Definition.ModifiedDate" Value="1/20/2016 8:03:18 PM" />
+              <pnp:Property Key="Definition.EditorId" Value="10;#a b,#i:0#.f|membership|a.b@contoso.com,#a.b@contoso.com,#a.b@contoso.com,#a b" />
+              <pnp:Property Key="_ModerationStatus" Value="0" />
+              <pnp:Property Key="Definition.FullName" Value="/sites/DemoHelpDesk_1/wfsvc/7ab46f32d9d34e678a583b75b270ff23/workflow.xaml" />
+              <pnp:Property Key="Definition.Path" Value="/sites/DemoHelpDesk_1/wfsvc/7ab46f32d9d34e678a583b75b270ff23" />
+              <pnp:Property Key="Definition.ModifiedDateUTC" Value="1/21/2016 4:03:18 AM" />
+              <pnp:Property Key="Definition.CreatedDateUTC" Value="1/14/2016 9:25:15 PM" />
+              <pnp:Property Key="File_x0020_Size" Value="60603" />
+              <pnp:Property Key="FSObjType" Value="0" />
+              <pnp:Property Key="SortBehavior" Value="9;#0" />
+              <pnp:Property Key="PermMask" Value="0x7fffffffffffffff" />
+              <pnp:Property Key="CheckedOutUserId" Value="9;#" />
+              <pnp:Property Key="IsCheckedoutToLocal" Value="0" />
+              <pnp:Property Key="UniqueId" Value="e90b5e5c-a37d-42f7-9c3a-114d92d7f3ae" />
+              <pnp:Property Key="SyncClientId" Value="9;#" />
+              <pnp:Property Key="ProgId" Value="" />
+              <pnp:Property Key="ScopeId" Value="{45AF7E40-4C22-4CEB-B736-2B85879BDCA9}" />
+              <pnp:Property Key="VirusStatus" Value="9;#60603" />
+              <pnp:Property Key="CheckedOutTitle" Value="9;#" />
+              <pnp:Property Key="_CheckinComment" Value="" />
+              <pnp:Property Key="Definition.EditorLogin" Value="i:0#.f|membership|a.b@contoso.com" />
+              <pnp:Property Key="Definition.AuthorLogin" Value="i:0#.f|membership|a.b@contoso.com" />
+              <pnp:Property Key="File_x0020_Type" Value="xaml" />
+              <pnp:Property Key="_EditMenuTableStart" Value="workflow.xaml" />
+              <pnp:Property Key="_EditMenuTableStart2" Value="9" />
+              <pnp:Property Key="_EditMenuTableEnd" Value="9" />
+              <pnp:Property Key="LinkFilenameNoMenu" Value="workflow.xaml" />
+              <pnp:Property Key="LinkFilename" Value="workflow.xaml" />
+              <pnp:Property Key="LinkFilename2" Value="workflow.xaml" />
+              <pnp:Property Key="DocIcon" Value="xaml" />
+              <pnp:Property Key="ServerUrl" Value="/sites/DemoHelpDesk_1/wfsvc/7ab46f32d9d34e678a583b75b270ff23/workflow.xaml" />
+              <pnp:Property Key="EncodedAbsUrl" Value="https://pramatitechnology.sharepoint.com/sites/DemoHelpDesk_1/wfsvc/7ab46f32d9d34e678a583b75b270ff23/workflow.xaml" />
+              <pnp:Property Key="BaseName" Value="workflow" />
+              <pnp:Property Key="FileSizeDisplay" Value="60603" />
+              <pnp:Property Key="MetaInfo" Value="SPDConfig.StartManually:SW|false&#xD;&#xA;vti_parserversion:SR|16.0.0.4803&#xD;&#xA;WSDescription:SW|&#xD;&#xA;IsProjectMode:SW|false&#xD;&#xA;WSGUID:SW|7ab46f32-d9d3-4e67-8a58-3b75b270ff23&#xD;&#xA;WSDisplayName:SW|Helpdesk State Workflow&#xD;&#xA;WSPublishState:IW|3&#xD;&#xA;vti_author:SR|i:0#.f|membership|a.b@contoso.com&#xD;&#xA;SPDConfig.StartOnChange:SW|true&#xD;&#xA;AutosetStatusToStageName:SW|true&#xD;&#xA;SubscriptionName:SW|Helpdesk State Workflow&#xD;&#xA;RestrictToScope:SW|F5B7115D-6F17-4AEB-9BE2-E22274F1F90B&#xD;&#xA;RestrictToType:SW|List&#xD;&#xA;vti_foldersubfolderitemcount:IW|0&#xD;&#xA;HistoryListId:SW|{CD0168A2-CA11-4465-ABFE-6CCC63A3D20D}&#xD;&#xA;vti_modifiedby:SR|i:0#.f|membership|a.b@contoso.com&#xD;&#xA;ContentTypeId:SW|0x01002A2479FF33DD4BC3B1533A012B653717000E5EF10971A20C43A389B68EC6ED795E&#xD;&#xA;SPDConfig.StartOnCreate:SW|true&#xD;&#xA;FileLeafRef:SW|workflow.xaml&#xD;&#xA;RequiresInitiationForm:SW|false&#xD;&#xA;InitiationUrl:SW|&#xD;&#xA;SubscriptionId:SW|{BA431C87-ECA1-454F-BF5F-BBA0483B26AE}&#xD;&#xA;FormField:SW|&lt;Fields/&gt;\r\n&#xD;&#xA;TaskListId:SW|{6BF11C61-AFBA-4CDB-9BFF-CD5A1A7EE339}&#xD;&#xA;WSPublishError:SW|Microsoft.Workflow.Client.ActivityValidationException: Workflow XAML failed validation due to the following errors:\nThe private implementation of activity '1: DynamicActivity' has the following validation error:   Value for a required activity argument 'Source' was not supplied.\n HTTP headers received from the server - ActivityId: 8f760afe-0306-4deb-81b4-e4843886774f. NodeId: . Scope: . Client ActivityId : a0bb569d-e0cc-2000-22dc-072f902c167e. ---&gt; System.Net.WebException: The remote server returned an error: (400) Bad Request.\r\n   at Microsoft.Workflow.Common.AsyncResult.End[TAsyncResult](IAsyncResult result)\r\n   at Microsoft.Workflow.Client.HttpGetResponseAsyncResult`1.End(IAsyncResult result)\r\n   at Microsoft.Workflow.Client.ClientHelpers.SendRequest[T](HttpWebRequest request, T content)\r\n   --- End of inner exception stack trace ---\r\n   at Microsoft.Workflow.Client.ClientHelpers.SendRequest[T](HttpWebRequest request, T content)\r\n   at Microsoft.Workflow.Client.WorkflowManagementClient.SendRequest[T](HttpWebRequest request, T content)\r\n   at Microsoft.Workflow.Client.ActivityManager.Publish(ActivityDescription description, Boolean overwriteXClassName, Boolean terminateDependentInstances)\r\n   at Microsoft.SharePoint.WorkflowServices.FabricWorkflowManagementClient.PublishActivity(String serviceGroupName, ActivityDescription activity, Boolean overwriteXClass, Nullable`1 terminateInstances)\r\n   at Microsoft.SharePoint.WorkflowServices.FabricWorkflowDeploymentProvider.PublishActivity(FabricWorkflowManagementClient client, ActivityDescription activityDefinition, String serviceGroupName)\r\n   at Microsoft.SharePoint.WorkflowServices.FabricWorkflowDeploymentProvider.&lt;&gt;c__DisplayClass5.&lt;PublishDefinition&gt;b__4()\r\n   at Microsoft.SharePoint.WorkflowServices.WorkflowServiceContextExtensions.InvokeWithEcosystemRetry(WorkflowServicesContext context, EcosystemRequiredMethod method)\r\n   at Microsoft.SharePoint.WorkflowServices.FabricWorkflowDeploymentProvider.PublishDefinition(WorkflowDefinition workflowDefinition)\r\n   at Microsoft.SharePoint.WorkflowServices.WorkflowDefinitionStorageEventReceiver.PublishDefinition(SPItemEventProperties properties)&#xD;&#xA;SPDConfig.LastEditMode:SW|TextBased&#xD;&#xA;vti_folderitemcount:IW|0&#xD;&#xA;isReusable:SW|false&#xD;&#xA;" />
+              <pnp:Property Key="_Level" Value="1" />
+              <pnp:Property Key="_IsCurrentVersion" Value="True" />
+              <pnp:Property Key="ItemChildCount" Value="0" />
+              <pnp:Property Key="FolderChildCount" Value="0" />
+              <pnp:Property Key="Restricted" Value="" />
+              <pnp:Property Key="OriginatorId" Value="" />
+              <pnp:Property Key="SMTotalSize" Value="8944850" />
+              <pnp:Property Key="SMLastModifiedDate" Value="2016-01-20 20:03:18" />
+              <pnp:Property Key="SMTotalFileStreamSize" Value="60603" />
+              <pnp:Property Key="SMTotalFileCount" Value="1" />
+              <pnp:Property Key="SelectTitle" Value="9" />
+              <pnp:Property Key="SelectFilename" Value="9" />
+              <pnp:Property Key="Edit" Value="0" />
+              <pnp:Property Key="owshiddenversion" Value="131" />
+              <pnp:Property Key="_UIVersion" Value="67072" />
+              <pnp:Property Key="_UIVersionString" Value="131.0" />
+              <pnp:Property Key="Order" Value="900" />
+              <pnp:Property Key="GUID" Value="{CC94201F-ADC3-46F3-B4B2-F86768A99976}" />
+              <pnp:Property Key="WorkflowVersion" Value="1" />
+              <pnp:Property Key="ParentVersionString" Value="9;#" />
+              <pnp:Property Key="ParentLeafName" Value="9;#" />
+              <pnp:Property Key="DocConcurrencyNumber" Value="131" />
+              <pnp:Property Key="ParentUniqueId" Value="{C8A61A7D-71E4-41B4-9546-EFBDB608A86B}" />
+              <pnp:Property Key="StreamHash" Value="" />
+              <pnp:Property Key="ModifiedBy" Value="i:0#.f|membership|a.b@contoso.com" />
+            </pnp:Properties>
+            <pnp:FormField>
+              <Fields />
+            </pnp:FormField>
+          </pnp:WorkflowDefinition>
+        </pnp:WorkflowDefinitions>
+        <pnp:WorkflowSubscriptions>
+          <pnp:WorkflowSubscription DefinitionId="7ab46f32-d9d3-4e67-8a58-3b75b270ff23" ListId="{listid:Helpdesk}" Enabled="true" EventSourceId="{listid:Helpdesk}" WorkflowStartEvent="false" ItemAddedEvent="true" ItemUpdatedEvent="true" ManualStartBypassesActivationLimit="false" Name="Helpdesk State Workflow" ParentContentTypeId="" StatusFieldName="Helpdesk_x0020_State_x0020_Workf">
+            <pnp:PropertyDefinitions>
+              <pnp:PropertyDefinition Key="StatusColumnCreated" Value="1" />
+              <pnp:PropertyDefinition Key="Microsoft.SharePoint.ActivationProperties.ListId" Value="f5b7115d-6f17-4aeb-9be2-e22274f1f90b" />
+              <pnp:PropertyDefinition Key="WSEventContextKeys" Value="StatusColumnCreated;#WorkflowService&#xD;&#xA;CreatedBySPD;#WorkflowService&#xD;&#xA;CurrentWebUri;#WorkflowService&#xD;&#xA;HistoryListId;#WorkflowService&#xD;&#xA;SharePointWorkflowContext.ActivationProperties.SiteId;#WorkflowService&#xD;&#xA;TaskListId;#WorkflowService&#xD;&#xA;Microsoft.SharePoint.ActivationProperties.ParentContentTypeId;#Instance&#xD;&#xA;SharePointWorkflowContext.ActivationProperties.WebId;#WorkflowService&#xD;&#xA;Microsoft.SharePoint.ActivationProperties.ListId;#WorkflowService&#xD;&#xA;Microsoft.SharePoint.ActivationProperties.ListName;#WorkflowService&#xD;&#xA;Microsoft.SharePoint.ActivationProperties.CurrentItemUrl;#Instance&#xD;&#xA;Microsoft.SharePoint.ActivationProperties.ItemId;#Instance&#xD;&#xA;Microsoft.SharePoint.ActivationProperties.ItemGuid;#Instance&#xD;&#xA;Microsoft.SharePoint.ActivationProperties.UniqueId;#Instance&#xD;&#xA;StatusFieldName;#WorkflowService&#xD;&#xA;Microsoft.SharePoint.ActivationProperties.RelatedItems;#Instance&#xD;&#xA;" />
+              <pnp:PropertyDefinition Key="WSPublishState" Value="3" />
+              <pnp:PropertyDefinition Key="SharePointWorkflowContext.Subscription.EventSourceId" Value="f5b7115d-6f17-4aeb-9be2-e22274f1f90b" />
+              <pnp:PropertyDefinition Key="HistoryListId" Value="{listid:Workflow History}" />
+              <pnp:PropertyDefinition Key="CurrentWebUri" Value="https://pramatitechnology.sharepoint.com/sites/DemoHelpDesk_1" />
+              <pnp:PropertyDefinition Key="SharePointWorkflowContext.Subscription.EventType" Value="ItemAdded#;ItemUpdated#;" />
+              <pnp:PropertyDefinition Key="vti_modifiedby" Value="i:0#.f|membership|a.b@contoso.com" />
+              <pnp:PropertyDefinition Key="StatusFieldName" Value="Helpdesk_x0020_State_x0020_Workf" />
+              <pnp:PropertyDefinition Key="CreatedBySPD" Value="1" />
+              <pnp:PropertyDefinition Key="vti_parserversion" Value="16.0.0.4803" />
+              <pnp:PropertyDefinition Key="vti_author" Value="i:0#.f|membership|a.b@contoso.com" />
+              <pnp:PropertyDefinition Key="vti_foldersubfolderitemcount" Value="0" />
+              <pnp:PropertyDefinition Key="SharePointWorkflowContext.Subscription.DisplayName" Value="Helpdesk State Workflow" />
+              <pnp:PropertyDefinition Key="WSEnabled" Value="true" />
+              <pnp:PropertyDefinition Key="SharePointWorkflowContext.ActivationProperties.SiteId" Value="BF0B0C33-2675-4588-980F-401B7A111D4D" />
+              <pnp:PropertyDefinition Key="vti_folderitemcount" Value="0" />
+              <pnp:PropertyDefinition Key="SharePointWorkflowContext.Subscription.Id" Value="ba431c87-eca1-454f-bf5f-bba0483b26ae" />
+              <pnp:PropertyDefinition Key="vti_privatelistexempt" Value="true" />
+              <pnp:PropertyDefinition Key="TaskListId" Value="{listid:Tasks}" />
+              <pnp:PropertyDefinition Key="ModifiedBy" Value="i:0#.f|membership|a.b@contoso.com" />
+              <pnp:PropertyDefinition Key="ContentTypeId" Value="0x0100AA27A923036E459D9EF0D18BBD0B9587009C7953D5D4DCF54889CFF996159AEA1A" />
+              <pnp:PropertyDefinition Key="SharePointWorkflowContext.Subscription.Name" Value="WorkflowAssociation_d6def37413764361a79c582e5019f31d" />
+              <pnp:PropertyDefinition Key="Order" Value="1000.00000000000" />
+              <pnp:PropertyDefinition Key="Microsoft.SharePoint.ActivationProperties.ParentContentTypeId" Value="" />
+              <pnp:PropertyDefinition Key="SharePointWorkflowContext.ActivationProperties.WebId" Value="EC185F40-C87E-47B1-8434-5B3A30E7D755" />
+              <pnp:PropertyDefinition Key="Microsoft.SharePoint.ActivationProperties.ListName" Value="Helpdesk" />
+              <pnp:PropertyDefinition Key="SharePointWorkflowContext.Subscription.ListItemId" Value="10" />
+              <pnp:PropertyDefinition Key="ContentType" Value="WorkflowServiceSubscription" />
+              <pnp:PropertyDefinition Key="SharePointWorkflowContext.Subscription.CreatedDate" Value="1/14/2016 2:47:17 PM" />
+              <pnp:PropertyDefinition Key="SharePointWorkflowContext.Subscription.AuthorId" Value="9;#a b,#i:0#.f|membership|a.b@contoso.com,#a.b@contoso.com,#a.b@contoso.com,#a b" />
+              <pnp:PropertyDefinition Key="SharePointWorkflowContext.Subscription.ModifiedDate" Value="1/20/2016 8:03:22 PM" />
+              <pnp:PropertyDefinition Key="SharePointWorkflowContext.Subscription.EditorId" Value="10;#a b,#i:0#.f|membership|a.b@contoso.com,#a.b@contoso.com,#a.b@contoso.com,#a b" />
+              <pnp:PropertyDefinition Key="_ModerationStatus" Value="0" />
+              <pnp:PropertyDefinition Key="SharePointWorkflowContext.Subscription.FullName" Value="/sites/DemoHelpDesk_1/wfsvc/7ab46f32d9d34e678a583b75b270ff23/WorkflowAssociation_d6def37413764361a79c582e5019f31d" />
+              <pnp:PropertyDefinition Key="SharePointWorkflowContext.Subscription.Path" Value="/sites/DemoHelpDesk_1/wfsvc/7ab46f32d9d34e678a583b75b270ff23" />
+              <pnp:PropertyDefinition Key="SharePointWorkflowContext.Subscription.ModifiedDateUTC" Value="1/21/2016 4:03:22 AM" />
+              <pnp:PropertyDefinition Key="SharePointWorkflowContext.Subscription.CreatedDateUTC" Value="1/14/2016 10:47:16 PM" />
+              <pnp:PropertyDefinition Key="File_x0020_Size" Value="0" />
+              <pnp:PropertyDefinition Key="FSObjType" Value="0" />
+              <pnp:PropertyDefinition Key="SortBehavior" Value="10;#0" />
+              <pnp:PropertyDefinition Key="PermMask" Value="0x7fffffffffffffff" />
+              <pnp:PropertyDefinition Key="CheckedOutUserId" Value="10;#" />
+              <pnp:PropertyDefinition Key="IsCheckedoutToLocal" Value="0" />
+              <pnp:PropertyDefinition Key="UniqueId" Value="7a21e2b2-e760-435e-9a03-44d26d470de3" />
+              <pnp:PropertyDefinition Key="SyncClientId" Value="10;#" />
+              <pnp:PropertyDefinition Key="ProgId" Value="" />
+              <pnp:PropertyDefinition Key="ScopeId" Value="{45AF7E40-4C22-4CEB-B736-2B85879BDCA9}" />
+              <pnp:PropertyDefinition Key="VirusStatus" Value="10;#0" />
+              <pnp:PropertyDefinition Key="CheckedOutTitle" Value="10;#" />
+              <pnp:PropertyDefinition Key="_CheckinComment" Value="" />
+              <pnp:PropertyDefinition Key="SharePointWorkflowContext.Subscription.EditorLogin" Value="i:0#.f|membership|a.b@contoso.com" />
+              <pnp:PropertyDefinition Key="SharePointWorkflowContext.Subscription.AuthorLogin" Value="i:0#.f|membership|a.b@contoso.com" />
+              <pnp:PropertyDefinition Key="_EditMenuTableStart" Value="WorkflowAssociation_d6def37413764361a79c582e5019f31d" />
+              <pnp:PropertyDefinition Key="_EditMenuTableStart2" Value="10" />
+              <pnp:PropertyDefinition Key="_EditMenuTableEnd" Value="10" />
+              <pnp:PropertyDefinition Key="LinkFilenameNoMenu" Value="WorkflowAssociation_d6def37413764361a79c582e5019f31d" />
+              <pnp:PropertyDefinition Key="LinkFilename" Value="WorkflowAssociation_d6def37413764361a79c582e5019f31d" />
+              <pnp:PropertyDefinition Key="LinkFilename2" Value="WorkflowAssociation_d6def37413764361a79c582e5019f31d" />
+              <pnp:PropertyDefinition Key="ServerUrl" Value="/sites/DemoHelpDesk_1/wfsvc/7ab46f32d9d34e678a583b75b270ff23/WorkflowAssociation_d6def37413764361a79c582e5019f31d" />
+              <pnp:PropertyDefinition Key="EncodedAbsUrl" Value="https://pramatitechnology.sharepoint.com/sites/DemoHelpDesk_1/wfsvc/7ab46f32d9d34e678a583b75b270ff23/WorkflowAssociation_d6def37413764361a79c582e5019f31d" />
+              <pnp:PropertyDefinition Key="BaseName" Value="WorkflowAssociation_d6def37413764361a79c582e5019f31d" />
+              <pnp:PropertyDefinition Key="FileSizeDisplay" Value="0" />
+              <pnp:PropertyDefinition Key="MetaInfo" Value="vti_parserversion:SR|16.0.0.4803&#xD;&#xA;Order:DW|1000.00000000000&#xD;&#xA;WSGUID:SW|ba431c87-eca1-454f-bf5f-bba0483b26ae&#xD;&#xA;WSDisplayName:SW|Helpdesk State Workflow&#xD;&#xA;WSEnabled:BW|true&#xD;&#xA;WSPublishState:IW|3&#xD;&#xA;vti_author:SR|i:0#.f|membership|a.b@contoso.com&#xD;&#xA;HistoryListId:SW|CD0168A2-CA11-4465-ABFE-6CCC63A3D20D&#xD;&#xA;WSEventSourceGUID:SW|f5b7115d-6f17-4aeb-9be2-e22274f1f90b&#xD;&#xA;WSEventType:SW|ItemAdded#;ItemUpdated#;&#xD;&#xA;vti_modifiedby:SR|i:0#.f|membership|a.b@contoso.com&#xD;&#xA;vti_foldersubfolderitemcount:IR|0&#xD;&#xA;Microsoft.SharePoint.ActivationProperties.ListId:SW|f5b7115d-6f17-4aeb-9be2-e22274f1f90b&#xD;&#xA;vti_privatelistexempt:BW|true&#xD;&#xA;FileLeafRef:SW|WorkflowAssociation_d6def37413764361a79c582e5019f31d&#xD;&#xA;Microsoft.SharePoint.ActivationProperties.ListName:SW|Helpdesk&#xD;&#xA;WSEventContextKeys:SW|StatusColumnCreated;#WorkflowService\r\nCreatedBySPD;#WorkflowService\r\nCurrentWebUri;#WorkflowService\r\nHistoryListId;#WorkflowService\r\nSharePointWorkflowContext.ActivationProperties.SiteId;#WorkflowService\r\nTaskListId;#WorkflowService\r\nMicrosoft.SharePoint.ActivationProperties.ParentContentTypeId;#Instance\r\nSharePointWorkflowContext.ActivationProperties.WebId;#WorkflowService\r\nMicrosoft.SharePoint.ActivationProperties.ListId;#WorkflowService\r\nMicrosoft.SharePoint.ActivationProperties.ListName;#WorkflowService\r\nMicrosoft.SharePoint.ActivationProperties.CurrentItemUrl;#Instance\r\nMicrosoft.SharePoint.ActivationProperties.ItemId;#Instance\r\nMicrosoft.SharePoint.ActivationProperties.ItemGuid;#Instance\r\nMicrosoft.SharePoint.ActivationProperties.UniqueId;#Instance\r\nStatusFieldName;#WorkflowService\r\nMicrosoft.SharePoint.ActivationProperties.RelatedItems;#Instance\r\n&#xD;&#xA;Microsoft.SharePoint.ActivationProperties.ParentContentTypeId:SW|&#xD;&#xA;ContentTypeId:SW|0x0100AA27A923036E459D9EF0D18BBD0B9587009C7953D5D4DCF54889CFF996159AEA1A&#xD;&#xA;ModifiedBy:SW|i:0#.f|membership|a.b@contoso.com&#xD;&#xA;StatusColumnCreated:SW|1&#xD;&#xA;SharePointWorkflowContext.ActivationProperties.WebId:SW|EC185F40-C87E-47B1-8434-5B3A30E7D755&#xD;&#xA;CurrentWebUri:SW|https://pramatitechnology.sharepoint.com/sites/DemoHelpDesk_1&#xD;&#xA;TaskListId:SW|6BF11C61-AFBA-4CDB-9BFF-CD5A1A7EE339&#xD;&#xA;StatusFieldName:SW|Helpdesk_x0020_State_x0020_Workf&#xD;&#xA;SharePointWorkflowContext.ActivationProperties.SiteId:SW|BF0B0C33-2675-4588-980F-401B7A111D4D&#xD;&#xA;vti_folderitemcount:IR|0&#xD;&#xA;CreatedBySPD:SW|1&#xD;&#xA;" />
+              <pnp:PropertyDefinition Key="_Level" Value="1" />
+              <pnp:PropertyDefinition Key="_IsCurrentVersion" Value="True" />
+              <pnp:PropertyDefinition Key="ItemChildCount" Value="0" />
+              <pnp:PropertyDefinition Key="FolderChildCount" Value="0" />
+              <pnp:PropertyDefinition Key="Restricted" Value="" />
+              <pnp:PropertyDefinition Key="OriginatorId" Value="" />
+              <pnp:PropertyDefinition Key="SMTotalSize" Value="1051" />
+              <pnp:PropertyDefinition Key="SMLastModifiedDate" Value="2016-01-20 20:03:22" />
+              <pnp:PropertyDefinition Key="SMTotalFileStreamSize" Value="0" />
+              <pnp:PropertyDefinition Key="SMTotalFileCount" Value="1" />
+              <pnp:PropertyDefinition Key="SelectTitle" Value="10" />
+              <pnp:PropertyDefinition Key="SelectFilename" Value="10" />
+              <pnp:PropertyDefinition Key="Edit" Value="0" />
+              <pnp:PropertyDefinition Key="owshiddenversion" Value="80" />
+              <pnp:PropertyDefinition Key="_UIVersion" Value="512" />
+              <pnp:PropertyDefinition Key="_UIVersionString" Value="1.0" />
+              <pnp:PropertyDefinition Key="GUID" Value="{76D10B26-DDD6-4584-B467-DC1792EE99F8}" />
+              <pnp:PropertyDefinition Key="WorkflowVersion" Value="1" />
+              <pnp:PropertyDefinition Key="ParentVersionString" Value="10;#" />
+              <pnp:PropertyDefinition Key="ParentLeafName" Value="10;#" />
+              <pnp:PropertyDefinition Key="DocConcurrencyNumber" Value="80" />
+              <pnp:PropertyDefinition Key="ParentUniqueId" Value="{C8A61A7D-71E4-41B4-9546-EFBDB608A86B}" />
+              <pnp:PropertyDefinition Key="StreamHash" Value="" />
+            </pnp:PropertyDefinitions>
+          </pnp:WorkflowSubscription>
+        </pnp:WorkflowSubscriptions>
+      </pnp:Workflows>
     </pnp:ProvisioningTemplate>
   </pnp:Templates>
 </pnp:Provisioning>

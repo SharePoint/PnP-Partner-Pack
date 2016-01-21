@@ -7,6 +7,7 @@ $(document).ready(function () {
         editDialog: '',
         viewDialog: '',
         HELPDESK_LIST_NAME: "Helpdesk",
+        HELPDESK_ITMANAGERWORKFLOW_LIST_NAME: "ITManagerWorkflow",
         EDIT_ATTACHMENT: "editattachment",
         SiteURL: window.location.protocol + "//" + window.location.host + _spPageContextInfo.siteServerRelativeUrl + "/",
         displayTicketsList: [],
@@ -43,7 +44,7 @@ $(document).ready(function () {
             var subjectlength = $("#subject").val().length;
             var descriptionlength = $("#ticket_description").val().length;
             var workstationlength = $("#workstation").val().length;
-
+          
             if (subjectlength === 0 || descriptionlength === 0 || workstationlength === 0) {
                 return false;
             } else {
@@ -61,6 +62,9 @@ $(document).ready(function () {
 
             var itemType = PnPHelpDesk.GetItemTypeForListName(PnPHelpDesk.HELPDESK_LIST_NAME);
             var userid = _spPageContextInfo.userId;
+            //"[{"Login":"i:0#.f|membership|acd.def@imaginea.com","Name":"abc  def","Email":"abc.def@xxx.com"}]"
+            var peoplePickerEmail = PnPHelpDesk.GetEmailFromText($("#hdnAdministrators").val().split(',')[2]);
+            var peoplePickerClaimId = 'i:0#.f|membership|' + peoplePickerEmail;
             var item = {
                 "__metadata": { "type": itemType },
                 "Title": ticketSubject,
@@ -71,8 +75,9 @@ $(document).ready(function () {
                 "TicketTypeId": ticketTypeID,
                 "TicketToId": ticketTargetDeptID,
                 "PriorityId": ticketPriorityID,
-                "StatusId": 1,
-                "TicketFromId": userid
+               // "StatusId": 1,
+                "TicketFromId": userid,
+                "ManagerId": PnPHelpDesk.EnsureUser(peoplePickerClaimId)
             };
             $.ajax({
                 url: PnPHelpDesk.SiteURL + "_api/web/lists/getbytitle('" + PnPHelpDesk.HELPDESK_LIST_NAME + "')/items",
@@ -93,6 +98,7 @@ $(document).ready(function () {
                     ticketFieldsArray.push(item.TicketNumber);
                     PnPHelpDesk.displayTicketsList.push(ticketFieldsArray);
                     $('#spanStatus').html('Ticket created successfully').addClass('ticketsuccess');
+                    $('.cam-peoplepicker-delImage').click();
                     console.log('Ticket created successfully');
                 },
                 error: function (data) {
@@ -224,6 +230,11 @@ $(document).ready(function () {
         },
         DisplayMyTickets: function (displayTicketsList) {
             var displayTickets = displayTicketsList;
+            if (displayTickets.length > 0) {
+                $("#Refresh-tickets").prop('disabled', false);
+            } else {
+                $("#Refresh-tickets").prop('disabled', true);
+            }
             $('#tblMyTickets').DataTable({
                 destroy: true,
                 "lengthMenu": [5, 10],
@@ -251,7 +262,7 @@ $(document).ready(function () {
                     {
                         "title": "",
                         "render": function (data, type) {
-                            if (type === 'display') {
+                            if (type === 'display' && data !== "") {
                                 return $('<a>')
                                     .attr('href', "#")
                                     .attr('id', data)
@@ -261,14 +272,13 @@ $(document).ready(function () {
                                     .html();
 
                             } else {
-                                return data;
+                                return "Edit";
                             }
                         }
                     }
                 ]
             });
-            $("#tblMyTickets").on("click", "a", function (event)
-            {
+            $("#tblMyTickets").on("click", "a", function (event) {
                 var ticketId = $(this).attr('id');
                 var ticketObj = PnPHelpDesk.GetTicketByID(ticketId);
                 var linkText = $(this).text();
@@ -313,7 +323,7 @@ $(document).ready(function () {
         },
         GetTicketByID: function (ticketNumber) {
             var ticketObject = "";
-            var ticketurl = PnPHelpDesk.SiteURL + "_api/lists/getbytitle('" + PnPHelpDesk.HELPDESK_LIST_NAME + "')/items?$select=ID,TicketType/Title,TicketTo/Title,Subject,Description,PriorityId,TicketToId,TicketTypeId,Priority/Title,Workstation,TicketNumber,StatusId,Title,Attachments&$expand=TicketType,Priority,TicketTo&$filter=TicketNumber eq " + ticketNumber;
+            var ticketurl = PnPHelpDesk.SiteURL + "_api/lists/getbytitle('" + PnPHelpDesk.HELPDESK_LIST_NAME + "')/items?$select=ID,TicketType/Title,TicketTo/Title,Subject,Description,PriorityId,TicketToId,TicketTypeId,Priority/Title,Workstation,TicketNumber,TicketStatus,Title,Attachments&$expand=TicketType,Priority,TicketTo&$filter=TicketNumber eq " + ticketNumber;
             $.ajax(
                 {
                     url: ticketurl,
@@ -341,16 +351,96 @@ $(document).ready(function () {
             $("#ticket_type").val("1");
             $("#ticket_to").val("1");
             $("#priority").val("1");
+            $('.cam-peoplepicker-delImage').click();
             return false;
-        }
+        },
+        EnsureUser: function (peoplepickerUser) {
+            var userId = 0;
+            $.ajax({
+                url: _spPageContextInfo.webAbsoluteUrl + "/_api/web/ensureUser('" + encodeURIComponent(peoplepickerUser) + "')",
+                type: "POST",
+                async: false,
+                contentType: "application/json;odata=verbose",
+                headers: {
+                    "Accept": "application/json;odata=verbose",
+                    "X-RequestDigest": $("#__REQUESTDIGEST").val()
+                },
+                success: function (data) {
+                    if (data.d.Id > 0)
+                        userId = data.d.Id;
+                },
+                error: function (data) {
+                    console.log(JSON.stringify(data));
+                }
+            });
+            return userId;
+        },
+        GetEmailFromText: function (text) {
+            var emails = text.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi);
+            if (emails != null && emails.length > 0)
+                return emails[0];
+            return "";
+        },
+        GetITManagerWorkFlowDetails: function()  {
+            var url = PnPHelpDesk.SiteURL + "/_api/web/lists/getbytitle('" + PnPHelpDesk.HELPDESK_ITMANAGERWORKFLOW_LIST_NAME + "')/ItemCount";
+            $.ajax({
+                url: url,
+                method: "GET",
+                async: false,
+                headers: { "Accept": "application/json; odata=verbose" },
+                success: function (data) {
+                    if (data.d.ItemCount >= 1) {
+                        $('#itManagerWorkFlow').hide();
+						$('#create-ticket').prop('disabled',false);
+                    } else {
+                        $('#itManagerWorkFlow').show();
+						$('#create-ticket').prop('disabled',true);
+                    }
+                },
+                error: function (data) {
+                    console.log('Error while retrieving information from ITManagerWorkflow');
+                }
+            });
+        },
+        SaveITManagerWorkflowDetails: function () {
+            var itemType = PnPHelpDesk.GetItemTypeForListName(PnPHelpDesk.HELPDESK_ITMANAGERWORKFLOW_LIST_NAME);
+        //"[{"Login":"i:0#.f|membership|acd.def@imaginea.com","Name":"abc  def","Email":"abc.def@xxx.com"}]"
+        var itpeoplePickerEmail = PnPHelpDesk.GetEmailFromText($("#hdnAdministrators1").val().split(',')[2]);
+        var itpeoplePickerClaimId = 'i:0#.f|membership|' + itpeoplePickerEmail;
+        var item = {
+            "__metadata": { "type": itemType },
+            "ITManagerId": PnPHelpDesk.EnsureUser(itpeoplePickerClaimId)
+        };
+        $.ajax({
+            url: PnPHelpDesk.SiteURL + "_api/web/lists/getbytitle('" + PnPHelpDesk.HELPDESK_ITMANAGERWORKFLOW_LIST_NAME + "')/items",
+            type: "POST",
+            contentType: "application/json;odata=verbose",
+            data: JSON.stringify(item),
+            headers: {
+                "Accept": "application/json;odata=verbose",
+                "X-RequestDigest": $("#__REQUESTDIGEST").val()
+            },
+            success: function (data) {
+                $('#spanStatus').html('IT Manager Workflow record created successfully').addClass('ticketsuccess');
+				$('#create-ticket').prop('disabled',false);
+                console.log('IT Manager Workflow record created successfully');
+            },
+            error: function (data) {
+                $('#spanStatus').html('IT Manager Workflow record creation failed').addClass('ticketerror');
+                console.log('IT Manager Workflow record creation failed');
+            }
+        });
+    }
     };
+
+    PnPHelpDesk.GetITManagerWorkFlowDetails();
 
     HelpdeskTicketResults = {
         element: '',
         url: '',
         init: function (ticketsElement, siteURL) {
             HelpdeskTicketResults.element = ticketsElement;
-            HelpdeskTicketResults.url = siteURL + "_api/lists/getbytitle('" + PnPHelpDesk.HELPDESK_LIST_NAME + "')/items?$select=TicketNumber,Subject,Status/Title&$expand=Status";
+            HelpdeskTicketResults.url = siteURL + "_api/lists/getbytitle('" + PnPHelpDesk.HELPDESK_LIST_NAME + "')/items?$select=TicketNumber,Subject,TicketStatus&$filter=AuthorId eq " + _spPageContextInfo.userId;
         },
         GetTicketsFromSPList: function () {
             $.ajax(
@@ -369,12 +459,17 @@ $(document).ready(function () {
         onSuccess: function (data) {
             var results = data.d.results;
             $.each(results, function (key) {
-                var value = results[key];
+                var value = results[key];				
                 var ticketFieldsArray = [];
                 ticketFieldsArray.push(value.TicketNumber);
                 ticketFieldsArray.push(value.Subject);
-                ticketFieldsArray.push(value.Status.Title);
-                ticketFieldsArray.push(value.TicketNumber);
+                ticketFieldsArray.push(value.TicketStatus);
+				if(value.TicketStatus === "New"){
+					ticketFieldsArray.push(value.TicketNumber);
+				}else{
+					ticketFieldsArray.push("");
+				}
+                
                 PnPHelpDesk.displayTicketsList.push(ticketFieldsArray);
             });
             PnPHelpDesk.DisplayMyTickets(PnPHelpDesk.displayTicketsList);
@@ -393,7 +488,7 @@ $(document).ready(function () {
 
     $("#create-ticket").click(function () {
         var isvalid = PnPHelpDesk.CheckValidations();
-        if (isvalid) {
+        if (isvalid && $(".cam-entity-resolved").text().length > 0) {
             $("#div_error").hide();
             PnPHelpDesk.SaveNewTicketInfo();
             PnPHelpDesk.DisplayMyTickets(PnPHelpDesk.displayTicketsList);
@@ -442,6 +537,50 @@ $(document).ready(function () {
         close: function () {
             PnPHelpDesk.viewDialog.dialog("close");
         }
+    });
+
+    PnPHelpDesk.itmanagerWorkflowDialog = $("#it-dialog-form").dialog({
+        autoOpen: false,
+        height: 200,
+        width: 450,
+        modal: true,
+        Open: function () {
+                $('.cam-peoplepicker-delImage').click();
+                },
+        buttons: {
+            "Save": function () {
+                if ($(".cam-entity-resolved").text().length > 0) {
+                    PnPHelpDesk.SaveITManagerWorkflowDetails();
+                    $('#itManagerWorkFlow').hide();
+                    $('.cam-peoplepicker-delImage').click();
+                    PnPHelpDesk.itmanagerWorkflowDialog.dialog("close");
+                }
+                else
+                {
+                    return false;
+                }
+            },
+            Cancel: function () {
+                $('.cam-peoplepicker-delImage').click();
+                PnPHelpDesk.itmanagerWorkflowDialog.dialog("close");
+            }
+        },
+        close: function () {
+            PnPHelpDesk.itmanagerWorkflowDialog.dialog("close");
+        }
+    });
+
+
+    $('#itManagerWorkFlow').click(function () {
+        PnPHelpDesk.itmanagerWorkflowDialog.dialog("open");
+    });
+	
+    $('#Refresh-tickets').click(function () {
+        PnPHelpDesk.displayTicketsList.length = 0;
+        var dataTable = $('#tblMyTickets').DataTable();
+        dataTable.clear().draw();
+        PnPHelpDesk.RetrieveTickets();
+		return false;
     });
 
     //Code to hide validation message while loading page

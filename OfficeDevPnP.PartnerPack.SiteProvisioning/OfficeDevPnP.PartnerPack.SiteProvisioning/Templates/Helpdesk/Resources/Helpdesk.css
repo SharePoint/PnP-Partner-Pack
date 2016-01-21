@@ -106,3 +106,7 @@ div.newticket{
     color: green;
     padding-left:5px;
 }
+.myTickets {
+	float:left;
+	padding-right:50px
+}

@@ -304,9 +304,13 @@
     <Content Include="Templates\Contact\Resources\Contact.js" />
     <Content Include="Templates\Contact\Resources\Contact.min.js" />
     <Content Include="Templates\CustomBar\SPO-CustomBar.xml" />
+    <Content Include="Templates\Helpdesk\Resources\app.js" />
     <Content Include="Templates\Helpdesk\Resources\Helpdesk.css" />
     <Content Include="Templates\Helpdesk\Resources\Helpdesk.js" />
     <Content Include="Templates\Helpdesk\Resources\Helpdesk.min.js" />
+    <Content Include="Templates\Helpdesk\Resources\peoplepickercontrol.css" />
+    <Content Include="Templates\Helpdesk\Resources\peoplepickercontrol.js" />
+    <Content Include="Templates\Helpdesk\Resources\peoplepickercontrol_resources.en.js" />
     <Content Include="Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Jobs.xml" />
     <Content Include="Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Templates.xml" />
     <Content Include="Templates\Infrastructure\PnP.png" />
