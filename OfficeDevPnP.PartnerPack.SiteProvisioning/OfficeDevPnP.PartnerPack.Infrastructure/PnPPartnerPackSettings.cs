@@ -30,7 +30,15 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
 
                 X509Certificate2 appOnlyCertificate = null;
 
-                X509Store certStore = new X509Store(StoreName.My, StoreLocation.CurrentUser);
+                StoreName storeName;
+                StoreLocation storeLocation;
+
+                Enum.TryParse(_configuration.CertificateSettings.storeName,
+                    out storeName);
+                Enum.TryParse(_configuration.CertificateSettings.storeLocation,
+                    out storeLocation);
+
+                X509Store certStore = new X509Store(storeName, storeLocation);
                 certStore.Open(OpenFlags.ReadOnly);
 
                 X509Certificate2Collection certCollection = certStore.Certificates.Find(
