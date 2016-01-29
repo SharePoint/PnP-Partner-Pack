@@ -117,7 +117,7 @@ an App Only access token. In order to do that, you have to create and configure 
 X.509 certificate, which will be used to authenticate your Application against Azure AD, while
 requesting the App Only access token. 
 
-First of all, you have to create the self-signer X.509 Certificate, which can be created 
+First of all, you have to create the self-signed X.509 Certificate, which can be created 
 using the makecert.exe tool that is available in the Windows SDK or through a provided PowerShell script which does not have a dependency to makecert. 
 
 ####Using makecert
@@ -271,7 +271,7 @@ any parameter within the provisioning templates, in order to make it easier for 
 <a name="azureblob"></a>
 ###Azure Blob Storage configuration
 To handle some asynchronous tasks, the PnP Partner Pack uses an Azure Blob Storage service
-to queue items. Thus, you will need to configure an Azure Blob Storage accoung.
+to queue items. Thus, you will need to configure an Azure Blob Storage account.
 
 Open the Microsoft Azure Management Portal, with a valid Microsoft Azure 
 subscription, and create a new Azure Blob Storage account. For example, you can call

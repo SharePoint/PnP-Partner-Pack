@@ -58,7 +58,7 @@ This Site Collection is created during the setup phase of the PnP Partner Pack, 
 fundamental artifacts like:
 * *PnPProvisioningJobs*: Document Library that stores Provisioning Jobs. You can learn more about this
 topic in the [Asynchronous Jobs Handling](#asyncJobsHandling) section.
-* *PnPProvisioningTemplates*: Document Library that stores tenat-level global Provisioning Templates. It
+* *PnPProvisioningTemplates*: Document Library that stores tenant-level global Provisioning Templates. It
 is used to share PnP Provisioning Templates (manually defined or saved from an existing site) that can
 be applied while provisioning sites across all the Site Collections of the current tenant.
 
@@ -77,7 +77,7 @@ that basically provides the implementation for a unique Controller called *HomeC
 The *HomeController* provides the logic for handling all the main capabilities like:
 * Save Site As Provisioning Template: based on the *SaveSiteAsTemplate* action.
 * Site Collection Provisioning UI: based on the *CreateSiteCollection* action. 
-* Sub-Site Provisioning UI: based on the *CreateSubSite* actinon.
+* Sub-Site Provisioning UI: based on the *CreateSubSite* action.
 * Settings capability: based on the *Settings* action.
 * My Site Collections UI: based on the *MyProvisionedSites* action.
 
@@ -284,7 +284,7 @@ As you can see the main configuration elements are:
 applying the PnP Provisioning Template. We suggest using the STS#0 (SharePoint "Team Site"), which is
 the most commonly used and the one that we tested more. Of course, you are free to change this option.
 It also defines the LogoUrl and the Title that will be used to rendere the pages of the PnP Partner Pack.
-Moreover, it defines the Welcome Message and the Footer Messagge for the Home Page and the global layout
+Moreover, it defines the Welcome Message and the Footer Message for the Home Page and the global layout
 view of the MVC site that renders the Site Provisioning engine.
 * *TenantSettings*: defines the information about the target Office 365 tenant, the thumbprint of the
 X.509 certificate to use for AppOnly authentication against Azure AD and the target SharePoint Online, 
@@ -292,7 +292,7 @@ and the URL of the Infrastructural Site Collection.
 * *ProvisioningRepository*: defines the concrete type to use as the Provisioning Repository. You should
 change this configuration in order to use a custom Provisioning Repository.
 * *ProvisioningJobs*: declares what are the Job Handlers, the Job Types, and the execution model of the
-Job Types. An execution model value of *Scheculed* means that the Job will be executed by the
+Job Types. An execution model value of *Scheduled* means that the Job will be executed by the
 *ScheduledJob*, while a value of *Continous* means that the Job will be executed by the *ContinousJob*.
 If you create any custom Job, you will have to define the Job Type and the Job  Handler through this
 elements. For further details about the Job Handling, please read the following section.
@@ -380,7 +380,7 @@ Here is a list of important things to know in order to master the PnP Partner Pa
 ###AppOnly Access Token and Authorization Rules
 Keep in mind that the PnP Partner Pack runs with an AppOnly token against SharePoint Online. This
 allows any user to play with the solution. However, the current implementation of the solution does
-not provide any authorization rules. We do suggest you to customize the solution, which is open source,
+not provide any authorization rules. We advise you to customize the solution, which is open source,
 in order to include your own custom authorization rules.
 
 ###Taxonomies Support
