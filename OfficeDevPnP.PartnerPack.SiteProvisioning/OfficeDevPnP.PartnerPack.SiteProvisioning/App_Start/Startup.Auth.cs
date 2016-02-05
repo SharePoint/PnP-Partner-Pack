@@ -11,18 +11,12 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OpenIdConnect;
 using Owin;
 using OfficeDevPnP.PartnerPack.SiteProvisioning.Models;
+using OfficeDevPnP.PartnerPack.SiteProvisioning.Components;
 
 namespace OfficeDevPnP.PartnerPack.SiteProvisioning
 {
     public partial class Startup
     {
-        private static string clientId = ConfigurationManager.AppSettings["ida:ClientId"];
-        private string appKey = ConfigurationManager.AppSettings["ida:ClientSecret"];
-        private string graphResourceID = "https://graph.windows.net";
-        private static string aadInstance = ConfigurationManager.AppSettings["ida:AADInstance"];
-        private string authority = aadInstance + "common";
-        private ApplicationDbContext db = new ApplicationDbContext();
-
         public void ConfigureAuth(IAppBuilder app)
         {
             
@@ -35,8 +29,8 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning
             app.UseOpenIdConnectAuthentication(
                 new OpenIdConnectAuthenticationOptions
                 {
-                    ClientId = clientId,
-                    Authority = authority,
+                    ClientId = MSGraphAPISettings.ClientId,
+                    Authority = MSGraphAPISettings.Authority,
                     TokenValidationParameters = new System.IdentityModel.Tokens.TokenValidationParameters
                     {
                         // instead of using the default validation (validating against a single issuer value, as we do in line of business apps), 
@@ -51,15 +45,19 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning
                         },
                         AuthorizationCodeReceived = (context) =>
                         {
-                            //var code = context.Code;
+                            var code = context.Code;
 
-                            //ClientCredential credential = new ClientCredential(clientId, appKey);
-                            //string tenantID = context.AuthenticationTicket.Identity.FindFirst("http://schemas.microsoft.com/identity/claims/tenantid").Value;
-                            //string signedInUserID = context.AuthenticationTicket.Identity.FindFirst(ClaimTypes.NameIdentifier).Value;
+                            ClientCredential credential = new ClientCredential(
+                                MSGraphAPISettings.ClientId, MSGraphAPISettings.ClientSecret);
+                            string signedInUserID = context.AuthenticationTicket.Identity.FindFirst(
+                                ClaimTypes.NameIdentifier).Value;
 
-                            //AuthenticationContext authContext = new AuthenticationContext(aadInstance + tenantID); //, new ADALTokenCache(signedInUserID));
-                            //AuthenticationResult result = authContext.AcquireTokenByAuthorizationCode(
-                            //    code, new Uri(HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Path)), credential, graphResourceID);
+                            AuthenticationContext authContext = new AuthenticationContext(
+                                MSGraphAPISettings.Authority,
+                                new SessionADALCache(signedInUserID));
+                            AuthenticationResult result = authContext.AcquireTokenByAuthorizationCode(
+                                code, new Uri(HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Path)),
+                                credential, MSGraphAPISettings.MicrosoftGraphResourceId);
 
                             return Task.FromResult(0);
                         },
