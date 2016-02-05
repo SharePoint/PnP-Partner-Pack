@@ -194,7 +194,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
                 templateToSave.DisplayName = job.Title;
 
                 // Save template image preview in folder
-                Folder templatesFolder = repositoryWeb.GetFolderByServerRelativeUrl(PnPPartnerPackConstants.PnPProvisioningTemplates);
+                Microsoft.SharePoint.Client.Folder templatesFolder = repositoryWeb.GetFolderByServerRelativeUrl(PnPPartnerPackConstants.PnPProvisioningTemplates);
                 repositoryContext.Load(templatesFolder, f => f.ServerRelativeUrl, f => f.Name);
                 repositoryContext.ExecuteQueryRetry();
 
