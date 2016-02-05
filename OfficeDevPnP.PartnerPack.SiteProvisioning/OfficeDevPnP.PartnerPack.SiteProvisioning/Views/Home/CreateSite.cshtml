@@ -71,7 +71,10 @@
             var currentStep = $("#@Html.IdFor(model => model.Step)").val();
             switch (currentStep) {
                 case "@CreateSiteStep.TemplateSelection":
-                    currentStep = "@CreateSiteStep.SiteInformation";
+                    if ($("#ProvisioningTemplateUrl").val() != "")
+                    {
+                        currentStep = "@CreateSiteStep.SiteInformation";
+                    }
                     break;
                 case "@CreateSiteStep.SiteInformation":
                     currentStep = direction == "forward" ? "@CreateSiteStep.TemplateParameters" : "@CreateSiteStep.TemplateSelection";
