@@ -239,6 +239,10 @@ The
 that is available in the 
 <a href="../scripts/">Scripts folder</a> of this repository will do everything for you, including replacing
 any parameter within the provisioning templates, in order to make it easier for you to setup the entire solution. 
+This PowerShell script requires some input arguments, which are:
+* InfrastructureSiteUrl: the URL of the SharePoint Online infrastructural Site Collection that you want to create
+* AzureWebSiteUrl: the URL of the Azure Web App Site that you will create later in this setup guide
+* Credentials: the credentials to use in order to authenticate against the target Microsoft Office 365 tenant 
 
 Alternatively, here you can see a sample excerpt of a PowerShell script that uses the wonderful PnP
 PowerShell extensions made by <a href="https://twitter.com/erwinvanhunen">Erwin</a> and maintained by the whole community, which are available <a href="https://github.com/OfficeDev/PnP-PowerShell">here</a>.
