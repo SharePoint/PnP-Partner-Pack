@@ -107,7 +107,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
                         });
                     }
                 }
-                catch (ServerException ex)
+                catch (ServerException)
                 {
                     // In case of any issue, ignore the local templates
                 }
@@ -185,7 +185,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
                 ptci.IncludeSearchConfiguration = job.IncludeSearchConfiguration;
                 ptci.IncludeSiteCollectionTermGroup = job.IncludeSiteCollectionTermGroup;
                 ptci.IncludeSiteGroups = job.IncludeSiteGroups;
-                ptci.PersistComposedLookFiles = job.PersistComposedLookFiles;
+                ptci.PersistBrandingFiles = job.PersistComposedLookFiles;
 
                 // Extract the current template
                 ProvisioningTemplate templateToSave = web.GetProvisioningTemplate(ptci);
