@@ -241,7 +241,7 @@ that is available in the
 any parameter within the provisioning templates, in order to make it easier for you to setup the entire solution. 
 
 Alternatively, here you can see a sample excerpt of a PowerShell script that uses the wonderful PnP
-PowerShell extensions made by <a href="https://twitter.com/erwinvanhunen">Erwin</a> and available <a href="https://github.com/OfficeDev/PnP-PowerShell">here</a>.
+PowerShell extensions made by <a href="https://twitter.com/erwinvanhunen">Erwin</a> and maintained by the whole community, which are available <a href="https://github.com/OfficeDev/PnP-PowerShell">here</a>.
 
 ```PowerShell
 Connect-SPOnline "https://[tenant]-admin.sharepoint.com/"
