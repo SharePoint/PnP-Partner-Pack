@@ -24,7 +24,12 @@ the target SharePoint Online tenant.
 This document outlines the manual setup process, which allows you to leverage the 
 PnP Partner Pack in your own environment.
 
-## Manual Installation Steps
+## Requirements
+In order to setup the PnP Partner Pack you need:
+* A valid Microsoft Office 365 tenant with at least an active subscription
+* The PnP PowerShell cmdlets (available here: http://aka.ms/OfficeDevPnPPowerShell) at least of version 2.0.1601.0. To double-check the version of the PnP PowerShell cmdlets, you can invoke the Connect-SPOOnline cmdlet with the -Verbose argument
+
+## Installation Steps
 The manual installation requires to accomplish the following steps:
 * [Azure Active Directory Application registration, as Office 365 Add-In](#azuread)
 * [Create the self-signed certificate](#createcertificate)
@@ -34,6 +39,8 @@ The manual installation requires to accomplish the following steps:
 * [Azure Web App provisioning and configuration](#azurewebapp)
 * [App Only certificate configuration in the Azure Web App](#apponlywebapp)
 * [Azure Web Jobs provisioning](#webjobs)
+
+During the setup guide you will often find two suitable alternatives to gain your goal. The first option will be to use some ready to go PowerShell scripts, which are the suggested path. Alternatively you will find some detailed and manual steps, if you rather prefer to setup everything manually.
 
 <a name="azuread"></a>
 ###Azure Active Directory Application Registration
@@ -120,8 +127,20 @@ requesting the App Only access token.
 First of all, you have to create the self-signed X.509 Certificate, which can be created 
 using the makecert.exe tool that is available in the Windows SDK or through a provided PowerShell script which does not have a dependency to makecert. 
 
-####Using makecert
-If you have Microsoft Visual Studio 2013/2015 installed on your enviroment, you already have the makecert tool, as well.
+####Using the Create-SelfSignedCertificate PowerShell Script
+You can use a provided PowerShell script which does not have a dependency to makecert.exe. The script is called <a href="../scripts/Create-SelfSignedCertificate.ps1">Create-SelfSignedCertificate.ps1</a> and is available in the 
+<a href="../scripts/">Scripts folder</a> of this repository.
+
+To create a self signed certificate with this script:
+
+```PowerShell
+.\Create-SelfSignedCertificate.ps1 -CommonName "MyCompanyName" -StartDate 2015-10-25 -EndDate 2016-10-25
+```
+
+You will be asked to provide a password to encrypt your private key, and both the .PFX file and .CER file will be exported to the current folder.
+
+####Using makecert (alternative manual option)
+Alternatively, if you have Microsoft Visual Studio 2013/2015 installed on your enviroment, you already have the makecert tool, as well.
 Otherwise, you will have to download from MSDN and to install the Windows SDK for your current
 version of Windows Operating System.
 
@@ -143,21 +162,17 @@ In the Current User's Personal folder of Certificates, select the just created c
 Select to export the private key into a .PFX file. Provide a password to protect the private key of the certificate.
 Repeat the same process as before, but this time export the certificate as a .CER file, which does not include the private key value.
 
-####Using the Create-SelfSignedCertificate PowerShell Script
-Alternatively you can use a provided PowerShell script which does not have a dependency to makecert.exe. The script is called <a href="../scripts/Create-SelfSignedCertificate.ps1">Create-SelfSignedCertificate.ps1</a> and is available in the 
-<a href="../scripts/">Scripts folder</a> of this repository.
-
-To create a self signed certificate with this script:
-
-```PowerShell
-.\Create-SelfSignedCertificate.ps1 -CommonName "MyCompanyName" -StartDate 2015-10-25 -EndDate 2016-10-25
-```
-
-You will be asked to provide a password to encrypt your private key, and both the .PFX file and .CER file will be exported to the current folder.
-
 <a name="apponlyazuread"></a>
 ### Configure the certificate in the Azure AD application manifest
-Start a PowerShell command window, and execute the following instructions:
+You can execute 
+
+```PowerShell
+Get-SPOAzureADManifestKeyCredentials -CertPath <path to your .cer file> | clip
+```
+
+which will generate the required snippet and copy it to the clipboard.
+
+Alternatively, start a PowerShell command window, and execute the following instructions:
 
 ```PowerShell
 $certPath = Read-Host "Enter certificate path (.cer)"
@@ -186,14 +201,6 @@ Write-Host "Certificate Thumbprint:" $cert.Thumbprint
 
 Copy the output value into a text file, you will use it pretty soon.
 
-
-Alternatively you can execute 
-
-```PowerShell
-Get-SPOAzureADManifestKeyCredentials -CertPath <path to your .cer file> | clip
-```
-
-which will generate the required snippet and copy it to the clipboard.
 
 Go back to the Azure AD Application that you created in the previous step and select the
 "Manage Manifest" button in the lower area of the screen, then select the "Download Manifest" 
@@ -226,7 +233,14 @@ Save the updated manifest and upload it back to Azure AD, by using the "Upload M
 ###Infrastructural Site Collection provisioning
 It is now time to create an infrastructural Site Collection in your Office 365 tenant. You
 can do that using the SharePoint Online Admin Center, or you can use a bunch of PowerShell.
-Here you can see a sample excerpt of a PowerShell script that uses the wonderful PnP
+
+You can use the 
+<a href="../scripts/Provision-InfrastructureSiteArtifacts.ps1">Provision-InfrastructureSiteArtifacts.ps1</a> PowerShell script file
+that is available in the 
+<a href="../scripts/">Scripts folder</a> of this repository. The script will do everything for you, including replacing
+any parameter within the provisioning templates, in order to make it easier for you to setup the entire solution. 
+
+Alternatively, here you can see a sample excerpt of a PowerShell script that uses the wonderful PnP
 PowerShell extensions made by <a href="https://twitter.com/erwinvanhunen">Erwin</a> and available <a href="https://github.com/OfficeDev/PnP-PowerShell">here</a>.
 
 ```PowerShell
@@ -262,11 +276,7 @@ In the latter library, you will find already uploaded a bunch of Provisioning Te
 organized in sub-folders. You will use them later in this setup guide.
 
 > Notice that the previous code excerpts are just examples, to show you how you should invoke the
-cmdlets. As a suitable alternative, you can use the 
-<a href="../scripts/Provision-InfrastructureSiteArtifacts.ps1">Provision-InfrastructureSiteArtifacts.ps1</a> PowerShell script file
-that is available in the 
-<a href="../scripts/">Scripts folder</a> of this repository. The script will do everything for you, including replacing
-any parameter within the provisioning templates, in order to make it easier for you to setup the entire solution. 
+cmdlets manually. 
 
 <a name="azureblob"></a>
 ###Azure Blob Storage configuration
@@ -292,10 +302,15 @@ for a sample configuration.
  
 ![Azure Web App - Creation](./Figures/Fig-10-Azure-Web-App-01.png)
 
-Now, open the web.config file of the Web Application called OfficeDevPnP.PartnerPack.SiteProvisioning and
+You can configure the web.config file of the web application by using the
+<a href="../scripts/Configure-Configs.ps1">Configure-Configs.ps1</a> PowerShell script file
+that is available in the 
+<a href="../scripts/">Scripts folder</a> of this repository.
+
+Alternatively, yoy can manually open the web.config file of the Web Application called OfficeDevPnP.PartnerPack.SiteProvisioning and
 available on GitHub at <a href="../OfficeDevPnP.PartnerPack.SiteProvisioning/OfficeDevPnP.PartnerPack.SiteProvisioning">this URL</a>.
 
-Edit the following sections:
+In case you like to configure the application manually, edit the following sections:
 
 ```XML
   <connectionStrings>
@@ -357,13 +372,11 @@ Edit the following sections:
 ```
 
 All the values surrounded by [name] have to be replaced with the corresponding values,
-which you got in one or more of the previous setup steps. You can even use the 
-<a href="../scripts/Configure-Configs.ps1">Configure-Configs.ps1</a> PowerShell script file
-that is available in the 
-<a href="../scripts/">Scripts folder</a> of this repository.
+which you got in one or more of the previous setup steps.
 
 Upload the Azure Web App to the target repository. You can use any of the available
-techniques for doing that (GitHub repository, FTP, Visual Studio Publish, etc.).
+techniques for doing that (GitHub repository, FTP, Visual Studio Publish, etc.). When you
+publish the web application, remember to uncheck the option "Enable Organizational Authentication".
  
 <a name="apponlywebapp"></a>
 ###App Only certificate configuration in the Azure Web App
@@ -416,12 +429,11 @@ If the check fails, the job sends and email alert to the unique Site Collection 
 
 In order to publish the Jobs, you will need to configure the App.Config of the jobs, providing 
 almost the same parameters that you configured for the Web Application and/or the other Jobs.
-To configured the jobs, you can also use the <a href="../scripts/Configure-Configs.ps1">Configure-Configs.ps1</a> PowerShell script file
+To configured the jobs, you can use the <a href="../scripts/Configure-Configs.ps1">Configure-Configs.ps1</a> PowerShell script file
 that is available in the <a href="../scripts/">Scripts folder</a> of this repository.
 
-Moreover, you will have to publish them into the Azure Web App. To provision the Governance Jobs (*CheckAdminJob* and *ExternalUsersJob*) you can also use
+Moreover, you will have to publish them into the Azure Web App. To provision the Governance Jobs (*CheckAdminJob* and *ExternalUsersJob*) you can use
 the <a href="../scripts/Provision-GovernanceTimerJobs.ps1">Provision-GovernanceTimerJobs.ps1</a> PowerShell script file
 that is available in the <a href="../scripts/">Scripts folder</a> of this repository.
 
-> Further details about how to publish the Azure Web Jobs into a target Azure Web App will
-be provided shortly. In the meantime you can read the following article: <a href="https://azure.microsoft.com/en-gb/documentation/articles/websites-dotnet-deploy-webjobs/">Deploy WebJobs using Visual Studio</a>.
+> Further details about how to publish Azure Web Jobs can be read in the following article: <a href="https://azure.microsoft.com/en-gb/documentation/articles/websites-dotnet-deploy-webjobs/">Deploy WebJobs using Visual Studio</a>.
