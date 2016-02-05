@@ -232,12 +232,12 @@ Save the updated manifest and upload it back to Azure AD, by using the "Upload M
 <a name="sitecollection"></a>
 ###Infrastructural Site Collection provisioning
 It is now time to create an infrastructural Site Collection in your Office 365 tenant. You
-can do that using the SharePoint Online Admin Center, or you can use a bunch of PowerShell.
+can do that using the SharePoint Online Admin Center, or you can use a PowerShell script.
 
-You can use the 
+The 
 <a href="../scripts/Provision-InfrastructureSiteArtifacts.ps1">Provision-InfrastructureSiteArtifacts.ps1</a> PowerShell script file
 that is available in the 
-<a href="../scripts/">Scripts folder</a> of this repository. The script will do everything for you, including replacing
+<a href="../scripts/">Scripts folder</a> of this repository will do everything for you, including replacing
 any parameter within the provisioning templates, in order to make it easier for you to setup the entire solution. 
 
 Alternatively, here you can see a sample excerpt of a PowerShell script that uses the wonderful PnP
