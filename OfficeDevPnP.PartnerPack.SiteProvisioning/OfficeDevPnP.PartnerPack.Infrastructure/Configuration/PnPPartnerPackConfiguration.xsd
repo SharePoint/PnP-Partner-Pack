@@ -70,6 +70,29 @@
             </xsd:attribute>
           </xsd:complexType>
         </xsd:element>
+        <xsd:element name="CertificateSettings" minOccurs="0">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+              Certificate location settings section for PnP Partner Pack.
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:attribute name="storeName" type="xsd:string" use="required">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                  The name of the session certificate storage
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:attribute>
+            <xsd:attribute name="storeLocation" type="xsd:string" use="required">
+              <xsd:annotation>
+                <xsd:documentation xml:lang="en">
+                  The location of the session certificate storage
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:attribute>
+          </xsd:complexType>
+        </xsd:element>
         <xsd:element name="TenantSettings">
           <xsd:annotation>
             <xsd:documentation xml:lang="en">
