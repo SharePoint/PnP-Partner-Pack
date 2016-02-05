@@ -310,6 +310,15 @@ You can configure the web.config file of the web application by using the
 <a href="../scripts/Configure-Configs.ps1">Configure-Configs.ps1</a> PowerShell script file
 that is available in the 
 <a href="../scripts/">Scripts folder</a> of this repository.
+This PowerShell script requires some input arguments, which are:
+* AzureStorageAccountName: the name of the storage account that will be used the infrastructural services and by the job
+* AzureStoragePrimaryAccessKey: the access key to consume the Azure Storage Account
+* ClientId: the OAuth ClientID registered in Azure AD for the PnP Partner Pack application 
+* ClientSecret: the OAuth Client Secret registered in Azure AD for the PnP Partner Pack application 
+* ADTenant: the tenant name of the target Microsoft Office 365 tenant (something like: tenant.onmicrosoft.com)
+* CertificateThumbprint: the thumbprint of the X.509 certificate that will be used for App-Only authentication
+* InfrastructureSiteUrl: the URL of the SharePoint Online infrastructural Site Collection for the PnP Partner Pack 
+
 
 Alternatively, yoy can manually open the web.config file of the Web Application called OfficeDevPnP.PartnerPack.SiteProvisioning and
 available on GitHub at <a href="../OfficeDevPnP.PartnerPack.SiteProvisioning/OfficeDevPnP.PartnerPack.SiteProvisioning">this URL</a>.
