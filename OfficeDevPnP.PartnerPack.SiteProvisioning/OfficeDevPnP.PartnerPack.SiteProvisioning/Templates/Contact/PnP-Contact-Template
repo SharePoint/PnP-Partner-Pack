@@ -1,0 +1,494 @@
+<?xml version="1.0"?>
+<pnp:Provisioning xmlns:pnp="http://schemas.dev.office.com/PnP/2015/08/ProvisioningSchema">
+  <pnp:Preferences Generator="OfficeDevPnP.Core, Version=1.8.1115.0, Culture=neutral, PublicKeyToken=null" />
+  <pnp:Templates ID="CONTAINER-PNP-PARTNER-PACK-TEMPLATES">
+    <pnp:ProvisioningTemplate ID="PNP-PARTNER-PACK-TEMPLATES" Version="1"  ImagePreviewUrl=""  DisplayName="Contact Template" Description="Contact Template">
+      <pnp:RegionalSettings AdjustHijriDays="0" AlternateCalendarType="None" CalendarType="None" Collation="25" FirstDayOfWeek="Sunday" FirstWeekOfYear="0" LocaleId="1033" ShowWeeks="false" Time24="false" TimeZone="23" WorkDayEndHour="5:00PM" WorkDays="62" WorkDayStartHour="8:00AM" />
+      <pnp:SupportedUILanguages>
+        <pnp:SupportedUILanguage LCID="1033" />
+      </pnp:SupportedUILanguages>
+      <pnp:PropertyBagEntries>
+        <pnp:PropertyBagEntry Key="NoCrawl" Value="false" />
+        <pnp:PropertyBagEntry Key="DesignPreviewThemedCssFolderUrl" Value="{themecatalog}/Themed/C03B65D3" />
+        <pnp:PropertyBagEntry Key="_PnP_PartnerPack_Overrides_Enabled" Value="true" />
+      </pnp:PropertyBagEntries>
+      <pnp:Security>
+        <pnp:AdditionalAdministrators>
+          <pnp:User Name="i:0#.f|membership|a.b@contoso.com" />
+          <pnp:User Name="i:0#.f|membership|c.d@contoso.com" />
+          <pnp:User Name="i:0#.f|membership|e.f@contoso.com" />
+          <pnp:User Name="i:0#.f|membership|g.h@contoso.com" />
+        </pnp:AdditionalAdministrators>
+        <pnp:SiteGroups>
+          <pnp:SiteGroup Title="Excel Services Viewers" Description="Members of this group can view pages, list items, and documents.  If the document has a server rendering available, they can only view the document using the server rendering." Owner="SHAREPOINT\system" AllowMembersEditMembership="false" AllowRequestToJoinLeave="false" AutoAcceptRequestToJoinLeave="false" OnlyAllowMembersViewMembership="true" />
+        </pnp:SiteGroups>
+        <pnp:Permissions />
+      </pnp:Security>
+      <pnp:Files>
+        <pnp:File Src="Contact.min.js" Folder="SiteAssets"  Overwrite="true">
+        </pnp:File>
+        <pnp:File  Src="contact.css" Folder="SiteAssets" Overwrite="true">
+        </pnp:File>
+      </pnp:Files>
+
+      <pnp:Pages WelcomePage="/Pages/Home.aspx">
+        <pnp:Page Layout="TwoColumns" Overwrite="true" Url="~site/sitepages/home.aspx">
+          <pnp:WebParts>
+            <pnp:WebPart Column="1" Row="1" Title="Script Editor">
+              <pnp:Contents>
+                <![CDATA[
+            <webParts><webPart xmlns="http://schemas.microsoft.com/WebPart/v3"><metaData><type name="Microsoft.SharePoint.WebPartPages.ScriptEditorWebPart, Microsoft.SharePoint, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c" /><importErrorMessage>Cannot import this Web Part.</importErrorMessage>
+    </metaData>
+    <data>
+      <properties>
+        <property name="ExportMode" type="exportmode">All</property>
+        <property name="HelpUrl" type="string" />
+        <property name="Hidden" type="bool">False</property>
+        <property name="Description" type="string">Allows authors to insert HTML snippets or scripts.</property>
+        <property name="Content" type="string">
+       &lt;link href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" rel = "stylesheet" /&gt;
+&lt;script&gt;
+    SP.SOD.executeOrDelayUntilScriptLoaded(LoadContactScript, 'sp.js');
+   function LoadContactScript() {
+        currWebUrl = _spPageContextInfo.webServerRelativeUrl;
+        LoadJSNCSS(currWebUrl + "/SiteAssets/contact.css", "css");
+        LoadJSNCSS("//code.jquery.com/jquery-1.11.3.min.js","js");
+        LoadJSNCSS("//code.jquery.com/ui/1.11.4/jquery-ui.js", "js");
+        LoadJSNCSS(currWebUrl + "/SiteAssets/Contact.min.js", "js");
+    }
+    function LoadJSNCSS(filePath, type) {
+        if (type == "js") {
+            var js = document.createElement("script");
+            js.type = "text/javascript";
+            js.src = filePath;
+            js.defer = "defer";
+            js.async = false;
+            document.getElementsByTagName('head')[0].appendChild(js);
+        }
+        else {
+            var css = document.createElement("link");
+            css.rel = "stylesheet";
+            css.href = filePath;
+            document.getElementsByTagName('head')[0].appendChild(css);
+        }
+    }
+&lt;/script&gt;
+
+&lt;div class="login" id="contactDiv"&gt;
+    &lt;h1&gt;Contact Search&lt;/h1&gt;
+    &lt;input type="text" id="txtfirstName" class="login-input" placeholder="First Name" autofocus&gt;
+    &lt;input type="text" id="txtlastName" class="login-input" placeholder="Last Name"&gt;
+    &lt;input type="text" id="txtmobileNumber" class="login-input" placeholder="Mobile Number"&gt;
+&lt;/div&gt;
+&lt;div id="searchResults"&gt;&lt;/div&gt;
+
+       </property>
+        <property name="CatalogIconImageUrl" type="string" />
+        <property name="Title" type="string">Script Editor</property>
+        <property name="AllowHide" type="bool">True</property>
+        <property name="AllowMinimize" type="bool">True</property>
+        <property name="AllowZoneChange" type="bool">True</property>
+        <property name="TitleUrl" type="string" />
+        <property name="ChromeType" type="chrometype">None</property>
+        <property name="AllowConnect" type="bool">True</property>
+        <property name="Width" type="unit" />
+        <property name="Height" type="unit" />
+        <property name="HelpMode" type="helpmode">Navigate</property>
+        <property name="AllowEdit" type="bool">True</property>
+        <property name="TitleIconImageUrl" type="string" />
+        <property name="Direction" type="direction">NotSet</property>
+        <property name="AllowClose" type="bool">True</property>
+        <property name="ChromeState" type="chromestate">Normal</property>
+      </properties>
+    </data>
+  </webPart>
+</webParts>
+            ]]>
+              </pnp:Contents>
+            </pnp:WebPart>
+          </pnp:WebParts>
+        </pnp:Page>
+      </pnp:Pages>
+      <pnp:SiteFields>
+        <Field Type="Choice" DisplayName="Template Scope" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" Format="Dropdown" FillInChoice="FALSE" Group="PnP Partner Pack Site Columns" ID="{2f4f410c-b2c9-4e0b-80e7-e5550492752a}" SourceID="{fcf55973-61e5-4a6e-a0a4-92bb172043a0}" StaticName="PnPProvisioningTemplateScope" Name="PnPProvisioningTemplateScope" AllowDeletion="TRUE">
+          <Default>Site</Default>
+          <CHOICES>
+            <CHOICE>Site</CHOICE>
+            <CHOICE>Web</CHOICE>
+            <CHOICE>Partial</CHOICE>
+          </CHOICES>
+        </Field>
+        <Field ID="{E2A3861F-C216-47D7-820F-7CB638862AB2}" Name="_ShortcutWebId" SourceID="http://schemas.microsoft.com/sharepoint/v3" StaticName="_ShortcutWebId" DisplayName="Shortcut Web Id" Group="_Hidden" Hidden="TRUE" Type="Guid" />
+        <Field ID="{47B1B86F-9F8A-4DBE-A75E-CA5D9B0F566C}" Name="_ShortcutUrl" SourceID="http://schemas.microsoft.com/sharepoint/v3" StaticName="_ShortcutUrl" DisplayName="Shortcut URL" Group="_Hidden" Hidden="TRUE" Type="URL" />
+        <Field ID="{2662AD77-2410-4938-B01C-E5E43321BAD4}" Name="_ShortcutSiteId" SourceID="http://schemas.microsoft.com/sharepoint/v3" StaticName="_ShortcutSiteId" DisplayName="Shortcut Site Id" Group="_Hidden" Hidden="TRUE" Type="Guid" />
+        <Field ID="{ef991a83-108d-4407-8ee5-ccc0c3d836b9}" Type="UserMulti" DisplayName="Shared With" Mult="TRUE" Name="SharedWithUsers" StaticName="SharedWithUsers" Group="_Hidden" Sealed="TRUE" AllowDeletion="FALSE" ReadOnly="TRUE" ShowInDisplayForm="FALSE" ShowInEditForm="FALSE" ShowInListSettings="FALSE" Viewable="FALSE" SourceID="{c8308f2f-44e2-4f76-aa63-ab34d570d57d}" />
+        <Field ID="{E8FEA999-553D-4F45-BE52-D941627E9FE5}" Name="_ShortcutUniqueId" SourceID="http://schemas.microsoft.com/sharepoint/v3" StaticName="_ShortcutUniqueId" DisplayName="Shortcut Unique Id" Group="_Hidden" Hidden="TRUE" Type="Guid" />
+        <Field Type="URL" DisplayName="Template Source Url" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" Format="Hyperlink" Group="PnP Partner Pack Site Columns" ID="{6049f7db-d1e7-42a0-8f3a-787ca2531fbb}" SourceID="{fcf55973-61e5-4a6e-a0a4-92bb172043a0}" StaticName="PnPProvisioningTemplateSourceUrl" Name="PnPProvisioningTemplateSourceUrl" AllowDeletion="TRUE">
+        </Field>
+        <Field ID="{d3c9caf7-044c-4c71-ae64-092981e54b33}" Type="Note" DisplayName="Shared With Details" Name="SharedWithDetails" StaticName="SharedWithDetails" Group="_Hidden" Sealed="TRUE" AllowDeletion="FALSE" ReadOnly="TRUE" ShowInDisplayForm="FALSE" ShowInEditForm="FALSE" ShowInListSettings="FALSE" Viewable="FALSE" SourceID="{c8308f2f-44e2-4f76-aa63-ab34d570d57d}" />
+      </pnp:SiteFields>
+      <pnp:ContentTypes>
+        <pnp:ContentType ID="0x010100498154DED7C84F4AB61A4029018F9048" Name="PnPProvisioningTemplate" Description="Create a new document." Group="PnP Partner Pack Content Types" NewFormUrl="" EditFormUrl="" DisplayFormUrl="">
+          <pnp:FieldRefs>
+            <pnp:FieldRef ID="c042a256-787d-4a6f-8a8a-cf6ab767f12d" Name="ContentType" />
+            <pnp:FieldRef ID="5f47e085-2150-41dc-b661-442f3027f552" Name="SelectFilename" />
+            <pnp:FieldRef ID="8553196d-ec8d-4564-9861-3dbe931050c8" Name="FileLeafRef" Required="true" />
+            <pnp:FieldRef ID="8c06beca-0777-48f7-91c7-6da68bc07b69" Name="Created" Hidden="true" />
+            <pnp:FieldRef ID="fa564e0f-0c70-4ab9-b863-0177e6ddd247" Name="Title" />
+            <pnp:FieldRef ID="28cf69c5-fa48-462a-b5cd-27b6f9d2bd5f" Name="Modified" Hidden="true" />
+            <pnp:FieldRef ID="822c78e3-1ea9-4943-b449-57863ad33ca9" Name="Modified_x0020_By" />
+            <pnp:FieldRef ID="4dd7e525-8d6b-4cb4-9d3e-44ee25f973eb" Name="Created_x0020_By" />
+            <pnp:FieldRef ID="2f4f410c-b2c9-4e0b-80e7-e5550492752a" Name="PnPProvisioningTemplateScope" />
+            <pnp:FieldRef ID="6049f7db-d1e7-42a0-8f3a-787ca2531fbb" Name="PnPProvisioningTemplateSourceUrl" />
+          </pnp:FieldRefs>
+        </pnp:ContentType>
+      </pnp:ContentTypes>
+      <pnp:Lists>
+        <pnp:ListInstance Title="Contacts List" Description="" DocumentTemplate="" OnQuickLaunch="true" TemplateType="100" Url="Lists/Contacts List" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-de22-43b2-a848-c05709900100" ContentTypesEnabled="true" EnableFolderCreation="false">
+          <pnp:ContentTypeBindings>
+            <pnp:ContentTypeBinding ContentTypeID="0x01" Default="true" />
+            <pnp:ContentTypeBinding ContentTypeID="0x0106" />
+            <pnp:ContentTypeBinding ContentTypeID="0x0120" />
+          </pnp:ContentTypeBindings>
+
+          <pnp:Views>
+            <View Name="{C28446B0-B24F-4929-8875-55C2A15447CE}" DefaultView="TRUE" Type="HTML" DisplayName="All Items" Url="/sites/webpartsite4/Lists/Contacts List/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/generic.png?rev=41">
+              <Query>
+                <OrderBy>
+                  <FieldRef Name="ID" />
+                </OrderBy>
+              </Query>
+              <ViewFields>
+                <FieldRef Name="FirstName" />
+                <FieldRef Name="Title" />
+                <FieldRef Name="EMail" />
+                <FieldRef Name="CellPhone" />
+              </ViewFields>
+              <RowLimit Paged="TRUE">30</RowLimit>
+              <Aggregations Value="Off" />
+              <JSLink>clienttemplates.js</JSLink>
+            </View>
+          </pnp:Views>
+          <pnp:FieldRefs>
+            <pnp:FieldRef ID="4a722dd4-d406-4356-93f9-2550b8f50dd0" Name="FirstName" DisplayName="First Name" />
+            <pnp:FieldRef ID="475c2610-c157-4b91-9e2d-6855031b3538" Name="FullName" DisplayName="Full Name" />
+            <pnp:FieldRef ID="fce16b4c-fe53-4793-aaab-b4892e736d15" Name="EMail" DisplayName="E-Mail" />
+            <pnp:FieldRef ID="038d1503-4629-40f6-adaf-b47d1ab2d4fe" Name="Company" DisplayName="Company" />
+            <pnp:FieldRef ID="c4e0f350-52cc-4ede-904c-dd71a3d11f7d" Name="JobTitle" DisplayName="Job Title" />
+            <pnp:FieldRef ID="fd630629-c165-4513-b43c-fdb16b86a14d" Name="WorkPhone" DisplayName="Business Phone" />
+            <pnp:FieldRef ID="2ab923eb-9880-4b47-9965-ebf93ae15487" Name="HomePhone" DisplayName="Home Phone" />
+            <pnp:FieldRef ID="2a464df1-44c1-4851-949d-fcd270f0ccf2" Name="CellPhone" DisplayName="Mobile Number" />
+            <pnp:FieldRef ID="9d1cacc8-f452-4bc1-a751-050595ad96e1" Name="WorkFax" DisplayName="Fax Number" />
+            <pnp:FieldRef ID="fc2e188e-ba91-48c9-9dd3-16431afddd50" Name="WorkAddress" DisplayName="Address" />
+            <pnp:FieldRef ID="6ca7bd7f-b490-402e-af1b-2813cf087b1e" Name="WorkCity" DisplayName="City" />
+            <pnp:FieldRef ID="ceac61d3-dda9-468b-b276-f4a6bb93f14f" Name="WorkState" DisplayName="State/Province" />
+            <pnp:FieldRef ID="9a631556-3dac-49db-8d2f-fb033b0fdc24" Name="WorkZip" DisplayName="ZIP/Postal Code" />
+            <pnp:FieldRef ID="3f3a5c85-9d5a-4663-b925-8b68a678ea3a" Name="WorkCountry" DisplayName="Country/Region" />
+            <pnp:FieldRef ID="a71affd2-dcc7-4529-81bc-2fe593154a5f" Name="WebPage" DisplayName="Web Page" />
+            <pnp:FieldRef ID="9da97a8a-1da5-4a77-98d3-4bc10456e700" Name="Comments" DisplayName="Comments" />
+          </pnp:FieldRefs>
+          <pnp:DataRows>
+            <pnp:DataRow>
+              <pnp:DataValue FieldName="FirstName">Sachin</pnp:DataValue>
+              <pnp:DataValue FieldName="EMail">Sachin.Tendulkar@gmail.com</pnp:DataValue>
+              <pnp:DataValue FieldName="Title">Tendulkar</pnp:DataValue>
+              <pnp:DataValue FieldName="CellPhone">9999999999</pnp:DataValue>
+            </pnp:DataRow>
+            <pnp:DataRow>
+              <pnp:DataValue FieldName="FirstName">MS</pnp:DataValue>
+              <pnp:DataValue FieldName="EMail">MS.Dhone@gmail.com</pnp:DataValue>
+              <pnp:DataValue FieldName="Title">Dhoni</pnp:DataValue>
+              <pnp:DataValue FieldName="CellPhone">8888888888</pnp:DataValue>
+            </pnp:DataRow>
+          </pnp:DataRows>
+        </pnp:ListInstance>
+        <pnp:ListInstance Title="Documents" Description="" DocumentTemplate="{site}/Shared Documents/Forms/template.dotx" OnQuickLaunch="true" TemplateType="101" Url="Shared Documents" EnableVersioning="true" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-e717-4e80-aa17-d0c71b360101" EnableAttachments="false">
+          <pnp:ContentTypeBindings>
+            <pnp:ContentTypeBinding ContentTypeID="0x0101" Default="true" />
+            <pnp:ContentTypeBinding ContentTypeID="0x0120" />
+          </pnp:ContentTypeBindings>
+          <pnp:Views>
+            <View Name="{BEE7A347-A8FE-4AD6-940A-653E90FAD939}" DefaultView="TRUE" Type="HTML" DisplayName="All Documents" Url="/sites/webpartsite4/Shared Documents/Forms/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/dlicon.png?rev=41">
+              <Query>
+                <OrderBy>
+                  <FieldRef Name="FileLeafRef" />
+                </OrderBy>
+              </Query>
+              <ViewFields>
+                <FieldRef Name="DocIcon" />
+                <FieldRef Name="LinkFilename" />
+                <FieldRef Name="Modified" />
+                <FieldRef Name="Editor" />
+              </ViewFields>
+              <RowLimit Paged="TRUE">30</RowLimit>
+              <JSLink>clienttemplates.js</JSLink>
+            </View>
+          </pnp:Views>
+          <pnp:FieldRefs>
+            <pnp:FieldRef ID="3881510a-4e4a-4ee8-b102-8ee8e2d0dd4b" Name="CheckoutUser" DisplayName="Checked Out To" />
+          </pnp:FieldRefs>
+        </pnp:ListInstance>
+        <pnp:ListInstance Title="MicroFeed" Description="MySite MicroFeed Persistent Storage List" DocumentTemplate="" TemplateType="544" Url="Lists/PublishedFeed" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="ea23650b-0340-4708-b465-441a41c37af7" ContentTypesEnabled="true" EnableFolderCreation="false">
+          <pnp:ContentTypeBindings>
+            <pnp:ContentTypeBinding ContentTypeID="0x01" Default="true" />
+            <pnp:ContentTypeBinding ContentTypeID="0x01" />
+            <pnp:ContentTypeBinding ContentTypeID="0x01" />
+            <pnp:ContentTypeBinding ContentTypeID="0x01" />
+            <pnp:ContentTypeBinding ContentTypeID="0x0120" />
+          </pnp:ContentTypeBindings>
+          <pnp:Views>
+            <View Name="{189028D9-1EF4-47D0-9D15-1A33668AA5E8}" DefaultView="TRUE" Type="HTML" DisplayName="All Items" Url="/sites/webpartsite4/Lists/PublishedFeed/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/images/generic.png">
+              <Query>
+                <OrderBy>
+                  <FieldRef Name="Created_x0020_Date" />
+                </OrderBy>
+              </Query>
+              <ViewFields>
+                <FieldRef Name="LinkTitleNoMenu" />
+                <FieldRef Name="MicroBlogType" />
+                <FieldRef Name="PostAuthor" />
+                <FieldRef Name="DefinitionId" />
+                <FieldRef Name="RootPostID" />
+                <FieldRef Name="RootPostUniqueID" />
+                <FieldRef Name="RootPostOwnerID" />
+                <FieldRef Name="UniqueId" />
+                <FieldRef Name="ReplyCount" />
+                <FieldRef Name="Created" />
+                <FieldRef Name="Modified" />
+                <FieldRef Name="Author" />
+                <FieldRef Name="Editor" />
+                <FieldRef Name="ID" />
+                <FieldRef Name="ReferenceID" />
+                <FieldRef Name="Attributes" />
+                <FieldRef Name="Content" />
+                <FieldRef Name="ContentData" />
+                <FieldRef Name="SearchContent" />
+                <FieldRef Name="RefRoot" />
+                <FieldRef Name="RefReply" />
+                <FieldRef Name="PostSource" />
+                <FieldRef Name="PeopleCount" />
+                <FieldRef Name="PeopleList" />
+                <FieldRef Name="MediaLinkType" />
+                <FieldRef Name="MediaLinkDescription" />
+                <FieldRef Name="MediaLinkURI" />
+                <FieldRef Name="MediaLinkUISnippet" />
+                <FieldRef Name="MediaLinkContentURI" />
+                <FieldRef Name="MediaLength" />
+                <FieldRef Name="MediaWidth" />
+                <FieldRef Name="MediaHeight" />
+                <FieldRef Name="MediaActionClickUrl" />
+                <FieldRef Name="MediaActionClickKind" />
+                <FieldRef Name="eMailSubscribers" />
+                <FieldRef Name="eMailUnsubscribed" />
+                <FieldRef Name="LikesCount" />
+                <FieldRef Name="LikedBy" />
+              </ViewFields>
+              <RowLimit Paged="TRUE">100</RowLimit>
+            </View>
+          </pnp:Views>
+          <pnp:Fields>
+            <Field Type="Integer" Name="MicroBlogType" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" Indexed="TRUE" DisplayName="MicroBlogType" StaticName="MicroBlogType" ID="{35329af5-04eb-44ee-89ae-9b5e4b5ecd9d}" ColName="int1" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+            <Field Type="Text" Name="PostAuthor" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" Indexed="FALSE" DisplayName="PostAuthor" StaticName="PostAuthor" ID="{6e4c2103-dea2-4b81-bc0a-410a7a812a05}" ColName="nvarchar3" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+            <Field Type="Integer" Name="DefinitionId" Indexed="TRUE" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" DisplayName="DefinitionId" StaticName="DefinitionId" ID="{de90c424-0414-4d3c-a6d0-a8090fc2f731}" ColName="int2" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+            <Field Type="Integer" Name="RootPostID" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" Indexed="TRUE" DisplayName="RootPostID" StaticName="RootPostID" ID="{9ce2079a-cf0d-479f-ae35-48229641a003}" ColName="int3" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+            <Field Type="Text" Name="RootPostOwnerID" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" DisplayName="RootPostOwnerID" StaticName="RootPostOwnerID" ID="{d573c999-f181-4015-88fd-72d7c135e1d6}" ColName="nvarchar4" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+            <Field Type="Text" Name="RootPostUniqueID" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" DisplayName="RootPostUniqueID" StaticName="RootPostUniqueID" ID="{8d68c714-9453-45d4-857e-c134308f1047}" ColName="nvarchar5" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+            <Field Type="Integer" Name="ReplyCount" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" DisplayName="ReplyCount" StaticName="ReplyCount" ID="{5f460546-df7d-489d-99fd-677d26f68e30}" ColName="int4" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+            <Field Type="Text" Name="ReferenceID" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" DisplayName="ReferenceID" StaticName="ReferenceID" ID="{5d8af039-7778-4004-b934-c9c348059309}" ColName="nvarchar6" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+            <Field Type="Integer" Name="Attributes" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" DisplayName="Attributes" StaticName="Attributes" ID="{5611398e-c664-46c8-8d34-427ae046cc31}" ColName="int5" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+            <Field Type="Note" Name="Content" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" DisplayName="Content" StaticName="Content" ID="{37c1e42e-8f43-4767-b51b-901fa7c19f00}" ColName="ntext2" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+            <Field Type="Note" Name="ContentData" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" DisplayName="ContentData" StaticName="ContentData" ID="{ec8e7d18-467b-4f6e-9607-e4f015dc63d9}" ColName="ntext3" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+            <Field Type="Note" Name="SearchContent" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" DisplayName="SearchContent" StaticName="SearchContent" ID="{fa2e7421-b52a-4fb7-afc2-c348144b4850}" ColName="ntext4" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+            <Field Type="Note" Name="RefRoot" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" DisplayName="RefRoot" StaticName="RefRoot" ID="{4709c48f-0bbe-47e6-9b19-deb852cb3ea4}" ColName="ntext5" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+            <Field Type="Note" Name="RefReply" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" DisplayName="RefReply" StaticName="RefReply" ID="{fa830350-bc6c-4931-ba2f-b3078fef4554}" ColName="ntext6" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+            <Field Type="Text" Name="PostSource" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" DisplayName="PostSource" StaticName="PostSource" ID="{e24e486f-3717-433c-91fc-edd848c2c483}" ColName="nvarchar7" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+            <Field Type="Integer" Name="PeopleCount" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" DisplayName="PeopleCount" StaticName="PeopleCount" ID="{a1728d72-f862-40d5-b3a8-4e394faba47a}" ColName="int6" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+            <Field Type="Note" Name="PeopleList" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" DisplayName="PeopleList" StaticName="PeopleList" ID="{d20e68a2-693a-470a-8349-a972ab3a7f0d}" ColName="ntext7" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+            <Field Type="Integer" Name="MediaLinkType" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" DisplayName="MediaLinkType" StaticName="MediaLinkType" ID="{2de40ff2-1313-4ae9-a927-f460493ae86f}" ColName="int7" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+            <Field Type="Text" Name="MediaLinkDescription" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" DisplayName="MediaLinkDescription" StaticName="MediaLinkDescription" ID="{4c074db2-ce03-406e-a23a-36153af6da2d}" ColName="nvarchar8" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+            <Field Type="Note" Name="PostSourceUri" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" DisplayName="PostSourceUri" StaticName="PostSourceUri" ID="{9c2e087c-0aae-49e0-a354-6853f4066acb}" ColName="ntext8" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+            <Field Type="URL" Name="MediaLinkURI" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" DisplayName="MediaLinkURI" StaticName="MediaLinkURI" ID="{d69707f1-8cb7-4318-8deb-fea7ed53df41}" ColName="nvarchar9" ColName2="nvarchar10" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" RowOrdinal2="0" />
+            <Field Type="URL" Name="MediaLinkUISnippet" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" DisplayName="MediaLinkUISnippet" StaticName="MediaLinkUISnippet" ID="{e1d22b08-cc0c-45d2-88f6-eb53529065e3}" ColName="nvarchar11" ColName2="nvarchar12" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" RowOrdinal2="0" />
+            <Field Type="URL" Name="MediaLinkContentURI" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" DisplayName="MediaLinkContentURI" StaticName="MediaLinkContentURI" ID="{35479e24-035c-4fa0-9605-da97647aa69e}" ColName="nvarchar13" ColName2="nvarchar14" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" RowOrdinal2="0" />
+            <Field Type="Integer" Name="MediaLength" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" DisplayName="MediaLength" StaticName="MediaLength" ID="{39c851ac-bc40-4481-adeb-945f56ac2e1d}" ColName="int8" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+            <Field Type="Integer" Name="MediaWidth" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" DisplayName="MediaWidth" StaticName="MediaWidth" ID="{234c9611-d3e4-413b-a5b6-cf0fa773ca24}" ColName="int9" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+            <Field Type="Integer" Name="MediaHeight" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" DisplayName="MediaHeight" StaticName="MediaHeight" ID="{41680d11-1cb0-4c7b-bc3e-85477635f116}" ColName="int10" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+            <Field Type="Integer" Name="MediaPreviewWidth" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" DisplayName="MediaPreviewWidth" StaticName="MediaPreviewWidth" ID="{bcf8a38f-b56b-4aee-a2d8-e85eff78fdff}" ColName="int11" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+            <Field Type="Integer" Name="MediaPreviewHeight" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" DisplayName="MediaPreviewHeight" StaticName="MediaPreviewHeight" ID="{6804f2b3-ba6b-4147-81d0-d025b76a82c4}" ColName="int12" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+            <Field Type="Integer" Name="MediaActionWidth" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" DisplayName="MediaActionWidth" StaticName="MediaActionWidth" ID="{79f148db-dcf4-4728-8744-3aa9a3669a12}" ColName="int13" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+            <Field Type="Integer" Name="MediaActionHeight" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" DisplayName="MediaActionHeight" StaticName="MediaActionHeight" ID="{b8448c28-0729-4d4f-9f38-8299291df5d3}" ColName="int14" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+            <Field Type="URL" Name="MediaActionClickUrl" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" DisplayName="MediaActionClickUrl" StaticName="MediaActionClickUrl" ID="{84a29bc8-2234-42af-9961-e3cf1d3e11b4}" ColName="nvarchar15" ColName2="nvarchar16" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" RowOrdinal2="0" />
+            <Field Type="Integer" Name="MediaActionClickKind" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" DisplayName="MediaActionClickKind" StaticName="MediaActionClickKind" ID="{53abf914-9726-4da7-b43f-7e8fb3568071}" ColName="int15" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+            <Field Type="Note" Name="eMailSubscribers" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" StaticName="eMailSubscribers" DisplayName="eMailSubscribers" ID="{8dc7f8e0-41ac-4c89-a6f5-d33ffa058ef5}" ColName="ntext9" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+            <Field Type="Note" Name="eMailUnsubscribed" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" StaticName="eMailUnsubscribed" DisplayName="eMailUnsubscribed" ID="{0a27b050-40cf-4dc4-8eab-7e85936cfed4}" ColName="ntext10" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+            <Field Type="Note" Name="RemoteLocation" ShowInDisplayForm="TRUE" ShowInNewForm="FALSE" ShowInEditForm="FALSE" StaticName="RemoteLocation" DisplayName="RemoteLocation" ID="{51083506-6bfb-4a54-be38-55816210c7aa}" ColName="ntext11" SourceID="{2FCE5344-F2A4-42DA-ABEA-569A0C48FD5D}" Version="2" RowOrdinal="0" />
+          </pnp:Fields>
+          <pnp:FieldRefs>
+            <pnp:FieldRef ID="790722e8-f13c-4f84-90b2-36161bfe7873" Name="j33b1bc20532487296f1bbbdead35a56" Hidden="true" DisplayName="HashTags_0" />
+            <pnp:FieldRef ID="6e4d832b-f610-41a8-b3e0-239608efda41" Name="LikesCount" DisplayName="Number of Likes" />
+            <pnp:FieldRef ID="333b1bc2-0532-4872-96f1-bbbdead35a56" Name="HashTags" DisplayName="HashTags" />
+          </pnp:FieldRefs>
+        </pnp:ListInstance>
+        <pnp:ListInstance Title="Site Assets" Description="Use this library to store files which are included on pages within this site, such as images on Wiki pages." DocumentTemplate="{site}/SiteAssets/Forms/template.doc" TemplateType="101" Url="SiteAssets" EnableVersioning="true" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-e717-4e80-aa17-d0c71b360101" EnableAttachments="false">
+          <pnp:ContentTypeBindings>
+            <pnp:ContentTypeBinding ContentTypeID="0x0101" Default="true" />
+            <pnp:ContentTypeBinding ContentTypeID="0x0120" />
+          </pnp:ContentTypeBindings>
+          <pnp:Views>
+            <View Name="{42D2B7D4-CD31-401D-9614-B68B178D87C3}" DefaultView="TRUE" Type="HTML" DisplayName="All Documents" Url="/sites/webpartsite4/SiteAssets/Forms/AllItems.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ImageUrl="/_layouts/15/images/dlicon.png?rev=41">
+              <Query>
+                <OrderBy>
+                  <FieldRef Name="FileLeafRef" />
+                </OrderBy>
+              </Query>
+              <ViewFields>
+                <FieldRef Name="DocIcon" />
+                <FieldRef Name="LinkFilename" />
+                <FieldRef Name="Modified" />
+                <FieldRef Name="Editor" />
+              </ViewFields>
+              <RowLimit Paged="TRUE">30</RowLimit>
+              <JSLink>clienttemplates.js</JSLink>
+            </View>
+          </pnp:Views>
+          <pnp:FieldRefs>
+            <pnp:FieldRef ID="ef991a83-108d-4407-8ee5-ccc0c3d836b9" Name="SharedWithUsers" DisplayName="Shared With" />
+            <pnp:FieldRef ID="d3c9caf7-044c-4c71-ae64-092981e54b33" Name="SharedWithDetails" DisplayName="Shared With Details" />
+            <pnp:FieldRef ID="3881510a-4e4a-4ee8-b102-8ee8e2d0dd4b" Name="CheckoutUser" DisplayName="Checked Out To" />
+          </pnp:FieldRefs>
+        </pnp:ListInstance>
+        <pnp:ListInstance Title="Site Pages" Description="" DocumentTemplate="" TemplateType="119" Url="SitePages" EnableVersioning="true" MinorVersionLimit="0" MaxVersionLimit="0" DraftVersionVisibility="0" TemplateFeatureID="00bfea71-c796-4402-9f2f-0eb9a6e71b18" ContentTypesEnabled="true" EnableAttachments="false" EnableFolderCreation="false">
+          <pnp:ContentTypeBindings>
+            <pnp:ContentTypeBinding ContentTypeID="0x010108" Default="true" />
+            <pnp:ContentTypeBinding ContentTypeID="0x01010901" />
+            <pnp:ContentTypeBinding ContentTypeID="0x0120" />
+          </pnp:ContentTypeBindings>
+          <pnp:Views>
+            <View Name="{CDCEAF68-9E6B-4D23-9B2C-28747E3C2B09}" DefaultView="TRUE" Type="HTML" DisplayName="All Pages" Url="/sites/webpartsite4/SitePages/Forms/AllPages.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ToolbarTemplate="WikiLibraryViewToolBar" ImageUrl="/_layouts/15/images/dlicon.png?rev=41">
+              <Query>
+                <OrderBy>
+                  <FieldRef Name="Modified" Ascending="FALSE" />
+                </OrderBy>
+              </Query>
+              <ViewFields>
+                <FieldRef Name="DocIcon" />
+                <FieldRef Name="LinkFilename" />
+                <FieldRef Name="Editor" />
+                <FieldRef Name="Modified" />
+                <FieldRef Name="Author" />
+                <FieldRef Name="Created" />
+              </ViewFields>
+              <RowLimit Paged="TRUE">30</RowLimit>
+              <JSLink>clienttemplates.js</JSLink>
+            </View>
+            <View Name="{8A8EB5FE-87FA-4054-823E-91CF79E382D9}" Type="HTML" DisplayName="Recent Changes" Url="/sites/webpartsite4/SitePages/Forms/RecentChanges.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ToolbarTemplate="WikiLibraryViewToolBar" ImageUrl="/_layouts/15/images/dlicon.png?rev=41">
+              <Query>
+                <OrderBy>
+                  <FieldRef Name="Modified" Ascending="FALSE" />
+                </OrderBy>
+              </Query>
+              <ViewFields>
+                <FieldRef Name="DocIcon" />
+                <FieldRef Name="LinkFilename" />
+                <FieldRef Name="Editor" />
+                <FieldRef Name="Modified" />
+                <FieldRef Name="Author" />
+                <FieldRef Name="Created" />
+              </ViewFields>
+              <RowLimit Paged="TRUE">30</RowLimit>
+              <JSLink>clienttemplates.js</JSLink>
+            </View>
+            <View Name="{456E2AFD-A214-49F2-96DE-C2C23336F3D2}" Type="HTML" DisplayName="Created By Me" Url="/sites/webpartsite4/SitePages/Forms/CreatedByMe.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ToolbarTemplate="WikiLibraryViewToolBar" ImageUrl="/_layouts/15/images/dlicon.png?rev=41">
+              <Query>
+                <Where>
+                  <Eq>
+                    <FieldRef Name="Author" />
+                    <Value Type="Integer">
+                      <UserID />
+                    </Value>
+                  </Eq>
+                </Where>
+                <OrderBy>
+                  <FieldRef Name="FileLeafRef" />
+                </OrderBy>
+              </Query>
+              <ViewFields>
+                <FieldRef Name="DocIcon" />
+                <FieldRef Name="LinkFilename" />
+                <FieldRef Name="Editor" />
+                <FieldRef Name="Modified" />
+                <FieldRef Name="Author" />
+                <FieldRef Name="Created" />
+              </ViewFields>
+              <RowLimit Paged="TRUE">30</RowLimit>
+              <JSLink>clienttemplates.js</JSLink>
+            </View>
+            <View Name="{4452E079-1FCD-4FF4-97FE-D45F96FEE2E8}" Type="HTML" DisplayName="By Author" Url="/sites/webpartsite4/SitePages/Forms/ByAuthor.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ToolbarTemplate="WikiLibraryViewToolBar" ImageUrl="/_layouts/15/images/dlicon.png?rev=41">
+              <Query>
+                <GroupBy Collapse="FALSE">
+                  <FieldRef Name="Author" />
+                </GroupBy>
+                <OrderBy>
+                  <FieldRef Name="FileLeafRef" />
+                </OrderBy>
+              </Query>
+              <ViewFields>
+                <FieldRef Name="DocIcon" />
+                <FieldRef Name="LinkFilename" />
+                <FieldRef Name="Editor" />
+                <FieldRef Name="Modified" />
+                <FieldRef Name="Author" />
+                <FieldRef Name="Created" />
+              </ViewFields>
+              <RowLimit Paged="TRUE">30</RowLimit>
+              <JSLink>clienttemplates.js</JSLink>
+            </View>
+            <View Name="{CC93728C-1C19-4F2F-9A05-6937484565E0}" Type="HTML" DisplayName="By Editor" Url="/sites/webpartsite4/SitePages/Forms/ByEditor.aspx" Level="1" BaseViewID="1" ContentTypeID="0x" ToolbarTemplate="WikiLibraryViewToolBar" ImageUrl="/_layouts/15/images/dlicon.png?rev=41">
+              <Query>
+                <GroupBy Collapse="FALSE">
+                  <FieldRef Name="Editor" />
+                </GroupBy>
+                <OrderBy>
+                  <FieldRef Name="FileLeafRef" />
+                </OrderBy>
+              </Query>
+              <ViewFields>
+                <FieldRef Name="DocIcon" />
+                <FieldRef Name="LinkFilename" />
+                <FieldRef Name="Editor" />
+                <FieldRef Name="Modified" />
+                <FieldRef Name="Author" />
+                <FieldRef Name="Created" />
+              </ViewFields>
+              <RowLimit Paged="TRUE">30</RowLimit>
+              <JSLink>clienttemplates.js</JSLink>
+            </View>
+          </pnp:Views>
+          <pnp:FieldRefs>
+            <pnp:FieldRef ID="c33527b4-d920-4587-b791-45024d00068a" Name="WikiField" DisplayName="Wiki Content" />
+            <pnp:FieldRef ID="ef991a83-108d-4407-8ee5-ccc0c3d836b9" Name="SharedWithUsers" DisplayName="Shared With" />
+          </pnp:FieldRefs>
+        </pnp:ListInstance>
+      </pnp:Lists>
+      <pnp:Features>
+        <pnp:WebFeatures>
+          <pnp:Feature ID="87294c72-f260-42f3-a41b-981a2ffce37a" Deactivate="true" Description="MDSFeature" />
+        </pnp:WebFeatures>
+      </pnp:Features>
+      <pnp:CustomActions>
+        <pnp:SiteCustomActions>
+          <pnp:CustomAction Name="jQueryLink" Description="jQueryLink" Location="ScriptLink" Sequence="0" Rights="0" ScriptBlock="&#xD;&#xA;                var headID = document.getElementsByTagName('head')[0]; &#xD;&#xA;                var&#xD;&#xA;                newScript = document.createElement('script');&#xD;&#xA;                newScript.type = 'text/javascript';&#xD;&#xA;                newScript.src = 'https://code.jquery.com/jquery-1.11.3.min.js';&#xD;&#xA;                newScript.id = 'jQueryLink';&#xD;&#xA;                headID.appendChild(newScript);">
+            <pnp:CommandUIExtension />
+          </pnp:CustomAction>
+          <pnp:CustomAction Name="PnPPartnerPackOverrides" Location="ScriptLink" Sequence="0" Rights="0" ScriptBlock=" var headID = document.getElementsByTagName('head')[0]; &#xD;&#xA;var scripts = document.getElementsByTagName('script');&#xD;&#xA;var scriptsSrc = [];&#xD;&#xA;for(var i = 0; i &lt; scripts.length; i++) {&#xD;&#xA;    if(scripts[i].type === 'text/javascript'){&#xD;&#xA;        scriptsSrc.push(scripts[i].src);&#xD;&#xA;    }&#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;if (scriptsSrc.indexOf('https://yourwebsite.azurewebsites.net/Templates/Overrides/PnP-Partner-Pack-Overrides.js?rev=457cefaa69cc4d6d9d37cecc6cb04dc3') === -1)  {  &#xD;&#xA;    var newScript = document.createElement('script');&#xD;&#xA;    newScript.id = 'PnPPartnerPackOverrides';&#xD;&#xA;    newScript.type = 'text/javascript';&#xD;&#xA;    newScript.src = 'https://yourwebsite.azurewebsites.net/Templates/Overrides/PnP-Partner-Pack-Overrides.js?rev=457cefaa69cc4d6d9d37cecc6cb04dc3';&#xD;&#xA;    headID.appendChild(newScript);&#xD;&#xA;    scriptsSrc.push('https://yourazurewebsite.azurewebsites.net/Templates/Overrides/PnP-Partner-Pack-Overrides.js?rev=457cefaa69cc4d6d9d37cecc6cb04dc3');&#xD;&#xA;}">
+            <pnp:CommandUIExtension />
+          </pnp:CustomAction>
+          <pnp:CustomAction Name="spoResponsive" Description="spoResponsive" Location="ScriptLink" Sequence="0" Rights="0" ScriptBlock="&#xD;&#xA;                var headID = document.getElementsByTagName('head')[0]; &#xD;&#xA;                var&#xD;&#xA;                newScript = document.createElement('script');&#xD;&#xA;                newScript.type = 'text/javascript';&#xD;&#xA;                newScript.src = 'https://yourwebsite.azurewebsites.net/Templates/Responsive/SPO-Responsive.js';&#xD;&#xA;                newScript.id = 'spoResponsive';&#xD;&#xA;                headID.appendChild(newScript);">
+            <pnp:CommandUIExtension />
+          </pnp:CustomAction>
+        </pnp:SiteCustomActions>
+      </pnp:CustomActions>
+      <pnp:ComposedLook Name="Blossom" ColorFile="" FontFile="" BackgroundFile="" MasterPage="{masterpagecatalog}/seattle.master" SiteLogo="/sites/PnP-Partner-Pack-Infrastructure/SiteAssets/PnP.png" AlternateCSS="https://yourwebsite.azurewebsites.net/Templates/Responsive/SPO-Responsive.css" Version="0" />
+    </pnp:ProvisioningTemplate>
+  </pnp:Templates>
+</pnp:Provisioning>

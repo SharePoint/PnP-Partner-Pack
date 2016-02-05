@@ -299,7 +299,17 @@
     <Content Include="Scripts\peoplepickercontrol.js" />
     <Content Include="Scripts\csompeoplepickercontrol_resources.en.js" />
     <Content Include="Scripts\peoplepickercontrol_resources.en.js" />
+    <Content Include="Templates\Contact\Resources\Contact.css" />
+    <Content Include="Templates\Contact\Resources\Contact.js" />
+    <Content Include="Templates\Contact\Resources\Contact.min.js" />
     <Content Include="Templates\CustomBar\SPO-CustomBar.xml" />
+    <Content Include="Templates\Helpdesk\Resources\app.js" />
+    <Content Include="Templates\Helpdesk\Resources\Helpdesk.css" />
+    <Content Include="Templates\Helpdesk\Resources\Helpdesk.js" />
+    <Content Include="Templates\Helpdesk\Resources\Helpdesk.min.js" />
+    <Content Include="Templates\Helpdesk\Resources\peoplepickercontrol.css" />
+    <Content Include="Templates\Helpdesk\Resources\peoplepickercontrol.js" />
+    <Content Include="Templates\Helpdesk\Resources\peoplepickercontrol_resources.en.js" />
     <Content Include="Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Jobs.xml" />
     <Content Include="Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Templates.xml" />
     <Content Include="Templates\Infrastructure\PnP.png" />
@@ -351,6 +361,12 @@
     <Content Include="Views\Home\SubSiteInformation.cshtml" />
     <Content Include="Views\Home\MyProvisionedSitesGrid.cshtml" />
     <Content Include="Views\Shared\_WorkingOnIt.cshtml" />
+    <Content Include="Templates\Contact\PnP-Contact-Template" />
+    <Content Include="Templates\Contact\PowerShellScripts\Upload-ContactResource.ps1" />
+    <Content Include="Templates\Contact\PowerShellScripts\Upload-ContactTemplate.ps1" />
+    <Content Include="Templates\Helpdesk\PnP-HelpDesk-Template" />
+    <Content Include="Templates\Helpdesk\PowerShellScripts\Upload-HelpdeskResource.ps1" />
+    <Content Include="Templates\Helpdesk\PowerShellScripts\Upload-HelpdeskTemplate.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
