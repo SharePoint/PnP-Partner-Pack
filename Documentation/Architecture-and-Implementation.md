@@ -38,7 +38,9 @@ SharePoint Online Site Collection, without the need to install and trust an Add-
 for each and every target Site Collection.
 
 Moreover, the application runs against SharePoint
-Only by leveraging an AppOnly access token, to allow to any user to leverage the provided capabilities.
+Online by leveraging an AppOnly access token, to allow to any user to leverage the provided capabilities.
+The application also consumes the Microsoft Graph API with an OAuth access token related to the current
+user identity. 
 
 The application requires to have tenant-level permissions for the application by itself (AppOnly).
 However, we assume that the requirement of having tenant-level permissions is not a road
@@ -107,6 +109,17 @@ As you can see the only difference is the View related to collecting information
 provisioning target. In fact, provisioning a Site Collection requires some information that are
 different from those required to provision a Sub-Site. However, all the other wizard steps will share
 the same base Model (*CreateSiteViewModel*) to store generic provisioning configurations.
+
+In order to consume the Microsoft Graph API, the application uses Active Directory Authentication Library (ADAL).
+Notice that ADAL uses a token cache for OAuth tokens. For the sake of simplicity, the token cache provided is
+based on the web application session and is implemented in type *SessionTokenCache*. 
+However,  a session-based token cache  is not a scalable solution and it cannot be used with multiple instances of the web app.
+Nevertheless, you can configure a session based on an external persistence provider, like for example the
+<a href="https://azure.microsoft.com/en-us/documentation/articles/cache-asp.net-session-state-provider/">Azure Redis Cache</a>,
+or you can define a token cache handler of your own, using a backend database or
+whatever else. For further details about ADAL and the token cache, you can read the book
+<a href="https://www.microsoftpressstore.com/store/modern-authentication-with-azure-active-directory-for-9780735696945">"Modern Authentication with Azure
+Active Directory for Web Applications"</a> written by <a href="http://www.cloudidentity.com/">Vittorio Bertocci</a>.
 
 Aside from that, the Azure Web App is a very common ASP.NET MVC Web Application, which internally 
 leverages the PnP Partner Pack Infrastructural Library to accomplish any real business task.

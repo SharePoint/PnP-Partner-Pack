@@ -102,11 +102,14 @@ the "Permissions to other applications" section, which is illustrated in the fol
 ![Azure AD - Application Configuration - Client Secret](./Figures/Fig-07-Azure-AD-App-Config-02.png)
 
 Click the "Add Application" button, a popup screen will appear. Select "Office 365 SharePoint Online"
-and click the confirmation button. In the main configuration screen you have to configure
-the following application permissions:
+and "Microsoft Graph", then click the confirmation button. In the main configuration screen you have 
+to configure the following application permissions:
 
-* Have full control of all site collection
-* Read and write managed metadata
+* Office 365 SharePoint Online (Application Permission)
+  * Have full control of all site collection
+  * Read and write managed metadata
+* Microsoft Graph (Delegated Permission)
+  * Read and write access to user profile
 
 For further details, see the following figure.
 
@@ -390,6 +393,15 @@ which you got in one or more of the previous setup steps.
 Upload the Azure Web App to the target repository. You can use any of the available
 techniques for doing that (GitHub repository, FTP, Visual Studio Publish, etc.). When you
 publish the web application, remember to uncheck the option "Enable Organizational Authentication".
+
+Notice that the web application uses a token cache for ADAL tokens, which are used when accessing 
+the Microsoft Graph API. The token cache provided is based on the web application
+session. Thus, it is not a scalable solution and it cannot be used with multiple instances of the web app.
+However, you can configure a session based on an external persistence provider, like for example the
+<a href="https://azure.microsoft.com/en-us/documentation/articles/cache-asp.net-session-state-provider/">Azure Redis Cache</a>,
+or you can define a token cache handler of your own, using a backend database or
+whatever else. For further details about ADAL and the token cache, you can read the
+<a href="./Architecture-and-Implementation.md">architectural document</a> related to the PnP Partner Pack.
  
 <a name="apponlywebapp"></a>
 ###App Only certificate configuration in the Azure Web App
