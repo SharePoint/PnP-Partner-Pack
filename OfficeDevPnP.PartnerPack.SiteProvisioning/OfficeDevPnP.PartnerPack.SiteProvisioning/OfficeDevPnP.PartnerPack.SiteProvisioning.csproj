@@ -259,6 +259,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Binders\PeoplePickerUserBinder.cs" />
+    <Compile Include="Components\LightGraphUser.cs" />
     <Compile Include="Components\MicrosoftGraphHelper.cs" />
     <Compile Include="Components\MSGraphAPIContext.cs" />
     <Compile Include="Components\MSGraphAPISettings.cs" />

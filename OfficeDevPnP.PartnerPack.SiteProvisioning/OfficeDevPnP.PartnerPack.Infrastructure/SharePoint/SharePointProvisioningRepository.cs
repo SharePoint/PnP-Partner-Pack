@@ -187,6 +187,11 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
                 ptci.IncludeSiteGroups = job.IncludeSiteGroups;
                 ptci.PersistBrandingFiles = job.PersistComposedLookFiles;
 
+                // We do intentionally remove taxonomies, which are not supported 
+                // in the AppOnly Authorization model
+                // For further details, see the PnP Partner Pack documentation 
+                ptci.HandlersToProcess ^= Handlers.TermGroups;
+
                 // Extract the current template
                 ProvisioningTemplate templateToSave = web.GetProvisioningTemplate(ptci);
 

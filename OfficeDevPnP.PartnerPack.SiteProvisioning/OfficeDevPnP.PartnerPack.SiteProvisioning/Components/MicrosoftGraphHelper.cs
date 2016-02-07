@@ -39,8 +39,10 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Components
                     MSGraphAPISettings.ClientSecret);
                 string signedInUserID = System.Security.Claims.ClaimsPrincipal.Current.FindFirst(
                     ClaimTypes.NameIdentifier).Value;
+                string tenantId = System.Security.Claims.ClaimsPrincipal.Current.FindFirst(
+                    "http://schemas.microsoft.com/identity/claims/tenantid").Value;
                 AuthenticationContext authContext = new AuthenticationContext(
-                    MSGraphAPISettings.Authority,
+                    MSGraphAPISettings.AADInstance + tenantId,
                     new SessionADALCache(signedInUserID));
 
                 AuthenticationResult result = authContext.AcquireTokenSilent(

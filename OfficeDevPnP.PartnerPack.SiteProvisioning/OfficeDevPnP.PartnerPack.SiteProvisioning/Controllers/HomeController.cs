@@ -16,6 +16,7 @@ using System.Web.Helpers;
 using System.Drawing;
 using System.IO;
 using System.Drawing.Imaging;
+using Newtonsoft.Json;
 
 namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
 {
@@ -26,8 +27,6 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         {
             IndexViewModel model = new IndexViewModel();
 
-            model.CurrentUserPrincipalName = ClaimsPrincipal.Current.Identity.Name;
-
             using (var ctx = PnPPartnerPackContextProvider.GetAppOnlyClientContext(PnPPartnerPackSettings.InfrastructureSiteUrl))
             {
                 Web web = ctx.Web;
@@ -35,6 +34,16 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
                 ctx.ExecuteQueryRetry();
 
                 model.InfrastructuralSiteUrl = web.Url;
+            }
+
+            var currentUser = GetCurrentUser();
+            if (currentUser != null)
+            {
+                model.CurrentUserPrincipalName = currentUser.UserPrincipalName;
+            }
+            else
+            {
+                model.CurrentUserPrincipalName = ClaimsPrincipal.Current.Identity.Name;
             }
 
             return View(model);
@@ -432,7 +441,35 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
                 result = sourceStream;
             }
 
-            return base.File(result, contentType);
+            if (result != null)
+            {
+                return base.File(result, contentType);
+            }
+            else
+            {
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.NoContent);
+            }
+        }
+
+        /// <summary>
+        /// This method retrieves the current user from Azure AD
+        /// </summary>
+        /// <returns>The user retrieved from Azure AD</returns>
+        public static LightGraphUser GetCurrentUser()
+        {
+            String jsonResponse = MicrosoftGraphHelper.MakeGetRequestForString(
+                String.Format("{0}me",
+                    MicrosoftGraphHelper.MicrosoftGraphV1BaseUri));
+
+            if (jsonResponse != null)
+            {
+                var user = JsonConvert.DeserializeObject<LightGraphUser>(jsonResponse);
+                return (user);
+            }
+            else
+            {
+                return (null);
+            }
         }
 
         /// <summary>

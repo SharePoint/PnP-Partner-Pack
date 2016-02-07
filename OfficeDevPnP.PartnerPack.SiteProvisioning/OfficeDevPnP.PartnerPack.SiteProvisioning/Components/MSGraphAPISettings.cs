@@ -11,8 +11,6 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Components
         public static string ClientId = ConfigurationManager.AppSettings["ida:ClientId"];
         public static string ClientSecret = ConfigurationManager.AppSettings["ida:ClientSecret"];
         public static string AADInstance = ConfigurationManager.AppSettings["ida:AADInstance"];
-        public static string TenantId = ConfigurationManager.AppSettings["ida:TenantId"];
-        public static string Authority = AADInstance + TenantId;
         public static string MicrosoftGraphResourceId = "https://graph.microsoft.com";
     }
 }

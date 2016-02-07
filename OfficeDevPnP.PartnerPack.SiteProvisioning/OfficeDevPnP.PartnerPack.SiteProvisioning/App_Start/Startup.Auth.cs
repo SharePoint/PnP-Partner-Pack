@@ -22,15 +22,16 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning
             
             app.SetDefaultSignInAsAuthenticationType(CookieAuthenticationDefaults.AuthenticationType);
 
-            app.UseCookieAuthentication(new CookieAuthenticationOptions {
-                CookieManager = new Components.SystemWebCookieManager()
-            });
+            app.UseCookieAuthentication(new CookieAuthenticationOptions());
+            //app.UseCookieAuthentication(new CookieAuthenticationOptions {
+            //    CookieManager = new Components.SystemWebCookieManager()
+            //});
 
             app.UseOpenIdConnectAuthentication(
                 new OpenIdConnectAuthenticationOptions
                 {
                     ClientId = MSGraphAPISettings.ClientId,
-                    Authority = MSGraphAPISettings.Authority,
+                    Authority = MSGraphAPISettings.AADInstance + "common",
                     TokenValidationParameters = new System.IdentityModel.Tokens.TokenValidationParameters
                     {
                         // instead of using the default validation (validating against a single issuer value, as we do in line of business apps), 
@@ -48,12 +49,15 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning
                             var code = context.Code;
 
                             ClientCredential credential = new ClientCredential(
-                                MSGraphAPISettings.ClientId, MSGraphAPISettings.ClientSecret);
+                                MSGraphAPISettings.ClientId,
+                                MSGraphAPISettings.ClientSecret);
                             string signedInUserID = context.AuthenticationTicket.Identity.FindFirst(
                                 ClaimTypes.NameIdentifier).Value;
+                            string tenantId = context.AuthenticationTicket.Identity.FindFirst(
+                                "http://schemas.microsoft.com/identity/claims/tenantid").Value;
 
                             AuthenticationContext authContext = new AuthenticationContext(
-                                MSGraphAPISettings.Authority,
+                                MSGraphAPISettings.AADInstance + tenantId,
                                 new SessionADALCache(signedInUserID));
                             AuthenticationResult result = authContext.AcquireTokenByAuthorizationCode(
                                 code, new Uri(HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Path)),
