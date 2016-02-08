@@ -8,17 +8,18 @@ PnP Partner Pack can be considered as Starter Kit for customers and partners and
 # What's included? #
 PnP Partner Pack solution is demonstrating following capabilities:
 
-- Self service site collection and sub site provisioning solution
+- Self-service site collection and sub site provisioning solution
 	- Fully configurable based on business requirements
 	- Save existing site as new template from the standard user interface
 	- Template creation does not require xml or script knowledge - New templates can be generated from the existing sites
 	- Sub site creation implementation with remote provisioning
 	- Support for tenant wide or site collection templates
 - Responsive UI package for the Office 365 SP sites
-	- Uses JavaScritp and custom CSS files to transform oob SP sites as responsive
+	- Uses JavaScript and custom CSS files to transform oob SP sites as responsive
 	- Can be applied to any SharePoint site and does not dependencies on the PnP Partner Pack
 - UI widget implementations with JavaScript embedding pattern to avoid custom master pages
 - Reference governance remote timer jobs (Azure WebJobs) to perform typical enterprise governance operations to existing site collections and sites
+- Configurable branding and text elements for easy branding element changes
 
 If you are interested on more detailed architectural description, please have a look on specific [PnP Partner Pack - Architecture documentation](./Documentation/Architecture-and-Implementation.md).
 
@@ -48,9 +49,13 @@ Yes. You can use this code and patterns anyway you want in your own implementati
 Obviously we are interested on your feedback and since PnP is open source community driven initiate, all contributions back to the PnP are absolutely welcome and appreciated, but not required.
 
 # Screen shots of the solution #
-[pic]
+Here's few screen shots of the different UIs solution provides for example for self-service site collection creation or for the sub site creation.
 
-[pic]
+![](http://i.imgur.com/XAQgzVk.png)
+
+Here's few screen shots of the responsive behavior included in the PnP Partner Pack.
+
+![](http://i.imgur.com/y6iGZyk.png)
 
 ---
 
