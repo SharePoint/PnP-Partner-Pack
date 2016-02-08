@@ -107,7 +107,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
                         });
                     }
                 }
-                catch (ServerException ex)
+                catch (ServerException)
                 {
                     // In case of any issue, ignore the local templates
                 }
@@ -185,7 +185,12 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
                 ptci.IncludeSearchConfiguration = job.IncludeSearchConfiguration;
                 ptci.IncludeSiteCollectionTermGroup = job.IncludeSiteCollectionTermGroup;
                 ptci.IncludeSiteGroups = job.IncludeSiteGroups;
-                ptci.PersistComposedLookFiles = job.PersistComposedLookFiles;
+                ptci.PersistBrandingFiles = job.PersistComposedLookFiles;
+
+                // We do intentionally remove taxonomies, which are not supported 
+                // in the AppOnly Authorization model
+                // For further details, see the PnP Partner Pack documentation 
+                ptci.HandlersToProcess ^= Handlers.TermGroups;
 
                 // Extract the current template
                 ProvisioningTemplate templateToSave = web.GetProvisioningTemplate(ptci);
@@ -194,7 +199,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
                 templateToSave.DisplayName = job.Title;
 
                 // Save template image preview in folder
-                Folder templatesFolder = repositoryWeb.GetFolderByServerRelativeUrl(PnPPartnerPackConstants.PnPProvisioningTemplates);
+                Microsoft.SharePoint.Client.Folder templatesFolder = repositoryWeb.GetFolderByServerRelativeUrl(PnPPartnerPackConstants.PnPProvisioningTemplates);
                 repositoryContext.Load(templatesFolder, f => f.ServerRelativeUrl, f => f.Name);
                 repositoryContext.ExecuteQueryRetry();
 

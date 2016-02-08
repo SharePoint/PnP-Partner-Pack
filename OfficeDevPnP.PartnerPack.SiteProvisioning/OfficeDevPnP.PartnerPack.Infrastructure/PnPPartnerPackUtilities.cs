@@ -1,5 +1,6 @@
 ﻿using Microsoft.SharePoint.Client;
 using OfficeDevPnP.Core.Framework.Provisioning.Model;
+using OfficeDevPnP.Core.Framework.Provisioning.ObjectHandlers;
 using OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml;
 using System;
 using System.Collections.Generic;
@@ -92,6 +93,12 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
             ProvisioningTemplate template = provider.GetTemplate(fileName);
             template.Connector = provider.Connector;
 
+            ProvisioningTemplateApplyingInformation ptai = 
+                new ProvisioningTemplateApplyingInformation();
+
+            // We exclude Term Groups because they are not supported in AppOnly
+            ptai.HandlersToProcess ^= Handlers.TermGroups;
+
             // Handle any custom parameter
             if (parameters != null)
             {
@@ -102,7 +109,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
             }
 
             // Apply the template to the target site
-            context.Site.RootWeb.ApplyProvisioningTemplate(template);
+            context.Site.RootWeb.ApplyProvisioningTemplate(template, ptai);
         }
 
         public static ProvisioningTemplate GetProvisioningTemplate(ClientContext context, String siteUrl, String folder, String fileName)

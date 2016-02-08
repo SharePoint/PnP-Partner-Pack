@@ -3,6 +3,7 @@ using Microsoft.Online.SharePoint.TenantManagement;
 using Microsoft.SharePoint.Client;
 using OfficeDevPnP.Core.Entities;
 using OfficeDevPnP.Core.Framework.Provisioning.Model;
+using OfficeDevPnP.Core.Framework.Provisioning.ObjectHandlers;
 using OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml;
 using System;
 using System.Collections.Generic;
@@ -28,13 +29,13 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
         {
             Console.WriteLine("Creating Site Collection \"{0}\".", job.RelativeUrl);
 
+            // Define the full Site Collection URL
+            String siteUrl = String.Format("{0}{1}",
+                PnPPartnerPackSettings.InfrastructureSiteUrl.Substring(0, PnPPartnerPackSettings.InfrastructureSiteUrl.IndexOf("sharepoint.com/") + 14),
+                job.RelativeUrl);
+
             using (var adminContext = PnPPartnerPackContextProvider.GetAppOnlyTenantLevelClientContext())
             {
-                // Define the full Site Collection URL
-                String siteUrl = String.Format("{0}{1}",
-                    PnPPartnerPackSettings.InfrastructureSiteUrl.Substring(0, PnPPartnerPackSettings.InfrastructureSiteUrl.IndexOf("sharepoint.com/") + 14), 
-                    job.RelativeUrl);
-
                 // Configure the Site Collection properties
                 SiteEntity newSite = new SiteEntity();
                 newSite.Description = job.Description;
@@ -71,17 +72,28 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                     adminContext.ExecuteQueryRetry();
                 }
 
+                Console.WriteLine("Site \"{0}\" created.", site.Url);
+
                 // Check if external sharing has to be enabled
                 if (job.ExternalSharingEnabled)
                 {
                     EnableExternalSharing(tenant, site);
 
                     // Enable External Sharing
-                    Console.WriteLine("Enabled Responsive Design Template to site \"{0}\".",
+                    Console.WriteLine("Enabled External Sharing for site \"{0}\".",
                         site.Url);
                 }
+            }
 
-                Console.WriteLine("Site \"{0}\" created.", site.Url);
+            // Move to the context of the created Site Collection
+            using (ClientContext clientContext = PnPPartnerPackContextProvider.GetAppOnlyClientContext(siteUrl))
+            {
+                Site site = clientContext.Site;
+                Web web = site.RootWeb;
+
+                clientContext.Load(site, s => s.Url);
+                clientContext.Load(web, w => w.Url);
+                clientContext.ExecuteQueryRetry();
 
                 // Check if we need to enable PnP Partner Pack overrides
                 if (job.PartnerPackExtensionsEnabled)
@@ -124,9 +136,22 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                     ProvisioningTemplate template = provider.GetTemplate(templateFileName);
                     template.Connector = provider.Connector;
 
-                    // We do intentionally remove taxonomies, which are not supported in the AppOnly Authorization model
+                    // We do intentionally remove taxonomies, which are not supported 
+                    // in the AppOnly Authorization model
                     // For further details, see the PnP Partner Pack documentation 
-                    template.TermGroups.Clear();
+                    ProvisioningTemplateApplyingInformation ptai =
+                        new ProvisioningTemplateApplyingInformation();
+
+                    // Write provisioning steps on console log
+                    ptai.MessagesDelegate += delegate (string message, ProvisioningMessageType messageType) {
+                        Console.WriteLine("{0} - {1}", messageType, messageType);
+                    };
+                    ptai.ProgressDelegate += delegate (string message, int step, int total) {
+                        Console.WriteLine("{0:00}/{1:00} - {2}", step, total, message);
+                    };
+
+                    ptai.HandlersToProcess ^=
+                        OfficeDevPnP.Core.Framework.Provisioning.Model.Handlers.TermGroups;
 
                     // Configure template parameters
                     if (job.TemplateParameters != null)
@@ -140,7 +165,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                         }
                     }
 
-                    web.ApplyProvisioningTemplate(template);
+                    web.ApplyProvisioningTemplate(template, ptai);
                 }
 
                 Console.WriteLine("Applyed Provisioning Template \"{0}\" to site.",
