@@ -325,7 +325,6 @@
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <None Include="Properties\PublishProfiles\Local-File-System.pubxml" />
-    <None Include="Properties\PublishProfiles\pnp-partner-pack.pubxml" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\csompeoplepickercontrol.js" />
