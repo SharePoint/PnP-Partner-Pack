@@ -8,7 +8,7 @@ Microsoft SharePoint Online, by providing the following capabilities:
 * Site Collection creation for non-admin users with custom UI and PnP Provisioning Template selection
 * My Site Collections personal view
 * Responsive Design template for Site Collections
-* Custom NavBar and Footer for Site Collections with JavaScript object model
+* Custom NavBar and Footer for Site Collections with JavaScript Object Model
 * Sample Timer Jobs (implemented as WebJobs) for Governance rules enforcement
 
 In this document you will learn about the architecture and the implementation details of the
@@ -31,7 +31,7 @@ The overall architecture of PnP Partner Pack is based on an Azure Web App, which
 called *OfficeDev.PnPPartnerPack.SiteProvisioning*, and on Azure Active Directory.
 In fact all the capabilities of the PnP Partner Pack are provided by an Azure 
 AD Application, which is an Office 365 App, and which is hosted in Azure.
-We decided to create the PnP Partner Pack as an Azure AD Application, insted of just
+We decided to create the PnP Partner Pack as an Azure AD Application, instead of just
 creating a SharePoint Add-In, because through the Azure AD Application we are
 able to apply the extensions and to play with the app targeting whatever
 SharePoint Online Site Collection, without the need to install and trust an Add-In
@@ -114,7 +114,7 @@ leverages the PnP Partner Pack Infrastructural Library to accomplish any real bu
 <a name="infrastructureLibrary"></a>
 ## Infrastructure Library
 This is a .NET class library, which is defined in the project named *OfficeDevPnP.PartnerPack.Infrastructure*,
-that provides all the core functionalites of the PnP Partner Pack.
+that provides all the core functionalities of the PnP Partner Pack.
 In this library you will find the following main types:
 * *IConfigurable*: defines the common interface that any configurable type should implement.
 * *IProvisioningRepository*: declares the basic interface for any concrete Provisioning Repository.
@@ -292,9 +292,9 @@ and the URL of the Infrastructural Site Collection.
 * *ProvisioningRepository*: defines the concrete type to use as the Provisioning Repository. You should
 change this configuration in order to use a custom Provisioning Repository.
 * *ProvisioningJobs*: declares what are the Job Handlers, the Job Types, and the execution model of the
-Job Types. An execution model value of *Scheculed* means that the Job will be executed by the
-*ScheduledJob*, while a value of *Continous* means that the Job will be executed by the *ContinousJob*.
-If you create any custom Job, you will have to define the Job Type and the Job  Handler through this
+Job Types. An execution model value of *Scheduled* means that the Job will be executed by the
+*ScheduledJob*, while a value of *Continuous* means that the Job will be executed by the *ContinousJob*.
+If you create any custom Job, you will have to define the Job Type and the Job Handler through this
 elements. For further details about the Job Handling, please read the following section.
 
 <a name="asyncJobsHandling"></a>
