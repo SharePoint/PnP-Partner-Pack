@@ -7,6 +7,10 @@ PS C:\> .\Helpdesk.ps1 `
 -PnpInfrasite "https://mytenant.sharepoint.com/sites/infrastructure" `
 -Csspath  "c:\Templates\Helpdesk.css" `
 -Jspath "c:\Templates\Helpdesk.min.js" `
+-PeoplePickerCsspath  "c:\Templates\peoplepickercontrol.css" `
+-PeoplePickerJspath "c:\Templates\peoplepickercontrol.js" `
+-PeoplePickerAppJspath  "c:\Templates\app.js" `
+-PeoplePickerResourceJspath "c:\Templates\peoplepickercontrol_resources.en.js" `
 #>
 
 
