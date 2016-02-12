@@ -304,6 +304,13 @@
     <Content Include="Templates\Contact\Resources\Contact.js" />
     <Content Include="Templates\Contact\Resources\Contact.min.js" />
     <Content Include="Templates\CustomBar\SPO-CustomBar.xml" />
+    <Content Include="Templates\Expense\Resources\app.js" />
+    <Content Include="Templates\Expense\Resources\Expense.css" />
+    <Content Include="Templates\Expense\Resources\Expense.js" />
+    <Content Include="Templates\Expense\Resources\Expense.min.js" />
+    <Content Include="Templates\Expense\Resources\peoplepickercontrol.css" />
+    <Content Include="Templates\Expense\Resources\peoplepickercontrol.js" />
+    <Content Include="Templates\Expense\Resources\peoplepickercontrol_resources.en.js" />
     <Content Include="Templates\Helpdesk\Resources\app.js" />
     <Content Include="Templates\Helpdesk\Resources\Helpdesk.css" />
     <Content Include="Templates\Helpdesk\Resources\Helpdesk.js" />
@@ -368,6 +375,9 @@
     <Content Include="Templates\Helpdesk\PnP-HelpDesk-Template" />
     <Content Include="Templates\Helpdesk\PowerShellScripts\Upload-HelpdeskResource.ps1" />
     <Content Include="Templates\Helpdesk\PowerShellScripts\Upload-HelpdeskTemplate.ps1" />
+    <Content Include="Templates\Expense\PowerShellScripts\Expense.ps1" />
+    <Content Include="Templates\Expense\PowerShellScripts\ExpenseTemplate.ps1" />
+    <Content Include="Templates\Expense\PnPExpenseTemplate" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

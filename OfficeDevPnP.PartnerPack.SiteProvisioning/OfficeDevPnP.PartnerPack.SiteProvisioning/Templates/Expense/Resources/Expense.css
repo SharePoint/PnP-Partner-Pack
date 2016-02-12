@@ -1,0 +1,184 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.table {
+    display: table;
+    width: 100%;
+}
+
+.cell {
+    display: table-cell;
+    width: 50%;
+}
+
+.row {
+    display: table-row;
+}
+
+.cell {
+    background: #F7F7F7;
+    color: black;
+    border: 5px solid white;
+}
+
+.form-div {
+    width: 100%;
+    padding-top: 3px;
+}
+
+.form-label {
+    font-weight: bold;
+    width: 40%;
+    display: block;
+    float: left;
+}
+
+.form-value {
+    width: 60%;
+    display: block;
+    float: left;
+}
+
+input, textarea {
+    font-family: open_sansregular;
+    padding: 0.5em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #fff;
+    outline: none;
+    font-size: 18px;
+}
+
+select {
+    font-family: open_sansregular;
+    padding: 0.1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #fff;
+    outline: none;
+    font-size: 18px;
+}
+
+.mytickets_table {
+    width: 100%;
+    border: 1px solid;
+}
+
+table.mytickets_table thead tr th, table.mytickets_table tbody tr td {
+    padding: 0.5em;
+}
+
+button:hover {
+    background-color: #765774;
+}
+
+button {
+    background-color: #9A7798;
+    border: none;
+    color: #fff;
+    font-weight: bold;
+    padding: 0.7em 1em;
+    cursor: pointer;
+    margin: 0;
+    border-radius: 4px;
+    outline: none;
+    -webkit-transition: background 0.5s ease;
+    -moz-transition: background 0.5s ease;
+    -ms-transition: background 0.5s ease;
+    -o-transition: background 0.5s ease;
+    transition: background 0.5s ease;
+}
+
+div.newticket {
+    width: 96%;
+    border: 1px solid;
+    padding: 0.5em;
+}
+
+.edit-view-form {
+    background: #F7F7F7;
+}
+
+table.users {
+    width: 100%;
+}
+
+#users {
+    table-layout: fixed;
+}
+
+.btnSubmitReset {
+    padding-left: 170px;
+}
+
+div#users-contain {
+    height: auto;
+    max-height: 100px;
+    overflow-y: scroll;
+}
+
+    div#users-contain table {
+        margin: 1em 0;
+        border-collapse: collapse;
+        width: 95%;
+    }
+
+        div#users-contain table td, div#users-contain table th {
+            border: 1px solid #eee;
+            padding: .6em 10px;
+            text-align: left;
+            font-size: 9px;
+        }
+
+.ui-dialog .ui-state-error {
+    padding: .3em;
+}
+
+.validateTips {
+    border: 1px solid transparent;
+    padding: 0.3em;
+}
+
+.ui-widget-content {
+    font-weight: bold;
+}
+
+h4 {
+    margin: 0px;
+}
+
+.ticketerror {
+    color:red;
+    padding-left:5px;
+}
+.ticketsuccess {
+    color: green;
+    padding-left:5px;
+}
+.myExpenses {
+	float:left;
+	padding-right:50px
+}
+.peoplepickerwidth{
+    width:200px;
+}
+
+.dataTables_filter input{
+    height:30px;
+}
+
+#mngr_comments{
+    width: 200px;
+    height: 60px;
+    overflow: auto;
+}
+
+#it_mngr_comments{
+    width: 200px;
+    height: 60px;
+    overflow: auto;
+}
