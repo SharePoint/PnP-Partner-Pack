@@ -1,7 +1,7 @@
 # PnP Partner Pack - Manual Setup Guide
 
 ##Solution Overview
-PnP Partner pack allows you to extend the out of the box experience of Microsoft Office 365 and 
+PnP Partner Pack allows you to extend the out of the box experience of Microsoft Office 365 and 
 Microsoft SharePoint Online, by providing the following capabilities:
 * Save Site as Provisioning Template feature in Site Settings
 * Sub-Site creation  with custom UI and PnP Provisioning Template selection
@@ -11,8 +11,10 @@ Microsoft SharePoint Online, by providing the following capabilities:
 * Custom NavBar and Footer for Site Collections with JavaScript object model
 * Sample Timer Jobs (implemented as WebJobs) for Governance rules enforcement
 
+This document is about the **PnP Partner Pack v. 1.1 (February 2016)**.
+
 ## Setup Overview
-From a deployment perspective the PnP Partner Pack is an Office 365 Add-In, which 
+From a deployment perspective the PnP Partner Pack is an Office 365 Application, which 
 leverages an Azure Web App with an Azure Web Sites and some Azure Web Jobs.
 
 The application has to be registered in Azure Active Directory and acts against SharePoint
@@ -24,6 +26,11 @@ the target SharePoint Online tenant.
 This document outlines the manual setup process, which allows you to leverage the 
 PnP Partner Pack in your own environment.
 
+If you already installed the PnP Partner Pack v. 1.0 and you are upgrading it to the
+latest version, which currently is v. 1.1, you can read the following 
+<a href="./Upgrade-From-v1_0-to-v1_1.md">upgrade guide</a>,
+instead of reading this setup guide.
+
 ## Requirements
 In order to setup the PnP Partner Pack you need:
 * A valid Microsoft Office 365 tenant with at least an active subscription
@@ -31,7 +38,7 @@ In order to setup the PnP Partner Pack you need:
 
 ## Installation Steps
 The manual installation requires to accomplish the following steps:
-* [Azure Active Directory Application registration, as Office 365 Add-In](#azuread)
+* [Azure Active Directory Application registration, as Office 365 Application](#azuread)
 * [Create the self-signed certificate](#createcertificate)
 * [App Only certificate configuration in the Azure AD Application](#apponlyazuread)
 * [Infrastructural Site Collection provisioning](#sitecollection)
@@ -44,7 +51,7 @@ During the setup guide you will often find two suitable alternatives to gain you
 
 <a name="azuread"></a>
 ###Azure Active Directory Application Registration
-First of all, because the PnP Partner Pack is an Office 365 Add-In, you have to register
+First of all, because the PnP Partner Pack is an Office 365 Application, you have to register
 it in the Azure Active Directory tenant that is under the cover of your Office 365 tenant.
 In order to do that, open the Office 365 Admin Center (https://portal.office.com) using
 the account of a user member of the Tenant Global Admins group.
@@ -54,7 +61,7 @@ treeview of the Office 365 Admin Center. In the new browser's tab that will be o
 will find the Microsoft Azure Management Portal. If it is the first time that you access
 the Azure Management Portal with your account, you will have to register a new Azure
 subscription, providing some information and a credit card for any payment need.
-But don't worry, in order to play with Azure AD and to register Office 365 Add-In you
+But don't worry, in order to play with Azure AD and to register Office 365 Application you
 will not pay anything. In fact, those are free capabilities. 
 After having accessed the Azure Management Portal, select the "Active Directory" section,
 by clicking on the icon highlighted in the following screenshot:
@@ -426,7 +433,7 @@ you can see a sample configuration.
 
 This last setting allows the Azure Web App to access the service account's personal certificate
 store to read the App Only X.509 certificate.
-You are now ready to play with your Office 365 Add-In. Simply open an Office 365 user session,
+You are now ready to play with your Office 365 Application. Simply open an Office 365 user session,
 click on the App Launcher and select the "My Apps" command.
 
 ![Office 365 App Launcher - My Apps](./Figures/Fig-14-O365-App-Launcher.png)
