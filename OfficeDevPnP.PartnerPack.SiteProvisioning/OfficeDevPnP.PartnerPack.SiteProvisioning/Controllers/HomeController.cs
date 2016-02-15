@@ -420,6 +420,12 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
             return PartialView("GetSiteCollectionSettings", PnPPartnerPackUtilities.GetSiteCollectionSettings(siteCollectionUri));
         }
 
+        [AllowAnonymous]
+        public ActionResult Error(string message)
+        {
+            throw new Exception(message);
+        }
+
         public ActionResult GetPersonaPhoto(String upn, Int32 width = 0, Int32 height = 0)
         {
             Stream result = null;
