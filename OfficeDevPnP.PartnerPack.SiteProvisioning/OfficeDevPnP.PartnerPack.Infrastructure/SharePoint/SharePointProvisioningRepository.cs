@@ -203,10 +203,16 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
                 repositoryContext.Load(templatesFolder, f => f.ServerRelativeUrl, f => f.Name);
                 repositoryContext.ExecuteQueryRetry();
 
+                // Fix the job filename if it is missing the .xml extension
+                if (!job.FileName.ToLower().EndsWith(".xml"))
+                {
+                    job.FileName += ".xml";
+                }
+
                 // If there is a preview image
                 if (job.TemplateImageFile != null)
                 {
-                    String previewImageFileName = job.FileName.Replace(".xml", "_preview.png");
+                    String previewImageFileName = job.FileName.ToLower().Replace(".xml", "_preview.png");
                     templatesFolder.UploadFile(previewImageFileName,
                         job.TemplateImageFile.ToStream(), true);
 
