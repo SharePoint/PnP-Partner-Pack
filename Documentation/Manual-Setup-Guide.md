@@ -101,6 +101,9 @@ or 2 years for key duration). Press the "Save" button in the lower part of the s
 generate the key value. After saving, you will see the key value. Copy it in a safe place,
 because you will not see it anymore.
 
+**Note:**
+Please ensure that the listed reply URL ends with a trailing slash as shown in below screenshot. 
+
 ![Azure AD - Application Configuration - Client Secret](./Figures/Fig-06-Azure-AD-App-Config-01.png)
 
 Scroll down a little bit more in the UI and configure the Application permissions, within
