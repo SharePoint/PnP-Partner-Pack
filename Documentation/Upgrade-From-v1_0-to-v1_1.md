@@ -38,8 +38,9 @@ that is available in the
     * Office 365 SharePoint Online (Application Permission)
         * Have full control of all site collection
         * Read and write managed metadata
-    * Microsoft Graph (Delegated Permission)
+    * Microsoft Graph (Delegated Permission) (**New**)
         * Read and write access to user profile
+* Ensure the application in Azure Active Directory has reply URL(s) that have a trailing slash (/)
 
 For further details about how to configure the permissions, see the following figure.
 
