@@ -1,6 +1,13 @@
 ﻿var SPOResponsiveApp = SPOResponsiveApp || {};
 
 SPOResponsiveApp.setUpToggling = function () {
+
+    var currentScriptUrl = $('#spoResponsive').attr('src');
+    if (currentScriptUrl != undefined) {
+        var currentScriptBaseUrl = currentScriptUrl.substring(0, currentScriptUrl.lastIndexOf("/") + 1);
+        $("head").append('<link rel="stylesheet" href="' + currentScriptBaseUrl + 'SPO-Responsive.css" type="text/css" />');
+    }
+
     if ($("#navbar-toggle").length)
         return;
 
@@ -26,7 +33,7 @@ SPOResponsiveApp.setUpToggling = function () {
 SPOResponsiveApp.init = function () {
     if (!window.jQuery) {
         // jQuery is needed for Responsive to run
-        setTimeout(SPOResponsiveApp.init, 50);
+        setTimeout(SPOResponsiveApp.init, 100);
     } else {
         $(function () {
             SPOResponsiveApp.setUpToggling();
