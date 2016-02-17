@@ -28,7 +28,8 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
                 ApplyProvisioningTemplateToSite(context,
                     PnPPartnerPackSettings.InfrastructureSiteUrl,
                     "Overrides",
-                    "PnP-Partner-Pack-Overrides.xml");
+                    "PnP-Partner-Pack-Overrides.xml",
+                    handlers: Handlers.CustomActions);
 
                 // Turn ON the customization flag
                 context.Site.RootWeb.SetPropertyBagValue(
@@ -43,7 +44,8 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
                 ApplyProvisioningTemplateToSite(context,
                     PnPPartnerPackSettings.InfrastructureSiteUrl,
                     "Responsive",
-                    "SPO-Responsive.xml");
+                    "SPO-Responsive.xml",
+                    handlers: Handlers.CustomActions);
             }
         }
 
@@ -81,7 +83,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
             return (result);
         }
 
-        private static void ApplyProvisioningTemplateToSite(ClientContext context, String siteUrl, String folder, String fileName, Dictionary<String, String> parameters = null)
+        private static void ApplyProvisioningTemplateToSite(ClientContext context, String siteUrl, String folder, String fileName, Dictionary<String, String> parameters = null, Handlers handlers = Handlers.All)
         {
             // Configure the XML file system provider
             XMLTemplateProvider provider =
@@ -97,6 +99,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
                 new ProvisioningTemplateApplyingInformation();
 
             // We exclude Term Groups because they are not supported in AppOnly
+            ptai.HandlersToProcess = handlers;
             ptai.HandlersToProcess ^= Handlers.TermGroups;
 
             // Handle any custom parameter

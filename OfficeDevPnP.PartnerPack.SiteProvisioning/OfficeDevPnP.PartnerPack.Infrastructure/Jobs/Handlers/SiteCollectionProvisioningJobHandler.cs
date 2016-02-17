@@ -105,6 +105,16 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                         site.Url);
                 }
 
+                // Check if the site has to be responsive
+                if (job.ResponsiveDesignEnabled)
+                {
+                    // Enable Responsive Design
+                    PnPPartnerPackUtilities.EnableResponsiveDesignOnSite(site.Url);
+
+                    Console.WriteLine("Enabled Responsive Design Template to site \"{0}\".",
+                        site.Url);
+                }
+
                 // Apply the Provisioning Template
                 Console.WriteLine("Applying Provisioning Template \"{0}\" to site.",
                     job.ProvisioningTemplateUrl);
@@ -160,16 +170,6 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
 
                 Console.WriteLine("Applyed Provisioning Template \"{0}\" to site.",
                     job.ProvisioningTemplateUrl);
-
-                // Check if the site has to be responsive
-                if (job.ResponsiveDesignEnabled)
-                {
-                    // Enable Responsive Design
-                    PnPPartnerPackUtilities.EnableResponsiveDesignOnSite(site.Url);
-
-                    Console.WriteLine("Enabled Responsive Design Template to site \"{0}\".",
-                        site.Url);
-                }
             }
         }
 
