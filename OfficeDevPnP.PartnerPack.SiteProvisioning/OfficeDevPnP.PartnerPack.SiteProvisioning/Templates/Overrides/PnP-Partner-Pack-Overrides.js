@@ -1,4 +1,4 @@
-﻿var jQuery = "https://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.2.min.js";
+﻿var jQueryScriptUrl = "https://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.2.min.js";
 
 // Is MDS enabled?
 if ("undefined" != typeof g_MinimalDownload && g_MinimalDownload && (window.location.pathname.toLowerCase()).endsWith("/_layouts/15/start.aspx") && "undefined" != typeof asyncDeltaManager) {
@@ -11,7 +11,7 @@ if ("undefined" != typeof g_MinimalDownload && g_MinimalDownload && (window.loca
 
 function JavaScript_Embed() {
 
-    loadScript(jQuery, function () {
+    loadScript(jQueryScriptUrl, function () {
         $(document).ready(function () {
             // SP.SOD.executeOrDelayUntilScriptLoaded(function () { ReplaceLinks(); }, 'sp.js');
             SP.SOD.executeFunc('sp.js', 'SP.ClientContext', replaceLinks);
