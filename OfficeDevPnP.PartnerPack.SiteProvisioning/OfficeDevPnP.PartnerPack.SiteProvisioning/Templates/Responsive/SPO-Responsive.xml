@@ -1,23 +1,23 @@
-<?xml version="1.0"?>
-<pnp:Provisioning xmlns:pnp="http://schemas.dev.office.com/PnP/2015/08/ProvisioningSchema">
-  <pnp:Preferences Generator="OfficeDevPnP.Core, Version=1.7.1015.0, Culture=neutral, PublicKeyToken=null">
+<pnp:Provisioning xmlns:pnp="http://schemas.dev.office.com/PnP/2015/12/ProvisioningSchema">
+  <pnp:Preferences Generator="OfficeDevPnP.Core, Version=2.1.1602.0, Culture=neutral, PublicKeyToken=null">
     <pnp:Parameters>
-      <pnp:Parameter Key="AzureWebSiteUrl" Required="true"></pnp:Parameter>
+      <pnp:Parameter Key="AzureWebSiteUrl" Required="true">https://pnp-partner-pack.azurewebsites.net</pnp:Parameter>
     </pnp:Parameters>
   </pnp:Preferences>
-  <pnp:Templates ID="PNP-PARTNER-PACK-RESPONSIVE-CONTAINER">
+  <pnp:Templates ID="CONTAINER-PNP-PARTNER-PACK-RESPONSIVE">
     <pnp:ProvisioningTemplate ID="PNP-PARTNER-PACK-RESPONSIVE" Version="1">
+      <pnp:WebSettings NoCrawl="false" AlternateCSS="{parameter:AzureWebSiteUrl}/Templates/Responsive/SPO-Responsive.css" />
       <pnp:CustomActions>
         <pnp:SiteCustomActions>
-          <pnp:CustomAction Name="jQueryLink" Description="jQueryLink" Location="ScriptLink" Sequence="1" Rights="0" ScriptBlock="&#xD;&#xA;                var headID = document.getElementsByTagName('head')[0]; &#xD;&#xA;                var&#xD;&#xA;                newScript = document.createElement('script');&#xD;&#xA;                newScript.type = 'text/javascript';&#xD;&#xA;                newScript.src = 'https://code.jquery.com/jquery-1.11.3.min.js';&#xD;&#xA;                newScript.id = 'jQueryLink';&#xD;&#xA;                headID.appendChild(newScript);">
+          <pnp:CustomAction Name="jQueryLink" Description="jQueryLink" Location="ScriptLink" Sequence="1" Rights="" ScriptBlock="&#xD;&#xA;                var headID = document.getElementsByTagName('head')[0]; &#xD;&#xA;                var&#xD;&#xA;                newScript = document.createElement('script');&#xD;&#xA;                newScript.type = 'text/javascript';&#xD;&#xA;                newScript.src = 'https://code.jquery.com/jquery-1.11.3.min.js';&#xD;&#xA;                newScript.id = 'jQueryLink';&#xD;&#xA;                headID.appendChild(newScript);">
             <pnp:CommandUIExtension />
           </pnp:CustomAction>
-          <pnp:CustomAction Name="spoResponsive" Description="spoResponsive" Location="ScriptLink" Sequence="2" Rights="0" ScriptBlock="&#xD;&#xA;                var headID = document.getElementsByTagName('head')[0]; &#xD;&#xA;                var&#xD;&#xA;                newScript = document.createElement('script');&#xD;&#xA;                newScript.type = 'text/javascript';&#xD;&#xA;                newScript.src = '{parameter:AzureWebSiteUrl}/Templates/Responsive/SPO-Responsive.js';&#xD;&#xA;                newScript.id = 'spoResponsive';&#xD;&#xA;                headID.appendChild(newScript);">
+          <pnp:CustomAction Name="spoResponsive" Description="spoResponsive" Location="ScriptLink" Sequence="2" Rights="" ScriptBlock="&#xD;&#xA;                var headID = document.getElementsByTagName('head')[0]; &#xD;&#xA;                var&#xD;&#xA;                newScript = document.createElement('script');&#xD;&#xA;                newScript.type = 'text/javascript';&#xD;&#xA;                newScript.src = '{parameter:AzureWebSiteUrl}/Templates/Responsive/SPO-Responsive.js';&#xD;&#xA;                newScript.id = 'spoResponsive';&#xD;&#xA;                headID.appendChild(newScript);">
             <pnp:CommandUIExtension />
           </pnp:CustomAction>
         </pnp:SiteCustomActions>
       </pnp:CustomActions>
-      <pnp:ComposedLook Name="Office" ColorFile="" FontFile="" BackgroundFile="" AlternateCSS="{parameter:AzureWebSiteUrl}/Templates/Responsive/SPO-Responsive.css" Version="0" />
+      <pnp:ComposedLook Name="Office" ColorFile="" FontFile="" BackgroundFile="" Version="0" />
     </pnp:ProvisioningTemplate>
   </pnp:Templates>
 </pnp:Provisioning>

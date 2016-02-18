@@ -23,6 +23,10 @@ namespace OfficeDevPnP.PartnerPack.ScheduledJob
                 PnPPartnerPackSettings.AppOnlyCertificate);
 
             job.Run();
+
+#if DEBUG
+            Console.ReadLine();
+#endif
         }
     }
 }

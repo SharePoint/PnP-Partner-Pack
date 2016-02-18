@@ -20,5 +20,35 @@
                 </div>
             </div>
         </div>
+        <div class="o365cs-nav-centerAlign">
+            <div class="o365cs-rsp-tw-hide o365cs-rsp-tn-hide" style="display: none;"></div>
+            <div class="o365cs-rsp-tw-hide o365cs-rsp-tn-hide" style="display: none;"></div>
+        </div>
+        <div class="o365cs-nav-rightAlign o365cs-topnavLinkBackground-2" id="O365_TopMenu">
+            <div>
+                <div class="o365cs-nav-rightMenus">
+@if (System.Security.Claims.ClaimsPrincipal.Current != null && System.Security.Claims.ClaimsPrincipal.Current.Identity != null && System.Security.Claims.ClaimsPrincipal.Current.Identity.IsAuthenticated)
+{
+    <div role="banner" aria-label="User settings">
+        <div class="o365cs-nav-topItem o365cs-rsp-tn-hideIfAffordanceOn">
+            <button autoid="_o365sg2c_1" type="button" class="o365cs-nav-item o365cs-nav-button o365cs-me-nav-item o365button ms-bgc-tdr-h ms-fcl-w" role="menuitem" aria-label="Paolo Pialorsi offline menu with submenu" aria-haspopup="true" aria-owns="_ariaId_10" aria-flowto="_ariaId_10">
+                <div class="o365cs-me-tileview-container">
+                    <div autoid="_o365sg2c_2" class="o365cs-me-tileview">
+                        <div autoid="_o365sg2c_3" class="o365cs-me-presence5x50 o365cs-me-presenceColor-Offline"></div>
+                        <span autoid="_o365sg2c_4" class="ms-bgc-nt ms-fcl-w o365cs-me-tileimg o365cs-me-tileimg-doughboy owaimg ms-Icon--person ms-icon-font-size-52"> </span>
+                        <div style="display: none;"></div>
+                        <div class="o365cs-me-tileimg">
+                            <img autoid="_o365sg2c_6" class="o365cs-me-personaimg" src="/Home/GetPersonaPhoto?upn=@(OfficeDevPnP.PartnerPack.SiteProvisioning.Components.MSGraphAPIContext.CurrentUserUPN)&height=64&width=64" title="@(OfficeDevPnP.PartnerPack.SiteProvisioning.Components.MSGraphAPIContext.CurrentUserDisplayName)" style="display: inline; width: 50px; top: 0px;">
+                        </div>
+                    </div>
+                </div>
+                <div style="display: none;"></div>
+            </button>
+        </div>
+    </div>
+}
+                </div>
+            </div>
+        </div>
     </div>
 </div>

@@ -58,6 +58,8 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                     job.JobId,
                     ProvisioningJobStatus.Failed,
                     ex.Message);
+
+                Console.WriteLine("Exception occurred: {0}\nStack Trace:\n{1}\n", ex.Message, ex.StackTrace);
             }
         }
     }

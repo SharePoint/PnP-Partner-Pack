@@ -1,7 +1,7 @@
 # PnP Partner Pack - Manual Setup Guide
 
 ##Solution Overview
-PnP Partner pack allows you to extend the out of the box experience of Microsoft Office 365 and 
+PnP Partner Pack allows you to extend the out of the box experience of Microsoft Office 365 and 
 Microsoft SharePoint Online, by providing the following capabilities:
 * Save Site as Provisioning Template feature in Site Settings
 * Sub-Site creation  with custom UI and PnP Provisioning Template selection
@@ -11,8 +11,10 @@ Microsoft SharePoint Online, by providing the following capabilities:
 * Custom NavBar and Footer for Site Collections with JavaScript object model
 * Sample Timer Jobs (implemented as WebJobs) for Governance rules enforcement
 
+This document is about the **PnP Partner Pack v. 1.1 (February 2016)**.
+
 ## Setup Overview
-From a deployment perspective the PnP Partner Pack is an Office 365 Add-In, which 
+From a deployment perspective the PnP Partner Pack is an Office 365 Application, which 
 leverages an Azure Web App with an Azure Web Sites and some Azure Web Jobs.
 
 The application has to be registered in Azure Active Directory and acts against SharePoint
@@ -24,9 +26,19 @@ the target SharePoint Online tenant.
 This document outlines the manual setup process, which allows you to leverage the 
 PnP Partner Pack in your own environment.
 
-## Manual Installation Steps
+If you already installed the PnP Partner Pack v. 1.0 and you are upgrading it to the
+latest version, which currently is v. 1.1, you can read the following 
+<a href="./Upgrade-From-v1_0-to-v1_1.md">upgrade guide</a>,
+instead of reading this setup guide.
+
+## Requirements
+In order to setup the PnP Partner Pack you need:
+* A valid Microsoft Office 365 tenant with at least an active subscription
+* The PnP PowerShell cmdlets (available here: http://aka.ms/OfficeDevPnPPowerShell) at least of version 2.0.1601.0. To double-check the version of the PnP PowerShell cmdlets, you can invoke the Connect-SPOOnline cmdlet with the -Verbose argument
+
+## Installation Steps
 The manual installation requires to accomplish the following steps:
-* [Azure Active Directory Application registration, as Office 365 Add-In](#azuread)
+* [Azure Active Directory Application registration, as Office 365 Application](#azuread)
 * [Create the self-signed certificate](#createcertificate)
 * [App Only certificate configuration in the Azure AD Application](#apponlyazuread)
 * [Infrastructural Site Collection provisioning](#sitecollection)
@@ -35,9 +47,11 @@ The manual installation requires to accomplish the following steps:
 * [App Only certificate configuration in the Azure Web App](#apponlywebapp)
 * [Azure Web Jobs provisioning](#webjobs)
 
+During the setup guide you will often find two suitable alternatives to gain your goal. The first option will be to use some ready to go PowerShell scripts, which are the suggested path. Alternatively you will find some detailed and manual steps, if you rather prefer to setup everything manually.
+
 <a name="azuread"></a>
 ###Azure Active Directory Application Registration
-First of all, because the PnP Partner Pack is an Office 365 Add-In, you have to register
+First of all, because the PnP Partner Pack is an Office 365 Application, you have to register
 it in the Azure Active Directory tenant that is under the cover of your Office 365 tenant.
 In order to do that, open the Office 365 Admin Center (https://portal.office.com) using
 the account of a user member of the Tenant Global Admins group.
@@ -47,7 +61,7 @@ treeview of the Office 365 Admin Center. In the new browser's tab that will be o
 will find the Microsoft Azure Management Portal. If it is the first time that you access
 the Azure Management Portal with your account, you will have to register a new Azure
 subscription, providing some information and a credit card for any payment need.
-But don't worry, in order to play with Azure AD and to register Office 365 Add-In you
+But don't worry, in order to play with Azure AD and to register Office 365 Application you
 will not pay anything. In fact, those are free capabilities. 
 After having accessed the Azure Management Portal, select the "Active Directory" section,
 by clicking on the icon highlighted in the following screenshot:
@@ -87,6 +101,9 @@ or 2 years for key duration). Press the "Save" button in the lower part of the s
 generate the key value. After saving, you will see the key value. Copy it in a safe place,
 because you will not see it anymore.
 
+**Note:**
+Please ensure that the listed reply URL ends with a trailing slash as shown in below screenshot. 
+
 ![Azure AD - Application Configuration - Client Secret](./Figures/Fig-06-Azure-AD-App-Config-01.png)
 
 Scroll down a little bit more in the UI and configure the Application permissions, within
@@ -95,11 +112,14 @@ the "Permissions to other applications" section, which is illustrated in the fol
 ![Azure AD - Application Configuration - Client Secret](./Figures/Fig-07-Azure-AD-App-Config-02.png)
 
 Click the "Add Application" button, a popup screen will appear. Select "Office 365 SharePoint Online"
-and click the confirmation button. In the main configuration screen you have to configure
-the following application permissions:
+and "Microsoft Graph", then click the confirmation button. In the main configuration screen you have 
+to configure the following application permissions:
 
-* Have full control of all site collection
-* Read and write managed metadata
+* Office 365 SharePoint Online (Application Permission)
+  * Have full control of all site collection
+  * Read and write managed metadata
+* Microsoft Graph (Delegated Permission)
+  * Read and write access to user profile
 
 For further details, see the following figure.
 
@@ -117,11 +137,23 @@ an App Only access token. In order to do that, you have to create and configure 
 X.509 certificate, which will be used to authenticate your Application against Azure AD, while
 requesting the App Only access token. 
 
-First of all, you have to create the self-signer X.509 Certificate, which can be created 
+First of all, you have to create the self-signed X.509 Certificate, which can be created 
 using the makecert.exe tool that is available in the Windows SDK or through a provided PowerShell script which does not have a dependency to makecert. 
 
-####Using makecert
-If you have Microsoft Visual Studio 2013/2015 installed on your enviroment, you already have the makecert tool, as well.
+####Using the Create-SelfSignedCertificate PowerShell Script
+You can use a provided PowerShell script which does not have a dependency to makecert.exe. The script is called <a href="../scripts/Create-SelfSignedCertificate.ps1">Create-SelfSignedCertificate.ps1</a> and is available in the 
+<a href="../scripts/">Scripts folder</a> of this repository.
+
+To create a self signed certificate with this script:
+
+```PowerShell
+.\Create-SelfSignedCertificate.ps1 -CommonName "MyCompanyName" -StartDate 2015-10-25 -EndDate 2016-10-25
+```
+
+You will be asked to provide a password to encrypt your private key, and both the .PFX file and .CER file will be exported to the current folder.
+
+####Using makecert (alternative manual option)
+Alternatively, if you have Microsoft Visual Studio 2013/2015 installed on your enviroment, you already have the makecert tool, as well.
 Otherwise, you will have to download from MSDN and to install the Windows SDK for your current
 version of Windows Operating System.
 
@@ -143,21 +175,17 @@ In the Current User's Personal folder of Certificates, select the just created c
 Select to export the private key into a .PFX file. Provide a password to protect the private key of the certificate.
 Repeat the same process as before, but this time export the certificate as a .CER file, which does not include the private key value.
 
-####Using the Create-SelfSignedCertificate PowerShell Script
-Alternatively you can use a provided PowerShell script which does not have a dependency to makecert.exe. The script is called <a href="../scripts/Create-SelfSignedCertificate.ps1">Create-SelfSignedCertificate.ps1</a> and is available in the 
-<a href="../scripts/">Scripts folder</a> of this repository.
-
-To create a self signed certificate with this script:
-
-```PowerShell
-.\Create-SelfSignedCertificate.ps1 -CommonName "MyCompanyName" -StartDate 2015-10-25 -EndDate 2016-10-25
-```
-
-You will be asked to provide a password to encrypt your private key, and both the .PFX file and .CER file will be exported to the current folder.
-
 <a name="apponlyazuread"></a>
 ### Configure the certificate in the Azure AD application manifest
-Start a PowerShell command window, and execute the following instructions:
+You can execute 
+
+```PowerShell
+Get-SPOAzureADManifestKeyCredentials -CertPath <path to your .cer file> | clip
+```
+
+which will generate the required snippet and copy it to the clipboard.
+
+Alternatively, start a PowerShell command window, and execute the following instructions:
 
 ```PowerShell
 $certPath = Read-Host "Enter certificate path (.cer)"
@@ -186,14 +214,6 @@ Write-Host "Certificate Thumbprint:" $cert.Thumbprint
 
 Copy the output value into a text file, you will use it pretty soon.
 
-
-Alternatively you can execute 
-
-```PowerShell
-Get-SPOAzureADManifestKeyCredentials -CertPath <path to your .cer file> | clip
-```
-
-which will generate the required snippet and copy it to the clipboard.
 
 Go back to the Azure AD Application that you created in the previous step and select the
 "Manage Manifest" button in the lower area of the screen, then select the "Download Manifest" 
@@ -225,9 +245,20 @@ Save the updated manifest and upload it back to Azure AD, by using the "Upload M
 <a name="sitecollection"></a>
 ###Infrastructural Site Collection provisioning
 It is now time to create an infrastructural Site Collection in your Office 365 tenant. You
-can do that using the SharePoint Online Admin Center, or you can use a bunch of PowerShell.
-Here you can see a sample excerpt of a PowerShell script that uses the wonderful PnP
-PowerShell extensions made by <a href="https://twitter.com/erwinvanhunen">Erwin</a> and available <a href="https://github.com/OfficeDev/PnP-PowerShell">here</a>.
+can do that using the SharePoint Online Admin Center, or you can use a PowerShell script.
+
+The 
+<a href="../scripts/Provision-InfrastructureSiteArtifacts.ps1">Provision-InfrastructureSiteArtifacts.ps1</a> PowerShell script file
+that is available in the 
+<a href="../scripts/">Scripts folder</a> of this repository will do everything for you, including replacing
+any parameter within the provisioning templates, in order to make it easier for you to setup the entire solution. 
+This PowerShell script requires some input arguments, which are:
+* InfrastructureSiteUrl: the URL of the SharePoint Online infrastructural Site Collection that you want to create
+* AzureWebSiteUrl: the URL of the Azure Web App Site that you will create later in this setup guide
+* Credentials: the credentials to use in order to authenticate against the target Microsoft Office 365 tenant 
+
+Alternatively, here you can see a sample excerpt of a PowerShell script that uses the wonderful PnP
+PowerShell extensions made by <a href="https://twitter.com/erwinvanhunen">Erwin</a> and maintained by the whole community, which are available <a href="https://github.com/OfficeDev/PnP-PowerShell">here</a>.
 
 ```PowerShell
 Connect-SPOnline "https://[tenant]-admin.sharepoint.com/"
@@ -262,16 +293,12 @@ In the latter library, you will find already uploaded a bunch of Provisioning Te
 organized in sub-folders. You will use them later in this setup guide.
 
 > Notice that the previous code excerpts are just examples, to show you how you should invoke the
-cmdlets. As a suitable alternative, you can use the 
-<a href="../scripts/Provision-InfrastructureSiteArtifacts.ps1">Provision-InfrastructureSiteArtifacts.ps1</a> PowerShell script file
-that is available in the 
-<a href="../scripts/">Scripts folder</a> of this repository. The script will do everything for you, including replacing
-any parameter within the provisioning templates, in order to make it easier for you to setup the entire solution. 
+cmdlets manually. 
 
 <a name="azureblob"></a>
 ###Azure Blob Storage configuration
 To handle some asynchronous tasks, the PnP Partner Pack uses an Azure Blob Storage service
-to queue items. Thus, you will need to configure an Azure Blob Storage accoung.
+to queue items. Thus, you will need to configure an Azure Blob Storage account.
 
 Open the Microsoft Azure Management Portal, with a valid Microsoft Azure 
 subscription, and create a new Azure Blob Storage account. For example, you can call
@@ -292,10 +319,24 @@ for a sample configuration.
  
 ![Azure Web App - Creation](./Figures/Fig-10-Azure-Web-App-01.png)
 
-Now, open the web.config file of the Web Application called OfficeDevPnP.PartnerPack.SiteProvisioning and
+You can configure the web.config file of the web application by using the
+<a href="../scripts/Configure-Configs.ps1">Configure-Configs.ps1</a> PowerShell script file
+that is available in the 
+<a href="../scripts/">Scripts folder</a> of this repository.
+This PowerShell script requires some input arguments, which are:
+* AzureStorageAccountName: the name of the storage account that will be used the infrastructural services and by the job
+* AzureStoragePrimaryAccessKey: the access key to consume the Azure Storage Account
+* ClientId: the OAuth ClientID registered in Azure AD for the PnP Partner Pack application 
+* ClientSecret: the OAuth Client Secret registered in Azure AD for the PnP Partner Pack application 
+* ADTenant: the tenant name of the target Microsoft Office 365 tenant (something like: tenant.onmicrosoft.com)
+* CertificateThumbprint: the thumbprint of the X.509 certificate that will be used for App-Only authentication
+* InfrastructureSiteUrl: the URL of the SharePoint Online infrastructural Site Collection for the PnP Partner Pack 
+
+
+Alternatively, yoy can manually open the web.config file of the Web Application called OfficeDevPnP.PartnerPack.SiteProvisioning and
 available on GitHub at <a href="../OfficeDevPnP.PartnerPack.SiteProvisioning/OfficeDevPnP.PartnerPack.SiteProvisioning">this URL</a>.
 
-Edit the following sections:
+In case you like to configure the application manually, edit the following sections:
 
 ```XML
   <connectionStrings>
@@ -357,13 +398,20 @@ Edit the following sections:
 ```
 
 All the values surrounded by [name] have to be replaced with the corresponding values,
-which you got in one or more of the previous setup steps. You can even use the 
-<a href="../scripts/Configure-Configs.ps1">Configure-Configs.ps1</a> PowerShell script file
-that is available in the 
-<a href="../scripts/">Scripts folder</a> of this repository.
+which you got in one or more of the previous setup steps.
 
 Upload the Azure Web App to the target repository. You can use any of the available
-techniques for doing that (GitHub repository, FTP, Visual Studio Publish, etc.).
+techniques for doing that (GitHub repository, FTP, Visual Studio Publish, etc.). When you
+publish the web application, remember to uncheck the option "Enable Organizational Authentication".
+
+Notice that the web application uses a token cache for ADAL tokens, which are used when accessing 
+the Microsoft Graph API. The token cache provided is based on the web application
+session. Thus, it is not a scalable solution and it cannot be used with multiple instances of the web app.
+However, you can configure a session based on an external persistence provider, like for example the
+<a href="https://azure.microsoft.com/en-us/documentation/articles/cache-asp.net-session-state-provider/">Azure Redis Cache</a>,
+or you can define a token cache handler of your own, using a backend database or
+whatever else. For further details about ADAL and the token cache, you can read the
+<a href="./Architecture-and-Implementation.md">architectural document</a> related to the PnP Partner Pack.
  
 <a name="apponlywebapp"></a>
 ###App Only certificate configuration in the Azure Web App
@@ -388,7 +436,7 @@ you can see a sample configuration.
 
 This last setting allows the Azure Web App to access the service account's personal certificate
 store to read the App Only X.509 certificate.
-You are now ready to play with your Office 365 Add-In. Simply open an Office 365 user session,
+You are now ready to play with your Office 365 Application. Simply open an Office 365 user session,
 click on the App Launcher and select the "My Apps" command.
 
 ![Office 365 App Launcher - My Apps](./Figures/Fig-14-O365-App-Launcher.png)
@@ -416,12 +464,11 @@ If the check fails, the job sends and email alert to the unique Site Collection 
 
 In order to publish the Jobs, you will need to configure the App.Config of the jobs, providing 
 almost the same parameters that you configured for the Web Application and/or the other Jobs.
-To configured the jobs, you can also use the <a href="../scripts/Configure-Configs.ps1">Configure-Configs.ps1</a> PowerShell script file
+To configured the jobs, you can use the <a href="../scripts/Configure-Configs.ps1">Configure-Configs.ps1</a> PowerShell script file
 that is available in the <a href="../scripts/">Scripts folder</a> of this repository.
 
-Moreover, you will have to publish them into the Azure Web App. To provision the Governance Jobs (*CheckAdminJob* and *ExternalUsersJob*) you can also use
+Moreover, you will have to publish them into the Azure Web App. To provision the Governance Jobs (*CheckAdminJob* and *ExternalUsersJob*) you can use
 the <a href="../scripts/Provision-GovernanceTimerJobs.ps1">Provision-GovernanceTimerJobs.ps1</a> PowerShell script file
 that is available in the <a href="../scripts/">Scripts folder</a> of this repository.
 
-> Further details about how to publish the Azure Web Jobs into a target Azure Web App will
-be provided shortly. In the meantime you can read the following article: <a href="https://azure.microsoft.com/en-gb/documentation/articles/websites-dotnet-deploy-webjobs/">Deploy WebJobs using Visual Studio</a>.
+> Further details about how to publish Azure Web Jobs can be read in the following article: <a href="https://azure.microsoft.com/en-gb/documentation/articles/websites-dotnet-deploy-webjobs/">Deploy WebJobs using Visual Studio</a>.

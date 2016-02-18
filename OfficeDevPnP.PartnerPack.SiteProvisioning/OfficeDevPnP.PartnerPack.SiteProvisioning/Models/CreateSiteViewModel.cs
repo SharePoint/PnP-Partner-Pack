@@ -37,6 +37,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
         public Int32 Language { get; set; }
 
         [Required(ErrorMessage = "Template is a required field!")]
+        [MinLength(1)]
         [DisplayName("Template")]
         [UIHint("ProvisioningTemplate")]
         public String ProvisioningTemplateUrl { get; set; }

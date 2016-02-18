@@ -38,7 +38,9 @@ SharePoint Online Site Collection, without the need to install and trust an Add-
 for each and every target Site Collection.
 
 Moreover, the application runs against SharePoint
-Only by leveraging an AppOnly access token, to allow to any user to leverage the provided capabilities.
+Online by leveraging an AppOnly access token, to allow to any user to leverage the provided capabilities.
+The application also consumes the Microsoft Graph API with an OAuth access token related to the current
+user identity. 
 
 The application requires to have tenant-level permissions for the application by itself (AppOnly).
 However, we assume that the requirement of having tenant-level permissions is not a road
@@ -58,7 +60,7 @@ This Site Collection is created during the setup phase of the PnP Partner Pack, 
 fundamental artifacts like:
 * *PnPProvisioningJobs*: Document Library that stores Provisioning Jobs. You can learn more about this
 topic in the [Asynchronous Jobs Handling](#asyncJobsHandling) section.
-* *PnPProvisioningTemplates*: Document Library that stores tenat-level global Provisioning Templates. It
+* *PnPProvisioningTemplates*: Document Library that stores tenant-level global Provisioning Templates. It
 is used to share PnP Provisioning Templates (manually defined or saved from an existing site) that can
 be applied while provisioning sites across all the Site Collections of the current tenant.
 
@@ -77,7 +79,7 @@ that basically provides the implementation for a unique Controller called *HomeC
 The *HomeController* provides the logic for handling all the main capabilities like:
 * Save Site As Provisioning Template: based on the *SaveSiteAsTemplate* action.
 * Site Collection Provisioning UI: based on the *CreateSiteCollection* action. 
-* Sub-Site Provisioning UI: based on the *CreateSubSite* actinon.
+* Sub-Site Provisioning UI: based on the *CreateSubSite* action.
 * Settings capability: based on the *Settings* action.
 * My Site Collections UI: based on the *MyProvisionedSites* action.
 
@@ -107,6 +109,17 @@ As you can see the only difference is the View related to collecting information
 provisioning target. In fact, provisioning a Site Collection requires some information that are
 different from those required to provision a Sub-Site. However, all the other wizard steps will share
 the same base Model (*CreateSiteViewModel*) to store generic provisioning configurations.
+
+In order to consume the Microsoft Graph API, the application uses Active Directory Authentication Library (ADAL).
+Notice that ADAL uses a token cache for OAuth tokens. For the sake of simplicity, the token cache provided is
+based on the web application session and is implemented in type *SessionTokenCache*. 
+However,  a session-based token cache  is not a scalable solution and it cannot be used with multiple instances of the web app.
+Nevertheless, you can configure a session based on an external persistence provider, like for example the
+<a href="https://azure.microsoft.com/en-us/documentation/articles/cache-asp.net-session-state-provider/">Azure Redis Cache</a>,
+or you can define a token cache handler of your own, using a backend database or
+whatever else. For further details about ADAL and the token cache, you can read the book
+<a href="https://www.microsoftpressstore.com/store/modern-authentication-with-azure-active-directory-for-9780735696945">"Modern Authentication with Azure
+Active Directory for Web Applications"</a> written by <a href="http://www.cloudidentity.com/">Vittorio Bertocci</a>.
 
 Aside from that, the Azure Web App is a very common ASP.NET MVC Web Application, which internally 
 leverages the PnP Partner Pack Infrastructural Library to accomplish any real business task.
@@ -284,7 +297,7 @@ As you can see the main configuration elements are:
 applying the PnP Provisioning Template. We suggest using the STS#0 (SharePoint "Team Site"), which is
 the most commonly used and the one that we tested more. Of course, you are free to change this option.
 It also defines the LogoUrl and the Title that will be used to rendere the pages of the PnP Partner Pack.
-Moreover, it defines the Welcome Message and the Footer Messagge for the Home Page and the global layout
+Moreover, it defines the Welcome Message and the Footer Message for the Home Page and the global layout
 view of the MVC site that renders the Site Provisioning engine.
 * *TenantSettings*: defines the information about the target Office 365 tenant, the thumbprint of the
 X.509 certificate to use for AppOnly authentication against Azure AD and the target SharePoint Online, 
@@ -293,8 +306,8 @@ and the URL of the Infrastructural Site Collection.
 change this configuration in order to use a custom Provisioning Repository.
 * *ProvisioningJobs*: declares what are the Job Handlers, the Job Types, and the execution model of the
 Job Types. An execution model value of *Scheduled* means that the Job will be executed by the
-*ScheduledJob*, while a value of *Continuous* means that the Job will be executed by the *ContinousJob*.
-If you create any custom Job, you will have to define the Job Type and the Job Handler through this
+*ScheduledJob*, while a value of *Continous* means that the Job will be executed by the *ContinousJob*.
+If you create any custom Job, you will have to define the Job Type and the Job  Handler through this
 elements. For further details about the Job Handling, please read the following section.
 
 <a name="asyncJobsHandling"></a>
@@ -380,7 +393,7 @@ Here is a list of important things to know in order to master the PnP Partner Pa
 ###AppOnly Access Token and Authorization Rules
 Keep in mind that the PnP Partner Pack runs with an AppOnly token against SharePoint Online. This
 allows any user to play with the solution. However, the current implementation of the solution does
-not provide any authorization rules. We do suggest you to customize the solution, which is open source,
+not provide any authorization rules. We advise you to customize the solution, which is open source,
 in order to include your own custom authorization rules.
 
 ###Taxonomies Support

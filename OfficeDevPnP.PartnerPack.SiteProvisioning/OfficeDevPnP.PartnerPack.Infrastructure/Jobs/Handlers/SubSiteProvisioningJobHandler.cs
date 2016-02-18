@@ -1,5 +1,6 @@
 ﻿using Microsoft.SharePoint.Client;
 using OfficeDevPnP.Core.Framework.Provisioning.Model;
+using OfficeDevPnP.Core.Framework.Provisioning.ObjectHandlers;
 using OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml;
 using System;
 using System.Collections.Generic;
@@ -68,6 +69,13 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                 ProvisioningTemplate template = provider.GetTemplate(templateFileName);
                 template.Connector = provider.Connector;
 
+                // We do intentionally remove taxonomies, which are not supported in the AppOnly Authorization model
+                // For further details, see the PnP Partner Pack documentation 
+                ProvisioningTemplateApplyingInformation ptai =
+                    new ProvisioningTemplateApplyingInformation();
+                ptai.HandlersToProcess ^=
+                    OfficeDevPnP.Core.Framework.Provisioning.Model.Handlers.TermGroups;
+
                 // Configure template parameters
                 foreach (var key in template.Parameters.Keys)
                 {
@@ -78,7 +86,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                 }
 
                 // Apply the template to the target site
-                web.ApplyProvisioningTemplate(template);
+                web.ApplyProvisioningTemplate(template, ptai);
 
                 Console.WriteLine("Applyed Provisioning Template \"{0}\" to site.",
                     job.ProvisioningTemplateUrl);

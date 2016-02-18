@@ -1,15 +1,14 @@
-<?xml version="1.0"?>
-<pnp:Provisioning xmlns:pnp="http://schemas.dev.office.com/PnP/2015/08/ProvisioningSchema">
-  <pnp:Preferences Generator="OfficeDevPnP.Core, Version=1.7.1015.0, Culture=neutral, PublicKeyToken=null">
+<pnp:Provisioning xmlns:pnp="http://schemas.dev.office.com/PnP/2015/12/ProvisioningSchema">
+  <pnp:Preferences Generator="OfficeDevPnP.Core, Version=2.1.1602.0, Culture=neutral, PublicKeyToken=null">
     <pnp:Parameters>
-      <pnp:Parameter Key="AzureWebSiteUrl" Required="true"></pnp:Parameter>
+      <pnp:Parameter Key="AzureWebSiteUrl" Required="true">https://pnp-partner-pack.azurewebsites.net</pnp:Parameter>
     </pnp:Parameters>
   </pnp:Preferences>
-  <pnp:Templates ID="PNP-PARTNER-PACK-OVERRIDES-CONTAINER">
+  <pnp:Templates ID="CONTAINER-PNP-PARTNER-PACK-OVERRIDES">
     <pnp:ProvisioningTemplate ID="PNP-PARTNER-PACK-OVERRIDES" Version="1">
       <pnp:CustomActions>
         <pnp:SiteCustomActions>
-          <pnp:CustomAction Name="PnPPartnerPackOverrides" Location="ScriptLink" Sequence="0" Rights="0" ScriptBlock=" var headID = document.getElementsByTagName('head')[0]; &#xD;&#xA;var scripts = document.getElementsByTagName('script');&#xD;&#xA;var scriptsSrc = [];&#xD;&#xA;for(var i = 0; i &lt; scripts.length; i++) {&#xD;&#xA;    if(scripts[i].type === 'text/javascript'){&#xD;&#xA;        scriptsSrc.push(scripts[i].src);&#xD;&#xA;    }&#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;if (scriptsSrc.indexOf('{parameter:AzureWebSiteUrl}/Templates/Overrides/PnP-Partner-Pack-Overrides.js?rev=457cefaa69cc4d6d9d37cecc6cb04dc3') === -1)  {  &#xD;&#xA;    var newScript = document.createElement('script');&#xD;&#xA;    newScript.id = 'PnPPartnerPackOverrides';&#xD;&#xA;    newScript.type = 'text/javascript';&#xD;&#xA;    newScript.src = '{parameter:AzureWebSiteUrl}/Templates/Overrides/PnP-Partner-Pack-Overrides.js?rev=457cefaa69cc4d6d9d37cecc6cb04dc3';&#xD;&#xA;    headID.appendChild(newScript);&#xD;&#xA;    scriptsSrc.push('{parameter:AzureWebSiteUrl}/Templates/Overrides/PnP-Partner-Pack-Overrides.js?rev=457cefaa69cc4d6d9d37cecc6cb04dc3');&#xD;&#xA;}">
+          <pnp:CustomAction Name="PnPPartnerPackOverrides" Location="ScriptLink" Sequence="0" Rights="" ScriptBlock="&#xD;&#xA;                var headID = document.getElementsByTagName('head')[0]; &#xD;&#xA;                var&#xD;&#xA;                newScript = document.createElement('script');&#xD;&#xA;                newScript.type = 'text/javascript';&#xD;&#xA;                newScript.src = '{parameter:AzureWebSiteUrl}/Templates/Overrides/PnP-Partner-Pack-Overrides.js?rev=457cefaa69cc4d6d9d37cecc6cb04dc3';&#xD;&#xA;                newScript.id = 'PnPPartnerPackOverrides';&#xD;&#xA;                headID.appendChild(newScript);">
             <pnp:CommandUIExtension />
           </pnp:CustomAction>
         </pnp:SiteCustomActions>
