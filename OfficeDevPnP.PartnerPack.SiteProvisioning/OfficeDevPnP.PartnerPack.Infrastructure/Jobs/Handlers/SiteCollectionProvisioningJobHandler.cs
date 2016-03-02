@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
@@ -36,6 +37,8 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
 
             using (var adminContext = PnPPartnerPackContextProvider.GetAppOnlyTenantLevelClientContext())
             {
+                adminContext.RequestTimeout = Timeout.Infinite;
+
                 // Configure the Site Collection properties
                 SiteEntity newSite = new SiteEntity();
                 newSite.Description = job.Description;
