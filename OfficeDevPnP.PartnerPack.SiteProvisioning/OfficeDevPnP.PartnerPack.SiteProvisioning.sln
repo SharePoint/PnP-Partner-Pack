@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfficeDevPnP.PartnerPack.SiteProvisioning", "OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning.csproj", "{9123B66F-A7A9-4E8E-83A2-9EC1FC4B57B3}"
 EndProject
@@ -29,6 +29,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{17065892-0FA9-4BBE-85CF-14C3D0BC9C3C}"
 	ProjectSection(SolutionItems) = preProject
 		..\scripts\Configure-Configs.ps1 = ..\scripts\Configure-Configs.ps1
+		..\scripts\Create-SelfSignedCertificate.ps1 = ..\scripts\Create-SelfSignedCertificate.ps1
+		..\scripts\Get-SelfSignedCertificateInformation.ps1 = ..\scripts\Get-SelfSignedCertificateInformation.ps1
 		..\scripts\Provision-GovernanceTimerJobs.ps1 = ..\scripts\Provision-GovernanceTimerJobs.ps1
 		..\scripts\Provision-InfrastructureSiteArtifacts.ps1 = ..\scripts\Provision-InfrastructureSiteArtifacts.ps1
 		..\scripts\Reset-Configs.ps1 = ..\scripts\Reset-Configs.ps1
