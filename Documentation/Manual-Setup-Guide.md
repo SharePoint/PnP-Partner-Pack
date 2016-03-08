@@ -404,10 +404,8 @@ When you publish a web job that requires to be run at a schedule your web job by
 
 Below screen shots shows some of the above steps in action:
 
-![](http://i.imgur.com/QG7pipK.png)
+![](http://i.imgur.com/WVtnAgX.png)
 
-![](http://i.imgur.com/SACHXOi.png)
-
-
+![](http://i.imgur.com/UR5TsF3.png)
 
 
