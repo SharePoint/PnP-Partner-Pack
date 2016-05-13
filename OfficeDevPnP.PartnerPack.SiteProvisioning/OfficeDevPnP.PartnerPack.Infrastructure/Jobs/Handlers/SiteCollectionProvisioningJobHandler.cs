@@ -169,6 +169,12 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                     }
 
                     web.ApplyProvisioningTemplate(template, ptai);
+
+                    //Set site policy template
+                    if (!String.IsNullOrEmpty(job.SitePolicy))
+                    {
+                        web.ApplySitePolicy(job.SitePolicy);
+                    }
                 }
 
                 Console.WriteLine("Applyed Provisioning Template \"{0}\" to site.",
