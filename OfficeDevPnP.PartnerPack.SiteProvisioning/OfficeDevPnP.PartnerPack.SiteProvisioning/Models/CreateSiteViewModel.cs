@@ -20,6 +20,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
         public String Title { get; set; }
 
         [Required(ErrorMessage = "Relative URL is a required field!")]
+        [MaxLength(33)]
         [DisplayName("Relative URL")]
         public String RelativeUrl { get; set; }
 
