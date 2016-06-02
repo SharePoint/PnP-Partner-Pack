@@ -134,7 +134,7 @@ You can execute
 Get-SPOAzureADManifestKeyCredentials -CertPath <path to your .cer file> | clip
 ```
 
-which will generate the required snippet and copy it to the clipboard.
+which will generate the required snippet and copy it to the clipboard. (Note: the Get-SPOAzureADManifestKeyCredentials command will not currently provide the certificate thumbprint needed for configuration later in the document.)
 
 Alternatively, start a PowerShell command window, and execute the following instructions:
 
