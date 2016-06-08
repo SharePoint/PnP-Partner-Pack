@@ -134,6 +134,15 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
 
                         job.TemplateParameters = model.TemplateParameters;
 
+                        if (string.IsNullOrEmpty(job.PrimarySiteCollectionAdmin))
+                        {
+                            job.PrimarySiteCollectionAdmin = model.PrimarySiteCollectionAdmin[0].Login.Split('|')[2];
+                        }
+                        if (string.IsNullOrEmpty(job.SecondarySiteCollectionAdmin))
+                        {
+                            job.SecondarySiteCollectionAdmin = model.SecondarySiteCollectionAdmin[0].Login.Split('|')[2];
+                        }
+
                         model.JobId = ProvisioningRepositoryFactory.Current.EnqueueProvisioningJob(job);
                     }
                     break;
