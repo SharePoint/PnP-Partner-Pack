@@ -115,10 +115,18 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
                         job.RelativeUrl = String.Format("/{0}/{1}", model.ManagedPath, model.RelativeUrl);
                         job.SitePolicy = model.SitePolicy;
                         job.Owner = ClaimsPrincipal.Current.Identity.Name;
+
                         job.PrimarySiteCollectionAdmin = model.PrimarySiteCollectionAdmin != null &&
-                            model.PrimarySiteCollectionAdmin.Length > 0 ? model.PrimarySiteCollectionAdmin[0].Email : null;
+                            model.PrimarySiteCollectionAdmin.Length > 0 ? 
+                                (!String.IsNullOrEmpty(model.PrimarySiteCollectionAdmin[0].Email) ? 
+                                model.PrimarySiteCollectionAdmin[0].Email : 
+                                model.PrimarySiteCollectionAdmin[0].Login.Split('|')[2]) : null;
                         job.SecondarySiteCollectionAdmin = model.SecondarySiteCollectionAdmin != null &&
-                            model.SecondarySiteCollectionAdmin.Length > 0 ? model.SecondarySiteCollectionAdmin[0].Email : null;
+                            model.SecondarySiteCollectionAdmin.Length > 0 ?
+                                (!String.IsNullOrEmpty(model.SecondarySiteCollectionAdmin[0].Email) ? 
+                                model.SecondarySiteCollectionAdmin[0].Email : 
+                                model.SecondarySiteCollectionAdmin[0].Login.Split('|')[2]) : null;
+
                         job.ProvisioningTemplateUrl = model.ProvisioningTemplateUrl;
                         job.StorageMaximumLevel = model.StorageMaximumLevel;
                         job.StorageWarningLevel = model.StorageWarningLevel;
@@ -133,15 +141,6 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
                             job.Owner);
 
                         job.TemplateParameters = model.TemplateParameters;
-
-                        if (string.IsNullOrEmpty(job.PrimarySiteCollectionAdmin))
-                        {
-                            job.PrimarySiteCollectionAdmin = model.PrimarySiteCollectionAdmin[0].Login.Split('|')[2];
-                        }
-                        if (string.IsNullOrEmpty(job.SecondarySiteCollectionAdmin))
-                        {
-                            job.SecondarySiteCollectionAdmin = model.SecondarySiteCollectionAdmin[0].Login.Split('|')[2];
-                        }
 
                         model.JobId = ProvisioningRepositoryFactory.Current.EnqueueProvisioningJob(job);
                     }
