@@ -21,7 +21,7 @@ If you already installed the PnP Partner Pack version 1.0 and you are upgrading 
 ## Requirements
 In order to setup the PnP Partner Pack you need:
 * A valid **Microsoft Office 365 tenant** with at least an active subscription
-* The **PnP PowerShell cmdlets** (available here: http://aka.ms/OfficeDevPnPPowerShell). The minimum version you need is version 2.0.1601.0. To double-check the version of the PnP PowerShell cmdlets, you can invoke the `Connect-SPOOnline`  cmdlet with the `-Verbose` argument
+* The **PnP PowerShell cmdlets** (available here: http://aka.ms/OfficeDevPnPPowerShell). The minimum version you need is version 2.0.1601.0. To double-check the version of the PnP PowerShell cmdlets, you can invoke the `Connect-SPOnline`  cmdlet with the `-Verbose` argument
 
 ## Installation Steps
 The manual installation requires to accomplish the following steps:
