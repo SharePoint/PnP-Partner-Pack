@@ -1,0 +1,17 @@
+﻿@using Kasanova.it.WorkflowEngine.O365App.Models
+@model CustomRadioList
+@{
+    var fieldName = Html.NameFor(m => m);
+    var isReadOnly = ViewData.Keys.Contains("readonly")
+        || ((ViewData.Keys.Contains("Keys")
+            || ViewData.Keys.Contains("Values"))
+            && ViewData.Values.Any(v => (v != null && v.GetType() == typeof(Dictionary<string, object>.KeyCollection)) ? ((Dictionary<string, object>.KeyCollection)v).Contains("readonly") : false));
+}
+
+<div id="@($"{fieldName}Div")">
+    <label class="ms-Label" id="@($"{fieldName}Label")">@(!String.IsNullOrEmpty(ViewData.ModelMetadata.DisplayName) ? ViewData.ModelMetadata.DisplayName : String.Empty)</label>
+    @foreach (var r in Model.Items)
+    {
+    <input type="radio" name="@Html.NameFor(m => m.SelectedValue)" title="@r.Text" value="@r.Value" @((r.IsSelected) ? "checked" : "") @((isReadOnly) ? "disabled" : "")/> @r.Text<br/>
+    }    
+</div>

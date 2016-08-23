@@ -9,6 +9,10 @@
     padding-right: 15px;
 }
 
+#mainContent {
+    margin-top: 20px;
+}
+
 .container {
     margin-left: 145px;
 }
@@ -47,7 +51,7 @@ a:hover {
 }
 
 .scrollableContent {
-    overflow: auto;
+    /* overflow: auto; */
 }
 
 .waitWorking {

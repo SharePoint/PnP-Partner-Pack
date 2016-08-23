@@ -23,6 +23,9 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/fabric").Include(
+                      "~/Scripts/jquery.fabric.*"));
+
             bundles.Add(new ScriptBundle("~/bundles/spoextensions").Include(
                       "~/Scripts/sppeoplepicker.js",
                       "~/Scripts/custom.js"));
@@ -30,6 +33,8 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/Office365SuiteBar.css",
+                      "~/Content/fabric.css",
+                      "~/Content/fabric.components.css",
                       "~/Content/site.css"));
         }
     }

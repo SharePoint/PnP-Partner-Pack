@@ -21,61 +21,6 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
     public static class HttpHelper
     {
         /// <summary>
-        /// This helper method returns and OAuth Access Token for the current user
-        /// </summary>
-        /// <param name="resourceId">The resourceId for which we are requesting the token</param>
-        /// <returns>The OAuth Access Token value</returns>
-        public static String GetAccessTokenForCurrentUser(String resourceId = null)
-        {
-            String accessToken = null;
-            if (String.IsNullOrEmpty(resourceId))
-            {
-                resourceId = MicrosoftGraphConstants.MicrosoftGraphResourceId;
-            }
-
-            try
-            {
-                ClientCredential credential = new ClientCredential(
-                    PnPPartnerPackSettings.ClientId,
-                    PnPPartnerPackSettings.ClientSecret);
-                string signedInUserID = System.Security.Claims.ClaimsPrincipal.Current.FindFirst(
-                    ClaimTypes.NameIdentifier).Value;
-                string tenantId = System.Security.Claims.ClaimsPrincipal.Current.FindFirst(
-                    "http://schemas.microsoft.com/identity/claims/tenantid").Value;
-                AuthenticationContext authContext = new AuthenticationContext(
-                    PnPPartnerPackSettings.AADInstance + tenantId,
-                    new SessionADALCache(signedInUserID));
-
-                AuthenticationResult result = authContext.AcquireTokenSilent(
-                    resourceId,
-                    credential,
-                    UserIdentifier.AnyUser);
-
-                accessToken = result.AccessToken;
-            }
-            catch (AdalException ex)
-            {
-                if (ex.ErrorCode == "failed_to_acquire_token_silently")
-                {
-                    // Refresh the access token from scratch
-                    HttpContext.Current.GetOwinContext().Authentication.Challenge(
-                        new AuthenticationProperties
-                        {
-                            RedirectUri = HttpContext.Current.Request.Url.ToString(),
-                        },
-                        OpenIdConnectAuthenticationDefaults.AuthenticationType);
-                }
-                else
-                {
-                    // Rethrow the exception
-                    throw ex;
-                }
-            }
-
-            return (accessToken);
-        }
-
-        /// <summary>
         /// This helper method makes an HTTP GET request and returns the result as a String
         /// </summary>
         /// <param name="requestUrl">The URL of the request</param>

@@ -1,0 +1,12 @@
+﻿@model HttpPostedFileBase
+
+@{
+    var fieldId = Html.IdFor(m => m);
+    var fieldName = Html.NameFor(m => m);
+    var isReadOnly = ViewData.Keys.Contains("readonly");
+}
+<div id="@($"{ViewData.ModelMetadata.PropertyName}Div")">
+    <label id="@($"{ViewData.ModelMetadata.PropertyName}Label")">@(!String.IsNullOrEmpty(ViewData.ModelMetadata.Description) ? ViewData.ModelMetadata.Description : ViewData.ModelMetadata.DisplayName)</label>
+    <input type="file" id="@(fieldId)" name="@(fieldName)" @((isReadOnly) ? "readonly" : "") />
+    <br/>
+</div>

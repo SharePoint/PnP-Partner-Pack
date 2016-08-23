@@ -8,6 +8,30 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Components
 {
     public static class MSGraphAPIContext
     {
+        public static String CurrentUserInitials
+        {
+            get
+            {
+                String result = null;
+
+                var name = System.Security.Claims.ClaimsPrincipal.Current.FindFirst("name");
+                if (name != null)
+                {
+                    var nameParts = name.Value.Split(new String[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                    if (nameParts.Length >= 2)
+                    {
+                        result = nameParts[0].Substring(0, 1) + nameParts[1].Substring(0, 1);
+                    }
+                    else
+                    {
+                        result = nameParts[0].Substring(0, 2);
+                    }
+                }
+
+                return (result.ToUpper());
+            }
+        }
+
         public static String CurrentUserUPN
         {
             get

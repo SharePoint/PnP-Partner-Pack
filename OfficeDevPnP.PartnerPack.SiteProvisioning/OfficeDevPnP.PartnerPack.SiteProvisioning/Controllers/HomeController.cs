@@ -36,7 +36,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
                 model.InfrastructuralSiteUrl = web.Url;
             }
 
-            var currentUser = GetCurrentUser();
+            var currentUser = UserUtility.GetCurrentUser();
             if (currentUser != null)
             {
                 model.CurrentUserPrincipalName = currentUser.UserPrincipalName;
@@ -117,15 +117,15 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
                         job.Owner = ClaimsPrincipal.Current.Identity.Name;
 
                         job.PrimarySiteCollectionAdmin = model.PrimarySiteCollectionAdmin != null &&
-                            model.PrimarySiteCollectionAdmin.Length > 0 ? 
-                                (!String.IsNullOrEmpty(model.PrimarySiteCollectionAdmin[0].Email) ? 
-                                model.PrimarySiteCollectionAdmin[0].Email : 
-                                model.PrimarySiteCollectionAdmin[0].Login.Split('|')[2]) : null;
+                            model.PrimarySiteCollectionAdmin.Principals.Count > 0 ? 
+                                (!String.IsNullOrEmpty(model.PrimarySiteCollectionAdmin.Principals[0].Mail) ? 
+                                model.PrimarySiteCollectionAdmin.Principals[0].Mail : 
+                                null): null;
                         job.SecondarySiteCollectionAdmin = model.SecondarySiteCollectionAdmin != null &&
-                            model.SecondarySiteCollectionAdmin.Length > 0 ?
-                                (!String.IsNullOrEmpty(model.SecondarySiteCollectionAdmin[0].Email) ? 
-                                model.SecondarySiteCollectionAdmin[0].Email : 
-                                model.SecondarySiteCollectionAdmin[0].Login.Split('|')[2]) : null;
+                            model.SecondarySiteCollectionAdmin.Principals.Count > 0 ?
+                                (!String.IsNullOrEmpty(model.SecondarySiteCollectionAdmin.Principals[0].Mail) ?
+                                model.SecondarySiteCollectionAdmin.Principals[0].Mail :
+                                null) : null;
 
                         job.ProvisioningTemplateUrl = model.ProvisioningTemplateUrl;
                         job.StorageMaximumLevel = model.StorageMaximumLevel;
@@ -406,12 +406,6 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetPeoplePickerData()
-        {
-            return Json(PeoplePickerHelper.GetPeoplePickerSearchData());
-        }
-
-        [HttpPost]
         public ActionResult GetSiteCollectionSettings(String siteCollectionUri)
         {
             return PartialView(PnPPartnerPackUtilities.GetSiteCollectionSettings(siteCollectionUri));
@@ -436,93 +430,6 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         public ActionResult Error(string message)
         {
             throw new Exception(message);
-        }
-
-        public ActionResult GetPersonaPhoto(String upn, Int32 width = 0, Int32 height = 0)
-        {
-            Stream result = null;
-            String contentType = "image/png";
-
-            var sourceStream = GetUserPhoto(upn);
-
-            if (sourceStream != null && width != 0 && height != 0)
-            {
-                Image sourceImage = Image.FromStream(sourceStream);
-                Image resultImage = ScaleImage(sourceImage, width, height);
-
-                result = new MemoryStream();
-                resultImage.Save(result, ImageFormat.Png);
-                result.Position = 0;
-            }
-            else
-            {
-                result = sourceStream;
-            }
-
-            if (result != null)
-            {
-                return base.File(result, contentType);
-            }
-            else
-            {
-                return new HttpStatusCodeResult(System.Net.HttpStatusCode.NoContent);
-            }
-        }
-
-        /// <summary>
-        /// This method retrieves the current user from Azure AD
-        /// </summary>
-        /// <returns>The user retrieved from Azure AD</returns>
-        public static LightGraphUser GetCurrentUser()
-        {
-            String jsonResponse = HttpHelper.MakeGetRequestForString(
-                String.Format("{0}me",
-                    MicrosoftGraphConstants.MicrosoftGraphV1BaseUri),
-                    HttpHelper.GetAccessTokenForCurrentUser(MicrosoftGraphConstants.MicrosoftGraphResourceId));
-
-            if (jsonResponse != null)
-            {
-                var user = JsonConvert.DeserializeObject<LightGraphUser>(jsonResponse);
-                return (user);
-            }
-            else
-            {
-                return (null);
-            }
-        }
-
-        /// <summary>
-        /// This method retrieves the photo of a single user from Azure AD
-        /// </summary>
-        /// <param name="upn">The UPN of the user</param>
-        /// <returns>The user's photo retrieved from Azure AD</returns>
-        private static Stream GetUserPhoto(String upn)
-        {
-            String contentType = "image/png";
-
-            var result = HttpHelper.MakeGetRequestForStream(
-                String.Format("{0}users/{1}/photo/$value",
-                    MicrosoftGraphConstants.MicrosoftGraphV1BaseUri, upn),
-                contentType);
-
-            return (result);
-        }
-
-        private Image ScaleImage(Image image, int maxWidth, int maxHeight)
-        {
-            var ratioX = (double)maxWidth / image.Width;
-            var ratioY = (double)maxHeight / image.Height;
-            var ratio = Math.Min(ratioX, ratioY);
-
-            var newWidth = (int)(image.Width * ratio);
-            var newHeight = (int)(image.Height * ratio);
-
-            var newImage = new Bitmap(newWidth, newHeight);
-
-            using (var graphics = Graphics.FromImage(newImage))
-                graphics.DrawImage(image, 0, 0, newWidth, newHeight);
-
-            return newImage;
         }
     }
 }

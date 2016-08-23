@@ -1,4 +1,14 @@
-﻿$(document).ready(function () {
+﻿function FixPersonaImages() {
+    $(".ms-Persona-image").error(function () {
+        $(this).hide();
+    });
+}
+
+$(document).ready(function () {
+
+    // Hide any unavailable persona image
+    FixPersonaImages();
+
     // Check to make sure the NavBar plugin is available, then run it
     if ($.fn.NavBar) {
         $('.ms-NavBar').NavBar();
