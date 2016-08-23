@@ -9,6 +9,7 @@ using System.Xml.Linq;
 using OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml;
 using System.Xml;
 using OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers;
+using System.Runtime.Remoting.Messaging;
 
 namespace OfficeDevPnP.PartnerPack.Infrastructure
 {
@@ -152,6 +153,8 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
                 return (_tenant);
             }
         }
+
+        public static String Authority = AADInstance + Tenant;
 
         /// <summary>
         /// Provides the URL of the PnP Partner Pack Infrastructural Site
@@ -338,5 +341,16 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
         /// The name of the Azure Storage Queue used for Continously running Jobs
         /// </summary>
         public const String StorageQueueName = "pnppartnerpackjobsqueue";
+
+        public static String ParentSiteUrl {
+            get
+            {
+                return (CallContext.LogicalGetData(typeof(PnPPartnerPackSettings).Name + ".ParentSiteUrl") as String);
+            }
+            set
+            {
+                CallContext.LogicalSetData(typeof(PnPPartnerPackSettings).Name + ".ParentSiteUrl", value);
+            }
+        }
     }
 }

@@ -50,7 +50,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
         [DisplayName("Template Parameters")]
         public Dictionary<String, String> TemplateParameters { get; set; }
 
-        public TemplateScope Scope { get; set; }
+        public TargetScope Scope { get; set; }
 
         public String ParentSiteUrl { get; set; }
     }

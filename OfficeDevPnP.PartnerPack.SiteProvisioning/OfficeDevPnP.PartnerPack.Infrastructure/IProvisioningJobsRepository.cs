@@ -1,45 +1,17 @@
-﻿using OfficeDevPnP.PartnerPack.Infrastructure.Jobs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OfficeDevPnP.PartnerPack.Infrastructure.Jobs;
 
 namespace OfficeDevPnP.PartnerPack.Infrastructure
 {
     /// <summary>
-    /// Interface that defines the common behavior for any Sites Provisioning Repository
+    /// Interface that defines the common behavior for any Provisioning Jobs Repository
     /// </summary>
-    public interface IProvisioningRepository : IConfigurable
+    public interface IProvisioningJobsRepository
     {
-        /// <summary>
-        /// Retrieves the list of Global Provisioning Templates
-        /// </summary>
-        /// <param name="scope">The scope to filter the provisioning templates</param>
-        /// <returns>Returns the list of Provisioning Templates</returns>
-        ProvisioningTemplateInformation[] GetGlobalProvisioningTemplates(TargetScope scope);
-
-        /// <summary>
-        /// Retrieves the list of Local Provisioning Templates
-        /// </summary>
-        /// <param name="siteUrl">The local Site Collection to retrieve the templates from</param>
-        /// <param name="scope">The scope to filter the provisioning templates</param>
-        /// <returns>Returns the list of Provisioning Templates</returns>
-        ProvisioningTemplateInformation[] GetLocalProvisioningTemplates(String siteUrl, TargetScope scope);
-
-        /// <summary>
-        /// Saves a Provisioning Template into the target Global repository
-        /// </summary>
-        /// <param name="template">The Provisioning Template to save</param>
-        void SaveGlobalProvisioningTemplate(GetProvisioningTemplateJob job);
-
-        /// <summary>
-        /// Saves a Provisioning Template into the target Local repository
-        /// </summary>
-        /// <param name="siteUrl">The local Site Collection to save to</param>
-        /// <param name="template">The Provisioning Template to save</param>
-        void SaveLocalProvisioningTemplate(String siteUrl, GetProvisioningTemplateJob job);
-
         /// <summary>
         /// Enqueues a new Provisioning Job
         /// </summary>

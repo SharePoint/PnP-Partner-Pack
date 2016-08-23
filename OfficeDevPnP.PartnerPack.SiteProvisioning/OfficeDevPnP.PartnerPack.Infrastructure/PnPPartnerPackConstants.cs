@@ -15,6 +15,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
         public static String PnPProvisioningTemplates = "PnPProvisioningTemplates";
         public static String PnPProvisioningTemplateContentTypeId = "0x010100498154DED7C84F4AB61A4029018F9048";
         public static String PnPProvisioningTemplateScope = "PnPProvisioningTemplateScope";
+        public static String PnPProvisioningTemplatePlatform = "PnPProvisioningTemplatePlatform";
         public static String PnPProvisioningTemplateSourceUrl = "PnPProvisioningTemplateSourceUrl";
 
         public static String PnPProvisioningJobs = "PnPProvisioningJobs";
@@ -27,5 +28,16 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
         public static String PnPPartnerPackOverridesPropertyBag = "_PnP_PartnerPack_Overrides_Enabled";
 
         public static String RegExSiteCollectionWithSubWebs = @"^(?<siteCollectionUrl>https\:\/\/(?<tenant>(\w|\-)+).sharepoint.com\/(sites|teams)\/(?<siteCollection>(\w|\-)+))(\/(?<subSite>(\w|\-)+))*";
+
+        public const String TEMPLATE_SCOPE = "PnP_Template_Scope";
+        public const String TEMPLATE_SCOPE_SITE = "Site";
+        public const String TEMPLATE_SCOPE_WEB = "Web";
+        public const String TEMPLATE_SCOPE_PARTIAL = "Partial";
+
+        public const String PLATFORM_SPO = "PnP_Supports_SPO_Platform";
+        public const String PLATFORM_SP2016 = "PnP_Supports_SP2016_Platform";
+        public const String PLATFORM_SP2013 = "PnP_Supports_SP2013_Platform";
+
+        public const String TRUE_VALUE = "True";
     }
 }

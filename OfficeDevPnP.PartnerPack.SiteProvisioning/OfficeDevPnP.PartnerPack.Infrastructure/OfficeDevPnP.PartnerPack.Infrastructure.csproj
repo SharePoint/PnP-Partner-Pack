@@ -62,6 +62,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.IdentityModel.Extensions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=69c3241e6f0468ca, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.IdentityModel.Protocol.Extensions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Protocol.Extensions.1.0.0\lib\net45\Microsoft.IdentityModel.Protocol.Extensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Office.Client.Policy, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5521.1200\lib\net45\Microsoft.Office.Client.Policy.dll</HintPath>
       <Private>True</Private>
@@ -76,6 +80,26 @@
     </Reference>
     <Reference Include="Microsoft.Online.SharePoint.Client.Tenant, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5521.1200\lib\net45\Microsoft.Online.SharePoint.Client.Tenant.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OpenIdConnect, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.OpenIdConnect.3.0.1\lib\net45\Microsoft.Owin.Security.OpenIdConnect.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ProjectServer.Client, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
@@ -131,7 +155,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="OfficeDevPnP.Core, Version=2.6.1608.0, Culture=neutral, PublicKeyToken=3751622786b357c2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharePointPnPCoreOnline.2.6.1608.0\lib\net45\OfficeDevPnP.Core.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\PaoloPia-PnP-Sites-Core\Core\OfficeDevPnP.Core\bin\Debug\OfficeDevPnP.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -140,10 +168,16 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.IdentityModel.Selectors" />
+    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.4.0.0\lib\net45\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Spatial, Version=5.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Spatial.5.7.0\lib\net40\System.Spatial.dll</HintPath>
@@ -167,8 +201,10 @@
       <DependentUpon>PnPPartnerPackConfiguration.xsd</DependentUpon>
     </Compile>
     <Compile Include="Configuration\PnPPartnerPackConfigurationSectionHandler.cs" />
+    <Compile Include="HttpHelper.cs" />
     <Compile Include="IConfigurable.cs" />
     <Compile Include="IProvisioningRepository.cs" />
+    <Compile Include="ITemplatesProvider.cs" />
     <Compile Include="JobStatus.cs" />
     <Compile Include="Jobs\ApplyProvisioningTemplateJob.cs" />
     <Compile Include="Jobs\GetProvisioningTemplateJob.cs" />
@@ -184,6 +220,7 @@
     <Compile Include="Jobs\SiteProvisioningJob.cs" />
     <Compile Include="Jobs\SiteCollectionProvisioningJob.cs" />
     <Compile Include="Jobs\SubSiteProvisioningJob.cs" />
+    <Compile Include="MicrosoftGraphConstants.cs" />
     <Compile Include="PnPImageUtilities.cs" />
     <Compile Include="PnPPartnerPackConstants.cs" />
     <Compile Include="PnPPartnerPackContextProvider.cs" />
@@ -192,10 +229,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProvisioningRepositoryFactory.cs" />
     <Compile Include="ProvisioningTemplateInformation.cs" />
+    <Compile Include="SessionADALCache.cs" />
     <Compile Include="SharePointContext.cs" />
     <Compile Include="SharePoint\SharePointProvisioningRepository.cs" />
     <Compile Include="SiteCollectionSettings.cs" />
-    <Compile Include="TemplateScope.cs" />
+    <Compile Include="TargetPlatform.cs" />
+    <Compile Include="TargetScope.cs" />
+    <Compile Include="TemplatesProviders\PnPTemplatesGalleryProvider.cs" />
+    <Compile Include="TemplatesProviders\PnPTemplatesGalleryResultItem.cs" />
+    <Compile Include="TemplatesProviders\SharePointBaseTemplatesProvider.cs" />
+    <Compile Include="TemplatesProviders\SharePointGlobalTemplatesProvider.cs" />
+    <Compile Include="TemplatesProviders\SharePointLocalTemplatesProvider.cs" />
     <Compile Include="TokenHelper.cs" />
   </ItemGroup>
   <ItemGroup>

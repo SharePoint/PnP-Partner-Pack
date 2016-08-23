@@ -2,7 +2,7 @@
 @using OfficeDevPnP.PartnerPack.SiteProvisioning.Models
 
 @{
-    if (Model.Scope != OfficeDevPnP.PartnerPack.Infrastructure.TemplateScope.Site)
+    if (Model.Scope != OfficeDevPnP.PartnerPack.Infrastructure.TargetScope.Site)
     {
         ViewBag.Title = "Create Sub Site";
     }
@@ -88,7 +88,7 @@
 
             $.ajax({
                 method: "POST",
-                url: "@Url.Action(Model.Scope == OfficeDevPnP.PartnerPack.Infrastructure.TemplateScope.Site ? "CreateSiteCollection" : "CreateSubSite")",
+                url: "@Url.Action(Model.Scope == OfficeDevPnP.PartnerPack.Infrastructure.TargetScope.Site ? "CreateSiteCollection" : "CreateSubSite")",
                 data: $("form").serialize(),
                 success: function (result) {
                     if (result) {

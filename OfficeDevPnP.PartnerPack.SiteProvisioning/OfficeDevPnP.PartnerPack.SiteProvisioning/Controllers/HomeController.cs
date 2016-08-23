@@ -53,7 +53,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         public ActionResult CreateSiteCollection()
         {
             CreateSiteCollectionViewModel model = new CreateSiteCollectionViewModel();
-            model.Scope = TemplateScope.Site;
+            model.Scope = TargetScope.Site;
             model.ParentSiteUrl = String.Empty;
             model.PartnerPackExtensionsEnabled = true;
             model.ResponsiveDesignEnabled = true;
@@ -156,8 +156,10 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         public ActionResult CreateSubSite()
         {
             CreateSubSiteViewModel model = new CreateSubSiteViewModel();
-            model.Scope = TemplateScope.Web;
+            model.Scope = TargetScope.Web;
             model.ParentSiteUrl = HttpContext.Request["SPHostUrl"];
+
+            PnPPartnerPackSettings.ParentSiteUrl = model.ParentSiteUrl;
 
             return View("CreateSite", model);
         }
@@ -165,6 +167,8 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         [HttpPost]
         public ActionResult CreateSubSite(CreateSubSiteViewModel model)
         {
+            PnPPartnerPackSettings.ParentSiteUrl = model.ParentSiteUrl;
+
             switch (model.Step)
             {
                 case CreateSiteStep.SiteInformation:
@@ -280,13 +284,13 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
                     if (web.Id == rootWeb.Id)
                     {
                         // We are in the Root Site of the Site Collection
-                        job.Scope = TemplateScope.Site;
+                        job.Scope = TargetScope.Site;
                         storageLocationUrl = rootWeb.Url;
                     }
                     else
                     {
                         // Otherwise we are in a Sub Site of the Site Collection
-                        job.Scope = TemplateScope.Web;
+                        job.Scope = TargetScope.Web;
                     }
                 }
 
@@ -471,9 +475,10 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         /// <returns>The user retrieved from Azure AD</returns>
         public static LightGraphUser GetCurrentUser()
         {
-            String jsonResponse = MicrosoftGraphHelper.MakeGetRequestForString(
+            String jsonResponse = HttpHelper.MakeGetRequestForString(
                 String.Format("{0}me",
-                    MicrosoftGraphHelper.MicrosoftGraphV1BaseUri));
+                    MicrosoftGraphConstants.MicrosoftGraphV1BaseUri),
+                    HttpHelper.GetAccessTokenForCurrentUser(MicrosoftGraphConstants.MicrosoftGraphResourceId));
 
             if (jsonResponse != null)
             {
@@ -495,9 +500,9 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         {
             String contentType = "image/png";
 
-            var result = MicrosoftGraphHelper.MakeGetRequestForStream(
+            var result = HttpHelper.MakeGetRequestForStream(
                 String.Format("{0}users/{1}/photo/$value",
-                    MicrosoftGraphHelper.MicrosoftGraphV1BaseUri, upn),
+                    MicrosoftGraphConstants.MicrosoftGraphV1BaseUri, upn),
                 contentType);
 
             return (result);

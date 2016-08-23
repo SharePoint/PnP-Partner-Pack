@@ -55,7 +55,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs
         /// <summary>
         /// Defines the Scope of the Provisioning Template
         /// </summary>
-        public TemplateScope Scope { get; set; }
+        public TargetScope Scope { get; set; }
 
         /// <summary>
         /// Defines the target Location for the Provisioning Template file

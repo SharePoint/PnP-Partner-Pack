@@ -39,6 +39,8 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
 
         public static void EnableResponsiveDesignOnSite(String siteUrl)
         {
+            // TODO: Move to core library method
+
             using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(siteUrl))
             {
                 ApplyProvisioningTemplateToSite(context,
@@ -85,6 +87,8 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
 
         private static void ApplyProvisioningTemplateToSite(ClientContext context, String siteUrl, String folder, String fileName, Dictionary<String, String> parameters = null, Handlers handlers = Handlers.All)
         {
+            // TODO: Move to Open XML
+
             // Configure the XML file system provider
             XMLTemplateProvider provider =
                 new XMLSharePointTemplateProvider(context, siteUrl,
@@ -117,6 +121,8 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
 
         public static ProvisioningTemplate GetProvisioningTemplate(ClientContext context, String siteUrl, String folder, String fileName)
         {
+            // TODO: Move to Open XML
+
             // Configure the XML file system provider
             XMLTemplateProvider provider =
                 new XMLSharePointTemplateProvider(context, siteUrl,

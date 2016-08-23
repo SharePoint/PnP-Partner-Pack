@@ -10,7 +10,9 @@
         var globalTemplates = ProvisioningRepositoryFactory.Current.GetGlobalProvisioningTemplates(Model.Scope);
         result.AddRange(globalTemplates);
 
-        if (Model.Scope != TemplateScope.Site)
+        // TODO: Aggiornare per supportare i vari provider di template
+
+        if (Model.Scope != TargetScope.Site)
         {
             var localTemplates = ProvisioningRepositoryFactory.Current.GetLocalProvisioningTemplates(Model.ParentSiteUrl, Model.Scope);
             result.AddRange(localTemplates);
@@ -25,6 +27,16 @@
     <input type="hidden" id="@Html.IdFor(model => model.Step)" name="@Html.NameFor(model => model.Step)" value="@Model.Step" />
 
     <h3>Select a Template</h3>
+
+    @*<h2>Templates Provider:
+        <select id="templateProvides">
+            <option value="1">Tenant</option>
+            <option value="1">Local Site Collection</option>
+            <option value="1">PnP Templates Gallery</option>
+        </select>        
+        Search for:
+        <input type="text" width="100" />
+    </h2>*@
 
     <div>
 

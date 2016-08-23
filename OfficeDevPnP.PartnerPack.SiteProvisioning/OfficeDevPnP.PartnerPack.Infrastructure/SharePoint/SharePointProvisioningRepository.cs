@@ -28,12 +28,12 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
             return;
         }
 
-        public ProvisioningTemplateInformation[] GetGlobalProvisioningTemplates(TemplateScope scope)
+        public ProvisioningTemplateInformation[] GetGlobalProvisioningTemplates(TargetScope scope)
         {
             return (GetLocalProvisioningTemplates(PnPPartnerPackSettings.InfrastructureSiteUrl, scope));
         }
 
-        public ProvisioningTemplateInformation[] GetLocalProvisioningTemplates(string siteUrl, TemplateScope scope)
+        public ProvisioningTemplateInformation[] GetLocalProvisioningTemplates(string siteUrl, TargetScope scope)
         {
             List<ProvisioningTemplateInformation> result =
                 new List<ProvisioningTemplateInformation>();
@@ -98,7 +98,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
 
                         result.Add(new ProvisioningTemplateInformation
                         {
-                            Scope = (TemplateScope)Enum.Parse(typeof(TemplateScope), (String)item[PnPPartnerPackConstants.PnPProvisioningTemplateScope], true),
+                            Scope = (TargetScope)Enum.Parse(typeof(TargetScope), (String)item[PnPPartnerPackConstants.PnPProvisioningTemplateScope], true),
                             TemplateSourceUrl = item[PnPPartnerPackConstants.PnPProvisioningTemplateSourceUrl] != null ? ((FieldUrlValue)item[PnPPartnerPackConstants.PnPProvisioningTemplateSourceUrl]).Url : null,
                             TemplateFileUri = String.Format("{0}/{1}/{2}", web.Url, PnPPartnerPackConstants.PnPProvisioningTemplates, item.File.Name),
                             TemplateImageUrl = template.ImagePreviewUrl,

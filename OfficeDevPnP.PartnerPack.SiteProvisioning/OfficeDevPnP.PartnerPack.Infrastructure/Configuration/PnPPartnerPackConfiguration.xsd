@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <xsd:schema id="PnPPartnerPackConfiguration"
-    targetNamespace="http://schemas.dev.office.com/PnP/2015/10/PnPPartnerPackConfiguration"
+    targetNamespace="http://schemas.dev.office.com/PnP/2016/08/PnPPartnerPackConfiguration"
     elementFormDefault="qualified"
-    xmlns="http://schemas.dev.office.com/PnP/2015/10/PnPPartnerPackConfiguration"
-    xmlns:pnp="http://schemas.dev.office.com/PnP/2015/10/PnPPartnerPackConfiguration"
+    xmlns="http://schemas.dev.office.com/PnP/2016/08/PnPPartnerPackConfiguration"
+    xmlns:pnp="http://schemas.dev.office.com/PnP/2016/08/PnPPartnerPackConfiguration"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 
   <xsd:element name="PnPPartnerPackConfiguration">
@@ -129,6 +129,37 @@
               Defines the Provisioning engine Repository type and configuration, if any.
             </xsd:documentation>
           </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="TemplatesProviders">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en">
+              Defines the collection of templates providers
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="TemplatesProvider" minOccurs="1" maxOccurs="unbounded">
+                <xsd:annotation>
+                  <xsd:documentation xml:lang="en">
+                    Defines a single templates provider
+                  </xsd:documentation>
+                </xsd:annotation>
+                <xsd:complexType>
+                  <xsd:complexContent>
+                    <xsd:extension base="pnp:DotNetHandlerType">
+                      <xsd:attribute name="enabled" type="xsd:boolean" use="required">
+                        <xsd:annotation>
+                          <xsd:documentation xml:lang="en">
+                            Allows to enable or disable a single templates provider
+                          </xsd:documentation>
+                        </xsd:annotation>
+                      </xsd:attribute>
+                    </xsd:extension>
+                  </xsd:complexContent>
+                </xsd:complexType>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:complexType>
         </xsd:element>
         <xsd:element name="ProvisioningJobs" minOccurs="0">
           <xsd:annotation>

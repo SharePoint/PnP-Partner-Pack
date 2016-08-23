@@ -9,7 +9,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
     /// <summary>
     /// Defines the available scopes for a Provisioning Template definition
     /// </summary>
-    public enum TemplateScope
+    public enum TargetScope
     {
         /// <summary>
         /// Defines a Provisioning Template for a Site Collection
