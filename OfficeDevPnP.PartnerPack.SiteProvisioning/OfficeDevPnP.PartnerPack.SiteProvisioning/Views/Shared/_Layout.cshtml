@@ -14,9 +14,8 @@
 
     </script>
 
-    @Scripts.Render("~/bundles/spoextensions")
+    @Scripts.Render("~/bundles/custom")
     @Styles.Render("~/Content/css")
-    @Styles.Render("~/Content/themes/base/css")
     @Scripts.Render("~/bundles/modernizr")
 
 </head>
@@ -29,17 +28,17 @@
         <div id="mainContent">
             <div class="ms-Grid">
                 <div class="ms-Grid-row">
-                    <div class="ms-Grid-col ms-u-sm5 ms-u-md3 ms-u-lg2">
+                    <div class="ms-Grid-col ms-u-md3 ms-u-lg2 ms-u-hiddenSm">
                         <img src="@OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackSettings.LogoUrl" class="siteIcon" />
                     </div>
-                    <div class="ms-Grid-col ms-u-sm7 ms-u-md9 ms-u-lg10">
-                        <h1>@ViewBag.Title</h1>
+                    <div class="ms-Grid-col ms-u-sm12 ms-u-md9 ms-u-lg10">
+                        <div class="ms-font-su">@ViewBag.Title</div>
                     </div>
                 </div>
                 <div class="ms-Grid-row">
-                    <div class="ms-Grid-col ms-u-sm5 ms-u-md3 ms-u-lg2">
+                    <div class="ms-Grid-col ms-u-md3 ms-u-lg2 ms-u-hiddenSm">
                     </div>
-                    <div class="ms-Grid-col ms-u-sm7 ms-u-md9 ms-u-lg10">
+                    <div class="ms-Grid-col ms-u-sm12 ms-u-md9 ms-u-lg10">
                         @RenderBody()
                     </div>
                 </div>

@@ -63,12 +63,21 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         private static Stream GetUserPhoto(String upn)
         {
             String contentType = "image/png";
+            Stream result = null;
 
-            var result = HttpHelper.MakeGetRequestForStream(
-                String.Format("{0}users/{1}/photo/$value",
-                    MicrosoftGraphConstants.MicrosoftGraphV1BaseUri, upn),
-                contentType,
-                MicrosoftGraphHelper.GetAccessTokenForCurrentUser(MicrosoftGraphConstants.MicrosoftGraphResourceId));
+            try
+            {
+                result = HttpHelper.MakeGetRequestForStream(
+                    String.Format("{0}users/{1}/photo/$value",
+                        MicrosoftGraphConstants.MicrosoftGraphV1BaseUri, upn),
+                    contentType,
+                    MicrosoftGraphHelper.GetAccessTokenForCurrentUser(MicrosoftGraphConstants.MicrosoftGraphResourceId));
+            }
+            catch (Exception)
+            {
+                // Ignore any exception related to image download, 
+                // in order to get the default icon with user's initials
+            }
 
             return (result);
         }

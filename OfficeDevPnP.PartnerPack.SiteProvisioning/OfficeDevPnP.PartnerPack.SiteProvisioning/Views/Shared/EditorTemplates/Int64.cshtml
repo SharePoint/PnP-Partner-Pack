@@ -1,28 +1,27 @@
-﻿@model System.String
+﻿@model System.Int64?
 
 @{
     var fieldId = Html.IdFor(m => m);
     var fieldName = Html.NameFor(m => m);
     var isRequired = ViewData.ModelMetadata.IsRequired;
-
     var isReadOnly = ViewData.Keys.Contains("readonly");
 
     Dictionary<String, object> htmlAttributes = new Dictionary<string, object>();
     htmlAttributes.Add("class", $"ms-TextField-field {(isRequired ? "required" : String.Empty)}");
-    htmlAttributes.Add("type", "text");
+    htmlAttributes.Add("type", "number");
+    htmlAttributes.Add("step", "1");
 
     if (isReadOnly)
     {
         htmlAttributes.Add("readonly", isReadOnly);
     }
-
-    //var format = ViewData.ModelMetadata.AdditionalValues
 }
 
 <div class="ms-TextField" id="@($"{fieldId}Div")">
     <label class="ms-Label" id="@($"{fieldId}Label")">@(!String.IsNullOrEmpty(ViewData.ModelMetadata.DisplayName) ? ViewData.ModelMetadata.DisplayName : ViewData.ModelMetadata.PropertyName)</label>
     @Html.TextBoxFor(m => m, htmlAttributes)
-    <br/>
-    <span class="ms-TextField-description" id="@($"{fieldId}Description")">@ViewData.ModelMetadata.Description</span>        
-    @Html.ValidationMessageFor(m => m, null, new { @class = "ms-fontColor-alert" })
+    <span class="ms-TextField-description" id="@($"{fieldId}Description")">@ViewData.ModelMetadata.Description</span>
+    <div>
+        @Html.ValidationMessageFor(m => m)
+    </div>
 </div>

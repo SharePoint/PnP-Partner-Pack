@@ -30,6 +30,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
 
         [DisplayName("Description")]
         [DataType(DataType.MultilineText)]
+        [UIHint("Multilines")]
         public string Description { get; set; }
 
         [Required(ErrorMessage = "Language is a required field!")]

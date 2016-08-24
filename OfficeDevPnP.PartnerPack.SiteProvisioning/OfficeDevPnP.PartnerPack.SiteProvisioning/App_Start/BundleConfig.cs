@@ -26,8 +26,8 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning
             bundles.Add(new ScriptBundle("~/bundles/fabric").Include(
                       "~/Scripts/jquery.fabric.*"));
 
-            bundles.Add(new ScriptBundle("~/bundles/spoextensions").Include(
-                      "~/Scripts/sppeoplepicker.js",
+            bundles.Add(new ScriptBundle("~/bundles/custom").Include(
+                      "~/Scripts/custom.principals.js",
                       "~/Scripts/custom.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(

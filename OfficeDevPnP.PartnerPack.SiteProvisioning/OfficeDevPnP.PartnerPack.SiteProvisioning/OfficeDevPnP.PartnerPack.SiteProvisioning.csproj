@@ -373,8 +373,8 @@
     <None Include="Properties\PublishProfiles\Local-File-System.pubxml" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\csompeoplepickercontrol.js" />
     <Content Include="Scripts\custom.js" />
+    <Content Include="Scripts\custom.principals.js" />
     <Content Include="Scripts\jquery-2.2.1.js" />
     <Content Include="Scripts\jquery-2.2.1.min.js" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
@@ -390,9 +390,6 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Scripts\peoplepickercontrol.js" />
-    <Content Include="Scripts\csompeoplepickercontrol_resources.en.js" />
-    <Content Include="Scripts\peoplepickercontrol_resources.en.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
@@ -404,7 +401,6 @@
     <Content Include="Templates\CustomBar\SPO-CustomBar.js" />
     <Content Include="Templates\Overrides\PnP-Partner-Pack-Overrides.xml" />
     <Content Include="Templates\Overrides\PnP-Partner-Pack-Overrides.js" />
-    <Content Include="Scripts\sppeoplepicker.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Templates\PnP-Empty-Site.xml" />
     <Content Include="Templates\PnP-Empty-Sub-Site.xml" />
@@ -458,6 +454,7 @@
     <Content Include="Views\Shared\EditorTemplates\RadioButtons.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\String.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Time.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Int64.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

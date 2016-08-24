@@ -2,6 +2,9 @@
 @using System.Xml.Linq
 
 @{
+    var fieldId = Html.IdFor(m => m);
+    var fieldName = Html.NameFor(m => m);
+
     XElement supportedUILanguages = XElement.Load(Server.MapPath("/Content/SupportedUILanguages.xml"));
 
     var culturesList = from l in supportedUILanguages.Descendants("supportedUILanguage")
@@ -12,5 +15,8 @@
                            Selected = Int32.Parse(l.Attribute("value").Value) == Model
                        };
 }
-@Html.DropDownListFor(model => model, culturesList, new { @class = "form-control" })
-@Html.ValidationMessageFor(model => model)
+<div class="ms-f" id="@($"{fieldId}Div")">
+    <label class="ms-Label" id="@($"{fieldId}Label")">@(!String.IsNullOrEmpty(ViewData.ModelMetadata.DisplayName) ? ViewData.ModelMetadata.DisplayName : ViewData.ModelMetadata.PropertyName)</label>
+    @Html.DropDownListFor(model => model, culturesList, new { @class = "form-control" })
+    @Html.ValidationMessageFor(model => model)
+</div>

@@ -128,7 +128,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (Principals == null || Principals.Count == 0)
-                yield return new ValidationResult("Selezionare almeno un utente");
+                yield return new ValidationResult("Please select at least one principal");
         }
     }
 }

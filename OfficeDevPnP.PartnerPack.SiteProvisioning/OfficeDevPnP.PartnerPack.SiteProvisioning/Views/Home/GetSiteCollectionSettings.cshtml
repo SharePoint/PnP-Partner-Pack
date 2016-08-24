@@ -1,17 +1,29 @@
 ﻿@model OfficeDevPnP.PartnerPack.Infrastructure.SiteCollectionSettings
 
-<div class="table">
-    <div class="form-group">
-        <label class="control-label col-md-3" for="Title">Title</label>
-        <div class="settingsValue col-md-6">@Model.Title</div>
+<div class="ms-Grid gridSettings">
+    <div class="ms-Grid-row">
+        <div class="ms-Grid-col ms-u-sm4 ms-u-md2 ms-u-lg2">
+            <label class="ms-Label">Title</label>
+        </div>
+        <div class="ms-Grid-col ms-u-sm8 ms-u-md10 ms-u-lg10">
+            <div class="settingsValue">@Model.Title</div>
+        </div>
     </div>
-    <div class="form-group">
-        <label class="control-label col-md-3" for="Title">URL</label>
-        <div class="settingsValue col-md-6"><a target="_blank" href="@Model.Url">@Model.Url</a></div>
+    <div class="ms-Grid-row">
+        <div class="ms-Grid-col ms-u-sm4 ms-u-md2 ms-u-lg2">
+            <label class="ms-Label">URL</label>
+        </div>
+        <div class="ms-Grid-col ms-u-sm8 ms-u-md10 ms-u-lg10">
+            <div class="settingsValue"><a target="_blank" href="@Model.Url">@Model.Url</a></div>
+        </div>
     </div>
-    <div class="row">
-        <div class="col-md-9 col-md-offset-3">
-            <input type="button" class="PnPPartnerToggleButton btn btn-primary" value="@(Model.PnPPartnerPackEnabled ? "Disable " + OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackSettings.Title : "Enable " + OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackSettings.Title)" data-pnp-status="@Model.PnPPartnerPackEnabled.ToString().ToLower()" />
+    <div class="ms-Grid-row">
+        <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+            <button id="RefreshButton" class="ms-Button ms-Button--primary PnPPartnerToggleButton" data-pnp-status="@Model.PnPPartnerPackEnabled.ToString().ToLower()">
+                <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+                <span class="ms-Button-label">@(Model.PnPPartnerPackEnabled ? "Disable " + OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackSettings.Title : "Enable " + OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackSettings.Title)</span>
+                <span class="ms-Button-description">@(Model.PnPPartnerPackEnabled ? "Disable " + OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackSettings.Title : "Enable " + OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackSettings.Title)</span>
+            </button>
         </div>
     </div>
 </div>

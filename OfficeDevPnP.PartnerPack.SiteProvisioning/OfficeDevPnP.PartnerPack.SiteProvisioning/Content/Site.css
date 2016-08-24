@@ -158,3 +158,12 @@ img.templatepreview {
     line-height: 170px;
     text-align: left;       
 }
+
+.templatesTable {
+    width: 80%;
+    margin-bottom: 20px;
+}
+
+.gridSettings {
+    margin-bottom: 20px;
+}

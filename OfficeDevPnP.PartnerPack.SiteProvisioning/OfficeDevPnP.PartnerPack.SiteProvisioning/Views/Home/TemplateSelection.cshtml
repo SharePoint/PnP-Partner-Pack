@@ -26,36 +26,40 @@
 
     <input type="hidden" id="@Html.IdFor(model => model.Step)" name="@Html.NameFor(model => model.Step)" value="@Model.Step" />
 
-    <h3>Select a Template</h3>
+    <div class="ms-font-xxl">Select a Template</div>
 
-    @*<h2>Templates Provider:
-        <select id="templateProvides">
-            <option value="1">Tenant</option>
-            <option value="1">Local Site Collection</option>
-            <option value="1">PnP Templates Gallery</option>
-        </select>        
-        Search for:
-        <input type="text" width="100" />
-    </h2>*@
+        @*<h2>Templates Provider:
+                <select id="templateProvides">
+                    <option value="1">Tenant</option>
+                    <option value="1">Local Site Collection</option>
+                    <option value="1">PnP Templates Gallery</option>
+                </select>
+                Search for:
+                <input type="text" width="100" />
+            </h2>*@
 
-    <div>
+        <div>
 
-        @foreach (var template in GetProvisioningTemplates())
-        {
-            <div class="provtemplate" data-pnp-template-url="@template.TemplateFileUri">
-                <div class="roundmask">
-                    <img alt="@template.DisplayName" src="@template.TemplateImageUrl" class="templatepreview" />
+            @foreach (var template in GetProvisioningTemplates())
+            {
+                <div class="provtemplate" data-pnp-template-url="@template.TemplateFileUri">
+                    <div class="roundmask">
+                        <img alt="@template.DisplayName" src="@template.TemplateImageUrl" class="templatepreview" />
+                    </div>
+                    <div class="ms-font-m-plus ms-u-textAlignCenter">@template.DisplayName</div>
+                    <span class="ms-font-m ms-u-textAlignCenter">@template.Description</span>
                 </div>
-                <h1>@template.DisplayName</h1>
-                <span>@template.Description</span>
-            </div>
-        }
+            }
+
+        </div>
+
+        <input type="hidden" id="@Html.IdFor(model => model.ProvisioningTemplateUrl)" name="@Html.NameFor(model => model.ProvisioningTemplateUrl)" value="" />
+
+        <button class="ms-Button ms-Button--primary NextStep">
+            <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+            <span class="ms-Button-label">Next</span>
+            <span class="ms-Button-description">Provide Site information</span>
+        </button>
 
     </div>
-
-    <input type="hidden" id="@Html.IdFor(model => model.ProvisioningTemplateUrl)" name="@Html.NameFor(model => model.ProvisioningTemplateUrl)" value="" />
-
-    <input type="button" class="btn-primary btn NextStep" value="Next" />
-
-</div>
 

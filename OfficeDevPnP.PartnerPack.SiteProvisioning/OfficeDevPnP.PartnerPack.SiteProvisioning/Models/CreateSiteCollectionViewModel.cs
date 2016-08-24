@@ -60,16 +60,16 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
         }
 
         [DisplayName("Storage Maximum Level")]
-        public Int64 StorageMaximumLevel { get; set; }
+        public Int64 StorageMaximumLevel { get; set; } = 1000;
 
         [DisplayName("Storage Warning Level")]
-        public Int64 StorageWarningLevel { get; set; }
+        public Int64 StorageWarningLevel { get; set; } = 900;
 
         [DisplayName("User Code Maximum Level")]
-        public Int64 UserCodeMaximumLevel { get; set; }
+        public Int64 UserCodeMaximumLevel { get; set; } = 300;
 
         [DisplayName("User Code Warning Level")]
-        public Int64 UserCodeWarningLevel { get; set; }
+        public Int64 UserCodeWarningLevel { get; set; } = 250;
 
         [DisplayName("External Sharing")]
         public Boolean ExternalSharingEnabled { get; set; }
@@ -80,6 +80,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
         [DisplayName("Enable Responsive Design Extensions")]
         public Boolean ResponsiveDesignEnabled { get; set; }
 
+        [DisplayName("Managed Path")]
         [UIHint("ManagedPath")]
         public String ManagedPath { get; set; }
     }

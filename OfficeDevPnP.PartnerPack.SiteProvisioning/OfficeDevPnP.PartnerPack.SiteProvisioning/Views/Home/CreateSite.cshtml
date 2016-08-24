@@ -62,7 +62,10 @@
             });
         });
 
-        function moveWizardStep() {
+        function moveWizardStep(e) {
+
+            // Prevent default event
+            e.preventDefault();
 
             var direction = $(this).hasClass("NextStep") ? "forward" : "backward";
             $("#SiteCreationWizard > div").hide();
@@ -95,11 +98,9 @@
                         $("#@Html.IdFor(model => model.Step)").remove();
 
                         var htmlResult = $.parseHTML(result);
-                        var newStep = $("#@Html.IdFor(model => model.Step )", htmlResult).val();
+                        var newStep = $("#@Html.IdFor(model => model.Step)", htmlResult).val();
                         $("#WorkingOnIt").hide();
                         $("#" + newStep).html(result).show();
-
-                        spApp.setup();
                     }
                 },
                 error: function (xhr, status, error) {
