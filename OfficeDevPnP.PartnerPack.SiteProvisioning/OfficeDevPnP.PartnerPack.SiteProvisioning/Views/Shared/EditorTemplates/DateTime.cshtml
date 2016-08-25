@@ -24,7 +24,7 @@
 
 <div class="ms-DatePicker" id="@($"{fieldId}Div")" style="max-width: 250px;">
     <div class="ms-TextField">
-        <label class="ms-Label" id="@($"{fieldId}Label")">@(!String.IsNullOrEmpty(ViewData.ModelMetadata.Description) ? ViewData.ModelMetadata.Description : !String.IsNullOrEmpty(ViewData.ModelMetadata.DisplayName) ? ViewData.ModelMetadata.DisplayName : ViewData.ModelMetadata.PropertyName)</label>
+        <label class="ms-Label @(isRequired ? "is-required" : "")" id="@($"{fieldId}Label")">@(!String.IsNullOrEmpty(ViewData.ModelMetadata.Description) ? ViewData.ModelMetadata.Description : !String.IsNullOrEmpty(ViewData.ModelMetadata.DisplayName) ? ViewData.ModelMetadata.DisplayName : ViewData.ModelMetadata.PropertyName)</label>
         <i class="ms-DatePicker-event ms-Icon ms-Icon--event"></i>
         @Html.TextBoxFor(m => m, ViewData.ModelMetadata.DisplayFormatString, htmlAttributes)
     </div>

@@ -9,7 +9,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
 {
     public class SaveTemplateViewModel : JobViewModel
     {
-        [Required(ErrorMessage = "Title is a required field!")]
+        [Required(ErrorMessage = "Title is a required field")]
         [DisplayName("Title")]
         public String Title { get; set; }
 
@@ -17,7 +17,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
         [DataType(DataType.MultilineText)]
         public String Description { get; set; }
 
-        [Required(ErrorMessage = "Template File Name is a required field!")]
+        [Required(ErrorMessage = "Template File Name is a required field")]
         [DisplayName("Template File Name")]
         public String FileName { get; set; }
 

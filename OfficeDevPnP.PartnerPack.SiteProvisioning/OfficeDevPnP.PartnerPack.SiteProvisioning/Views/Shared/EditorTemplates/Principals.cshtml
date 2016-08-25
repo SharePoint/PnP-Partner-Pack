@@ -4,10 +4,11 @@
 @{
     var fieldId = Html.IdFor(m => m);
     var fieldName = Html.NameFor(m => m);
+    var isRequired = ViewData.ModelMetadata.IsRequired;
     var idMaxSelectableProfilesNumber = Html.IdFor(m => m.MaxSelectableProfilesNumber);
 }
 
-<label class="ms-Label" id="@($"{fieldId}Label")">@(!String.IsNullOrEmpty(ViewData.ModelMetadata.DisplayName) ? ViewData.ModelMetadata.DisplayName : ViewData.ModelMetadata.PropertyName)</label>
+<label class="ms-Label @(isRequired ? "is-required" : "")" id="@($"{fieldId}Label")">@(!String.IsNullOrEmpty(ViewData.ModelMetadata.DisplayName) ? ViewData.ModelMetadata.DisplayName : ViewData.ModelMetadata.PropertyName)</label>
 <input type="hidden" id="@idMaxSelectableProfilesNumber" value="@Model.MaxSelectableProfilesNumber" />
 <div class="ms-PeoplePicker ms-PeoplePicker--Facepile" id="@Html.IdFor(m => m)" style="max-width: 280px;">
     <div class="ms-PeoplePicker-searchBox"><input class="ms-PeoplePicker-searchField" type="text" placeholder="Add principals"></div>

@@ -42,6 +42,14 @@ textarea {
     max-width: 280px;
 }
 
+.form-control {
+    border-radius: 0px !important;
+}
+
+.inputForm {
+    margin-bottom: 20px;
+}
+
 a {
     text-decoration: none !important;
 }
@@ -57,7 +65,7 @@ a:hover {
 .waitWorking {
     width: 350px; 
     margin-top: 50px; 
-    margin-left:150px; 
+    margin-left: 50px; 
     margin-bottom: 50px;
     vertical-align: middle;
 }

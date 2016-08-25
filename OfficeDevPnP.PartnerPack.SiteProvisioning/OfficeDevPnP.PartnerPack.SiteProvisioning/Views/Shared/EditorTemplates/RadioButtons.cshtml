@@ -2,6 +2,7 @@
 @model CustomRadioList
 @{
     var fieldName = Html.NameFor(m => m);
+    var isRequired = ViewData.ModelMetadata.IsRequired;
     var isReadOnly = ViewData.Keys.Contains("readonly")
         || ((ViewData.Keys.Contains("Keys")
             || ViewData.Keys.Contains("Values"))
@@ -9,7 +10,7 @@
 }
 
 <div id="@($"{fieldName}Div")">
-    <label class="ms-Label" id="@($"{fieldName}Label")">@(!String.IsNullOrEmpty(ViewData.ModelMetadata.DisplayName) ? ViewData.ModelMetadata.DisplayName : String.Empty)</label>
+    <label class="ms-Label @(isRequired ? "is-required" : "")" id="@($"{fieldName}Label")">@(!String.IsNullOrEmpty(ViewData.ModelMetadata.DisplayName) ? ViewData.ModelMetadata.DisplayName : String.Empty)</label>
     @foreach (var r in Model.Items)
     {
     <input type="radio" name="@Html.NameFor(m => m.SelectedValue)" title="@r.Text" value="@r.Value" @((r.IsSelected) ? "checked" : "") @((isReadOnly) ? "disabled" : "")/> @r.Text<br/>

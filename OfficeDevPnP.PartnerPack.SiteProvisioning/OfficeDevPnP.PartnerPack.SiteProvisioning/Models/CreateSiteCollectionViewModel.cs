@@ -11,7 +11,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
     {
         private PrincipalsViewModel _primarySiteCollectionAdmin;
 
-        [Required(ErrorMessage = "Primary Site Collection Administrator is a required field!")]
+        [Required(ErrorMessage = "Primary Site Collection Administrator is a required field")]
         [DisplayName("Primary Site Collection Administrator")]
         [UIHint("Principals")]
         public PrincipalsViewModel PrimarySiteCollectionAdmin
@@ -36,7 +36,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
 
         private PrincipalsViewModel _secondarySiteCollectionAdmin;
 
-        [Required(ErrorMessage = "Secondary Site Collection Administrator is a required field!")]
+        [Required(ErrorMessage = "Secondary Site Collection Administrator is a required field")]
         [DisplayName("Secondary Site Collection Administrator")]
         [UIHint("Principals")]
         public PrincipalsViewModel SecondarySiteCollectionAdmin
@@ -59,10 +59,10 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
             }
         }
 
-        [DisplayName("Storage Maximum Level")]
+        [DisplayName("Storage Maximum Level (MB)")]
         public Int64 StorageMaximumLevel { get; set; } = 1000;
 
-        [DisplayName("Storage Warning Level")]
+        [DisplayName("Storage Warning Level (MB)")]
         public Int64 StorageWarningLevel { get; set; } = 900;
 
         [DisplayName("User Code Maximum Level")]
