@@ -53,6 +53,8 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
 
         public TargetScope Scope { get; set; }
 
+        public String TemplatesProviderTypeName { get; set; }
+
         public String ParentSiteUrl { get; set; }
     }
 

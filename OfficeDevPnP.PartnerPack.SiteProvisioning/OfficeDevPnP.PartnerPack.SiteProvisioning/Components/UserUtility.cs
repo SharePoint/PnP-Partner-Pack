@@ -11,18 +11,26 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Components
     {
         public static LightGraphUser GetUser(string path)
         {
-            String jsonResponse = HttpHelper.MakeGetRequestForString(
-                String.Format("{0}{1}",
-                    MicrosoftGraphConstants.MicrosoftGraphV1BaseUri, path), 
-                MicrosoftGraphHelper.GetAccessTokenForCurrentUser(MicrosoftGraphConstants.MicrosoftGraphResourceId));
+            try
+            {
+                String jsonResponse = HttpHelper.MakeGetRequestForString(
+                    String.Format("{0}{1}",
+                        MicrosoftGraphConstants.MicrosoftGraphV1BaseUri, path),
+                    MicrosoftGraphHelper.GetAccessTokenForCurrentUser(MicrosoftGraphConstants.MicrosoftGraphResourceId));
 
-            if (jsonResponse != null)
-            {
-                var user = JsonConvert.DeserializeObject<LightGraphUser>(jsonResponse);
-                return (user);
+                if (jsonResponse != null)
+                {
+                    var user = JsonConvert.DeserializeObject<LightGraphUser>(jsonResponse);
+                    return (user);
+                }
+                else
+                {
+                    return (null);
+                }
             }
-            else
+            catch (Exception)
             {
+                // In case of any failure, skip the request
                 return (null);
             }
         }

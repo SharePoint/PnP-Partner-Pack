@@ -246,84 +246,81 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
 
             Uri requestUri = new Uri(requestUrl);
 
+            // If we have the token, then handle the HTTP request
+            HttpClientHandler handler = new HttpClientHandler();
+            handler.AllowAutoRedirect = true;
+            HttpClient httpClient = new HttpClient(handler, true);
+
+            // Set the Authorization Bearer token
             if (!String.IsNullOrEmpty(accessToken))
             {
-                // If we have the token, then handle the HTTP request
-                HttpClientHandler handler = new HttpClientHandler();
-                handler.AllowAutoRedirect = true;
-                HttpClient httpClient = new HttpClient(handler, true);
+                httpClient.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", accessToken);
+            }
 
-                // Set the Authorization Bearer token
-                if (!String.IsNullOrEmpty(accessToken))
+            // If there is an accept argument, set the corresponding HTTP header
+            if (!String.IsNullOrEmpty(accept))
+            {
+                httpClient.DefaultRequestHeaders.Accept.Clear();
+                httpClient.DefaultRequestHeaders.Accept.Add(
+                    new MediaTypeWithQualityHeaderValue(accept));
+            }
+
+            // Prepare the content of the request, if any
+            HttpContent requestContent = null;
+            System.IO.Stream streamContent = content as System.IO.Stream;
+            if (streamContent != null)
+            {
+                requestContent = new StreamContent(streamContent);
+                requestContent.Headers.ContentType = new MediaTypeHeaderValue(contentType);
+            }
+            else
+            {
+                requestContent =
+                    (content != null) ?
+                    new StringContent(JsonConvert.SerializeObject(content,
+                        Formatting.None,
+                        new JsonSerializerSettings
+                        {
+                            NullValueHandling = NullValueHandling.Ignore,
+                            ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                        }),
+                    Encoding.UTF8, contentType) :
+                    null;
+            }
+
+            // Prepare the HTTP request message with the proper HTTP method
+            HttpRequestMessage request = new HttpRequestMessage(
+                new HttpMethod(httpMethod), requestUrl);
+
+            // Set the request content, if any
+            if (requestContent != null)
+            {
+                request.Content = requestContent;
+            }
+
+            // Fire the HTTP request
+            HttpResponseMessage response = httpClient.SendAsync(request).Result;
+
+            if (response.IsSuccessStatusCode)
+            {
+                // If the response is Success and there is a
+                // predicate to retrieve the result, invoke it
+                if (resultPredicate != null)
                 {
-                    httpClient.DefaultRequestHeaders.Authorization =
-                        new AuthenticationHeaderValue("Bearer", accessToken);
+                    result = resultPredicate(response);
                 }
 
-                // If there is an accept argument, set the corresponding HTTP header
-                if (!String.IsNullOrEmpty(accept))
-                {
-                    httpClient.DefaultRequestHeaders.Accept.Clear();
-                    httpClient.DefaultRequestHeaders.Accept.Add(
-                        new MediaTypeWithQualityHeaderValue(accept));
-                }
-
-                // Prepare the content of the request, if any
-                HttpContent requestContent = null;
-                System.IO.Stream streamContent = content as System.IO.Stream;
-                if (streamContent != null)
-                {
-                    requestContent = new StreamContent(streamContent);
-                    requestContent.Headers.ContentType = new MediaTypeHeaderValue(contentType);
-                }
-                else
-                {
-                    requestContent =
-                        (content != null) ?
-                        new StringContent(JsonConvert.SerializeObject(content,
-                            Formatting.None,
-                            new JsonSerializerSettings
-                            {
-                                NullValueHandling = NullValueHandling.Ignore,
-                                ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                            }),
-                        Encoding.UTF8, contentType) :
-                        null;
-                }
-
-                // Prepare the HTTP request message with the proper HTTP method
-                HttpRequestMessage request = new HttpRequestMessage(
-                    new HttpMethod(httpMethod), requestUrl);
-
-                // Set the request content, if any
-                if (requestContent != null)
-                {
-                    request.Content = requestContent;
-                }
-
-                // Fire the HTTP request
-                HttpResponseMessage response = httpClient.SendAsync(request).Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    // If the response is Success and there is a
-                    // predicate to retrieve the result, invoke it
-                    if (resultPredicate != null)
-                    {
-                        result = resultPredicate(response);
-                    }
-
-                    // Get any response header and put it in the answer
-                    responseHeaders = response.Headers;
-                }
-                else
-                {
-                    throw new ApplicationException(
-                        String.Format("Exception while invoking endpoint {0}.", requestUrl),
-                        new HttpException(
-                            (Int32)response.StatusCode,
-                            response.Content.ReadAsStringAsync().Result));
-                }
+                // Get any response header and put it in the answer
+                responseHeaders = response.Headers;
+            }
+            else
+            {
+                throw new ApplicationException(
+                    String.Format("Exception while invoking endpoint {0}.", requestUrl),
+                    new HttpException(
+                        (Int32)response.StatusCode,
+                        response.Content.ReadAsStringAsync().Result));
             }
 
             return (result);

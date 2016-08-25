@@ -1,8 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<pnp:PnPPartnerPackConfiguration xmlns:pnp="http://schemas.dev.office.com/PnP/2015/10/PnPPartnerPackConfiguration">
+<pnp:PnPPartnerPackConfiguration xmlns:pnp="http://schemas.dev.office.com/PnP/2016/08/PnPPartnerPackConfiguration">
 
-  <pnp:GeneralSettings defaultSiteTemplate="STS#0" storageQueueName="pnppartnerpackjobsqueue" />
+  <pnp:GeneralSettings defaultSiteTemplate="STS#0" Title="PnP Partner Pack" LogoUrl="/AppIcon.png">
+    <pnp:WelcomeMessage>
+      <![CDATA[
+          Welcome to the PnP Partner Pack, which is a project managed by the <a href="http://aka.ms/OfficeDevPnP" target="_blank">Office 365 Developers Patterns &amp; Practices</a> team!<br/>
+          This is a sample solution, including source code, that illustrates to the partners' ecosystem and customers how to get started truly on the transformation, and with typical SP add-in model implementations.<br/>
+          Here you can find samples about how to manage the provisioning of Site Collection or Sub Sites, applying one or more provisioning templates.<br/>
+          The provisioning is based on the new Remote Provisioning technique, by leveraging the PnP Provisioning Engine.<br/>
+          Let's play with this sample solution and enjoy the new Add-In Model for Microsoft SharePoint andd Microsoft Office 365.
+        ]]>
+    </pnp:WelcomeMessage>
+    <pnp:FooterMessage>
+      <![CDATA[
+          <p>
+            &copy; <a href="http://aka.ms/OfficeDevPnP">Office 365 Developers Patterns &amp; Practices</a> - PnP Partner Pack version: 2.0 (September 2016)
+          </p>
+        ]]>
+    </pnp:FooterMessage>
+  </pnp:GeneralSettings>
 
+  <pnp:CertificateSettings storeName="My" storeLocation="CurrentUser" />
+  
   <pnp:TenantSettings
     tenant="sample.onmicrosoft.com"
     appOnlyCertificateThumbprint="3BF6BD842C011E9E387F34734037C90488DB929C"
@@ -15,6 +34,16 @@
       <!-- Whatever you like here! :-) -->
     </pnp:Configuration>
   </pnp:ProvisioningRepository>
+
+  <pnp:TemplatesProviders>
+    <pnp:TemplatesProvider name="TenantGlobal" enabled="true" type="OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders.SharePointGlobalTemplatesProvider, OfficeDevPnP.PartnerPack.Infrastructure" />
+    <pnp:TemplatesProvider name="SiteCollectionLocal" enabled="true" type="OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders.SharePointLocalTemplatesProvider, OfficeDevPnP.PartnerPack.Infrastructure" />
+    <pnp:TemplatesProvider name="TemplatesGallery" enabled="true" type="OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders.PnPTemplatesGalleryProvider, OfficeDevPnP.PartnerPack.Infrastructure">
+      <pnp:Configuration>
+        <gallery url="https://pnp-templates-gallery-dev.azurewebsites.net/" />
+      </pnp:Configuration>
+    </pnp:TemplatesProvider>
+  </pnp:TemplatesProviders>
 
   <pnp:ProvisioningJobs>
     <pnp:JobHandlers>

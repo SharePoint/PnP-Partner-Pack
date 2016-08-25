@@ -250,6 +250,35 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
             return PartialView(model.Step.ToString(), model);
         }
 
+        [HttpPost]
+        public ActionResult SearchTemplates(OfficeDevPnP.PartnerPack.Infrastructure.TargetScope scope, String parentSiteUrl, String templatesProvider, String searchText)
+        {
+            SearchTemplatesViewModel model = new SearchTemplatesViewModel();
+
+            if (!PnPPartnerPackSettings.TemplatesProviders.ContainsKey(templatesProvider))
+            {
+                throw new Exception("Invalid templates provider key!");
+            }
+
+            model.SearchResults = PnPPartnerPackSettings.TemplatesProviders[templatesProvider]
+                .SearchProvisioningTemplates(searchText, TargetPlatform.SharePointOnline, scope);
+
+            //List<ProvisioningTemplateInformation> result = new List<ProvisioningTemplateInformation>();
+
+            //var globalTemplates = ProvisioningRepositoryFactory.Current.GetGlobalProvisioningTemplates(scope);
+            //result.AddRange(globalTemplates);
+
+            //if (scope != TargetScope.Site)
+            //{
+            //    var localTemplates = ProvisioningRepositoryFactory.Current.GetLocalProvisioningTemplates(parentSiteUrl, scope);
+            //    result.AddRange(localTemplates);
+            //}
+
+            //model.SearchResults = result.ToArray();
+
+            return PartialView(model);
+        }
+
         [HttpGet]
         public ActionResult SaveSiteAsTemplate(String spHostUrl)
         {

@@ -175,3 +175,11 @@ img.templatepreview {
 .gridSettings {
     margin-bottom: 20px;
 }
+
+.stepcontainer .ms-Dropdown .ms-Label {
+    margin-bottom: 0px !important;
+}
+
+.ms-SearchBox-label {
+    font-weight: normal !important;
+}

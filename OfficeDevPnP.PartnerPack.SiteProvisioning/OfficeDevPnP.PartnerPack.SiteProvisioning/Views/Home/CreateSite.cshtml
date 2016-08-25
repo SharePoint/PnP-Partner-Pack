@@ -19,7 +19,7 @@
     @Html.HiddenFor(model => model.Scope)
     @Html.HiddenFor(model => model.ParentSiteUrl)
 
-    <div>
+    <div id="SiteCreationWizardContainer">
         @Html.Partial("~/Views/Shared/_WorkingOnIt.cshtml")
         <div id="SiteCreationWizard">
             <div id="@CreateSiteStep.TemplateSelection">
@@ -54,6 +54,8 @@
                 $(".provtemplate").removeClass("active");
                 $(this).addClass("active");
             });
+
+            $(document).on("click", ".templatesSearchButton", searchTemplates);
         });
 
         function moveWizardStep(e) {
@@ -95,10 +97,54 @@
                         var newStep = $("#@Html.IdFor(model => model.Step)", htmlResult).val();
                         $("#WorkingOnIt").hide();
                         $("#" + newStep).html(result).show();
+
+                        applyOfficeUIFabricStyles();
                     }
                 },
                 error: function (xhr, status, error) {
                     alert("Error stepping through Site creation: " + error);
+                }
+            });
+        }
+
+        function searchTemplates(e) {
+
+            // Prevent default event
+             e.preventDefault();
+
+            var searchText = $("#templatesSearch").val();
+            var templatesProvider = $("#templateProviders").val();
+
+            $("#TemplatesSelectionList").empty();
+            $("#WorkingOnIt").prependTo($("#TemplatesSelectionList"));
+            $("#WorkingOnIt").show();
+            
+            $.ajax({
+                method: "POST",
+                url: "@Url.Action("SearchTemplates")",
+                data: {
+                    scope: "@(Model.Scope)",
+                    parentSiteUrl: "@(Model.ParentSiteUrl)",
+                    templatesProvider: templatesProvider,
+                    searchText: searchText,
+                },
+                success: function (result) {
+                    if (result) {
+
+                        var htmlResult = $.parseHTML(result);
+
+                        $("#WorkingOnIt").hide();
+                        $("#WorkingOnIt").prependTo($("#SiteCreationWizardContainer"));
+
+                        $("#TemplatesSelectionList").html(result).show();
+
+                    }
+                },
+                error: function (xhr, status, error) {
+                    $("#WorkingOnIt").hide();
+                    $("#WorkingOnIt").prependTo($("#SiteCreationWizardContainer"));
+
+                    alert("Error searching for templates: " + error);
                 }
             });
         }

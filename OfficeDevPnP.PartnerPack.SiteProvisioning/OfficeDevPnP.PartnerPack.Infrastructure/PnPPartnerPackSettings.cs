@@ -352,5 +352,40 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
                 CallContext.LogicalSetData(typeof(PnPPartnerPackSettings).Name + ".ParentSiteUrl", value);
             }
         }
+
+        public static IReadOnlyDictionary<String, ITemplatesProvider> TemplatesProviders
+        {
+            get
+            {
+                Dictionary<String, ITemplatesProvider> providers = new Dictionary<String, ITemplatesProvider>();
+
+                // Browse through the configured Job Handlers
+                if (_configuration.TemplatesProviders != null)
+                {
+                    // Go through the enabled template providers
+                    foreach (var provider in _configuration.TemplatesProviders.Where(p => p.enabled))
+                    {
+                        Type providerType = Type.GetType(provider.type, true);
+                        ITemplatesProvider providerInstance = (ITemplatesProvider)Activator.CreateInstance(providerType);
+
+                        if(provider.Configuration != null)
+                        {
+                            // Convert it into a XElement
+                            using (XmlReader reader = new XmlNodeReader(provider.Configuration))
+                            {
+                                XElement configuration = XElement.Load(reader);
+
+                                // Initialize the Templates Provider
+                                providerInstance.Init(configuration);
+                            }
+                        }
+
+                        providers.Add(provider.name, providerInstance);
+                    }
+                }
+
+                return (providers);
+            }
+        }
     }
 }

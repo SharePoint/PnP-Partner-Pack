@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Xml.Linq;
 
 namespace OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders
@@ -30,7 +31,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders
             // Mind the final / in the provided URL
             // <gallery url="https://templates-gallery.officedevpnp.com/" />
 
-            if (configuration.Name != "gallery")
+            if (configuration.Name != "{http://schemas.dev.office.com/PnP/2016/08/PnPPartnerPackConfiguration}gallery")
             {
                 throw new ApplicationException("Invalid configuration settings for PnPTemplatesGalleryProvider, missing gallery root element!");
             }
@@ -96,12 +97,12 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders
         {
             ProvisioningTemplateInformation[] result = null;
 
-            String targetPlatforms = String.Empty;
-            String targetScopes = String.Empty;
+            String targetPlatforms = platforms.ToString();
+            String targetScopes = scope.ToString();
 
             // Search via HTTP REST
             var jsonSearchResult = HttpHelper.MakeGetRequestForString(
-                $"{this._templatesGalleryBaseUrl}api/SearchTemplates?searchText={searchText}&platforms={targetPlatforms}&scopes={targetScopes}");
+                $"{this._templatesGalleryBaseUrl}api/SearchTemplates?searchText={HttpUtility.UrlEncode(searchText)}&platforms={targetPlatforms}&scope={targetScopes}");
 
             // If we have any result
             if (!String.IsNullOrEmpty(jsonSearchResult))

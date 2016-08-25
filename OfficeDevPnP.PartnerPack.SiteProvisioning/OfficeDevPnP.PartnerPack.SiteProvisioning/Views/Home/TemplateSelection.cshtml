@@ -2,64 +2,56 @@
 
 @using OfficeDevPnP.PartnerPack.Infrastructure
 
-@functions {
-    public ProvisioningTemplateInformation[] GetProvisioningTemplates()
-    {
-        List<ProvisioningTemplateInformation> result = new List<ProvisioningTemplateInformation>();
 
-        var globalTemplates = ProvisioningRepositoryFactory.Current.GetGlobalProvisioningTemplates(Model.Scope);
-        result.AddRange(globalTemplates);
-
-        // TODO: Aggiornare per supportare i vari provider di template
-
-        if (Model.Scope != TargetScope.Site)
-        {
-            var localTemplates = ProvisioningRepositoryFactory.Current.GetLocalProvisioningTemplates(Model.ParentSiteUrl, Model.Scope);
-            result.AddRange(localTemplates);
-        }
-
-        return (result.ToArray());
-    }
-}
 
 <div class="stepcontainer">
 
     <input type="hidden" id="@Html.IdFor(model => model.Step)" name="@Html.NameFor(model => model.Step)" value="@Model.Step" />
+    <input type="hidden" id="@Html.IdFor(model => model.TemplatesProviderTypeName)" name="@Html.NameFor(model => model.TemplatesProviderTypeName)" value="@Model.TemplatesProviderTypeName" />
 
     <div class="ms-font-xxl">Select a Template</div>
 
-        @*<h2>Templates Provider:
-                <select id="templateProvides">
-                    <option value="1">Tenant</option>
-                    <option value="1">Local Site Collection</option>
-                    <option value="1">PnP Templates Gallery</option>
-                </select>
-                Search for:
-                <input type="text" width="100" />
-            </h2>*@
-
-        <div>
-
-            @foreach (var template in GetProvisioningTemplates())
-            {
-                <div class="provtemplate" data-pnp-template-url="@template.TemplateFileUri">
-                    <div class="roundmask">
-                        <img alt="@template.DisplayName" src="@template.TemplateImageUrl" class="templatepreview" />
-                    </div>
-                    <div class="ms-font-m-plus ms-u-textAlignCenter">@template.DisplayName</div>
-                    <span class="ms-font-m ms-u-textAlignCenter">@template.Description</span>
+    <div class="ms-Grid inputForm">
+        <div class="ms-Grid-row">
+            <div class="ms-Grid-col ms-u-sm4 ms-u-md4 ms-u-lg4">
+                <div class="ms-Dropdown">
+                    <label for="templateProviders" class="ms-Label">Templates provider</label>
+                    <i class="ms-Dropdown-caretDown ms-Icon ms-Icon--caretDown"></i>
+                    <select name="templateProviders" id="templateProviders" class="ms-Dropdown-select">
+                        @foreach (var pk in PnPPartnerPackSettings.TemplatesProviders.Keys)
+                        {
+                            <option value="@pk">@PnPPartnerPackSettings.TemplatesProviders[pk].DisplayName</option>
+                        }
+                    </select>
                 </div>
-            }
-
+            </div>
+            <div class="ms-Grid-col ms-u-sm6 ms-u-md6 ms-u-lg6">
+                <label for="templatesSearch" class="ms-Label">Search criteria</label>
+                <div class="ms-SearchBox" style="width: 100%;">
+                    <input name="templatesSearch" id="templatesSearch" class="ms-SearchBox-field" style="width: 100%; max-width: none;">
+                    <label class="ms-SearchBox-label"><i class="ms-SearchBox-icon ms-Icon ms-Icon--search"></i>Free text to search</label>
+                    <button class="ms-SearchBox-closeButton templatesSearchButton"><i class="ms-Icon ms-Icon--x"></i></button>
+                </div>
+            </div>
+            <div class="ms-Grid-col ms-u-sm2 ms-u-md2 ms-u-lg2">
+                <label class="ms-Label">&nbsp;</label>
+                <button class="ms-Button ms-Button--primary templatesSearchButton">
+                    <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+                    <span class="ms-Button-label">Search</span>
+                    <span class="ms-Button-description">Search</span>
+                </button>
+            </div>
         </div>
-
-        <input type="hidden" id="@Html.IdFor(model => model.ProvisioningTemplateUrl)" name="@Html.NameFor(model => model.ProvisioningTemplateUrl)" value="" />
-
-        <button class="ms-Button ms-Button--primary NextStep">
-            <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
-            <span class="ms-Button-label">Next</span>
-            <span class="ms-Button-description">Provide Site information</span>
-        </button>
-
     </div>
 
+    <div id="TemplatesSelectionList"></div>
+
+    <input type="hidden" id="@Html.IdFor(model => model.ProvisioningTemplateUrl)" name="@Html.NameFor(model => model.ProvisioningTemplateUrl)" value="" />
+
+    <button class="ms-Button ms-Button--primary NextStep">
+        <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+        <span class="ms-Button-label">Next</span>
+        <span class="ms-Button-description">Provide Site information</span>
+    </button>
+
+</div>
