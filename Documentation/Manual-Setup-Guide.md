@@ -40,9 +40,9 @@ During the setup guide you will often find two suitable alternatives to achieve 
 ### Azure Active Directory Application Registration
 First of all, because the PnP Partner Pack is an Office 365 Application, you have to **register it in the Azure Active Directory tenant** that is linked to your Office 365 tenant. In order to do that, open the Office 365 Admin Center (https://portal.office.com) using the account of a user member of the Tenant Global Admins group.
 
-Click on the "Azure AD" link that is available under the ADMIN group in the left-side treeview of the Office 365 Admin Center. In the new browser's tab that will be opened you will find the Microsoft Azure Management Portal. If it is the first time that you access the Azure Management Portal with your account, you will have to register a new Azure subscription, providing some information and a credit card for any payment need. But don't worry, in order to play with Azure AD and to register Office 365 Application you will not pay anything. In fact, those are free capabilities. 
+Click on the "Azure AD" link that is available under the "Ademin centers" group in the left-side treeview of the Office 365 Admin Center. In the new browser's tab that will be opened you will find the Microsoft Azure Management Portal. If it is the first time that you access the Azure Management Portal with your account, you will have to register a new Azure subscription, providing some information and a credit card for any payment need. But don't worry, in order to play with Azure AD and to register Office 365 Application you will not pay anything. In fact, those are free capabilities. 
 
-After having accessed the Azure Management Portal, select the "Active Directory" section, by clicking on the icon highlighted in the following screen shot:
+Once having access to the Azure Management Portal, select the "Active Directory" section, by clicking on the icon highlighted in the following screen shot:
 
 ![Azure AD Button](./Figures/Fig-01-Azure-AD-Button.png)
 
@@ -59,7 +59,7 @@ Then, provide a **name** for your application (we suggest to name it "OfficeDev 
 
 ![Azure AD - Add an Application - Second Step](./Figures/Fig-04-Azure-AD-Add-Application-Step-02.png)
 
-In the following registration step, provide the **URL** of the Azure Web App that you will create (in one of the following steps) and define a **unique ID**, which can be for example `https://yourtenantonmicrosoft.com/OfficeDevPnP.PartnerPack.SiteProvisioning`.
+In the following registration step, provide the **URL** of the Azure Web App that you will create (in one of the following steps) and define a **unique ID**, which can be for example `https://yourtenant.onmicrosoft.com/OfficeDevPnP.PartnerPack.SiteProvisioning`.
 
 ![Azure AD - Add an Application - Third Step](./Figures/Fig-05-Azure-AD-Add-Application-Step-03.png)
 
@@ -248,7 +248,7 @@ In the latter library, you will already find some Provisioning Templates, organi
 ### Azure Blob Storage configuration
 To handle some asynchronous tasks, the PnP Partner Pack uses an Azure Blob Storage service to queue items. Thus, you will need to configure an Azure Blob Storage account.
 
-Open the Microsoft Azure Management Portal, with a valid Microsoft Azure subscription, and create a **new Azure Blob Storage account**. For example, you can call the Azure Blob Storage account with a name like pnppartnerpack[tenant], or whatever else you like. After having created the Azure Blob Storage account, open the "Manage Access Keys" popup screen and copy the values of **"Storage Account Name"**, and **"Primary Access Key"**.
+Open the Microsoft Azure Management Portal, with a valid Microsoft Azure subscription, and create a **new Azure Blob Storage account**. For example, you can call the Azure Blob Storage account with a name like pnppartnerpack[tenant], or whatever else you like. After having created the Azure Blob Storage account, open the "Manage Access Keys" popup screen and copy the values of **"Storage Account Name"**, and **"Primary Access Key"**. Alternatively if using the new Azure Portal, click on your Storage account, click on **"'Accss keys'** under the Settings header and copy out the **"Storage account name"** and **"key1"** values.
 
 <a name="azurewebapp"></a>
 ### Azure Web App provisioning and configuration
@@ -351,11 +351,11 @@ Once you have created and configured the Azure Web App, open the "Scale" tab and
 
 ![Azure Web App - BASIC Pricing Level](./Figures/Fig-11-Azure-Web-App-02.png)
 
-You need at least the "BASIC" pricing plan, because you will need to upload the .PFX file of the self-signed certificate to create the App Only context, and the "BASIC" level is the minimum level that allows management of custom X.509 certificates. Thus, go into the **"Configuration"** tab and add a new X.509 certificate to the Azure Web App, through the proper configuration section, which is highlighted in the following figure.
+You need at least the "BASIC" pricing plan, because you will need to upload the .PFX file of the self-signed certificate to create the App Only context, and the "BASIC" level is the minimum level that allows management of custom X.509 certificates. Thus, go into the **"Configuration"** tab and add a new X.509 certificate to the Azure Web App, through the proper configuration section, which is highlighted in the following figure. Alternatively through the new Azure Portal you will go into the App Service, click on **"Custom domains and SSL"**, click on the **"More"** menu at the top, click on **"Upload Certificates"**, select the PFX certificate that you have created earlier on in these steps and click on **'Save'**.
 
 ![Azure Web App - X.509 Certificate](./Figures/Fig-12-Azure-Web-App-03.png)
 
-After that, scroll a little bit to the "App Settings" section. There, you will have to configure a setting called *WEBSITE_LOAD_CERTIFICATES* with a value of ***. In the following figure you can see a sample configuration.
+After that, scroll a little bit to the "App Settings" section. There, you will have to configure a setting called *WEBSITE_LOAD_CERTIFICATES* with a value of *. In the following figure you can see a sample configuration. Alternatively through the new Azure Portal, you have to go to **"Application settings"**, scroll down to the **"App settings"** section and add the *WEBSITE_LOAD_CERTIFICATES* entry with a value of *. Click on **"Save"** at the top to confirm your modification.
 
 ![Azure Web App - SSL Certificates Setting](./Figures/Fig-13-Azure-Web-App-04.png)
 
