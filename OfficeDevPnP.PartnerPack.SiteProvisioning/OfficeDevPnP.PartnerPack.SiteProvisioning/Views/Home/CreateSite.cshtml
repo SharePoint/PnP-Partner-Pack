@@ -115,6 +115,8 @@
             var searchText = $("#templatesSearch").val();
             var templatesProvider = $("#templateProviders").val();
 
+            $("#@(Html.IdFor(model => model.TemplatesProviderTypeName))").val(templatesProvider);
+
             $("#TemplatesSelectionList").empty();
             $("#WorkingOnIt").prependTo($("#TemplatesSelectionList"));
             $("#WorkingOnIt").show();
