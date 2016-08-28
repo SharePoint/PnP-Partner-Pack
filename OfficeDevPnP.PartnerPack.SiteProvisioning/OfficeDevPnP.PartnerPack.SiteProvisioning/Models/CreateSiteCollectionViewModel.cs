@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OfficeDevPnP.PartnerPack.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -22,7 +23,6 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
                 {
                     _primarySiteCollectionAdmin = new PrincipalsViewModel();
                     _primarySiteCollectionAdmin.MaxSelectableProfilesNumber = 1;
-                    _primarySiteCollectionAdmin.ValidateSPOLicense = true;
                     _primarySiteCollectionAdmin.IncludeGroups = false;
                 }
 
@@ -47,7 +47,6 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
                 {
                     _secondarySiteCollectionAdmin = new PrincipalsViewModel();
                     _secondarySiteCollectionAdmin.MaxSelectableProfilesNumber = 1;
-                    _secondarySiteCollectionAdmin.ValidateSPOLicense = true;
                     _secondarySiteCollectionAdmin.IncludeGroups = false;
                 }
 

@@ -14,5 +14,8 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
         public static String MicrosoftGraphV1BaseUri = "https://graph.microsoft.com/v1.0/";
         public static String MicrosoftGraphBetaBaseUri = "https://graph.microsoft.com/beta/";
         public static String MicrosoftGraphResourceId = "https://graph.microsoft.com";
+
+        public static String GlobalTenantAdminRole = "Company Administrator";
+        public static String GlobalSPOAdminRole = "SharePoint Service Administrator";
     }
 }

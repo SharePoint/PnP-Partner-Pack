@@ -246,6 +246,7 @@
     <Compile Include="TemplatesProviders\SharePointGlobalTemplatesProvider.cs" />
     <Compile Include="TemplatesProviders\SharePointLocalTemplatesProvider.cs" />
     <Compile Include="TokenHelper.cs" />
+    <Compile Include="UserRoles.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

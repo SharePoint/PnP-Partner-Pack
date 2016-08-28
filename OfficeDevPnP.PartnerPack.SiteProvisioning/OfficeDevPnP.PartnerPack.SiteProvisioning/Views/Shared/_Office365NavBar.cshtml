@@ -24,7 +24,8 @@
             </ul>
         </li>
 
-        @if (OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackUtilities.UserIsTenantGlobalAdmin())
+        @if (OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackUtilities.UserIsTenantGlobalAdmin() ||
+            OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackUtilities.UserIsSPOAdmin())
         {
             <li class="ms-NavBar-item ms-NavBar-item--right"><a class="ms-NavBar-link" href="/Home/Settings"><i class="ms-Icon ms-Icon--gear"></i> Settings</a></li>
         }

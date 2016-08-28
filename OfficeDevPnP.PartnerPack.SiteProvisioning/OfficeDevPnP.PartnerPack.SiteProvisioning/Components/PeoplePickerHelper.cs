@@ -16,12 +16,12 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Components
     {
         private GraphServiceClient graphClient = MicrosoftGraphHelper.GetNewGraphClient();
 
-        public async Task<PrincipalsViewModel> GetPeoplePickerSearchData(string nameToSearch, bool searchGroups = true, bool validateSPOLicense = true, int maxResultCount = 6)
+        public async Task<PrincipalsViewModel> GetPeoplePickerSearchData(string nameToSearch, bool searchGroups = true, List<Guid> validationSkus = null, int maxResultCount = 6)
         {
             PrincipalsViewModel result = new PrincipalsViewModel();
             try
             {
-                var filteredUsers = await GetUsers(nameToSearch, validateSPOLicense);
+                var filteredUsers = await GetUsers(nameToSearch);
                 result.Principals.AddRange(filteredUsers.Principals);
 
                 if (searchGroups)
@@ -44,7 +44,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Components
             return result;
         }
 
-        private async Task<PrincipalsViewModel> GetUsers(string nameToSearch, bool validateSPOLicense, IGraphServiceUsersCollectionRequest request = null)
+        private async Task<PrincipalsViewModel> GetUsers(string nameToSearch, IGraphServiceUsersCollectionRequest request = null)
         {
             PrincipalsViewModel result = new PrincipalsViewModel();
 
@@ -53,16 +53,12 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Components
                     .Filter($"startswith(DisplayName,'{nameToSearch}') or startswith(UserPrincipalName,'{nameToSearch}') or startswith(Mail,'{nameToSearch}')")
                     .GetAsync();
 
-            if (validateSPOLicense)
-            {
-                filteredUsers = await CheckLicensedUsers(filteredUsers);
-            }
             var t = await MapUsers(filteredUsers);
             result.Principals.AddRange(t.Principals);
 
             if (filteredUsers.NextPageRequest != null)
             {
-                var additionalUsers = await GetUsers(nameToSearch, validateSPOLicense, filteredUsers.NextPageRequest);
+                var additionalUsers = await GetUsers(nameToSearch, filteredUsers.NextPageRequest);
 
                 if (additionalUsers.Principals.Count > 0)
                 {
@@ -71,12 +67,6 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Components
             }
 
             return result;
-        }
-
-        private Task<IGraphServiceUsersCollectionPage> CheckLicensedUsers(IGraphServiceUsersCollectionPage filteredUsers)
-        {
-            // TODO: Implement license check
-            return Task.FromResult(filteredUsers);
         }
 
         private async Task<PrincipalsViewModel> MapUsers(IGraphServiceUsersCollectionPage source)

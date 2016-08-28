@@ -116,11 +116,6 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
         public Int32 MaxSelectableProfilesNumber { get; set; } = 1;
 
         /// <summary>
-        /// Allows to require that the users have a valid SPO license
-        /// </summary>
-        public Boolean ValidateSPOLicense { get; set; } = true;
-
-        /// <summary>
         /// Allows to defines whether to search for groups, and not only for users
         /// </summary>
         public Boolean IncludeGroups { get; set; } = false;

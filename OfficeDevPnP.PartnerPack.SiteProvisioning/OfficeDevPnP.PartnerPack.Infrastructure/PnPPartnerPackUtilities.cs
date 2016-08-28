@@ -1,4 +1,5 @@
 ﻿using Microsoft.SharePoint.Client;
+using Newtonsoft.Json;
 using OfficeDevPnP.Core.Framework.Provisioning.Model;
 using OfficeDevPnP.Core.Framework.Provisioning.ObjectHandlers;
 using OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml;
@@ -99,7 +100,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
             ProvisioningTemplate template = provider.GetTemplate(fileName);
             template.Connector = provider.Connector;
 
-            ProvisioningTemplateApplyingInformation ptai = 
+            ProvisioningTemplateApplyingInformation ptai =
                 new ProvisioningTemplateApplyingInformation();
 
             // We exclude Term Groups because they are not supported in AppOnly
@@ -170,8 +171,38 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
 
         public static Boolean UserIsTenantGlobalAdmin()
         {
-            // TODO: Implement method UserIsTenantGlobalAdmin
-            return (true);
+            return (UserIsAdmin(MicrosoftGraphConstants.GlobalTenantAdminRole));
+        }
+
+        public static Boolean UserIsSPOAdmin()
+        {
+            return (UserIsAdmin(MicrosoftGraphConstants.GlobalSPOAdminRole));
+        }
+
+        private static Boolean UserIsAdmin(String targetRole)
+        {
+            try
+            {
+                // Retrieve (using the Microsoft Graph) the current user's roles
+                String jsonResponse = HttpHelper.MakeGetRequestForString(
+                    String.Format("{0}me/memberOf?$select=id,displayName",
+                        MicrosoftGraphConstants.MicrosoftGraphV1BaseUri),
+                    MicrosoftGraphHelper.GetAccessTokenForCurrentUser(MicrosoftGraphConstants.MicrosoftGraphResourceId));
+
+                if (jsonResponse != null)
+                {
+                    var result = JsonConvert.DeserializeObject<UserRoles>(jsonResponse);
+                    // Check if the requested role (of type DirectoryRole) is included in the list
+                    return (result.Roles.Any(r => r.DisplayName == targetRole && 
+                        r.DataType.Equals("#microsoft.graph.directoryRole", StringComparison.InvariantCultureIgnoreCase)));
+                }
+            }
+            catch (Exception)
+            {
+                // Ignore any exception and return false (user is not member of ...)
+            }
+
+            return (false);
         }
 
         public static String GetSiteCollectionRootUrl(String siteUrl)
