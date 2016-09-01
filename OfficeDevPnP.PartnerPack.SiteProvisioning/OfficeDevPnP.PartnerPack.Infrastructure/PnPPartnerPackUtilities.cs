@@ -40,15 +40,10 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
 
         public static void EnableResponsiveDesignOnSite(String siteUrl)
         {
-            // TODO: Move to core library method
-
             using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(siteUrl))
             {
-                ApplyProvisioningTemplateToSite(context,
-                    PnPPartnerPackSettings.InfrastructureSiteUrl,
-                    "Responsive",
-                    "SPO-Responsive.xml",
-                    handlers: Handlers.CustomActions);
+                Web web = context.Web;
+                web.EnableResponsiveUI(PnPPartnerPackSettings.InfrastructureSiteUrl);
             }
         }
 

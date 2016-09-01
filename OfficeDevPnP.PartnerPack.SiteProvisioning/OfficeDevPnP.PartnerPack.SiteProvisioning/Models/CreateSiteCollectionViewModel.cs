@@ -65,10 +65,10 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
         public Int64 StorageWarningLevel { get; set; } = 900;
 
         [DisplayName("User Code Maximum Level")]
-        public Int64 UserCodeMaximumLevel { get; set; } = 300;
+        public Int64 UserCodeMaximumLevel { get; set; } = 0;
 
         [DisplayName("User Code Warning Level")]
-        public Int64 UserCodeWarningLevel { get; set; } = 250;
+        public Int64 UserCodeWarningLevel { get; set; } = 0;
 
         [DisplayName("External Sharing")]
         public Boolean ExternalSharingEnabled { get; set; }

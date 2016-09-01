@@ -37,59 +37,77 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                 // Get a reference to the parent Web
                 Web parentWeb = context.Web;
 
-                // Create the new sub site as a new child Web
-                WebCreationInformation newWeb = new WebCreationInformation();
-                newWeb.Description = job.Description;
-                newWeb.Language = job.Language;
-                newWeb.Title = job.SiteTitle;
-                newWeb.Url = subSiteUrl;
-                newWeb.UseSamePermissionsAsParentSite = job.InheritPermissions;
-                newWeb.WebTemplate = PnPPartnerPackSettings.DefaultSiteTemplate;
-
-                Web web = parentWeb.Webs.Add(newWeb);
-                context.ExecuteQueryRetry();
-
-                Console.WriteLine("Site \"{0}\" created.", subSiteUrl);
-
-                // Apply the Provisioning Template
-                Console.WriteLine("Applying Provisioning Template \"{0}\" to site.", 
-                    job.ProvisioningTemplateUrl);
-
-                // Determine the reference URLs and file names
-                String templatesSiteUrl = job.ProvisioningTemplateUrl.Substring(0,
-                    job.ProvisioningTemplateUrl.IndexOf(PnPPartnerPackConstants.PnPProvisioningTemplates));
-                String templateFileName = job.ProvisioningTemplateUrl.Substring(job.ProvisioningTemplateUrl.LastIndexOf("/") + 1);
-
-                // Configure the XML file system provider
-                XMLTemplateProvider provider =
-                    new XMLSharePointTemplateProvider(context, templatesSiteUrl,
-                        PnPPartnerPackConstants.PnPProvisioningTemplates);
-
-                // Load the template from the XML stored copy
-                ProvisioningTemplate template = provider.GetTemplate(templateFileName);
-                template.Connector = provider.Connector;
-
-                // We do intentionally remove taxonomies, which are not supported in the AppOnly Authorization model
-                // For further details, see the PnP Partner Pack documentation 
-                ProvisioningTemplateApplyingInformation ptai =
-                    new ProvisioningTemplateApplyingInformation();
-                ptai.HandlersToProcess ^=
-                    OfficeDevPnP.Core.Framework.Provisioning.Model.Handlers.TermGroups;
-
-                // Configure template parameters
-                foreach (var key in template.Parameters.Keys)
+                // Load the template from the source Templates Provider
+                if (!String.IsNullOrEmpty(job.TemplatesProviderTypeName))
                 {
-                    if (job.TemplateParameters.ContainsKey(key))
+                    ProvisioningTemplate template = null;
+
+                    var templatesProvider = PnPPartnerPackSettings.TemplatesProviders[job.TemplatesProviderTypeName];
+                    if (templatesProvider != null)
                     {
-                        template.Parameters[key] = job.TemplateParameters[key];
+                        template = templatesProvider.GetProvisioningTemplate(job.ProvisioningTemplateUrl);
+                    }
+
+                    if (template != null)
+                    {
+                        // Create the new sub site as a new child Web
+                        WebCreationInformation newWeb = new WebCreationInformation();
+                        newWeb.Description = job.Description;
+                        newWeb.Language = job.Language;
+                        newWeb.Title = job.SiteTitle;
+                        newWeb.Url = subSiteUrl;
+                        newWeb.UseSamePermissionsAsParentSite = job.InheritPermissions;
+
+                        // Use the BaseSiteTemplate of the template, if any, otherwise 
+                        // fallback to the pre-configured site template (i.e. STS#0)
+                        newWeb.WebTemplate = !String.IsNullOrEmpty(template.BaseSiteTemplate) ? 
+                            template.BaseSiteTemplate : 
+                            PnPPartnerPackSettings.DefaultSiteTemplate;
+
+                        Web web = parentWeb.Webs.Add(newWeb);
+                        context.ExecuteQueryRetry();
+
+                        Console.WriteLine("Site \"{0}\" created.", subSiteUrl);
+
+                        // Apply the Provisioning Template
+                        Console.WriteLine("Applying Provisioning Template \"{0}\" to site.",
+                            job.ProvisioningTemplateUrl);
+
+                        // We do intentionally remove taxonomies, which are not supported in the AppOnly Authorization model
+                        // For further details, see the PnP Partner Pack documentation 
+                        ProvisioningTemplateApplyingInformation ptai =
+                            new ProvisioningTemplateApplyingInformation();
+
+                        // Write provisioning steps on console log
+                        ptai.MessagesDelegate += delegate (string message, ProvisioningMessageType messageType) {
+                            Console.WriteLine("{0} - {1}", messageType, messageType);
+                        };
+                        ptai.ProgressDelegate += delegate (string message, int step, int total) {
+                            Console.WriteLine("{0:00}/{1:00} - {2}", step, total, message);
+                        };
+
+                        // Exclude handlers not supported in App-Only
+                        ptai.HandlersToProcess ^=
+                            OfficeDevPnP.Core.Framework.Provisioning.Model.Handlers.TermGroups;
+                        ptai.HandlersToProcess ^=
+                            OfficeDevPnP.Core.Framework.Provisioning.Model.Handlers.SearchSettings;
+
+                        // Configure template parameters
+                        foreach (var key in template.Parameters.Keys)
+                        {
+                            if (job.TemplateParameters.ContainsKey(key))
+                            {
+                                template.Parameters[key] = job.TemplateParameters[key];
+                            }
+                        }
+
+                        // Apply the template to the target site
+                        web.ApplyProvisioningTemplate(template, ptai);
+
+                        Console.WriteLine("Applyed Provisioning Template \"{0}\" to site.",
+                            job.ProvisioningTemplateUrl);
                     }
                 }
-
-                // Apply the template to the target site
-                web.ApplyProvisioningTemplate(template, ptai);
-
-                Console.WriteLine("Applyed Provisioning Template \"{0}\" to site.",
-                    job.ProvisioningTemplateUrl);
             }
         }
     }

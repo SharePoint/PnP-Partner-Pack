@@ -8,6 +8,7 @@ using OfficeDevPnP.Core.Framework.Provisioning.Model;
 using Microsoft.SharePoint.Client;
 using OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml;
 using OfficeDevPnP.Core.Framework.Provisioning.Connectors;
+using OfficeDevPnP.Core.Framework.Provisioning.Providers;
 
 namespace OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders
 {
@@ -42,23 +43,35 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders
 
                 web.EnsureProperty(w => w.Url);
 
-                var templateRelativePath = templateUri.Substring(0, web.Url.Length + 1);
-                templateRelativePath = templateUri.Substring(0, PnPPartnerPackConstants.PnPProvisioningTemplates.Length + 1);
+                var templateRelativePath = templateUri.Substring(templateUri.LastIndexOf("/") + 1);
 
                 // Configure the SharePoint Connector
                 var sharepointConnector = new SharePointConnector(context, web.Url,
                     PnPPartnerPackConstants.PnPProvisioningTemplates);
 
-                // Configure the Open XML provider
-                XMLTemplateProvider provider =
-                    new XMLOpenXMLTemplateProvider(
-                        new OpenXMLConnector(templateRelativePath, sharepointConnector));
+                TemplateProviderBase provider = null;
+                // If the target is a .PNP Open XML template
+                if (templateRelativePath.ToLower().EndsWith(".pnp"))
+                {
+                    // Configure the Open XML provider for SharePoint
+                    provider =
+                        new XMLOpenXMLTemplateProvider(
+                            new OpenXMLConnector(templateRelativePath, sharepointConnector));
+                }
+                else
+                {
+                    // Otherwise use the .XML template provider for SharePoint
+                    provider =
+                        new XMLSharePointTemplateProvider(context, web.Url,
+                            PnPPartnerPackConstants.PnPProvisioningTemplates);
+                }
 
-                // Determine the name of the XML file inside the PNP Open XML file
+                // Determine the name of the XML file inside the PNP Open XML file, if any
                 var xmlTemplateFile = templateRelativePath.ToLower().Replace(".pnp", ".xml");
 
                 // Get the template
                 ProvisioningTemplate template = provider.GetTemplate(xmlTemplateFile);
+                template.Connector = provider.Connector;
 
                 return (template);
             }
@@ -82,10 +95,10 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders
                 {
                     if ((platforms & TargetPlatform.SharePointOnline) == TargetPlatform.SharePointOnline)
                     {
-                        platformsCAMLFilter = @"<Contains>
+                        platformsCAMLFilter = @"<Eq>
                                                     <FieldRef Name='PnPProvisioningTemplatePlatform' />
-                                                    <Value Type='Text'>SharePoint Online</Value>
-                                                </Contains>";
+                                                    <Value Type='MultiChoice'>SharePoint Online</Value>
+                                                </Eq>";
                     }
                     if ((platforms & TargetPlatform.SharePoint2016) == TargetPlatform.SharePoint2016)
                     {
@@ -93,18 +106,18 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders
                         {
                             platformsCAMLFilter = @"<Or>" +
                                                         platformsCAMLFilter + @"
-                                                        <Contains>
+                                                        <Eq>
                                                             <FieldRef Name='PnPProvisioningTemplatePlatform' />
-                                                            <Value Type='Text'>SharePoint 2016</Value>
-                                                        </Contains>
+                                                            <Value Type='MultiChoice'>SharePoint 2016</Value>
+                                                        </Eq>
                                                     </Or>";
                         }
                         else
                         {
-                            platformsCAMLFilter = @"<Contains>
+                            platformsCAMLFilter = @"<Eq>
                                                     <FieldRef Name='PnPProvisioningTemplatePlatform' />
-                                                    <Value Type='Text'>SharePoint 2016</Value>
-                                                </Contains>";
+                                                    <Value Type='MultiChoice'>SharePoint 2016</Value>
+                                                </Eq>";
                         }
                     }
                     if ((platforms & TargetPlatform.SharePoint2013) == TargetPlatform.SharePoint2013)
@@ -113,18 +126,18 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders
                         {
                             platformsCAMLFilter = @"<Or>" +
                                                         platformsCAMLFilter + @"
-                                                        <Contains>
+                                                        <Eq>
                                                             <FieldRef Name='PnPProvisioningTemplatePlatform' />
-                                                            <Value Type='Text'>SharePoint 2013</Value>
-                                                        </Contains>
+                                                            <Value Type='MultiChoice'>SharePoint 2013</Value>
+                                                        </Eq>
                                                     </Or>";
                         }
                         else
                         {
-                            platformsCAMLFilter = @"<Contains>
+                            platformsCAMLFilter = @"<Eq>
                                                     <FieldRef Name='PnPProvisioningTemplatePlatform' />
-                                                    <Value Type='Text'>SharePoint 2013</Value>
-                                                </Contains>";
+                                                    <Value Type='MultiChoice'>SharePoint 2013</Value>
+                                                </Eq>";
                         }
                     }
 
@@ -138,7 +151,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders
                             @"<View>
                         <Query>
                             <Where>" +
-                                (!String.IsNullOrEmpty(platformsCAMLFilter) ? "<And>" : String.Empty) + @"
+                                (!String.IsNullOrEmpty(platformsCAMLFilter) ? " < And>" : String.Empty) + @"
                                     <And>
                                         <Eq>
                                             <FieldRef Name='PnPProvisioningTemplateScope' />
@@ -179,12 +192,25 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders
                             // Get the template file name and server relative URL
                             item.File.EnsureProperties(f => f.Name, f => f.ServerRelativeUrl);
 
-                            // Configure the Open XML provider
-                            XMLTemplateProvider provider =
-                                new XMLOpenXMLTemplateProvider(
-                                    new OpenXMLConnector(item.File.Name, sharepointConnector));
+                            TemplateProviderBase provider = null;
 
-                            // Determine the name of the XML file inside the PNP Open XML file
+                            // If the target is a .PNP Open XML template
+                            if (item.File.Name.ToLower().EndsWith(".pnp"))
+                            {
+                                // Configure the Open XML provider for SharePoint
+                                provider =
+                                    new XMLOpenXMLTemplateProvider(
+                                        new OpenXMLConnector(item.File.Name, sharepointConnector));
+                            }
+                            else
+                            {
+                                // Otherwise use the .XML template provider for SharePoint
+                                provider =
+                                    new XMLSharePointTemplateProvider(context, web.Url,
+                                        PnPPartnerPackConstants.PnPProvisioningTemplates);
+                            }
+
+                            // Determine the name of the XML file inside the PNP Open XML file, if any
                             var xmlTemplateFile = item.File.Name.ToLower().Replace(".pnp", ".xml");
 
                             // Get the template
@@ -249,7 +275,17 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders
 
                             #endregion
 
-                            result.Add(templateInformation);
+                            // If we don't have a search text 
+                            // or we have a search text and it is contained either 
+                            // in the DisplayName or in the Description of the template
+                            if ((!String.IsNullOrEmpty(searchText) && 
+                                ((!String.IsNullOrEmpty(template.DisplayName) && template.DisplayName.ToLower().Contains(searchText.ToLower())) ||
+                                (!String.IsNullOrEmpty(template.Description) && template.Description.ToLower().Contains(searchText.ToLower())))) ||
+                                String.IsNullOrEmpty(searchText))
+                            {
+                                // Add the template to the result
+                                result.Add(templateInformation);
+                            }
                         }
                     }
                     catch (ServerException)

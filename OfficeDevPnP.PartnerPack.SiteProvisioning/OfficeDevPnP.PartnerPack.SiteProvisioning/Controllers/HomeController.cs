@@ -17,6 +17,12 @@ using System.Drawing;
 using System.IO;
 using System.Drawing.Imaging;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
+using System.Net.Http;
+using OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml;
+using OfficeDevPnP.Core.Framework.Provisioning.Connectors;
+using System.Net.Http.Headers;
+using System.Net;
 
 namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
 {
@@ -82,21 +88,14 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
                     else
                     {
                         if (!String.IsNullOrEmpty(model.ProvisioningTemplateUrl) &&
-                            model.ProvisioningTemplateUrl.IndexOf(PnPPartnerPackConstants.PnPProvisioningTemplates) > 0)
+                            !String.IsNullOrEmpty(model.TemplatesProviderTypeName))
                         {
-                            String templateSiteUrl = model.ProvisioningTemplateUrl.Substring(0, model.ProvisioningTemplateUrl.IndexOf(PnPPartnerPackConstants.PnPProvisioningTemplates));
-                            String templateFileName = model.ProvisioningTemplateUrl.Substring(model.ProvisioningTemplateUrl.IndexOf(PnPPartnerPackConstants.PnPProvisioningTemplates) + PnPPartnerPackConstants.PnPProvisioningTemplates.Length + 1);
-                            String templateFolder = String.Empty;
-
-                            if (templateFileName.IndexOf("/") > 0)
+                            var templatesProvider = PnPPartnerPackSettings.TemplatesProviders[model.TemplatesProviderTypeName];
+                            if (templatesProvider != null)
                             {
-                                templateFolder = templateFileName.Substring(0, templateFileName.LastIndexOf("/") - 1);
-                                templateFileName = templateFileName.Substring(templateFolder.Length + 1);
+                                var template = templatesProvider.GetProvisioningTemplate(model.ProvisioningTemplateUrl);
+                                model.TemplateParameters = template.Parameters;
                             }
-                            model.TemplateParameters = PnPPartnerPackUtilities.GetProvisioningTemplateParameters(
-                                    templateSiteUrl,
-                                    templateFolder,
-                                    templateFileName);
                         }
                     }
                     break;
@@ -128,6 +127,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
                                 null) : null;
 
                         job.ProvisioningTemplateUrl = model.ProvisioningTemplateUrl;
+                        job.TemplatesProviderTypeName = model.TemplatesProviderTypeName;
                         job.StorageMaximumLevel = model.StorageMaximumLevel;
                         job.StorageWarningLevel = model.StorageWarningLevel;
                         job.UserCodeMaximumLevel = model.UserCodeMaximumLevel;
@@ -232,6 +232,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
                         job.SitePolicy = model.SitePolicy;
                         job.Owner = ClaimsPrincipal.Current.Identity.Name;
                         job.ProvisioningTemplateUrl = model.ProvisioningTemplateUrl;
+                        job.TemplatesProviderTypeName = model.TemplatesProviderTypeName;
                         job.InheritPermissions = model.InheritPermissions;
                         job.Title = String.Format("Provisioning of Sub Site \"{1}\" with Template \"{0}\" by {2}",
                             job.ProvisioningTemplateUrl,
@@ -459,6 +460,36 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         public ActionResult Error(string message)
         {
             throw new Exception(message);
+        }
+
+        [HttpGet]
+        public ActionResult GetTemplateImagePreviewFromPnP(String imagePreviewUri)
+        {
+            if (String.IsNullOrEmpty(imagePreviewUri))
+            {
+                throw new ArgumentNullException("imagePreviewUri");
+            }
+
+            // Recover the original protocol moniker
+            var sourceUrl = imagePreviewUri.Replace("pnps://", "https://").Replace("pnp://", "http://");
+            var imagePreviewFile = sourceUrl.Substring(sourceUrl.LastIndexOf("/") + 1);
+            var pnpFileUrl = sourceUrl.Substring(0, sourceUrl.LastIndexOf("/"));
+            var pnpFileName = pnpFileUrl.Substring(pnpFileUrl.LastIndexOf("/") + 1);
+            var sourceSiteUrl = PnPPartnerPackUtilities.GetSiteCollectionRootUrl(pnpFileUrl);
+            var sourceSiteFolder = pnpFileUrl.Substring(sourceSiteUrl.Length + 1, pnpFileUrl.LastIndexOf("/") - sourceSiteUrl.Length - 1);
+
+            using (var repositoryContext = PnPPartnerPackContextProvider.GetAppOnlyClientContext(sourceSiteUrl))
+            {
+                var repositoryWeb = repositoryContext.Web;
+                repositoryWeb.EnsureProperty(w => w.Url);
+
+                XMLTemplateProvider provider = new XMLOpenXMLTemplateProvider(pnpFileName,
+                    new SharePointConnector(repositoryContext, repositoryWeb.Url, sourceSiteFolder));
+
+                var imageFileStream = provider.Connector.GetFileStream(imagePreviewFile);
+
+                return (base.File(imageFileStream, "image/png"));
+            }
         }
     }
 }

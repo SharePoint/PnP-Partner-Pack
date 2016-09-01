@@ -53,12 +53,11 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders
         public ProvisioningTemplate GetProvisioningTemplate(string templateUri)
         {
             ProvisioningTemplate result = null;
-            HttpResponseHeaders responseHeaders; 
 
             // Get the template via HTTP REST
-            var templateStream = HttpHelper.MakeGetRequestForStreamWithResponseHeaders(
-                $"{this._templatesGalleryBaseUrl}api/DownloadTemplate/{templateUri}",
-                "application/octet-stream", out responseHeaders);
+            var templateStream = HttpHelper.MakeGetRequestForStream(
+                $"{this._templatesGalleryBaseUrl}api/DownloadTemplate?templateUri={HttpUtility.UrlEncode(templateUri)}",
+                "application/octet-stream");
 
             // If we have any result
             if (templateStream != null)
@@ -66,21 +65,14 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders
                 XMLTemplateProvider provider = new XMLOpenXMLTemplateProvider(
                     new OpenXMLConnector(templateStream));
 
-                // Read the .PNP Open XML file name
-                if (responseHeaders.Contains("Content-Disposition"))
-                {
-                    // Read the content disposition header value
-                    var contentDispositionHeader = responseHeaders.FirstOrDefault(h => h.Key == "Content-Disposition");
-                    var contentDisposition = new System.Net.Mime.ContentDisposition(contentDispositionHeader.Value.First());
+                var openXMLFileName = templateUri.Substring(templateUri.LastIndexOf("/") + 1);
 
-                    var openXMLFileName = contentDisposition.FileName;
+                // Determine the name of the XML file inside the PNP Open XML file
+                var xmlTemplateFile = openXMLFileName.ToLower().Replace(".pnp", ".xml");
 
-                    // Determine the name of the XML file inside the PNP Open XML file
-                    var xmlTemplateFile = openXMLFileName.ToLower().Replace(".pnp", ".xml");
-
-                    // Get the template
-                    result = provider.GetTemplate(xmlTemplateFile);
-                }
+                // Get the template
+                result = provider.GetTemplate(xmlTemplateFile);
+                result.Connector = provider.Connector;
             }
 
             return (result);
