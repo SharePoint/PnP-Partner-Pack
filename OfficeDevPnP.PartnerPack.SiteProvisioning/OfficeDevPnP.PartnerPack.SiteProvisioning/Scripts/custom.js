@@ -29,9 +29,9 @@ function applyOfficeUIFabricStyles() {
         $(".ms-Dialog").Dialog();
     }
 
-    if ($.fn.ContextualMenu) {
-        $(".ms-ContextualMenu").ContextualMenu();
-    }
+    //if ($.fn.ContextualMenu) {
+    //    $(".ms-ContextualMenu").ContextualMenu();
+    //}
 
     if ($.fn.Facepile) {
         $(".ms-Facepile").Facepile();
@@ -80,4 +80,7 @@ $(document).ready(function () {
     // Hide any unavailable persona image
     fixPersonaImages();
 
+    $(".ms-ContextualMenu-link").click(function () {
+        debugger;
+    });
 });

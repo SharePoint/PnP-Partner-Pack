@@ -39,5 +39,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
         public const String PLATFORM_SP2013 = "PnP_Supports_SP2013_Platform";
 
         public const String TRUE_VALUE = "True";
+
+        public const String PropertyBag_Branding = "PnP_Branding_TenantSettings";
     }
 }

@@ -292,6 +292,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ApplyProvisioningTemplateViewModel.cs" />
+    <Compile Include="Models\BrandingViewModel.cs" />
     <Compile Include="Models\CreateSiteCollectionViewModel.cs" />
     <Compile Include="Models\CreateSiteViewModel.cs" />
     <Compile Include="Models\CreateSubSiteViewModel.cs" />
@@ -378,6 +379,7 @@
     <Content Include="Scripts\custom.principals.js" />
     <Content Include="Scripts\jquery-2.2.1.js" />
     <Content Include="Scripts\jquery-2.2.1.min.js" />
+    <None Include="Properties\PublishProfiles\pnp-partner-pack - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.2.3.js" />
     <Content Include="Scripts\jquery-2.2.3.min.js" />
@@ -457,10 +459,14 @@
     <Content Include="Views\Shared\EditorTemplates\Time.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Int64.cshtml" />
     <Content Include="Views\Home\SearchTemplates.cshtml" />
+    <Content Include="Views\Governance\Temporary.cshtml" />
+    <Content Include="Views\Governance\ExternalSharing.cshtml" />
+    <Content Include="Views\Governance\Branding.cshtml" />
+    <Content Include="Views\Governance\UpdateTemplates.cshtml" />
+    <Content Include="Views\Governance\SiteCollectionsBatch.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Governance\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

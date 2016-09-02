@@ -81,6 +81,28 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
             return (result);
         }
 
+        public static String GetPropertyBagValueFromInfrastructure(String propertyKey)
+        {
+            using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(
+                PnPPartnerPackSettings.InfrastructureSiteUrl))
+            {
+                var web = context.Web;
+                var result = web.GetPropertyBagValueString(propertyKey, null);
+
+                return (result);
+            }
+        }
+
+        public static void SetPropertyBagValueToInfrastructure(String propertyKey, String value)
+        {
+            using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(
+                PnPPartnerPackSettings.InfrastructureSiteUrl))
+            {
+                var web = context.Web;
+                web.SetPropertyBagValue(propertyKey, value);
+            }
+        }
+
         private static void ApplyProvisioningTemplateToSite(ClientContext context, String siteUrl, String folder, String fileName, Dictionary<String, String> parameters = null, Handlers handlers = Handlers.All)
         {
             // TODO: Move to Open XML
@@ -113,31 +135,6 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
 
             // Apply the template to the target site
             context.Site.RootWeb.ApplyProvisioningTemplate(template, ptai);
-        }
-
-        public static ProvisioningTemplate GetProvisioningTemplate(ClientContext context, String siteUrl, String folder, String fileName)
-        {
-            // TODO: Move to Open XML
-
-            // Configure the XML file system provider
-            XMLTemplateProvider provider =
-                new XMLSharePointTemplateProvider(context, siteUrl,
-                    PnPPartnerPackConstants.PnPProvisioningTemplates +
-                    (!String.IsNullOrEmpty(folder) ? "/" + folder : String.Empty));
-
-            // Load the template from the XML stored copy
-            ProvisioningTemplate template = provider.GetTemplate(fileName);
-
-            return (template);
-        }
-
-        public static Dictionary<String, String> GetProvisioningTemplateParameters(String siteUrl, String folder, String fileName)
-        {
-            using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(siteUrl))
-            {
-                ProvisioningTemplate template = GetProvisioningTemplate(context, siteUrl, folder, fileName);
-                return (template.Parameters);
-            }
         }
 
         public static void EnablePartnerPackInfrastructureOnSite(String siteUrl)

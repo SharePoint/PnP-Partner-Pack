@@ -47,6 +47,8 @@
             // Handle wizard steps
             $(document).on("click", ".NextStep,.PreviousStep", moveWizardStep);
 
+            $(document).on("click", ".BackButton", function () { history.back(); });
+
             // Handle template selection
             $(document).on("click", ".provtemplate", function () {
                 $("#@Html.IdFor(model => model.ProvisioningTemplateUrl)")

@@ -197,21 +197,14 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
                     else
                     {
                         if (!String.IsNullOrEmpty(model.ProvisioningTemplateUrl) &&
-                            model.ProvisioningTemplateUrl.IndexOf(PnPPartnerPackConstants.PnPProvisioningTemplates) > 0)
+                            !String.IsNullOrEmpty(model.TemplatesProviderTypeName))
                         {
-                            String templateSiteUrl = model.ProvisioningTemplateUrl.Substring(0, model.ProvisioningTemplateUrl.IndexOf(PnPPartnerPackConstants.PnPProvisioningTemplates));
-                            String templateFileName = model.ProvisioningTemplateUrl.Substring(model.ProvisioningTemplateUrl.IndexOf(PnPPartnerPackConstants.PnPProvisioningTemplates) + PnPPartnerPackConstants.PnPProvisioningTemplates.Length + 1);
-                            String templateFolder = String.Empty;
-
-                            if (templateFileName.IndexOf("/") > 0)
+                            var templatesProvider = PnPPartnerPackSettings.TemplatesProviders[model.TemplatesProviderTypeName];
+                            if (templatesProvider != null)
                             {
-                                templateFolder = templateFileName.Substring(0, templateFileName.LastIndexOf("/") - 1);
-                                templateFileName = templateFileName.Substring(templateFolder.Length + 1);
+                                var template = templatesProvider.GetProvisioningTemplate(model.ProvisioningTemplateUrl);
+                                model.TemplateParameters = template.Parameters;
                             }
-                            model.TemplateParameters = PnPPartnerPackUtilities.GetProvisioningTemplateParameters(
-                                    templateSiteUrl,
-                                    templateFolder,
-                                    templateFileName);
                         }
                     }
                     break;
