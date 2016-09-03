@@ -1,0 +1,20 @@
+﻿@model OfficeDevPnP.PartnerPack.SiteProvisioning.Models.SiteCollectionsBatchViewModel
+
+@using OfficeDevPnP.PartnerPack.SiteProvisioning.Models
+
+<div>
+
+    <input type="hidden" id="@Html.IdFor(model => model.Step)" name="@Html.NameFor(model => model.Step)" value="@Model.Step" />
+
+    <div class="ms-Grid">
+        <div class="ms-Grid-row">
+            <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                The Batch process has been scheduled. The ID assigned to the Job is: @Model.JobId.
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+

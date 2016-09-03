@@ -299,10 +299,12 @@
     <Compile Include="Models\IndexViewModel.cs" />
     <Compile Include="Models\JobViewModel.cs" />
     <Compile Include="Models\MyProvisionedSitesViewModel.cs" />
+    <Compile Include="Models\PnPPartnerPackBatch.cs" />
     <Compile Include="Models\PrincipalViewModel.cs" />
     <Compile Include="Models\SaveTemplateViewModel.cs" />
     <Compile Include="Models\SearchTemplatesViewModel.cs" />
     <Compile Include="Models\SettingsViewModel.cs" />
+    <Compile Include="Models\SiteCollectionsBatchViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SharePointContext.cs" />
     <Compile Include="Startup.cs" />
@@ -310,6 +312,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AppIcon.png" />
+    <Content Include="SupportFiles\BatchModel.xml" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -460,10 +463,15 @@
     <Content Include="Views\Shared\EditorTemplates\Int64.cshtml" />
     <Content Include="Views\Home\SearchTemplates.cshtml" />
     <Content Include="Views\Governance\Temporary.cshtml" />
-    <Content Include="Views\Governance\ExternalSharing.cshtml" />
     <Content Include="Views\Governance\Branding.cshtml" />
     <Content Include="Views\Governance\UpdateTemplates.cshtml" />
     <Content Include="Views\Governance\SiteCollectionsBatch.cshtml" />
+    <None Include="SupportFiles\PnPPartnerPackBatch.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="Views\Governance\BatchStartup.cshtml" />
+    <Content Include="Views\Governance\BatchFileUploaded.cshtml" />
+    <Content Include="Views\Governance\BatchScheduled.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

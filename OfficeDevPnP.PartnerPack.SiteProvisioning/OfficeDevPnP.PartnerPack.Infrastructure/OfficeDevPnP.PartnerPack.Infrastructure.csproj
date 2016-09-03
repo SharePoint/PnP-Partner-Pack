@@ -223,6 +223,7 @@
     <Compile Include="Jobs\ProvisioningJob.cs" />
     <Compile Include="Jobs\ProvisioningJobInformation.cs" />
     <Compile Include="Jobs\ProvisioningTemplateLocation.cs" />
+    <Compile Include="Jobs\SiteCollectionsBatchJob.cs" />
     <Compile Include="Jobs\SiteProvisioningJob.cs" />
     <Compile Include="Jobs\SiteCollectionProvisioningJob.cs" />
     <Compile Include="Jobs\SubSiteProvisioningJob.cs" />

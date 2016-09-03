@@ -79,8 +79,4 @@ $(document).ready(function () {
 
     // Hide any unavailable persona image
     fixPersonaImages();
-
-    $(".ms-ContextualMenu-link").click(function () {
-        debugger;
-    });
 });

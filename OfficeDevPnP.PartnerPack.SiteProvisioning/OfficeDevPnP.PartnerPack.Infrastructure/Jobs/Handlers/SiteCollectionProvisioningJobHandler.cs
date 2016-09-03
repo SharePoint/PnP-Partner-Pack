@@ -110,6 +110,8 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                     // Move to the context of the created Site Collection
                     using (ClientContext clientContext = PnPPartnerPackContextProvider.GetAppOnlyClientContext(siteUrl))
                     {
+                        clientContext.RequestTimeout = Timeout.Infinite;
+
                         Site site = clientContext.Site;
                         Web web = site.RootWeb;
 

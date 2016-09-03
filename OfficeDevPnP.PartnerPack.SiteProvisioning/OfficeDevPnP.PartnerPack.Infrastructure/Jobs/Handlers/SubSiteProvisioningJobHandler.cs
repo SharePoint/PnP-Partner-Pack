@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
@@ -34,6 +35,8 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
 
             using (ClientContext context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(parentSiteUrl))
             {
+                context.RequestTimeout = Timeout.Infinite;
+
                 // Get a reference to the parent Web
                 Web parentWeb = context.Web;
 
