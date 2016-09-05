@@ -41,5 +41,6 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
         public const String TRUE_VALUE = "True";
 
         public const String PropertyBag_Branding = "PnP_Branding_TenantSettings";
+        public const String PropertyBag_TemplateInfo = "PnP_Template_Information";
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Online.SharePoint.TenantAdministration;
 using Microsoft.Online.SharePoint.TenantManagement;
 using Microsoft.SharePoint.Client;
+using Newtonsoft.Json;
 using OfficeDevPnP.Core.Entities;
 using OfficeDevPnP.Core.Framework.Provisioning.Model;
 using OfficeDevPnP.Core.Framework.Provisioning.ObjectHandlers;
@@ -176,6 +177,16 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                         }
 
                         web.ApplyProvisioningTemplate(template, ptai);
+
+                        // Save the template information in the target site
+                        var info = new SiteTemplateInfo()
+                        {
+                            TemplateProviderType = job.TemplatesProviderTypeName,
+                            TemplateUri = job.ProvisioningTemplateUrl,
+                            AppliedOn = DateTime.Now,
+                        };
+                        var jsonInfo = JsonConvert.SerializeObject(info);
+                        web.SetPropertyBagValue(PnPPartnerPackConstants.PropertyBag_TemplateInfo, jsonInfo);
 
                         // Set site policy template
                         if (!String.IsNullOrEmpty(job.SitePolicy))

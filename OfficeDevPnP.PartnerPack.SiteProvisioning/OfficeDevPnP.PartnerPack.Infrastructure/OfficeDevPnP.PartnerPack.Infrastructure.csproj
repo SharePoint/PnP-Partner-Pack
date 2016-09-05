@@ -227,6 +227,7 @@
     <Compile Include="Jobs\SiteProvisioningJob.cs" />
     <Compile Include="Jobs\SiteCollectionProvisioningJob.cs" />
     <Compile Include="Jobs\SubSiteProvisioningJob.cs" />
+    <Compile Include="Jobs\UpdateTemplatesJob.cs" />
     <Compile Include="MicrosoftGraphConstants.cs" />
     <Compile Include="MicrosoftGraphHelper.cs" />
     <Compile Include="PnPImageUtilities.cs" />
@@ -241,6 +242,7 @@
     <Compile Include="SharePointContext.cs" />
     <Compile Include="SharePoint\SharePointProvisioningRepository.cs" />
     <Compile Include="SiteCollectionSettings.cs" />
+    <Compile Include="SiteTemplateInfo.cs" />
     <Compile Include="TargetPlatform.cs" />
     <Compile Include="TargetScope.cs" />
     <Compile Include="TemplatesProviders\PnPTemplatesGalleryProvider.cs" />

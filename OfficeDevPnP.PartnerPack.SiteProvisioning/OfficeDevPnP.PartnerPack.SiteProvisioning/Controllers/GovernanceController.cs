@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Online.SharePoint.TenantAdministration;
+using Microsoft.SharePoint.Client;
+using Newtonsoft.Json;
 using OfficeDevPnP.PartnerPack.Infrastructure;
 using OfficeDevPnP.PartnerPack.Infrastructure.Jobs;
 using OfficeDevPnP.PartnerPack.SiteProvisioning.Models;
@@ -87,10 +89,31 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
             return model;
         }
 
-        // GET: Governance/UpdateTemplates
+        [HttpGet]
         public ActionResult UpdateTemplates()
         {
-            return View();
+            UpdateTemplatesViewModel model = new UpdateTemplatesViewModel();
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult UpdateTemplates(UpdateTemplatesViewModel model)
+        {
+            AntiForgery.Validate();
+            if (ModelState.IsValid)
+            {
+                // Create the asynchronous job
+                var job = new UpdateTemplatesJob
+                {
+                    Owner = ClaimsPrincipal.Current.Identity.Name,
+                    Title = "Tenant Wide Update Templates",
+                };
+
+                // Enqueue the job for execution
+                model.JobId = ProvisioningRepositoryFactory.Current.EnqueueProvisioningJob(job);
+            }
+
+            return View(model);
         }
 
         [HttpGet]
