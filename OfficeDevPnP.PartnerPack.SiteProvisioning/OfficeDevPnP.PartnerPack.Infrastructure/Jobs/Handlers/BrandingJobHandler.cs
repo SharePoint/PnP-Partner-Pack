@@ -120,7 +120,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
 
                     foreach (var site in siteCollections)
                     {
-                        if (!site.Url.ToLower().Contains("/portals/"))
+                        if (!site.Url.ToLower().Contains("/portals/") && !site.Url.ToLower().Contains("-public.sharepoint.com"))
                         {
                             Console.WriteLine($"Applying branding to site: {site.Url}");
 

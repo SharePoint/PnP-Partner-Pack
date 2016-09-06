@@ -183,6 +183,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                         {
                             TemplateProviderType = job.TemplatesProviderTypeName,
                             TemplateUri = job.ProvisioningTemplateUrl,
+                            TemplateParameters = template.Parameters,
                             AppliedOn = DateTime.Now,
                         };
                         var jsonInfo = JsonConvert.SerializeObject(info);

@@ -213,6 +213,7 @@
     <Compile Include="Jobs\ApplyProvisioningTemplateJob.cs" />
     <Compile Include="Jobs\ApplyBrandingJob.cs" />
     <Compile Include="Jobs\GetProvisioningTemplateJob.cs" />
+    <Compile Include="Jobs\Handlers\UpdateTemplatesJobHandler.cs" />
     <Compile Include="Jobs\Handlers\BrandingJobHandler.cs" />
     <Compile Include="Jobs\Handlers\ContinousJobItem.cs" />
     <Compile Include="Jobs\Handlers\ProvisioningTemplateJobHandler.cs" />

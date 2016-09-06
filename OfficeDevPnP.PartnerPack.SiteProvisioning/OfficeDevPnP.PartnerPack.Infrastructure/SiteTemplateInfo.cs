@@ -22,6 +22,11 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
         public String TemplateUri { get; set; }
 
         /// <summary>
+        /// Any parameter value provided to the template
+        /// </summary>
+        public Dictionary<String, String> TemplateParameters { get; set; }
+
+        /// <summary>
         /// The latest date of application of the template
         /// </summary>
         public DateTime AppliedOn { get; set; }
