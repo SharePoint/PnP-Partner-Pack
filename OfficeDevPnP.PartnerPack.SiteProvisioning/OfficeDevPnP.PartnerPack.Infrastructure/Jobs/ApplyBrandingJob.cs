@@ -41,5 +41,10 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs
         ///  The UI Custom Actions URL of the new branding, optional
         /// </summary>
         public String UICustomActionsUrl { get; set; }
+
+        /// <summary>
+        /// Last date and time of update of branding settings
+        /// </summary>
+        public DateTime UpdatedOn { get; set; }
     }
 }

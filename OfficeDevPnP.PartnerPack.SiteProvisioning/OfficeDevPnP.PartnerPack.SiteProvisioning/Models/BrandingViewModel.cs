@@ -27,6 +27,6 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
         public String UICustomActionsUrl { get; set; }
 
         [DisplayName("Last Date and Time of Update")]
-        public DateTime UpdatedOn { get; set; }
+        public DateTime? UpdatedOn { get; set; }
     }
 }

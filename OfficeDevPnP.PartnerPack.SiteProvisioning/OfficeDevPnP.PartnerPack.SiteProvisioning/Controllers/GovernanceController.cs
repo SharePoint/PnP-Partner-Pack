@@ -63,6 +63,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
                     UICustomActionsUrl = model.UICustomActionsUrl,
                     Owner = ClaimsPrincipal.Current.Identity.Name,
                     Title = "Tenant Wide Branding",
+                    UpdatedOn = model.UpdatedOn.HasValue ? model.UpdatedOn.Value : original.UpdatedOn.Value,
                 };
 
                 // Enqueue the job for execution

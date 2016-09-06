@@ -44,11 +44,13 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
         /// <returns>The Stream  of the result</returns>
         public static System.IO.Stream MakeGetRequestForStream(String requestUrl,
             String accept,
-            String accessToken = null)
+            String accessToken = null,
+            String referer = null)
         {
             return (MakeHttpRequest<System.IO.Stream>("GET",
                 requestUrl, 
                 accessToken,
+                referer : referer,
                 resultPredicate: r => r.Content.ReadAsStreamAsync().Result));
         }
 
@@ -204,6 +206,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
             String accept = null,
             Object content = null,
             String contentType = null,
+            String referer = null,
             Func<HttpResponseMessage, TResult> resultPredicate = null)
         {
             HttpResponseHeaders responseHeaders;
@@ -214,6 +217,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
                 accept,
                 content,
                 contentType,
+                referer,
                 resultPredicate));
         }
 
@@ -238,6 +242,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
             String accept = null,
             Object content = null,
             String contentType = null,
+            String referer = null,
             Func<HttpResponseMessage, TResult> resultPredicate = null)
         {
             // Prepare the variable to hold the result, if any
@@ -256,6 +261,11 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
             {
                 httpClient.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", accessToken);
+            }
+
+            if (!String.IsNullOrEmpty(referer))
+            {
+                httpClient.DefaultRequestHeaders.Referrer = new Uri(referer);
             }
 
             // If there is an accept argument, set the corresponding HTTP header
