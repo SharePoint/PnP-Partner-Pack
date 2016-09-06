@@ -401,3 +401,5 @@ Because the the PnP Partner Pack runs with an AppOnly token against SharePoint O
 support applying taxonomies while applying any PnP Provisioning Template. Thus, if you are going to 
 apply a PnP Provisioning Template that includes Term Groups, those will be remove from the template
 before applying it.
+
+<img src="https://telemetry.sharepointpnp.com/pnp-partner-pack/documentation/architecture-and-implementation" /> 

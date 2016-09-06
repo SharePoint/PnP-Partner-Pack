@@ -409,3 +409,4 @@ Below screen shots shows some of the above steps in action:
 ![](http://i.imgur.com/UR5TsF3.png)
 
 
+<img src="https://telemetry.sharepointpnp.com/pnp-partner-pack/documentation/manual-setup-guide" /> 
