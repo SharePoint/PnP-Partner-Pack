@@ -40,7 +40,7 @@
                   A Parameter that can be used as a replacement within templates and provisioning objects.
                 </xsd:documentation>
               </xsd:annotation>
-              <xsd:complexType mixed="true">
+              <xsd:complexType mixed="false">
                 <xsd:attribute name="Key" use="required" type="xsd:string">
                   <xsd:annotation>
                     <xsd:documentation xml:lang="en">
@@ -48,10 +48,10 @@
                     </xsd:documentation>
                   </xsd:annotation>
                 </xsd:attribute>
-                <xsd:attribute name="Required" use="optional" type="xsd:boolean" default="false">
+                <xsd:attribute name="Value" use="required" type="xsd:string">
                   <xsd:annotation>
                     <xsd:documentation>
-                      When set to true then a value must be provided in the XML or provided at runtime.
+                      The value of the Parameter
                     </xsd:documentation>
                   </xsd:annotation>
                 </xsd:attribute>
@@ -126,17 +126,17 @@
         </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
-    <xsd:attribute name="initialTemplate" type="xsd:string" use="required">
+    <xsd:attribute name="templateUrl" type="xsd:string" use="required">
       <xsd:annotation>
         <xsd:documentation xml:lang="en-us">
-          Defines the SharePoint initial template for creating the Site (provide values like STS#0, BLOG#0, etc.), required attribute.
+          Defines the URL of the PnP Provisioning Template to use for creating the Site, required attribute.
         </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
-    <xsd:attribute name="templateUrl" type="xsd:string" use="optional">
+    <xsd:attribute name="templatesProviderName" type="xsd:string" use="required">
       <xsd:annotation>
         <xsd:documentation xml:lang="en-us">
-          Defines the URL of the PnP Provisioning Template to use for creating the Site, optional attribute.
+          The name of the templates provider, required attribute.
         </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>

@@ -218,8 +218,10 @@
     <Compile Include="Jobs\Handlers\ProvisioningTemplateJobHandler.cs" />
     <Compile Include="Jobs\Handlers\ProvisioningJobHandler.cs" />
     <Compile Include="Jobs\Handlers\SiteCollectionProvisioningJobHandler.cs" />
+    <Compile Include="Jobs\Handlers\SiteCollectionsBatchJobHandler.cs" />
     <Compile Include="Jobs\Handlers\SubSiteProvisioningJobHandler.cs" />
     <Compile Include="Jobs\JobExtensions.cs" />
+    <Compile Include="Jobs\PnPPartnerPackBatch.cs" />
     <Compile Include="Jobs\ProvisioningJob.cs" />
     <Compile Include="Jobs\ProvisioningJobInformation.cs" />
     <Compile Include="Jobs\ProvisioningTemplateLocation.cs" />

@@ -6,10 +6,10 @@
       description="This is the Site Collection 01"
       managedPath="sites"
       relativeUrl="SiteCollection01"
-      initialTemplate="STS#0"
       language="1033"
       timeZone="4"
       sitePolicy="MBI"
+      templatesProviderName="Global Tenant"
       templateUrl="https://tenant.sharepoint.com/sites/PnP-Partner-Pack/PnPProvisioningTemplates/Sample-Template-01.pnp"
       primarySiteCollectionAdmin="admin1@tenant.onmicrosoft.com"
       secondarySiteCollectionAdmin="admin2@tenant.onmicrosoft.com"
@@ -20,7 +20,7 @@
       responsiveDesignEnabled="true"
       >
     <pnp:templateParameters>
-      <pnp:parameter Key="SampleParameter" Required="true">SampleValue</pnp:parameter>
+      <pnp:parameter Key="SampleParameter" Value="SampleValue" />
     </pnp:templateParameters>
   </pnp:siteCollection>
 
@@ -29,10 +29,10 @@
       description="This is the Site Collection 02"
       managedPath="sites"
       relativeUrl="SiteCollection02"
-      initialTemplate="STS#0"
       language="1033"
       timeZone="4"
       sitePolicy="HBI"
+      templatesProviderName="Current Site Collection"
       templateUrl="https://tenant.sharepoint.com/sites/PnP-Partner-Pack/PnPProvisioningTemplates/Sample-Template-02.pnp"
       primarySiteCollectionAdmin="admin3@tenant.onmicrosoft.com"
       secondarySiteCollectionAdmin="admin4@tenant.onmicrosoft.com"

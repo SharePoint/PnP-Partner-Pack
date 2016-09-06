@@ -20,7 +20,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
             ApplyBrandingJob brandingJob = job as ApplyBrandingJob;
             if (brandingJob == null)
             {
-                throw new ArgumentException("Invalid job type for SiteCollectionProvisioningJobHandler.");
+                throw new ArgumentException("Invalid job type for BrandingJobHandler.");
             }
 
             ApplyBranding(brandingJob);

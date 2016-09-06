@@ -299,7 +299,6 @@
     <Compile Include="Models\IndexViewModel.cs" />
     <Compile Include="Models\JobViewModel.cs" />
     <Compile Include="Models\MyProvisionedSitesViewModel.cs" />
-    <Compile Include="Models\PnPPartnerPackBatch.cs" />
     <Compile Include="Models\PrincipalViewModel.cs" />
     <Compile Include="Models\SaveTemplateViewModel.cs" />
     <Compile Include="Models\SearchTemplatesViewModel.cs" />
