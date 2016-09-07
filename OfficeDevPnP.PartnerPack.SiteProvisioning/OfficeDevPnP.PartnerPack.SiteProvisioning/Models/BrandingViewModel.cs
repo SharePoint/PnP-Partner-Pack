@@ -28,5 +28,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
 
         [DisplayName("Last Date and Time of Update")]
         public DateTime? UpdatedOn { get; set; }
+
+        public Boolean RollOut { get; set; } = false;
     }
 }

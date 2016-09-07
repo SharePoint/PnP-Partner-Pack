@@ -20,7 +20,17 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         [HttpGet]
         public ActionResult Branding()
         {
-            BrandingViewModel model = getCurrentBrandingSettings();
+            BrandingSettings original = PnPPartnerPackUtilities.GetTenantBrandingSettings();
+
+            BrandingViewModel model = new BrandingViewModel {
+                LogoImageUrl = original.LogoImageUrl,
+                BackgroundImageUrl = original.BackgroundImageUrl,
+                ColorFileUrl = original.ColorFileUrl,
+                FontFileUrl = original.FontFileUrl,
+                CSSOverrideUrl = original.CSSOverrideUrl,
+                UICustomActionsUrl = original.UICustomActionsUrl,
+            };
+
             return View(model);
         }
 
@@ -31,7 +41,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
             if (ModelState.IsValid)
             {
                 // Get the original branding settings
-                BrandingViewModel original = getCurrentBrandingSettings();
+                BrandingSettings original = PnPPartnerPackUtilities.GetTenantBrandingSettings();
 
                 // If something changed in the branding settings compared with previous settings
                 if (model.LogoImageUrl != original.LogoImageUrl ||
@@ -41,53 +51,42 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
                     model.CSSOverrideUrl != original.CSSOverrideUrl ||
                     model.UICustomActionsUrl != original.UICustomActionsUrl)
                 {
+                    var newBrandingSettings = new BrandingSettings {
+                        LogoImageUrl = model.LogoImageUrl,
+                        BackgroundImageUrl = model.BackgroundImageUrl,
+                        ColorFileUrl = model.ColorFileUrl,
+                        FontFileUrl = model.FontFileUrl,
+                        CSSOverrideUrl = model.CSSOverrideUrl,
+                        UICustomActionsUrl = model.UICustomActionsUrl,
+                        UpdatedOn = DateTime.Now,
+                    };
+
                     // Update the last date and time of update
-                    model.UpdatedOn = DateTime.Now;
+                    model.UpdatedOn = newBrandingSettings.UpdatedOn;
 
                     // Get the JSON representation of the settings
-                    var jsonBranding = JsonConvert.SerializeObject(model);
+                    var jsonBranding = JsonConvert.SerializeObject(newBrandingSettings);
 
                     // Store the new tenant-wide settings in the Infrastructural Site Collection
                     PnPPartnerPackUtilities.SetPropertyBagValueToInfrastructure(
                         PnPPartnerPackConstants.PropertyBag_Branding, jsonBranding);
                 }
 
-                // Create the asynchronous job
-                var job = new ApplyBrandingJob
+                if (model.RollOut)
                 {
-                    LogoImageUrl = model.LogoImageUrl,
-                    BackgroundImageUrl = model.BackgroundImageUrl,
-                    ColorFileUrl = model.ColorFileUrl,
-                    FontFileUrl = model.FontFileUrl,
-                    CSSOverrideUrl = model.CSSOverrideUrl,
-                    UICustomActionsUrl = model.UICustomActionsUrl,
-                    Owner = ClaimsPrincipal.Current.Identity.Name,
-                    Title = "Tenant Wide Branding",
-                    UpdatedOn = model.UpdatedOn.HasValue ? model.UpdatedOn.Value : original.UpdatedOn.Value,
-                };
+                    // Create the asynchronous job
+                    var job = new BrandingJob
+                    {
+                        Owner = ClaimsPrincipal.Current.Identity.Name,
+                        Title = "Tenant Wide Branding",
+                    };
 
-                // Enqueue the job for execution
-                model.JobId = ProvisioningRepositoryFactory.Current.EnqueueProvisioningJob(job);
+                    // Enqueue the job for execution
+                    model.JobId = ProvisioningRepositoryFactory.Current.EnqueueProvisioningJob(job);
+                }
             }
 
             return View(model);
-        }
-
-        /// <summary>
-        /// Private method for reading branding settings from the Infrastructural Site Collection
-        /// </summary>
-        /// <returns></returns>
-        private static BrandingViewModel getCurrentBrandingSettings()
-        {
-            // Get the current settings from the Infrastructural Site Collection
-            var jsonBrandingSettings = PnPPartnerPackUtilities.GetPropertyBagValueFromInfrastructure(
-                PnPPartnerPackConstants.PropertyBag_Branding);
-
-            // Read the current branding settings, if any
-            var model = jsonBrandingSettings != null ?
-                JsonConvert.DeserializeObject<BrandingViewModel>(jsonBrandingSettings) :
-                new BrandingViewModel();
-            return model;
         }
 
         [HttpGet]

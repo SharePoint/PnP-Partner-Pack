@@ -195,6 +195,20 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                             web.ApplySitePolicy(job.SitePolicy);
                         }
 
+                        // Apply Tenant Branding, if requested
+                        if (job.ApplyTenantBranding)
+                        {
+                            var brandingSettings = PnPPartnerPackUtilities.GetTenantBrandingSettings();
+
+                            using (var repositoryContext = PnPPartnerPackContextProvider.GetAppOnlyClientContext(
+                                PnPPartnerPackSettings.InfrastructureSiteUrl))
+                            {
+                                var brandingTemplate = BrandingJobHandler.PrepareBrandingTemplate(repositoryContext, brandingSettings);
+                                BrandingJobHandler.ApplyBrandingOnWeb(web, brandingSettings, brandingTemplate);
+                            }
+                        }
+
+
                         Console.WriteLine("Applyed Provisioning Template \"{0}\" to site.",
                             job.ProvisioningTemplateUrl);
                     }

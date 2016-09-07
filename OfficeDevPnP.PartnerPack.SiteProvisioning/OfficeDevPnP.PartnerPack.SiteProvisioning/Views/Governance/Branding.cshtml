@@ -1,7 +1,7 @@
 ﻿@model OfficeDevPnP.PartnerPack.SiteProvisioning.Models.BrandingViewModel
 
 @{
-    ViewBag.Title = "Branding";
+    ViewBag.Title = "Tenant Branding";
 }
 
 @if (Model.JobId.HasValue && Model.JobId.Value != Guid.Empty)
@@ -9,7 +9,7 @@
     <div class="ms-Grid">
         <div class="ms-Grid-row">
             <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
-                The Branding settings will be applied tenant-wide to all Site Collection. The ID assigned to the Job is: @Model.JobId.
+                The Branding settings will be applied tenant-wide to all Site Collections and Sites. The ID assigned to the Job is: @Model.JobId.
             </div>
         </div>
     </div>
@@ -22,6 +22,7 @@ else
 
         <div class="inputForm">
 
+            <input type="hidden" id="@Html.IdFor(model => model.RollOut)" name="@Html.NameFor(model => model.RollOut)" value="@Model.RollOut" />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
             <div class="ms-Grid">
@@ -71,6 +72,12 @@ else
             <span class="ms-Button-label">Apply</span>
             <span class="ms-Button-description">Apply branding</span>
         </button>
+
+        <button class="ms-Button RollOutBranding">
+            <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+            <span class="ms-Button-label">Roll out</span>
+            <span class="ms-Button-description">Roll out</span>
+        </button>
     }
 }
 
@@ -85,6 +92,7 @@ else
 
             // Handle wizard steps
             $(document).on("click", ".ApplyBranding", applyBranding);
+            $(document).on("click", ".RollOutBranding", rollOutBranding);
         });
 
         function applyBranding(e) {
@@ -92,7 +100,24 @@ else
             // Prevent default event
             e.preventDefault();
 
+            // Prevent rollout
+            $("#@Html.IdFor(model => model.RollOut)").val("false");
+
+            // Submit the form
             $("form")[0].submit();
         }
+
+        function rollOutBranding(e) {
+
+            // Prevent default event
+            e.preventDefault();
+
+            // Schedule rollout
+            $("#@Html.IdFor(model => model.RollOut)").val("true");
+
+            // Submit the form
+            $("form")[0].submit();
+        }
+
     </script>
 }

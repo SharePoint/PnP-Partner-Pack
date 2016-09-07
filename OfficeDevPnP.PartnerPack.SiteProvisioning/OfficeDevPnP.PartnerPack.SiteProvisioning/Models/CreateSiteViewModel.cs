@@ -56,6 +56,9 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
         public String TemplatesProviderTypeName { get; set; }
 
         public String ParentSiteUrl { get; set; }
+
+        [DisplayName("Apply Tenant Branding")]
+        public Boolean ApplyTenantBranding { get; set; }
     }
 
     public enum CreateSiteStep

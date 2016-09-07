@@ -17,7 +17,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
     {
         protected override void RunJobInternal(ProvisioningJob job)
         {
-            ApplyBrandingJob brandingJob = job as ApplyBrandingJob;
+            BrandingJob brandingJob = job as BrandingJob;
             if (brandingJob == null)
             {
                 throw new ArgumentException("Invalid job type for BrandingJobHandler.");
@@ -26,88 +26,14 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
             ApplyBranding(brandingJob);
         }
 
-        private void ApplyBranding(ApplyBrandingJob job)
+        private void ApplyBranding(BrandingJob job)
         {
             // Use the infrastructural site collection to temporary store the template with color palette and font files
             using (var repositoryContext = PnPPartnerPackContextProvider.GetAppOnlyClientContext(
                     PnPPartnerPackSettings.InfrastructureSiteUrl))
             {
-                var repositoryWeb = repositoryContext.Site.RootWeb;
-                repositoryContext.Load(repositoryWeb, w => w.Url);
-                repositoryContext.ExecuteQueryRetry();
-
-                var refererUri = new Uri(repositoryWeb.Url);
-                var refererValue = $"{refererUri.Scheme}://{refererUri.Host}/";
-
-                // Prepare an OpenXML provider
-                XMLTemplateProvider provider = new XMLOpenXMLTemplateProvider($"{job.JobId}.pnp",
-                    new SharePointConnector(repositoryContext, repositoryWeb.Url,
-                            PnPPartnerPackConstants.PnPProvisioningTemplates));
-
-                // Prepare the branding provisioning template
-                var template = new ProvisioningTemplate();
-                template.WebSettings = new WebSettings
-                {
-                    AlternateCSS = job.CSSOverrideUrl,
-                    SiteLogo = job.LogoImageUrl,
-                };
-
-                template.ComposedLook = new ComposedLook();
-
-                if (!String.IsNullOrEmpty(job.BackgroundImageUrl))
-                {
-                    var backgroundImageFileName = job.BackgroundImageUrl.Substring(job.BackgroundImageUrl.LastIndexOf("/") + 1);
-                    var backgroundImageFileStream = HttpHelper.MakeGetRequestForStream(job.BackgroundImageUrl, "application/octet-stream", referer: refererValue);
-                    template.ComposedLook.BackgroundFile = String.Format("{{sitecollection}}/SiteAssets/{0}", backgroundImageFileName);
-                    provider.Connector.SaveFileStream(backgroundImageFileName, backgroundImageFileStream);
-
-                    template.Files.Add(new Core.Framework.Provisioning.Model.File
-                    {
-                        Src = backgroundImageFileName,
-                        Folder = "SiteAssets",
-                        Overwrite = true,
-                    });
-                }
-
-                if (!String.IsNullOrEmpty(job.FontFileUrl))
-                {
-                    var fontFileName = job.FontFileUrl.Substring(job.FontFileUrl.LastIndexOf("/") + 1);
-                    var fontFileStream = HttpHelper.MakeGetRequestForStream(job.FontFileUrl, "application/octet-stream", referer : refererValue);
-                    template.ComposedLook.FontFile = String.Format("{{themecatalog}}/15/{0}", fontFileName);
-                    provider.Connector.SaveFileStream(fontFileName, fontFileStream);
-
-                    template.Files.Add(new Core.Framework.Provisioning.Model.File {
-                        Src = fontFileName,
-                        Folder = "{themecatalog}/15",
-                        Overwrite = true,
-                    });
-                }
-
-                if (!String.IsNullOrEmpty(job.ColorFileUrl))
-                {
-                    var colorFileName = job.ColorFileUrl.Substring(job.ColorFileUrl.LastIndexOf("/") + 1);
-                    var colorFileStream = HttpHelper.MakeGetRequestForStream(job.ColorFileUrl, "application/octet-stream", referer: refererValue);
-                    template.ComposedLook.ColorFile = String.Format("{{themecatalog}}/15/{0}", colorFileName);
-                    provider.Connector.SaveFileStream(colorFileName, colorFileStream);
-
-                    template.Files.Add(new Core.Framework.Provisioning.Model.File
-                    {
-                        Src = colorFileName,
-                        Folder = "{themecatalog}/15",
-                        Overwrite = true,
-                    });
-                }
-
-                // Save the template, ready to be applied
-                provider.SaveAs(template, $"{job.JobId}.xml");
-
-                // Re-open the template provider just saved
-                provider = new XMLOpenXMLTemplateProvider($"{job.JobId}.pnp",
-                    new SharePointConnector(repositoryContext, repositoryWeb.Url,
-                            PnPPartnerPackConstants.PnPProvisioningTemplates));
-
-                // Set the connector of the template, in order to being able to retrieve support files
-                template.Connector = provider.Connector;
+                var brandingSettings = PnPPartnerPackUtilities.GetTenantBrandingSettings();
+                ProvisioningTemplate template = PrepareBrandingTemplate(repositoryContext, brandingSettings);
 
                 // For each Site Collection in the tenant
                 using (var adminContext = PnPPartnerPackContextProvider.GetAppOnlyTenantLevelClientContext())
@@ -120,72 +46,172 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
 
                     foreach (var site in siteCollections)
                     {
-                        if (!site.Url.ToLower().Contains("/portals/") && !site.Url.ToLower().Contains("-public.sharepoint.com"))
+                        if (!site.Url.ToLower().Contains("/portals/")
+                            && !site.Url.ToLower().Contains("-public.sharepoint.com")
+                            && !site.Url.ToLower().Contains("-my.sharepoint.com"))
                         {
-                            Console.WriteLine($"Applying branding to site: {site.Url}");
-
                             // Clean-up the template
                             template.WebSettings.MasterPageUrl = null;
 
                             using (var siteContext = PnPPartnerPackContextProvider.GetAppOnlyClientContext(site.Url))
                             {
-                                // Configure proper settings for the provisioning engine
-                                ProvisioningTemplateApplyingInformation ptai =
-                                    new ProvisioningTemplateApplyingInformation();
+                                // Get a reference to the target web
+                                var targetWeb = siteContext.Site.RootWeb;
 
-                                // Write provisioning steps on console log
-                                ptai.MessagesDelegate += delegate (string message, ProvisioningMessageType messageType) {
-                                    Console.WriteLine("{0} - {1}", messageType, messageType);
-                                };
-                                ptai.ProgressDelegate += delegate (string message, int step, int total) {
-                                    Console.WriteLine("{0:00}/{1:00} - {2}", step, total, message);
-                                };
-
-                                // Include only required handlers
-                                ptai.HandlersToProcess = Core.Framework.Provisioning.Model.Handlers.ComposedLook |
-                                    Core.Framework.Provisioning.Model.Handlers.Files |
-                                    Core.Framework.Provisioning.Model.Handlers.WebSettings;
-
-                                // Apply branding (if it is not already applied)
-                                var targetWeb = siteContext.Web;
-                                targetWeb.EnsureProperty(w => w.MasterUrl);
-
-                                // Check if we really need to apply/update the branding
-                                var siteBrandingUpdatedOn = targetWeb.GetPropertyBagValueString(
-                                    PnPPartnerPackConstants.PropertyBag_Branding_AppliedOn, null);
-
-                                // If the branding updated on date and time are missing
-                                // or older than the branding update date and time
-                                if (String.IsNullOrEmpty(siteBrandingUpdatedOn) || 
-                                    DateTime.Parse(siteBrandingUpdatedOn) < job.UpdatedOn.ToUniversalTime())
-                                {
-                                    // Confirm the master page URL
-                                    template.WebSettings.MasterPageUrl = targetWeb.MasterUrl;
-
-                                    // Apply the template
-                                    targetWeb.ApplyProvisioningTemplate(template, ptai);
-
-                                    // Apply a custom JSLink, if any
-                                    if (!String.IsNullOrEmpty(job.UICustomActionsUrl))
-                                    {
-                                        targetWeb.AddJsLink(
-                                            PnPPartnerPackConstants.BRANDING_SCRIPT_LINK_KEY,
-                                            job.UICustomActionsUrl);
-                                    }
-
-                                    // Store Property Bag to set the last date and time when we applied the branding 
-                                    targetWeb.SetPropertyBagValue(
-                                        PnPPartnerPackConstants.PropertyBag_Branding_AppliedOn,
-                                        DateTime.Now.ToUniversalTime().ToString());
-                                }
+                                // Update the root web of the site collection
+                                ApplyBrandingOnWeb(targetWeb, brandingSettings, template);
                             }
-
-                            Console.WriteLine($"Applied branding to site: {site.Url}");
                         }
                     }
                 }
+            }
+        }
 
-                provider.Delete($"{job.JobId}.pnp");
+        public static ProvisioningTemplate PrepareBrandingTemplate(ClientContext repositoryContext, BrandingSettings brandingSettings)
+        {
+            var repositoryWeb = repositoryContext.Site.RootWeb;
+            repositoryContext.Load(repositoryWeb, w => w.Url);
+            repositoryContext.ExecuteQueryRetry();
+
+            var refererUri = new Uri(repositoryWeb.Url);
+            var refererValue = $"{refererUri.Scheme}://{refererUri.Host}/";
+
+            var templateId = Guid.NewGuid();
+
+            // Prepare an OpenXML provider
+            XMLTemplateProvider provider = new XMLOpenXMLTemplateProvider($"{templateId}.pnp",
+                new SharePointConnector(repositoryContext, repositoryWeb.Url,
+                        PnPPartnerPackConstants.PnPProvisioningTemplates));
+
+            // Prepare the branding provisioning template
+            var template = new ProvisioningTemplate();
+            template.WebSettings = new WebSettings
+            {
+                AlternateCSS = brandingSettings.CSSOverrideUrl,
+                SiteLogo = brandingSettings.LogoImageUrl,
+            };
+
+            template.ComposedLook = new ComposedLook();
+
+            if (!String.IsNullOrEmpty(brandingSettings.BackgroundImageUrl))
+            {
+                var backgroundImageFileName = brandingSettings.BackgroundImageUrl.Substring(brandingSettings.BackgroundImageUrl.LastIndexOf("/") + 1);
+                var backgroundImageFileStream = HttpHelper.MakeGetRequestForStream(brandingSettings.BackgroundImageUrl, "application/octet-stream", referer: refererValue);
+                template.ComposedLook.BackgroundFile = String.Format("{{sitecollection}}/SiteAssets/{0}", backgroundImageFileName);
+                provider.Connector.SaveFileStream(backgroundImageFileName, backgroundImageFileStream);
+
+                template.Files.Add(new Core.Framework.Provisioning.Model.File
+                {
+                    Src = backgroundImageFileName,
+                    Folder = "SiteAssets",
+                    Overwrite = true,
+                });
+            }
+
+            if (!String.IsNullOrEmpty(brandingSettings.FontFileUrl))
+            {
+                var fontFileName = brandingSettings.FontFileUrl.Substring(brandingSettings.FontFileUrl.LastIndexOf("/") + 1);
+                var fontFileStream = HttpHelper.MakeGetRequestForStream(brandingSettings.FontFileUrl, "application/octet-stream", referer: refererValue);
+                template.ComposedLook.FontFile = String.Format("{{themecatalog}}/15/{0}", fontFileName);
+                provider.Connector.SaveFileStream(fontFileName, fontFileStream);
+
+                template.Files.Add(new Core.Framework.Provisioning.Model.File
+                {
+                    Src = fontFileName,
+                    Folder = "{themecatalog}/15",
+                    Overwrite = true,
+                });
+            }
+
+            if (!String.IsNullOrEmpty(brandingSettings.ColorFileUrl))
+            {
+                var colorFileName = brandingSettings.ColorFileUrl.Substring(brandingSettings.ColorFileUrl.LastIndexOf("/") + 1);
+                var colorFileStream = HttpHelper.MakeGetRequestForStream(brandingSettings.ColorFileUrl, "application/octet-stream", referer: refererValue);
+                template.ComposedLook.ColorFile = String.Format("{{themecatalog}}/15/{0}", colorFileName);
+                provider.Connector.SaveFileStream(colorFileName, colorFileStream);
+
+                template.Files.Add(new Core.Framework.Provisioning.Model.File
+                {
+                    Src = colorFileName,
+                    Folder = "{themecatalog}/15",
+                    Overwrite = true,
+                });
+            }
+
+            // Save the template, ready to be applied
+            provider.SaveAs(template, $"{templateId}.xml");
+
+            // Re-open the template provider just saved
+            provider = new XMLOpenXMLTemplateProvider($"{templateId}.pnp",
+                new SharePointConnector(repositoryContext, repositoryWeb.Url,
+                        PnPPartnerPackConstants.PnPProvisioningTemplates));
+
+            // Set the connector of the template, in order to being able to retrieve support files
+            template.Connector = provider.Connector;
+
+            return template;
+        }
+
+        public static void ApplyBrandingOnWeb(Web targetWeb, BrandingSettings brandingSettings, ProvisioningTemplate template)
+        {
+            targetWeb.EnsureProperties(w => w.MasterUrl, w => w.Url);
+
+            // Configure proper settings for the provisioning engine
+            ProvisioningTemplateApplyingInformation ptai =
+                new ProvisioningTemplateApplyingInformation();
+
+            // Write provisioning steps on console log
+            ptai.MessagesDelegate += delegate (string message, ProvisioningMessageType messageType) {
+                Console.WriteLine("{0} - {1}", messageType, messageType);
+            };
+            ptai.ProgressDelegate += delegate (string message, int step, int total) {
+                Console.WriteLine("{0:00}/{1:00} - {2}", step, total, message);
+            };
+
+            // Include only required handlers
+            ptai.HandlersToProcess = Core.Framework.Provisioning.Model.Handlers.ComposedLook |
+                Core.Framework.Provisioning.Model.Handlers.Files |
+                Core.Framework.Provisioning.Model.Handlers.WebSettings;
+
+            // Check if we really need to apply/update the branding
+            var siteBrandingUpdatedOn = targetWeb.GetPropertyBagValueString(
+                PnPPartnerPackConstants.PropertyBag_Branding_AppliedOn, null);
+
+            // If the branding updated on date and time are missing
+            // or older than the branding update date and time
+            if (String.IsNullOrEmpty(siteBrandingUpdatedOn) ||
+                DateTime.Parse(siteBrandingUpdatedOn) < brandingSettings.UpdatedOn.Value.ToUniversalTime())
+            {
+                Console.WriteLine($"Appling branding to site: {targetWeb.Url}");
+
+                // Confirm the master page URL
+                template.WebSettings.MasterPageUrl = targetWeb.MasterUrl;
+
+                // Apply the template
+                targetWeb.ApplyProvisioningTemplate(template, ptai);
+
+                // Apply a custom JSLink, if any
+                if (!String.IsNullOrEmpty(brandingSettings.UICustomActionsUrl))
+                {
+                    targetWeb.AddJsLink(
+                        PnPPartnerPackConstants.BRANDING_SCRIPT_LINK_KEY,
+                        brandingSettings.UICustomActionsUrl);
+                }
+
+                // Store Property Bag to set the last date and time when we applied the branding 
+                targetWeb.SetPropertyBagValue(
+                    PnPPartnerPackConstants.PropertyBag_Branding_AppliedOn,
+                    DateTime.Now.ToUniversalTime().ToString());
+
+                Console.WriteLine($"Applied branding to site: {targetWeb.Url}");
+            }
+
+            // Apply branding (recursively) on all the subwebs of the current web
+            targetWeb.EnsureProperty(w => w.Webs);
+
+            foreach (var subweb in targetWeb.Webs)
+            {
+                ApplyBrandingOnWeb(subweb, brandingSettings, template);
             }
         }
     }

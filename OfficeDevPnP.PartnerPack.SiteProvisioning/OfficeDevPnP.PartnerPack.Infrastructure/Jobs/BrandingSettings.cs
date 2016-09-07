@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,43 +7,43 @@ using System.Threading.Tasks;
 namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs
 {
     /// <summary>
-    /// Defines a Branding application Job
+    /// Defines the settings for Tenant branding
     /// </summary>
-    public class ApplyBrandingJob : ProvisioningJob
+    public class BrandingSettings
     {
         /// <summary>
-        ///  The Logo Image URL of the new branding, optional
+        ///  Represents the URL of the Logo, if any
         /// </summary>
         public String LogoImageUrl { get; set; }
 
         /// <summary>
-        ///  The Background Image URL of the new branding, optional
+        /// Represents the URL of the background image, if any
         /// </summary>
         public String BackgroundImageUrl { get; set; }
 
         /// <summary>
-        ///  The CSS Override URL of the new branding, optional
+        /// Represents the URL of CSS override file, if any
         /// </summary>
         public String CSSOverrideUrl { get; set; }
 
         /// <summary>
-        ///  The Color File URL of the new branding, optional
+        /// Represents the URL of the Color file, if any
         /// </summary>
         public String ColorFileUrl { get; set; }
 
         /// <summary>
-        ///  The Palette File URL of the new branding, optional
+        /// Represents the URL of the Font file, if any
         /// </summary>
         public String FontFileUrl { get; set; }
 
         /// <summary>
-        ///  The UI Custom Actions URL of the new branding, optional
+        /// Represents the URL of the UI Custom action, if any
         /// </summary>
         public String UICustomActionsUrl { get; set; }
 
         /// <summary>
-        /// Last date and time of update of branding settings
+        /// Latest date and time of update for the branding settings
         /// </summary>
-        public DateTime UpdatedOn { get; set; }
+        public DateTime? UpdatedOn { get; set; }
     }
 }

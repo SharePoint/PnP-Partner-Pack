@@ -114,6 +114,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
                         job.RelativeUrl = String.Format("/{0}/{1}", model.ManagedPath, model.RelativeUrl);
                         job.SitePolicy = model.SitePolicy;
                         job.Owner = ClaimsPrincipal.Current.Identity.Name;
+                        job.ApplyTenantBranding = model.ApplyTenantBranding;
 
                         job.PrimarySiteCollectionAdmin = model.PrimarySiteCollectionAdmin != null &&
                             model.PrimarySiteCollectionAdmin.Principals.Count > 0 ? 
@@ -224,6 +225,8 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
                         job.RelativeUrl = model.RelativeUrl;
                         job.SitePolicy = model.SitePolicy;
                         job.Owner = ClaimsPrincipal.Current.Identity.Name;
+                        job.ApplyTenantBranding = model.ApplyTenantBranding;
+
                         job.ProvisioningTemplateUrl = model.ProvisioningTemplateUrl;
                         job.TemplatesProviderTypeName = model.TemplatesProviderTypeName;
                         job.InheritPermissions = model.InheritPermissions;

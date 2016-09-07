@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using OfficeDevPnP.Core.Framework.Provisioning.Model;
 using OfficeDevPnP.Core.Framework.Provisioning.ObjectHandlers;
 using OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml;
+using OfficeDevPnP.PartnerPack.Infrastructure.Jobs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -211,6 +212,24 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
             }
 
             return (siteUrl);
+        }
+
+        /// <summary>
+        /// Helper method for reading branding settings from the Infrastructural Site Collection
+        /// </summary>
+        /// <returns></returns>
+        public static BrandingSettings GetTenantBrandingSettings()
+        {
+            // Get the current settings from the Infrastructural Site Collection
+            var jsonBrandingSettings = PnPPartnerPackUtilities.GetPropertyBagValueFromInfrastructure(
+                PnPPartnerPackConstants.PropertyBag_Branding);
+
+            // Read the current branding settings, if any
+            var branding = jsonBrandingSettings != null ?
+                JsonConvert.DeserializeObject<BrandingSettings>(jsonBrandingSettings) :
+                new BrandingSettings();
+
+            return branding;
         }
     }
 }

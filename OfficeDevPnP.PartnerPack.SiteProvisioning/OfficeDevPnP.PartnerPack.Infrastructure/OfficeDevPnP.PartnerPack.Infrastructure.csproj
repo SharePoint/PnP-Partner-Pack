@@ -211,7 +211,8 @@
     <Compile Include="ITemplatesProvider.cs" />
     <Compile Include="JobStatus.cs" />
     <Compile Include="Jobs\ApplyProvisioningTemplateJob.cs" />
-    <Compile Include="Jobs\ApplyBrandingJob.cs" />
+    <Compile Include="Jobs\BrandingJob.cs" />
+    <Compile Include="Jobs\BrandingSettings.cs" />
     <Compile Include="Jobs\GetProvisioningTemplateJob.cs" />
     <Compile Include="Jobs\Handlers\UpdateTemplatesJobHandler.cs" />
     <Compile Include="Jobs\Handlers\BrandingJobHandler.cs" />
