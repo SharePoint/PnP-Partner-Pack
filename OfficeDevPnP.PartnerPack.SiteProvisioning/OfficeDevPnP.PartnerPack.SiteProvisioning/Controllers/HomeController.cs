@@ -247,6 +247,8 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         [HttpPost]
         public ActionResult SearchTemplates(OfficeDevPnP.PartnerPack.Infrastructure.TargetScope scope, String parentSiteUrl, String templatesProvider, String searchText)
         {
+            PnPPartnerPackSettings.ParentSiteUrl = parentSiteUrl;
+
             SearchTemplatesViewModel model = new SearchTemplatesViewModel();
 
             if (!PnPPartnerPackSettings.TemplatesProviders.ContainsKey(templatesProvider))

@@ -17,6 +17,12 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders
             get { return ("Current Site Collection"); }
         }
 
+        public SharePointLocalTemplatesProvider()
+            : base(PnPPartnerPackSettings.ParentSiteUrl)
+        {
+
+        }
+
         // NOTE: Use the current context to determine the URL of the current Site Collection
 
         public override ProvisioningTemplate GetProvisioningTemplate(string templateUri)

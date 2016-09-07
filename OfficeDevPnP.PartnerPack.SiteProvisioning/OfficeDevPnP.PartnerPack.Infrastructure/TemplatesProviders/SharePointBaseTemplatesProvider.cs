@@ -23,9 +23,13 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders
 
         public SharePointBaseTemplatesProvider()
         {
+        }
+
+        public SharePointBaseTemplatesProvider(String templateSiteUrl)
+        {
             // If the ParentSiteUrl is empty or NULL, then fallback to Global Tenant settings
-            this.TemplatesSiteUrl = !String.IsNullOrEmpty(PnPPartnerPackSettings.ParentSiteUrl) ?
-                PnPPartnerPackSettings.ParentSiteUrl :
+            this.TemplatesSiteUrl = !String.IsNullOrEmpty(templateSiteUrl) ?
+                templateSiteUrl :
                 PnPPartnerPackSettings.InfrastructureSiteUrl;
         }
 

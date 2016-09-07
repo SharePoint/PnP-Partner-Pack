@@ -12,4 +12,15 @@
         </div>
     </div>
 
+    @if (Model.Scope == OfficeDevPnP.PartnerPack.Infrastructure.TargetScope.Web)
+    {
+        <div>
+            <button class="ms-Button BackButton">
+                <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+                <span class="ms-Button-label">Back</span>
+                <span class="ms-Button-description">Go back</span>
+            </button>
+        </div>
+    }
+
 </div>

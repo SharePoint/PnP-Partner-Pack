@@ -1,4 +1,5 @@
 ﻿using Microsoft.SharePoint.Client;
+using Newtonsoft.Json;
 using OfficeDevPnP.Core.Framework.Provisioning.Model;
 using OfficeDevPnP.Core.Framework.Provisioning.ObjectHandlers;
 using OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml;
@@ -106,6 +107,23 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
 
                         // Apply the template to the target site
                         web.ApplyProvisioningTemplate(template, ptai);
+
+                        // Save the template information in the target site
+                        var info = new SiteTemplateInfo()
+                        {
+                            TemplateProviderType = job.TemplatesProviderTypeName,
+                            TemplateUri = job.ProvisioningTemplateUrl,
+                            TemplateParameters = template.Parameters,
+                            AppliedOn = DateTime.Now,
+                        };
+                        var jsonInfo = JsonConvert.SerializeObject(info);
+                        web.SetPropertyBagValue(PnPPartnerPackConstants.PropertyBag_TemplateInfo, jsonInfo);
+
+                        // Set site policy template
+                        if (!String.IsNullOrEmpty(job.SitePolicy))
+                        {
+                            web.ApplySitePolicy(job.SitePolicy);
+                        }
 
                         Console.WriteLine("Applyed Provisioning Template \"{0}\" to site.",
                             job.ProvisioningTemplateUrl);

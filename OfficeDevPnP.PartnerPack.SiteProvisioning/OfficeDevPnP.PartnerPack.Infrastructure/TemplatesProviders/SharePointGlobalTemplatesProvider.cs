@@ -18,6 +18,12 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders
             get { return ("Global Tenant"); }
         }
 
+        public SharePointGlobalTemplatesProvider()
+            : base(PnPPartnerPackSettings.InfrastructureSiteUrl)
+        {
+
+        }
+
         public override ProvisioningTemplate GetProvisioningTemplate(string templateUri)
         {
             return (base.GetProvisioningTemplate(templateUri));

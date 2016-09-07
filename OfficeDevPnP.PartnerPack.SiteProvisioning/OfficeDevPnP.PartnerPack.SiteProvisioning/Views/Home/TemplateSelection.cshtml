@@ -18,9 +18,16 @@
                     <label for="templateProviders" class="ms-Label">Templates provider</label>
                     <i class="ms-Dropdown-caretDown ms-Icon ms-Icon--caretDown"></i>
                     <select name="templateProviders" id="templateProviders" class="ms-Dropdown-select">
-                        @foreach (var pk in PnPPartnerPackSettings.TemplatesProviders.Keys)
-                        {
-                            <option value="@pk">@PnPPartnerPackSettings.TemplatesProviders[pk].DisplayName</option>
+                        @{
+                            var providers = PnPPartnerPackSettings.TemplatesProviders;
+
+                            foreach (var pk in providers.Keys)
+                            {
+                                if ((Model.Scope == TargetScope.Site && providers[pk].GetType().FullName != typeof(OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders.SharePointLocalTemplatesProvider).FullName) || (Model.Scope != TargetScope.Site))
+                                {
+                                    <option value="@pk">@providers[pk].DisplayName</option>
+                                }
+                            }
                         }
                     </select>
                 </div>
