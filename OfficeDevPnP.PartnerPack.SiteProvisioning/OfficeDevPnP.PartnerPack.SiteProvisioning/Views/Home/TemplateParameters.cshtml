@@ -7,6 +7,8 @@
 
     <div class="ms-font-xxl">Template Parameters</div>
 
+    <input type="hidden" id="TemplateParametersCount" name="TemplateParametersCount" value="@(Model.TemplateParameters != null ? Model.TemplateParameters.Count : 0)" />
+
     @if (Model.Step == CreateSiteStep.TemplateParameters && (Model.TemplateParameters == null || Model.TemplateParameters.Count == 0))
     {
         <div class="informationText">There are no template parameters. You can simply proceed with Site creation.</div>

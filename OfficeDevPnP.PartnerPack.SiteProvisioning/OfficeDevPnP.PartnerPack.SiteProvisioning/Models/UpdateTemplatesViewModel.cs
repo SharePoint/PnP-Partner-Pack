@@ -7,7 +7,7 @@ using System.Web;
 
 namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
 {
-    public class UpdateTemplatesViewModel : JobViewModel
+    public class RefreshSitesViewModel : JobViewModel
     {
         // Nothing to do, so far ...
     }

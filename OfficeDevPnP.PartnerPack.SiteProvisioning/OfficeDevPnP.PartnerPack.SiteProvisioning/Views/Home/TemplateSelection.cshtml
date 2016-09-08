@@ -36,7 +36,7 @@
                 <label for="templatesSearch" class="ms-Label">Search criteria</label>
                 <div class="ms-SearchBox" style="width: 100%;">
                     <input name="templatesSearch" id="templatesSearch" class="ms-SearchBox-field" style="width: 100%; max-width: none;">
-                    <label class="ms-SearchBox-label"><i class="ms-SearchBox-icon ms-Icon ms-Icon--search"></i>Free text to search</label>
+                    <label class="ms-SearchBox-label"><i class="ms-SearchBox-icon ms-Icon ms-Icon--search"></i>Please provide a text to search for ...</label>
                     <button class="ms-SearchBox-closeButton templatesSearchButton"><i class="ms-Icon ms-Icon--x"></i></button>
                 </div>
             </div>
@@ -53,6 +53,8 @@
 
     <div id="TemplatesSelectionList"></div>
 
+    <div class="ms-font-m ms-fontColor-warning WarningMessage"></div>
+
     <input type="hidden" id="@Html.IdFor(model => model.ProvisioningTemplateUrl)" name="@Html.NameFor(model => model.ProvisioningTemplateUrl)" value="" />
 
     <button class="ms-Button BackButton">
@@ -68,3 +70,11 @@
     </button>
 
 </div>
+
+<script>
+
+    $(document).ready(function () {
+        searchTemplates(null);
+    });
+
+</script>

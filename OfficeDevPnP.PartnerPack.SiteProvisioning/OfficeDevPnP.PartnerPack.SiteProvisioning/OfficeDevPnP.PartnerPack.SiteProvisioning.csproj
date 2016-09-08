@@ -448,7 +448,6 @@
     <Content Include="Views\Home\SubSiteInformation.cshtml" />
     <Content Include="Views\Home\MyProvisionedSitesGrid.cshtml" />
     <Content Include="Views\Shared\_WorkingOnIt.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\Persona.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Boolean.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Double.cshtml" />
@@ -464,7 +463,7 @@
     <Content Include="Views\Home\SearchTemplates.cshtml" />
     <Content Include="Views\Governance\Temporary.cshtml" />
     <Content Include="Views\Governance\Branding.cshtml" />
-    <Content Include="Views\Governance\UpdateTemplates.cshtml" />
+    <Content Include="Views\Governance\RefreshSites.cshtml" />
     <Content Include="Views\Governance\SiteCollectionsBatch.cshtml" />
     <None Include="SupportFiles\PnPPartnerPackBatch.xsd">
       <SubType>Designer</SubType>
@@ -475,6 +474,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Shared\DisplayTemplates\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

@@ -13,7 +13,7 @@
                        {
                            Text = l.Attribute("description").Value,
                            Value = l.Attribute("value").Value,
-                           Selected = Int32.Parse(l.Attribute("value").Value) == Model
+                           Selected = (Model != 0 ? Int32.Parse(l.Attribute("value").Value) == Model : Int32.Parse(l.Attribute("value").Value) == 1033)
                        };
 }
 <div class="ms-f" id="@($"{fieldId}Div")">

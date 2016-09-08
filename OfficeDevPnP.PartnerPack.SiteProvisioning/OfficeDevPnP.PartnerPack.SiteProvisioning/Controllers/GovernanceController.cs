@@ -90,20 +90,20 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         }
 
         [HttpGet]
-        public ActionResult UpdateTemplates()
+        public ActionResult RefreshSites()
         {
-            UpdateTemplatesViewModel model = new UpdateTemplatesViewModel();
+            RefreshSitesViewModel model = new RefreshSitesViewModel();
             return View(model);
         }
 
         [HttpPost]
-        public ActionResult UpdateTemplates(UpdateTemplatesViewModel model)
+        public ActionResult RefreshSites(RefreshSitesViewModel model)
         {
             AntiForgery.Validate();
             if (ModelState.IsValid)
             {
                 // Create the asynchronous job
-                var job = new UpdateTemplatesJob
+                var job = new RefreshSitesJob
                 {
                     Owner = ClaimsPrincipal.Current.Identity.Name,
                     Title = "Tenant Wide Update Templates",

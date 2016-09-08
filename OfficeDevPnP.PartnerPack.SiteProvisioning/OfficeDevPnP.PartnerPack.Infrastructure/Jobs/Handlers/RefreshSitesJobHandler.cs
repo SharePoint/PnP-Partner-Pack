@@ -14,11 +14,11 @@ using System.Threading.Tasks;
 
 namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
 {
-    public class UpdateTemplatesJobHandler : ProvisioningJobHandler
+    public class RefreshSitesJobHandler : ProvisioningJobHandler
     {
         protected override void RunJobInternal(ProvisioningJob job)
         {
-            UpdateTemplatesJob updateJob = job as UpdateTemplatesJob;
+            RefreshSitesJob updateJob = job as RefreshSitesJob;
             if (updateJob == null)
             {
                 throw new ArgumentException("Invalid job type for BrandingJobHandler.");
@@ -27,7 +27,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
             UpdateTemplates(updateJob);
         }
 
-        private void UpdateTemplates(UpdateTemplatesJob job)
+        private void UpdateTemplates(RefreshSitesJob job)
         {
             // For each Site Collection in the tenant
             using (var adminContext = PnPPartnerPackContextProvider.GetAppOnlyTenantLevelClientContext())
@@ -58,7 +58,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
             }
         }
 
-        private void UpdateTemplateOnWeb(Web targetWeb, UpdateTemplatesJob job)
+        private void UpdateTemplateOnWeb(Web targetWeb, RefreshSitesJob job)
         {
             targetWeb.EnsureProperty(w => w.Url);
 

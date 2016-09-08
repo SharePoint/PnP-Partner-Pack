@@ -54,6 +54,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                 siteJob.ExternalSharingEnabled = batch.externalSharingEnabled;
                 siteJob.ResponsiveDesignEnabled = batch.responsiveDesignEnabled;
                 siteJob.PartnerPackExtensionsEnabled = batch.partnerPackExtensionsEnabled;
+                siteJob.ApplyTenantBranding = batch.applyTenantBranding;
                 siteJob.Title = String.Format("Provisioning of Site Collection \"{1}\" with Template \"{0}\" by {2}",
                     siteJob.ProvisioningTemplateUrl,
                     siteJob.RelativeUrl,

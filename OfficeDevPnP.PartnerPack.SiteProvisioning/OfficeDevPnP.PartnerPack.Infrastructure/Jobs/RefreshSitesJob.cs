@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs
 {
     /// <summary>
-    /// Defines an Update Templates Job
+    /// Defines an Refresh Sites Job
     /// </summary>
-    public class UpdateTemplatesJob : ProvisioningJob
+    public class RefreshSitesJob : ProvisioningJob
     {
     }
 }

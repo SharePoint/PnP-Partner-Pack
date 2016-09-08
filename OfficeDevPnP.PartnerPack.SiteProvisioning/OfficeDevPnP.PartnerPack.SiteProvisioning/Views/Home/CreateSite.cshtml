@@ -42,7 +42,7 @@
         $(function () {
 
             // Hide the Working On It panel
-            $("#WorkingOnIt").hide();
+            // $("#WorkingOnIt").hide();
 
             // Handle wizard steps
             $(document).on("click", ".NextStep,.PreviousStep", moveWizardStep);
@@ -55,6 +55,8 @@
                     .val($(this).attr("data-pnp-template-url"));
                 $(".provtemplate").removeClass("active");
                 $(this).addClass("active");
+
+                $(".WarningMessage").text("");
             });
 
             $(document).on("click", ".templatesSearchButton", searchTemplates);
@@ -75,6 +77,13 @@
                     if ($("#ProvisioningTemplateUrl").val() != "")
                     {
                         currentStep = "@CreateSiteStep.SiteInformation";
+                    }
+                    else
+                    {
+                        $(".WarningMessage").text("Please select a template!");
+                        $("#SiteCreationWizard > div").show();
+                        $("#WorkingOnIt").hide();
+                        return;
                     }
                     break;
                 case "@CreateSiteStep.SiteInformation":
@@ -101,6 +110,15 @@
                         $("#" + newStep).html(result).show();
 
                         applyOfficeUIFabricStyles();
+
+                        if (currentStep == "@CreateSiteStep.TemplateParameters")
+                        {
+                            templateParametersCount = $("#TemplateParametersCount").val();
+                            if (templateParametersCount == "0")
+                            {
+                                $(".NextStep").click();
+                            }
+                        }
                     }
                 },
                 error: function (xhr, status, error) {
@@ -112,10 +130,24 @@
         function searchTemplates(e) {
 
             // Prevent default event
-             e.preventDefault();
-
+            if (e != null && e != undefined) {
+                e.preventDefault();
+            }
+            
             var searchText = $("#templatesSearch").val();
             var templatesProvider = $("#templateProviders").val();
+
+            if ((searchText == "" || searchText == null || searchText == undefined) && (e != null && e != undefined))
+            {
+                $(".WarningMessage").text("Please provide a text to search for!");
+                $("#SiteCreationWizard > div").show();
+                $("#WorkingOnIt").hide();
+                return;
+            }
+            else
+            {
+                $(".WarningMessage").text("");
+            }
 
             $("#@(Html.IdFor(model => model.TemplatesProviderTypeName))").val(templatesProvider);
 
@@ -141,7 +173,6 @@
                         $("#WorkingOnIt").prependTo($("#SiteCreationWizardContainer"));
 
                         $("#TemplatesSelectionList").html(result).show();
-
                     }
                 },
                 error: function (xhr, status, error) {

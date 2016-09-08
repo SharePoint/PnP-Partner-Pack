@@ -214,7 +214,7 @@
     <Compile Include="Jobs\BrandingJob.cs" />
     <Compile Include="Jobs\BrandingSettings.cs" />
     <Compile Include="Jobs\GetProvisioningTemplateJob.cs" />
-    <Compile Include="Jobs\Handlers\UpdateTemplatesJobHandler.cs" />
+    <Compile Include="Jobs\Handlers\RefreshSitesJobHandler.cs" />
     <Compile Include="Jobs\Handlers\BrandingJobHandler.cs" />
     <Compile Include="Jobs\Handlers\ContinousJobItem.cs" />
     <Compile Include="Jobs\Handlers\ProvisioningTemplateJobHandler.cs" />
@@ -231,7 +231,7 @@
     <Compile Include="Jobs\SiteProvisioningJob.cs" />
     <Compile Include="Jobs\SiteCollectionProvisioningJob.cs" />
     <Compile Include="Jobs\SubSiteProvisioningJob.cs" />
-    <Compile Include="Jobs\UpdateTemplatesJob.cs" />
+    <Compile Include="Jobs\RefreshSitesJob.cs" />
     <Compile Include="MicrosoftGraphConstants.cs" />
     <Compile Include="MicrosoftGraphHelper.cs" />
     <Compile Include="PnPImageUtilities.cs" />

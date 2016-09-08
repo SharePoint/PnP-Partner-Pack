@@ -93,6 +93,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Components
 
             PrincipalViewModel user = new PrincipalViewModel()
             {
+                UserPrincipalName = u.UserPrincipalName,
                 DisplayName = u.DisplayName,
                 Mail = u.Mail,
                 FirstName = u.GivenName,

@@ -67,7 +67,7 @@ function searchPeopleOrGroups(searchId, searchName, searchGroups, maxSelection) 
                             $(displayName).text(e.DisplayName);
                         }
                         var secondaryText = $("<div></div>").addClass("ms-Persona-secondaryText");
-                        $(secondaryText).text(e.JobTitle);
+                        $(secondaryText).text(e.UserPrincipalName);
                         $(detailsDiv).append(displayName);
                         $(detailsDiv).append(secondaryText);
 

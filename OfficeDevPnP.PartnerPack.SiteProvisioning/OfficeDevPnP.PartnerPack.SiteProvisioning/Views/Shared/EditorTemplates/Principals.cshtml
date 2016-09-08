@@ -1,5 +1,6 @@
-﻿@using OfficeDevPnP.PartnerPack.SiteProvisioning.Models
-@model PrincipalsViewModel
+﻿@model OfficeDevPnP.PartnerPack.SiteProvisioning.Models.PrincipalsViewModel
+
+@using OfficeDevPnP.PartnerPack.SiteProvisioning.Models
 
 @{
     var fieldId = Html.IdFor(m => m);
@@ -43,7 +44,7 @@
                                     @*<div class="ms-Persona-presence"></div>*@
                                     <div class="ms-Persona-details">
                                         <div class="ms-Persona-primaryText">@identity.DisplayName</div>
-                                        <div class="ms-Persona-secondaryText">@identity.JobTitle</div>
+                                        <div class="ms-Persona-secondaryText">@identity.UserPrincipalName</div>
                                     </div>
                                 </div>
                                 <button class="ms-PeoplePicker-resultAction js-selectedRemove"><i class="ms-Icon ms-Icon--x"></i></button>

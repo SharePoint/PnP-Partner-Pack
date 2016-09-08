@@ -183,3 +183,10 @@ img.templatepreview {
 .ms-SearchBox-label {
     font-weight: normal !important;
 }
+
+.WarningMessage
+{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: red;
+}

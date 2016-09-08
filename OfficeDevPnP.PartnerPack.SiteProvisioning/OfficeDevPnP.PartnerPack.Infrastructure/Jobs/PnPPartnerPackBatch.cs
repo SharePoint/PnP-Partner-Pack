@@ -215,6 +215,12 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs {
         
         private string templatesProviderNameField;
         
+        private bool applyTenantBrandingField;
+        
+        public baseSiteSettings() {
+            this.applyTenantBrandingField = true;
+        }
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlArrayItemAttribute("parameter", IsNullable=false)]
         public baseSiteSettingsParameter[] templateParameters {
@@ -300,6 +306,18 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs {
             }
             set {
                 this.templatesProviderNameField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(true)]
+        public bool applyTenantBranding {
+            get {
+                return this.applyTenantBrandingField;
+            }
+            set {
+                this.applyTenantBrandingField = value;
             }
         }
     }

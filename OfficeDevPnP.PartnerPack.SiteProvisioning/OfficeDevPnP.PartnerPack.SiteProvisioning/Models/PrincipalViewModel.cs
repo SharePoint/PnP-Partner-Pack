@@ -53,6 +53,12 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
         public String Mail { get; set; }
 
         /// <summary>
+        /// User Principal Name
+        /// </summary>
+        [JsonProperty(PropertyName = "userPrincipalName")]
+        public String UserPrincipalName { get; set; }
+
+        /// <summary>
         /// Display name
         /// </summary>
         [JsonProperty(PropertyName = "displayName")]
