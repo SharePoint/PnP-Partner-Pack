@@ -2,6 +2,7 @@
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Newtonsoft.Json;
+using OfficeDevPnP.Core.Enums;
 using OfficeDevPnP.Core.Framework.Provisioning.Connectors;
 using OfficeDevPnP.Core.Framework.Provisioning.Model;
 using OfficeDevPnP.Core.Framework.Provisioning.ObjectHandlers;
@@ -469,6 +470,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
             resultItem.ErrorMessage = (String)jobItem[PnPPartnerPackConstants.PnPProvisioningJobError];
             resultItem.Type = (String)jobItem[PnPPartnerPackConstants.PnPProvisioningJobType];
             resultItem.Owner = ((FieldUserValue)jobItem[PnPPartnerPackConstants.PnPProvisioningJobOwner]).LookupValue;
+            resultItem.ScheduledOn = (DateTime)jobItem[jobItem.ParentList.GetFieldById<FieldDateTime>(BuiltInFieldId.Created).InternalName];
 
             if (includeFileStream)
             {

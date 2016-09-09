@@ -46,5 +46,10 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs
         /// Provides the Stream of the Provisioning Job file
         /// </summary>
         public Stream JobFile { get; set; }
+
+        /// <summary>
+        /// Defines the date and time when the job was scheduled
+        /// </summary>
+        public DateTime ScheduledOn { get; set; }
     }
 }

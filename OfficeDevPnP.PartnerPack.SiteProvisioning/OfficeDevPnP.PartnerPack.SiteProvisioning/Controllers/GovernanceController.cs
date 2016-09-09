@@ -93,6 +93,28 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         public ActionResult RefreshSites()
         {
             RefreshSitesViewModel model = new RefreshSitesViewModel();
+
+            // Retrieve any pending, running, or failed job
+            var runningJobs = ProvisioningRepositoryFactory.Current.GetProvisioningJobs(
+                ProvisioningJobStatus.Pending | ProvisioningJobStatus.Running |
+                ProvisioningJobStatus.Failed, typeof(RefreshSitesJob).FullName, 
+                false);
+
+            if (runningJobs != null && runningJobs.Length > 0)
+            {
+                // Get the most recent job instance
+                var lastJob = runningJobs.OrderByDescending(j => j.ScheduledOn).First();
+
+                // Configure the model accordingly
+                model.Status = lastJob.Status == ProvisioningJobStatus.Pending | lastJob.Status == ProvisioningJobStatus.Running ? RefreshJobStatus.Running :
+                    (lastJob.Status == ProvisioningJobStatus.Failed ? RefreshJobStatus.Failed : RefreshJobStatus.Idle);
+
+                if (model.Status == RefreshJobStatus.Failed)
+                {
+                    model.ErrorMessage = lastJob.ErrorMessage;
+                }
+            }
+
             return View(model);
         }
 
@@ -111,6 +133,8 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
 
                 // Enqueue the job for execution
                 model.JobId = ProvisioningRepositoryFactory.Current.EnqueueProvisioningJob(job);
+
+                model.Status = RefreshJobStatus.Scheduled;
             }
 
             return View(model);
