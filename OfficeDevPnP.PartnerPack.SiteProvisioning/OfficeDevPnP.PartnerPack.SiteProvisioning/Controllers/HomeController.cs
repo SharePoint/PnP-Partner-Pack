@@ -35,6 +35,9 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
 
             using (var ctx = PnPPartnerPackContextProvider.GetAppOnlyClientContext(PnPPartnerPackSettings.InfrastructureSiteUrl))
             {
+                // Track usage of the PnP Partner Pack
+                ctx.ClientTag = "SPDev:PartnerPack";
+
                 Web web = ctx.Web;
                 ctx.Load(web, w => w.Title, w => w.Url);
                 ctx.ExecuteQueryRetry();
