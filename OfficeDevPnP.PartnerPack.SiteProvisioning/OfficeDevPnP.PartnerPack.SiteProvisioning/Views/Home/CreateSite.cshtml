@@ -110,15 +110,6 @@
                         $("#" + newStep).html(result).show();
 
                         applyOfficeUIFabricStyles();
-
-                        if (currentStep == "@CreateSiteStep.TemplateParameters")
-                        {
-                            templateParametersCount = $("#TemplateParametersCount").val();
-                            if (templateParametersCount == "0")
-                            {
-                                $(".NextStep").click();
-                            }
-                        }
                     }
                 },
                 error: function (xhr, status, error) {

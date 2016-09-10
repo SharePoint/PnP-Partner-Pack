@@ -72,85 +72,89 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         [HttpPost]
         public ActionResult CreateSiteCollection(CreateSiteCollectionViewModel model)
         {
-            switch (model.Step)
+
+            if (model.Step == CreateSiteStep.SiteInformation)
             {
-                case CreateSiteStep.SiteInformation:
-                    ModelState.Clear();
-                    if (String.IsNullOrEmpty(model.Title))
+                ModelState.Clear();
+                if (String.IsNullOrEmpty(model.Title))
+                {
+                    // Set initial value for PnP Partner Pack Extensions Enabled
+                    model.PartnerPackExtensionsEnabled = true;
+                    model.ResponsiveDesignEnabled = true;
+                }
+            }
+            if (model.Step == CreateSiteStep.TemplateParameters)
+            {
+                if (!ModelState.IsValid)
+                {
+                    model.Step = CreateSiteStep.SiteInformation;
+                }
+                else
+                {
+                    if (!String.IsNullOrEmpty(model.ProvisioningTemplateUrl) &&
+                        !String.IsNullOrEmpty(model.TemplatesProviderTypeName))
                     {
-                        // Set initial value for PnP Partner Pack Extensions Enabled
-                        model.PartnerPackExtensionsEnabled = true;
-                        model.ResponsiveDesignEnabled = true;
-                    }
-                    break;
-                case CreateSiteStep.TemplateParameters:
-                    if (!ModelState.IsValid)
-                    {
-                        model.Step = CreateSiteStep.SiteInformation;
-                    }
-                    else
-                    {
-                        if (!String.IsNullOrEmpty(model.ProvisioningTemplateUrl) &&
-                            !String.IsNullOrEmpty(model.TemplatesProviderTypeName))
+                        var templatesProvider = PnPPartnerPackSettings.TemplatesProviders[model.TemplatesProviderTypeName];
+                        if (templatesProvider != null)
                         {
-                            var templatesProvider = PnPPartnerPackSettings.TemplatesProviders[model.TemplatesProviderTypeName];
-                            if (templatesProvider != null)
-                            {
-                                var template = templatesProvider.GetProvisioningTemplate(model.ProvisioningTemplateUrl);
-                                model.TemplateParameters = template.Parameters;
-                            }
+                            var template = templatesProvider.GetProvisioningTemplate(model.ProvisioningTemplateUrl);
+                            model.TemplateParameters = template.Parameters;
                         }
                     }
-                    break;
-                case CreateSiteStep.SiteCreated:
-                    AntiForgery.Validate();
-                    if (ModelState.IsValid)
+
+                    if (model.TemplateParameters == null || model.TemplateParameters.Count == 0)
                     {
-                        // Prepare the Job to provision the Site Collection
-                        SiteCollectionProvisioningJob job = new SiteCollectionProvisioningJob();
-
-                        // Prepare all the other information about the Provisioning Job
-                        job.SiteTitle = model.Title;
-                        job.Description = model.Description;
-                        job.Language = model.Language;
-                        job.TimeZone = model.TimeZone;
-                        job.RelativeUrl = String.Format("/{0}/{1}", model.ManagedPath, model.RelativeUrl);
-                        job.SitePolicy = model.SitePolicy;
-                        job.Owner = ClaimsPrincipal.Current.Identity.Name;
-                        job.ApplyTenantBranding = model.ApplyTenantBranding;
-
-                        job.PrimarySiteCollectionAdmin = model.PrimarySiteCollectionAdmin != null &&
-                            model.PrimarySiteCollectionAdmin.Principals.Count > 0 ? 
-                                (!String.IsNullOrEmpty(model.PrimarySiteCollectionAdmin.Principals[0].Mail) ? 
-                                model.PrimarySiteCollectionAdmin.Principals[0].Mail : 
-                                null): null;
-                        job.SecondarySiteCollectionAdmin = model.SecondarySiteCollectionAdmin != null &&
-                            model.SecondarySiteCollectionAdmin.Principals.Count > 0 ?
-                                (!String.IsNullOrEmpty(model.SecondarySiteCollectionAdmin.Principals[0].Mail) ?
-                                model.SecondarySiteCollectionAdmin.Principals[0].Mail :
-                                null) : null;
-
-                        job.ProvisioningTemplateUrl = model.ProvisioningTemplateUrl;
-                        job.TemplatesProviderTypeName = model.TemplatesProviderTypeName;
-                        job.StorageMaximumLevel = model.StorageMaximumLevel;
-                        job.StorageWarningLevel = model.StorageWarningLevel;
-                        job.UserCodeMaximumLevel = model.UserCodeMaximumLevel;
-                        job.UserCodeWarningLevel = model.UserCodeWarningLevel;
-                        job.ExternalSharingEnabled = model.ExternalSharingEnabled;
-                        job.ResponsiveDesignEnabled = model.ResponsiveDesignEnabled;
-                        job.PartnerPackExtensionsEnabled = model.PartnerPackExtensionsEnabled;
-                        job.Title = String.Format("Provisioning of Site Collection \"{1}\" with Template \"{0}\" by {2}",
-                            job.ProvisioningTemplateUrl,
-                            job.RelativeUrl,
-                            job.Owner);
-
-                        job.TemplateParameters = model.TemplateParameters;
-
-                        model.JobId = ProvisioningRepositoryFactory.Current.EnqueueProvisioningJob(job);
+                        model.Step = CreateSiteStep.SiteCreated;
                     }
-                    break;
-                default:
-                    break;
+                }
+            }
+            if (model.Step == CreateSiteStep.SiteCreated)
+            {
+                AntiForgery.Validate();
+                if (ModelState.IsValid)
+                {
+                    // Prepare the Job to provision the Site Collection
+                    SiteCollectionProvisioningJob job = new SiteCollectionProvisioningJob();
+
+                    // Prepare all the other information about the Provisioning Job
+                    job.SiteTitle = model.Title;
+                    job.Description = model.Description;
+                    job.Language = model.Language;
+                    job.TimeZone = model.TimeZone;
+                    job.RelativeUrl = String.Format("/{0}/{1}", model.ManagedPath, model.RelativeUrl);
+                    job.SitePolicy = model.SitePolicy;
+                    job.Owner = ClaimsPrincipal.Current.Identity.Name;
+                    job.ApplyTenantBranding = model.ApplyTenantBranding;
+
+                    job.PrimarySiteCollectionAdmin = model.PrimarySiteCollectionAdmin != null &&
+                        model.PrimarySiteCollectionAdmin.Principals.Count > 0 ?
+                            (!String.IsNullOrEmpty(model.PrimarySiteCollectionAdmin.Principals[0].Mail) ?
+                            model.PrimarySiteCollectionAdmin.Principals[0].Mail :
+                            null) : null;
+                    job.SecondarySiteCollectionAdmin = model.SecondarySiteCollectionAdmin != null &&
+                        model.SecondarySiteCollectionAdmin.Principals.Count > 0 ?
+                            (!String.IsNullOrEmpty(model.SecondarySiteCollectionAdmin.Principals[0].Mail) ?
+                            model.SecondarySiteCollectionAdmin.Principals[0].Mail :
+                            null) : null;
+
+                    job.ProvisioningTemplateUrl = model.ProvisioningTemplateUrl;
+                    job.TemplatesProviderTypeName = model.TemplatesProviderTypeName;
+                    job.StorageMaximumLevel = model.StorageMaximumLevel;
+                    job.StorageWarningLevel = model.StorageWarningLevel;
+                    job.UserCodeMaximumLevel = model.UserCodeMaximumLevel;
+                    job.UserCodeWarningLevel = model.UserCodeWarningLevel;
+                    job.ExternalSharingEnabled = model.ExternalSharingEnabled;
+                    job.ResponsiveDesignEnabled = model.ResponsiveDesignEnabled;
+                    job.PartnerPackExtensionsEnabled = model.PartnerPackExtensionsEnabled;
+                    job.Title = String.Format("Provisioning of Site Collection \"{1}\" with Template \"{0}\" by {2}",
+                        job.ProvisioningTemplateUrl,
+                        job.RelativeUrl,
+                        job.Owner);
+
+                    job.TemplateParameters = model.TemplateParameters;
+
+                    model.JobId = ProvisioningRepositoryFactory.Current.EnqueueProvisioningJob(job);
+                }
             }
 
             return PartialView(model.Step.ToString(), model);
