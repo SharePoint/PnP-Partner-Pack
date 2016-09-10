@@ -9,6 +9,8 @@ using Microsoft.SharePoint.Client;
 using OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml;
 using OfficeDevPnP.Core.Framework.Provisioning.Connectors;
 using OfficeDevPnP.Core.Framework.Provisioning.Providers;
+using System.Runtime.Caching;
+using Newtonsoft.Json;
 
 namespace OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders
 {
@@ -17,6 +19,20 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders
     /// </summary>
     public abstract class SharePointBaseTemplatesProvider : ITemplatesProvider
     {
+        // Lazy static private property for managing the in memory cache
+        private static Lazy<MemoryCache> cacheValue = new Lazy<MemoryCache>(() => {
+            MemoryCache result = new MemoryCache("SharePointTemplatesProvider");
+            return (result);
+        }, true);
+
+        protected static MemoryCache Cache
+        {
+            get
+            {
+                return (cacheValue.Value);
+            }
+        }
+
         public String TemplatesSiteUrl { get; protected set; }
 
         public abstract string DisplayName { get; }
@@ -83,8 +99,27 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders
 
         public virtual ProvisioningTemplateInformation[] SearchProvisioningTemplates(string searchText, TargetPlatform platforms, TargetScope scope)
         {
-            List<ProvisioningTemplateInformation> result =
-                new List<ProvisioningTemplateInformation>();
+            String cacheKey = JsonConvert.SerializeObject(new SharePointSearchCacheKey
+            {
+                TemplatesProviderTypeName = this.GetType().Name,
+                SearchText = searchText,
+                Platforms = platforms,
+                Scope = scope,
+            });
+
+            List<ProvisioningTemplateInformation> result = Cache[cacheKey] as List<ProvisioningTemplateInformation>;
+
+            if (result == null)
+            {
+                result = SearchProvisioningTemplatesInternal(searchText, platforms, scope, cacheKey);
+            }
+
+            return (result.ToArray());
+        }
+
+        private List<ProvisioningTemplateInformation> SearchProvisioningTemplatesInternal(string searchText, TargetPlatform platforms, TargetScope scope, String cacheKey)
+        {
+            List<ProvisioningTemplateInformation> result = new List<ProvisioningTemplateInformation>();
 
             // Connect to the target Templates Site Collection
             using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(TemplatesSiteUrl))
@@ -282,7 +317,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders
                             // If we don't have a search text 
                             // or we have a search text and it is contained either 
                             // in the DisplayName or in the Description of the template
-                            if ((!String.IsNullOrEmpty(searchText) && 
+                            if ((!String.IsNullOrEmpty(searchText) &&
                                 ((!String.IsNullOrEmpty(template.DisplayName) && template.DisplayName.ToLower().Contains(searchText.ToLower())) ||
                                 (!String.IsNullOrEmpty(template.Description) && template.Description.ToLower().Contains(searchText.ToLower())))) ||
                                 String.IsNullOrEmpty(searchText))
@@ -297,9 +332,31 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders
                         // In case of any issue, ignore the failing templates
                     }
                 }
-
-                return (result.ToArray());
             }
+
+            CacheItemPolicy policy = new CacheItemPolicy
+            {
+                Priority = CacheItemPriority.Default,
+                AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(5), // Cache results for 30 minutes
+                RemovedCallback = (args) =>
+                {
+                    if (args.RemovedReason == CacheEntryRemovedReason.Expired)
+                    {
+                        var removedKey = args.CacheItem.Key;
+                        var searchInputs = JsonConvert.DeserializeObject<SharePointSearchCacheKey>(removedKey);
+
+                        var newItem = SearchProvisioningTemplatesInternal(
+                            searchInputs.SearchText,
+                            searchInputs.Platforms,
+                            searchInputs.Scope,
+                            removedKey);
+                    }
+                },
+            };
+
+            Cache.Set(cacheKey, result, policy);
+
+            return result;
         }
     }
 }
