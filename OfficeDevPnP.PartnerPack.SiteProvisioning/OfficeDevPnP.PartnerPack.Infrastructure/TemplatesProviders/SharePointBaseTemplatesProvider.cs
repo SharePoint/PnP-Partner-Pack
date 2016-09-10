@@ -337,7 +337,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders
             CacheItemPolicy policy = new CacheItemPolicy
             {
                 Priority = CacheItemPriority.Default,
-                AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(5), // Cache results for 30 minutes
+                AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(30), // Cache results for 30 minutes
                 RemovedCallback = (args) =>
                 {
                     if (args.RemovedReason == CacheEntryRemovedReason.Expired)
