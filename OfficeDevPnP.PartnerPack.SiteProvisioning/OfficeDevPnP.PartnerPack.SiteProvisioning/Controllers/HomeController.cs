@@ -177,78 +177,81 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         {
             PnPPartnerPackSettings.ParentSiteUrl = model.ParentSiteUrl;
 
-            switch (model.Step)
+            if (model.Step == CreateSiteStep.SiteInformation)
             {
-                case CreateSiteStep.SiteInformation:
-                    ModelState.Clear();
+                ModelState.Clear();
 
-                    // If it is the first time that we are here
-                    if (String.IsNullOrEmpty(model.Title))
+                // If it is the first time that we are here
+                if (String.IsNullOrEmpty(model.Title))
+                {
+                    model.InheritPermissions = true;
+                    using (var ctx = PnPPartnerPackContextProvider.GetAppOnlyClientContext(model.ParentSiteUrl))
                     {
-                        model.InheritPermissions = true;
-                        using (var ctx = PnPPartnerPackContextProvider.GetAppOnlyClientContext(model.ParentSiteUrl))
-                        {
-                            Web web = ctx.Web;
-                            ctx.Load(web, w => w.Language, w => w.RegionalSettings.TimeZone);
-                            ctx.ExecuteQueryRetry();
+                        Web web = ctx.Web;
+                        ctx.Load(web, w => w.Language, w => w.RegionalSettings.TimeZone);
+                        ctx.ExecuteQueryRetry();
 
-                            model.Language = (Int32)web.Language;
-                            model.TimeZone = web.RegionalSettings.TimeZone.Id;
+                        model.Language = (Int32)web.Language;
+                        model.TimeZone = web.RegionalSettings.TimeZone.Id;
+                    }
+                }
+            }
+            if (model.Step == CreateSiteStep.TemplateParameters)
+            {
+                if (!ModelState.IsValid)
+                {
+                    model.Step = CreateSiteStep.SiteInformation;
+                }
+                else
+                {
+                    if (!String.IsNullOrEmpty(model.ProvisioningTemplateUrl) &&
+                        !String.IsNullOrEmpty(model.TemplatesProviderTypeName))
+                    {
+                        var templatesProvider = PnPPartnerPackSettings.TemplatesProviders[model.TemplatesProviderTypeName];
+                        if (templatesProvider != null)
+                        {
+                            var template = templatesProvider.GetProvisioningTemplate(model.ProvisioningTemplateUrl);
+                            model.TemplateParameters = template.Parameters;
+                        }
+
+                        if (model.TemplateParameters == null || model.TemplateParameters.Count == 0)
+                        {
+                            model.Step = CreateSiteStep.SiteCreated;
                         }
                     }
-                    break;
-                case CreateSiteStep.TemplateParameters:
-                    if (!ModelState.IsValid)
-                    {
-                        model.Step = CreateSiteStep.SiteInformation;
-                    }
-                    else
-                    {
-                        if (!String.IsNullOrEmpty(model.ProvisioningTemplateUrl) &&
-                            !String.IsNullOrEmpty(model.TemplatesProviderTypeName))
-                        {
-                            var templatesProvider = PnPPartnerPackSettings.TemplatesProviders[model.TemplatesProviderTypeName];
-                            if (templatesProvider != null)
-                            {
-                                var template = templatesProvider.GetProvisioningTemplate(model.ProvisioningTemplateUrl);
-                                model.TemplateParameters = template.Parameters;
-                            }
-                        }
-                    }
-                    break;
-                case CreateSiteStep.SiteCreated:
-                    AntiForgery.Validate();
-                    if (ModelState.IsValid)
-                    {
-                        // Prepare the Job to provision the Sub Site 
-                        SubSiteProvisioningJob job = new SubSiteProvisioningJob();
+                }
+            }
+            if (model.Step == CreateSiteStep.SiteCreated)
+            {
+                AntiForgery.Validate();
+                if (ModelState.IsValid)
+                {
+                    // Prepare the Job to provision the Sub Site 
+                    SubSiteProvisioningJob job = new SubSiteProvisioningJob();
 
-                        // Prepare all the other information about the Provisioning Job
-                        job.SiteTitle = model.Title;
-                        job.Description = model.Description;
-                        job.Language = model.Language;
-                        job.TimeZone = model.TimeZone;
-                        job.ParentSiteUrl = model.ParentSiteUrl;
-                        job.RelativeUrl = model.RelativeUrl;
-                        job.SitePolicy = model.SitePolicy;
-                        job.Owner = ClaimsPrincipal.Current.Identity.Name;
-                        job.ApplyTenantBranding = model.ApplyTenantBranding;
+                    // Prepare all the other information about the Provisioning Job
+                    job.SiteTitle = model.Title;
+                    job.Description = model.Description;
+                    job.Language = model.Language;
+                    job.TimeZone = model.TimeZone;
+                    job.ParentSiteUrl = model.ParentSiteUrl;
+                    job.RelativeUrl = model.RelativeUrl;
+                    job.SitePolicy = model.SitePolicy;
+                    job.Owner = ClaimsPrincipal.Current.Identity.Name;
+                    job.ApplyTenantBranding = model.ApplyTenantBranding;
 
-                        job.ProvisioningTemplateUrl = model.ProvisioningTemplateUrl;
-                        job.TemplatesProviderTypeName = model.TemplatesProviderTypeName;
-                        job.InheritPermissions = model.InheritPermissions;
-                        job.Title = String.Format("Provisioning of Sub Site \"{1}\" with Template \"{0}\" by {2}",
-                            job.ProvisioningTemplateUrl,
-                            job.RelativeUrl,
-                            job.Owner);
+                    job.ProvisioningTemplateUrl = model.ProvisioningTemplateUrl;
+                    job.TemplatesProviderTypeName = model.TemplatesProviderTypeName;
+                    job.InheritPermissions = model.InheritPermissions;
+                    job.Title = String.Format("Provisioning of Sub Site \"{1}\" with Template \"{0}\" by {2}",
+                        job.ProvisioningTemplateUrl,
+                        job.RelativeUrl,
+                        job.Owner);
 
-                        job.TemplateParameters = model.TemplateParameters;
+                    job.TemplateParameters = model.TemplateParameters;
 
-                        model.JobId = ProvisioningRepositoryFactory.Current.EnqueueProvisioningJob(job);
-                    }
-                    break;
-                default:
-                    break;
+                    model.JobId = ProvisioningRepositoryFactory.Current.EnqueueProvisioningJob(job);
+                }
             }
 
             return PartialView(model.Step.ToString(), model);

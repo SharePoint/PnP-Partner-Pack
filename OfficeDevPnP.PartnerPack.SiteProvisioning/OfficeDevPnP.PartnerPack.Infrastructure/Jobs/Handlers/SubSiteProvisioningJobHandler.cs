@@ -105,6 +105,10 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                             }
                         }
 
+                        // Fixup Title and Description
+                        template.WebSettings.Title = job.SiteTitle;
+                        template.WebSettings.Description = job.Description;
+
                         // Apply the template to the target site
                         web.ApplyProvisioningTemplate(template, ptai);
 
