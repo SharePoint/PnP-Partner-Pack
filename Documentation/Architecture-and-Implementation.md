@@ -445,6 +445,7 @@ support applying taxonomies while applying any PnP Provisioning Template. Thus, 
 apply a PnP Provisioning Template that includes Term Groups, those will be remove from the template
 before applying it.
 
+<<<<<<< HEAD
 ###Search Settings Support
 Because the the PnP Partner Pack runs with an AppOnly token against SharePoint Online, it does not 
 support applying search settings while applying any PnP Provisioning Template. Thus, if you are going to 
@@ -468,3 +469,5 @@ in the community really use.
 However, if you don't like to have tracking and telemetry in your deployment, you can remove the "call home" function in the
 Index action of the Home controller, and you can remove the image elements at the end of all of the view. This is an open source
 project, thus you have the source code and you can do whatever you like with it.
+
+<img src="https://telemetry.sharepointpnp.com/pnp-partner-pack/documentation/architecture-and-implementation" /> 

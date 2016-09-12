@@ -47,3 +47,5 @@ For further details about how to configure the permissions, see the following fi
 ![Azure AD - Application Configuration - Client Secret](./Figures/Fig-08-Azure-AD-App-Config-03.png)
 
 Enjoy the refresh PnP Partner Pack!
+
+<img src="https://telemetry.sharepointpnp.com/pnp-partner-pack/documentation/upgrade-from-v1_0-to-v1_1" /> 

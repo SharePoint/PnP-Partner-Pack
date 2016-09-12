@@ -1,4 +1,4 @@
-﻿# PnP Partner Pack 
+# PnP Partner Pack 
 This is the repository for PnP Partner Pack, which is part of the community driven [Office 365 Developer Patterns and Practices](http://aka.ms/OfficeDevPnP) (PnP) initiate. 
 
 ![](http://i.imgur.com/5L34MNk.png)
