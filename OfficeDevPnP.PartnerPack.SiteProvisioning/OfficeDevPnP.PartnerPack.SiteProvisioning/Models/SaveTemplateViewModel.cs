@@ -9,16 +9,17 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
 {
     public class SaveTemplateViewModel : JobViewModel
     {
-        [Required(ErrorMessage = "Title is a required field!")]
+        [Required(ErrorMessage = "Title is a required field")]
         [DisplayName("Title")]
         public String Title { get; set; }
 
         [DisplayName("Description")]
         [DataType(DataType.MultilineText)]
+        [UIHint("Multilines")]
         public String Description { get; set; }
 
-        [Required(ErrorMessage = "Template File Name is a required field!")]
-        [DisplayName("Template File Name")]
+        [Required(ErrorMessage = "Template File Name is a required field")]
+        [DisplayName("Template File Name (without extension)")]
         public String FileName { get; set; }
 
         [DisplayName("Include All Term Groups")]
@@ -28,7 +29,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
         public Boolean IncludeSiteCollectionTermGroup { get; set; }
 
         [DisplayName("Include Search Configuration")]
-        public Boolean IncludeSearchConfiguration { get; set; }
+        public Boolean IncludeSearchConfiguration { get; set; } = false;
 
         [DisplayName("Include Site Groups")]
         public Boolean IncludeSiteGroups { get; set; }

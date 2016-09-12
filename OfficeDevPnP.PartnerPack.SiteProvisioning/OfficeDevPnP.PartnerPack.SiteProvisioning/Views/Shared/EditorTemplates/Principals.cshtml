@@ -1,0 +1,94 @@
+﻿@model OfficeDevPnP.PartnerPack.SiteProvisioning.Models.PrincipalsViewModel
+
+@using OfficeDevPnP.PartnerPack.SiteProvisioning.Models
+
+@{
+    var fieldId = Html.IdFor(m => m);
+    var fieldName = Html.NameFor(m => m);
+    var isRequired = ViewData.ModelMetadata.IsRequired;
+    var idMaxSelectableProfilesNumber = Html.IdFor(m => m.MaxSelectableProfilesNumber);
+}
+
+<label class="ms-Label @(isRequired ? "is-required" : "")" id="@($"{fieldId}Label")">@(!String.IsNullOrEmpty(ViewData.ModelMetadata.DisplayName) ? ViewData.ModelMetadata.DisplayName : ViewData.ModelMetadata.PropertyName)</label>
+<input type="hidden" id="@idMaxSelectableProfilesNumber" value="@Model.MaxSelectableProfilesNumber" />
+<div class="ms-PeoplePicker ms-PeoplePicker--Facepile" id="@Html.IdFor(m => m)" style="max-width: 280px;">
+    <div class="ms-PeoplePicker-searchBox"><input class="ms-PeoplePicker-searchField" type="text" placeholder="Add principals"></div>
+
+    <div class="ms-PeoplePicker-results">
+        <div class="ms-PeoplePicker-peopleListHeader">
+            <span>Suggested contacts</span>
+        </div>
+        <ul class="ms-PeoplePicker-peopleList">
+            <!-- Search result to display here -->
+        </ul>
+    </div>
+
+            <div class="ms-PeoplePicker-selected is-active">
+                <div class="ms-PeoplePicker-selectedHeader"><span class="ms-PeoplePicker-selectedCount">@((Model != null) ? Model.Principals.Count() : 0)</span> principals</div>
+                @Html.ValidationMessageFor(m => m, null, new { @class = "ms-fontColor-alert" })
+                <ul class="ms-PeoplePicker-selectedPeople">
+                    @if (Model != null)
+            {
+                for (int x = 0; x < Model.Principals.Count; x++)
+                {
+                    var identity = Model.Principals[x];
+                            <li class="ms-PeoplePicker-selectedPerson">
+                                <div class="ms-Persona ms-Persona--sm">
+                                    <div class="ms-Persona-imageArea">
+                                        <div class="ms-Persona-initials @identity.BadgeColor">@identity.Abbreviation</div>
+                                        @if (!String.IsNullOrEmpty(identity.Mail))
+                                        {
+                                            <img class="ms-Persona-image" src="/Persona/GetPhoto?upn=@(identity.Mail)&height=64&width=64">
+                                        }
+                                    </div>
+                                    @*<div class="ms-Persona-presence"></div>*@
+                                    <div class="ms-Persona-details">
+                                        <div class="ms-Persona-primaryText">@identity.DisplayName</div>
+                                        <div class="ms-Persona-secondaryText">@identity.UserPrincipalName</div>
+                                    </div>
+                                </div>
+                                <button class="ms-PeoplePicker-resultAction js-selectedRemove"><i class="ms-Icon ms-Icon--x"></i></button>
+                                @Html.HiddenFor(m => Model.Principals[x].Mail)
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>        
+
+        <script type="text/javascript">
+
+            $().ready(function () {
+
+                $("#@Html.IdFor(m => m) .ms-PeoplePicker-searchField").on("keyup", function (e) {
+                    if (e) {
+                        delayKeyup(function () {
+                            e.preventDefault();
+                            var maxSelection = $("#@idMaxSelectableProfilesNumber").val();
+                            searchPeopleOrGroups("@fieldId", "@fieldName", @Model.IncludeGroups.ToString().ToLower(), maxSelection);
+                        }, 500);
+                    }
+                    e.preventDefault();
+                    return false;
+                });
+
+                $("#@Html.IdFor(m => m) .ms-PeoplePicker-searchField").on("blur", function (e) {
+                    if (e) {
+                        e.preventDefault();
+                        setTimeout(function () {
+                            $("#@Html.IdFor(m => m) .ms-PeoplePicker-results").hide();
+                        }, 500);
+                    }
+                    e.preventDefault();
+                    return false;
+                });
+
+                $("#@Html.IdFor(m => m) .js-selectedRemove").click(function (e) {
+                    removePersona(e, "@fieldId");
+                });
+
+                fixPersonaImages();
+
+            });
+
+        </script>

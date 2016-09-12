@@ -42,6 +42,11 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs
         public String ProvisioningTemplateUrl { get; set; }
 
         /// <summary>
+        /// Defines the type name for the Templates Provider to use to get the selected template
+        /// </summary>
+        public String TemplatesProviderTypeName { get; set; }
+
+        /// <summary>
         /// Defines the TimeZone for the Site Collection or Sub site to provision
         /// </summary>
         public Int32 TimeZone { get; set; }
@@ -50,5 +55,10 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs
         /// Defines the Parameters keys and values for the Site Collection or Sub site to provision
         /// </summary>
         public Dictionary<String, String> TemplateParameters { get; set; }
+
+        /// <summary>
+        /// Declares whether to apply tenant-level branding while creating the site
+        /// </summary>
+        public bool ApplyTenantBranding { get; set; } = false;
     }
 }

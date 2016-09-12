@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema id="PnPPartnerPackBatch"
+    targetNamespace="http://schemas.dev.office.com/PnP/2016/08/PnPPartnerPackBatch"
+    elementFormDefault="qualified"
+    xmlns="http://schemas.dev.office.com/PnP/2016/08/PnPPartnerPackBatch"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <xsd:element name="batches">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en-us">
+        The list of sites to create with the batch process
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="siteCollection" type="siteCollectionBatch" minOccurs="1" maxOccurs="unbounded">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en-us">
+              A Site Collection to create through the batch process
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:complexType name="baseSiteSettings">
+    <xsd:annotation>
+      <xsd:documentation>
+        Common settings for every Site Collection or Site.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="templateParameters" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="parameter" maxOccurs="unbounded">
+              <xsd:annotation>
+                <xsd:documentation>
+                  A Parameter that can be used as a replacement within templates and provisioning objects.
+                </xsd:documentation>
+              </xsd:annotation>
+              <xsd:complexType mixed="false">
+                <xsd:attribute name="Key" use="required" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation xml:lang="en">
+                      The name of the Parameter
+                    </xsd:documentation>
+                  </xsd:annotation>
+                </xsd:attribute>
+                <xsd:attribute name="Value" use="required" type="xsd:string">
+                  <xsd:annotation>
+                    <xsd:documentation>
+                      The value of the Parameter
+                    </xsd:documentation>
+                  </xsd:annotation>
+                </xsd:attribute>
+              </xsd:complexType>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="title" type="xsd:string" use="required">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en-us">
+          Defines the Title of the Site, required attribute.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="description" type="xsd:string" use="required">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en-us">
+          Defines the Description of the Site, required attribute.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="sitePolicy" use="required">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en-us">
+          Defines the Relative URL of the Site (the part after the managed path), required attribute.
+        </xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="LBI">
+            <xsd:annotation>
+              <xsd:documentation xml:lang="en-us">
+                Low Business Impact
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="MBI">
+            <xsd:annotation>
+              <xsd:documentation xml:lang="en-us">
+                Medium Business Impact
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="HBI">
+            <xsd:annotation>
+              <xsd:documentation xml:lang="en-us">
+                High Business Impact
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="language" use="required">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en-us">
+          Defines the language of the Site (provide numeric language code values like 1040, 1033, or those defines in file /Content/SupportedUILanguages.xml), required attribute.
+        </xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="\d{4}" />
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="timeZone" type="xsd:int" use="required">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en-us">
+          Defines the Time Zone of the Site (provide numeric values like those defines in file /Content/TimeZones.xml), required attribute.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="templateUrl" type="xsd:string" use="required">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en-us">
+          Defines the URL of the PnP Provisioning Template to use for creating the Site, required attribute.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="templatesProviderName" type="xsd:string" use="required">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en-us">
+          The name of the templates provider, required attribute.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="applyTenantBranding" type="xsd:boolean" use="optional" default="true">
+      <xsd:annotation>
+        <xsd:documentation xml:lang="en-us">
+          Declares whether to apply tenant branding on the Site, optional attribute, default value true.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+
+  <xsd:complexType name="siteCollectionBatch">
+    <xsd:annotation>
+      <xsd:documentation>
+        Settings for a Site Collection
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="baseSiteSettings">
+        <xsd:attribute name="primarySiteCollectionAdmin" type="xsd:string" use="required">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en-us">
+              The account (UPN) of the Primary Site Collection Administrator for the Site, required attribute.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="secondarySiteCollectionAdmin" type="xsd:string" use="required">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en-us">
+              The account (UPN) of the Secondary Site Collection Administrator for the Site, required attribute.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="storageMaximulLevel" type="xsd:int" use="optional" default="1000">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en-us">
+              The maximum storage quota (MB) for the Site, optional attribute, default value 1000MB.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="storageWarningLevel" type="xsd:int" use="optional" default="900">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en-us">
+              The storage quota warning (MB) for the Site, optional attribute, default value 900MB.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="externalSharingEnabled" type="xsd:boolean" use="optional" default="false">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en-us">
+              Declares whether to enable the External Sharing on the Site, optional attribute, default value false.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="partnerPackExtensionsEnabled" type="xsd:boolean" use="optional" default="true">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en-us">
+              Declares whether to enable the PnP Partner Pack Extensions on the Site, optional attribute, default value true.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="responsiveDesignEnabled" type="xsd:boolean" use="optional" default="true">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en-us">
+              Declares whether to enable the PnP Partner Pack Extensions on the Site, optional attribute, default value true.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="managedPath" use="required">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en-us">
+              Defines the Managed Path of the Site, required attribute.
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:enumeration value="sites">
+                <xsd:annotation>
+                  <xsd:documentation xml:lang="en-us">
+                    /sites/
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:enumeration>
+              <xsd:enumeration value="teams">
+                <xsd:annotation>
+                  <xsd:documentation xml:lang="en-us">
+                    /teams/
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:enumeration>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="relativeUrl" type="xsd:string" use="required">
+          <xsd:annotation>
+            <xsd:documentation xml:lang="en-us">
+              Defines the Relative URL of the Site (the part after the managed path), required attribute.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+</xsd:schema>

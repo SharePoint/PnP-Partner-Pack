@@ -20,6 +20,14 @@ function JavaScript_Embed() {
 }
 
 function replaceLinks() {
+
+    // Customize the newsbweb.aspx page, as soon as possible
+    if (IsOnPage("newsbweb.aspx")) {
+        // Clean the current page as soon as possible
+        $("body").removeClass("ms-backgroundImage");
+        $("body").empty();
+    }
+
     var ctx = SP.ClientContext.get_current();
     var web = ctx.get_web();
     ctx.load(web, 'Url');
@@ -31,6 +39,12 @@ function replaceLinks() {
             var addInSiteUrl = currentScriptUrl.substring(0, currentScriptUrl.indexOf("/Templates/Overrides/"));
             // addInSiteUrl = "https://localhost:44300";
             var hostWebUrl = web.get_url();
+
+            // Customize the newsbweb.aspx page, as soon as possible
+            if (IsOnPage("newsbweb.aspx")) {
+                // Redirect to the custom "New Sub Site" page URL
+                location.replace(addInSiteUrl + "/Home/CreateSubSite?SPHostUrl=" + encodeURIComponent(hostWebUrl));
+            }
 
             // Customize the viewlsts.aspx page
             if (IsOnPage("viewlsts.aspx")) {

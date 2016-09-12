@@ -15,11 +15,11 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
     {
         public CreateSiteStep Step { get; set; }
 
-        [Required(ErrorMessage = "Title is a required field!")]
+        [Required(ErrorMessage = "Title is a required field")]
         [DisplayName("Title")]
         public String Title { get; set; }
 
-        [Required(ErrorMessage = "Relative URL is a required field!")]
+        [Required(ErrorMessage = "Relative URL is a required field")]
         [MaxLength(33)]
         [DisplayName("Relative URL")]
         public String RelativeUrl { get; set; }
@@ -30,14 +30,15 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
 
         [DisplayName("Description")]
         [DataType(DataType.MultilineText)]
+        [UIHint("Multilines")]
         public string Description { get; set; }
 
-        [Required(ErrorMessage = "Language is a required field!")]
+        [Required(ErrorMessage = "Language is a required field")]
         [DisplayName("Language")]
         [UIHint("LocaleID")]
         public Int32 Language { get; set; }
 
-        [Required(ErrorMessage = "Template is a required field!")]
+        [Required(ErrorMessage = "Template is a required field")]
         [MinLength(1)]
         [DisplayName("Template")]
         [UIHint("ProvisioningTemplate")]
@@ -50,9 +51,14 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
         [DisplayName("Template Parameters")]
         public Dictionary<String, String> TemplateParameters { get; set; }
 
-        public TemplateScope Scope { get; set; }
+        public TargetScope Scope { get; set; }
+
+        public String TemplatesProviderTypeName { get; set; }
 
         public String ParentSiteUrl { get; set; }
+
+        [DisplayName("Apply Tenant Branding")]
+        public Boolean ApplyTenantBranding { get; set; }
     }
 
     public enum CreateSiteStep

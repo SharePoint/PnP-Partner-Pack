@@ -23,13 +23,18 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/spoextensions").Include(
-                      "~/Scripts/sppeoplepicker.js",
+            bundles.Add(new ScriptBundle("~/bundles/fabric").Include(
+                      "~/Scripts/jquery.fabric.*"));
+
+            bundles.Add(new ScriptBundle("~/bundles/custom").Include(
+                      "~/Scripts/custom.principals.js",
                       "~/Scripts/custom.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/Office365SuiteBar.css",
+                      "~/Content/fabric.css",
+                      "~/Content/fabric.components.css",
                       "~/Content/site.css"));
         }
     }

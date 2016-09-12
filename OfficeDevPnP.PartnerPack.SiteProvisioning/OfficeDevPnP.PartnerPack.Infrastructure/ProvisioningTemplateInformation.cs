@@ -17,17 +17,22 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
         public String TemplateFileUri { get; set; }
 
         /// <summary>
-        /// Defines the Scope of the Provisioning Template
+        /// Defines the target Scope of the Provisioning Template
         /// </summary>
-        public TemplateScope Scope { get; set; }
+        public TargetScope Scope { get; set; }
 
         /// <summary>
-        /// Defines the URL of the source Site from which the Provisioning Template has been generated
+        /// Defines the target Platforms of the Provisioning Template
+        /// </summary>
+        public TargetPlatform Platforms { get; set; }
+
+        /// <summary>
+        /// Defines the URL of the source Site from which the Provisioning Template has been generated, if any
         /// </summary>
         public String TemplateSourceUrl { get; set; }
 
         /// <summary>
-        /// Defines the URL of the source Site from which the Provisioning Template has been generated
+        /// Defines the URL of the source Site from which the Provisioning Template has been generated, if any
         /// </summary>
         public String TemplateImageUrl { get; set; }
 

@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pnp:batches xmlns:pnp="http://schemas.dev.office.com/PnP/2016/08/PnPPartnerPackBatch">
+
+  <pnp:siteCollection
+      title="Site Collection 01"
+      description="This is the Site Collection 01"
+      managedPath="sites"
+      relativeUrl="SiteCollection01"
+      language="1033"
+      timeZone="4"
+      sitePolicy="MBI"
+      templatesProviderName="TenantGlobal"
+      templateUrl="https://tenant.sharepoint.com/sites/PnP-Partner-Pack/PnPProvisioningTemplates/Sample-Template-01.pnp"
+      primarySiteCollectionAdmin="admin1@tenant.onmicrosoft.com"
+      secondarySiteCollectionAdmin="admin2@tenant.onmicrosoft.com"
+      storageMaximulLevel="1000"
+      storageWarningLevel="900"
+      externalSharingEnabled="true"
+      partnerPackExtensionsEnabled="true"
+      responsiveDesignEnabled="true"
+      applyTenantBranding="true">
+    <pnp:templateParameters>
+      <pnp:parameter Key="SampleParameter" Value="SampleValue" />
+    </pnp:templateParameters>
+  </pnp:siteCollection>
+
+  <pnp:siteCollection
+      title="Site Collection 02"
+      description="This is the Site Collection 02"
+      managedPath="sites"
+      relativeUrl="SiteCollection02"
+      language="1033"
+      timeZone="4"
+      sitePolicy="HBI"
+      templatesProviderName="Current Site Collection"
+      templateUrl="https://tenant.sharepoint.com/sites/PnP-Partner-Pack/PnPProvisioningTemplates/Sample-Template-02.pnp"
+      primarySiteCollectionAdmin="admin3@tenant.onmicrosoft.com"
+      secondarySiteCollectionAdmin="admin4@tenant.onmicrosoft.com"
+      storageMaximulLevel="1000"
+      storageWarningLevel="900"
+      externalSharingEnabled="true"
+      partnerPackExtensionsEnabled="true"
+      responsiveDesignEnabled="true" 
+      applyTenantBranding="true" />
+
+</pnp:batches>

@@ -8,6 +8,7 @@ Microsoft SharePoint Online, by providing the following capabilities:
 * Site Collection creation for non-admin users with custom UI and PnP Provisioning Template selection
 * My Site Collections personal view
 * Responsive Design template for Site Collections
+* Governance tools for administrators: apply SharePoint farm-wide branding, refresh site templates, bulk creation of site collections 
 * Custom NavBar and Footer for Site Collections with JavaScript Object Model
 * Sample Timer Jobs (implemented as WebJobs) for Governance rules enforcement
 
@@ -73,15 +74,24 @@ sites in that specific Site Collection. Furthermore, local templates are availab
 for Sub-Sites creation.
 
 <a name="azureWebApp"></a>
-## Azure Web App Details
-As already stated, the Sites Provisioning Azure Web App is an ASP.NET MVC Web Application
-that basically provides the implementation for a unique Controller called *HomeController*.
-The *HomeController* provides the logic for handling all the main capabilities like:
+## Azure App Service Details
+As already stated, the Sites Provisioning Web application is an ASP.NET MVC Web Application
+that basically provides the implementation for three controllers:
+* *HomeController*: implements the main actions of the PnP Partner Pack, in order to manage sites creation and templates management.
+* *PersonaController*: provides basic functionalities to manage persona controls, users' profile picture, etc.
+* *GovernanceController*: implements the main governance actions of the PnP Partner Pack.
+
+The *HomeController* provides the logic for handling the following capabilities:
 * Save Site As Provisioning Template: based on the *SaveSiteAsTemplate* action.
 * Site Collection Provisioning UI: based on the *CreateSiteCollection* action. 
 * Sub-Site Provisioning UI: based on the *CreateSubSite* action.
 * Settings capability: based on the *Settings* action.
 * My Site Collections UI: based on the *MyProvisionedSites* action.
+
+The *GovernanceController* provides the logic for handling the following capabilities:
+* Apply SharePoint-wide branding to all sites and site collections in the Office 365 tenant.
+* Refresh templates applied to sites and site collections created using the PnP Partner Pack v. 2.0 
+* Batch creation of site collections using a bulk loaded XML file
 
 Of course, each main action has a corresponding View and a Model, from a MVC perspective.
 The only actions that deserve a specific explanation are those related to Site Collections and
@@ -110,10 +120,15 @@ provisioning target. In fact, provisioning a Site Collection requires some infor
 different from those required to provision a Sub-Site. However, all the other wizard steps will share
 the same base Model (*CreateSiteViewModel*) to store generic provisioning configurations.
 
+We used a similar approach for the Batch creation of Site Collections in the Governance section. In fact, there we use the following views:
+* BatchStartup.cshtml
+* BatchFileUploaded.cshtml
+* BatchScheduled.cshtml
+
 In order to consume the Microsoft Graph API, the application uses Active Directory Authentication Library (ADAL).
 Notice that ADAL uses a token cache for OAuth tokens. For the sake of simplicity, the token cache provided is
 based on the web application session and is implemented in type *SessionTokenCache*. 
-However,  a session-based token cache  is not a scalable solution and it cannot be used with multiple instances of the web app.
+However,  a session-based token cache is not a scalable solution and it cannot be used with multiple instances of the web app.
 Nevertheless, you can configure a session based on an external persistence provider, like for example the
 <a href="https://azure.microsoft.com/en-us/documentation/articles/cache-asp.net-session-state-provider/">Azure Redis Cache</a>,
 or you can define a token cache handler of your own, using a backend database or
@@ -121,7 +136,7 @@ whatever else. For further details about ADAL and the token cache, you can read 
 <a href="https://www.microsoftpressstore.com/store/modern-authentication-with-azure-active-directory-for-9780735696945">"Modern Authentication with Azure
 Active Directory for Web Applications"</a> written by <a href="http://www.cloudidentity.com/">Vittorio Bertocci</a>.
 
-Aside from that, the Azure Web App is a very common ASP.NET MVC Web Application, which internally 
+Aside from that, the Azure App Service is a very common ASP.NET MVC Web Application, which internally 
 leverages the PnP Partner Pack Infrastructural Library to accomplish any real business task.
 
 <a name="infrastructureLibrary"></a>
@@ -134,6 +149,8 @@ In this library you will find the following main types:
 It allows to define an abstract persistence layer. By default the PnP Partner Pack provides a 
 Provisioning Repository that is backed on SharePoint Online, using the 
 [Infrastructural Site Collection](#infrastructuralSiteCollection).
+* *ITemplatesProvider*: defines the common interface for any concrete Templates Provider service, 
+in order to being able to leverage external template providers like the PnP Templates Gallery.
 * *PnPPartnerPackConstants*: declares a bunch of constant values used around the solution.
 * *PnPPartnerPackContextProvider*: this is a fundamental type that handles the creation of a CSOM
 *ClientContext* object, bases on the current configuration. It hides the complexity of creating AppOnly
@@ -275,17 +292,33 @@ Here follows a sample excerpt of the XML configuration section for the PnP Partn
     <ProvisioningRepository name="SharePointProvisioningRepository" 
       type="OfficeDevPnP.PartnerPack.Infrastructure.SharePoint.SharePointProvisioningRepository, OfficeDevPnP.PartnerPack.Infrastructure" />
 
+    <TemplatesProviders>
+      <TemplatesProvider name="TenantGlobal" enabled="true" type="OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders.SharePointGlobalTemplatesProvider, OfficeDevPnP.PartnerPack.Infrastructure" />
+      <TemplatesProvider name="SiteCollectionLocal" enabled="true" type="OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders.SharePointLocalTemplatesProvider, OfficeDevPnP.PartnerPack.Infrastructure" />
+      <TemplatesProvider name="TemplatesGallery" enabled="true" type="OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders.PnPTemplatesGalleryProvider, OfficeDevPnP.PartnerPack.Infrastructure">
+        <Configuration>
+          <gallery url="https://templates-gallery.sharepointpnp.com/" />
+        </Configuration>
+      </TemplatesProvider>
+    </TemplatesProviders>
+
     <ProvisioningJobs>
       <JobHandlers>
         <JobHandler name="ProvisioningTemplateJobHandler" type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers.ProvisioningTemplateJobHandler, OfficeDevPnP.PartnerPack.Infrastructure" />
         <JobHandler name="SiteCollectionProvisioningJobHandler" type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers.SiteCollectionProvisioningJobHandler, OfficeDevPnP.PartnerPack.Infrastructure" />
         <JobHandler name="SubSiteProvisioningJobHandler" type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers.SubSiteProvisioningJobHandler, OfficeDevPnP.PartnerPack.Infrastructure" />
+        <JobHandler name="BrandingJobHandler" type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers.BrandingJobHandler, OfficeDevPnP.PartnerPack.Infrastructure" />
+        <JobHandler name="SiteCollectionsBatchJobHandler" type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers.SiteCollectionsBatchJobHandler, OfficeDevPnP.PartnerPack.Infrastructure" />
+        <JobHandler name="RefreshSitesJobHandler" type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers.RefreshSitesJobHandler, OfficeDevPnP.PartnerPack.Infrastructure" />
       </JobHandlers>
       <JobTypes>
         <JobType handler="ProvisioningTemplateJobHandler" executionModel="Scheduled" type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.GetProvisioningTemplateJob" />
         <JobType handler="ProvisioningTemplateJobHandler" executionModel="Continous" type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.ApplyProvisioningTemplateJob" />
         <JobType handler="SiteCollectionProvisioningJobHandler" executionModel="Scheduled" type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.SiteCollectionProvisioningJob" />
         <JobType handler="SubSiteProvisioningJobHandler" executionModel="Continous" type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.SubSiteProvisioningJob" />
+        <JobType handler="BrandingJobHandler" executionModel="Scheduled" type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.BrandingJob" />
+        <JobType handler="SiteCollectionsBatchJobHandler" executionModel="Scheduled" type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.SiteCollectionsBatchJob" />
+        <JobType handler="RefreshSitesJobHandler" executionModel="Scheduled" type="OfficeDevPnP.PartnerPack.Infrastructure.Jobs.RefreshSitesJob" />
       </JobTypes>
     </ProvisioningJobs>
 
@@ -304,6 +337,10 @@ X.509 certificate to use for AppOnly authentication against Azure AD and the tar
 and the URL of the Infrastructural Site Collection.
 * *ProvisioningRepository*: defines the concrete type to use as the Provisioning Repository. You should
 change this configuration in order to use a custom Provisioning Repository.
+* *TemplatesProviders*: defines the list of templates providers that can be used to retrieve PnP 
+provisioning templates when you have to create a new site or site collection. Out of the box the PnP
+Partner Pack supports SharePoint Online (tenant level and local site collection level), as well as the
+PnP Templates Gallery public and open source repository.
 * *ProvisioningJobs*: declares what are the Job Handlers, the Job Types, and the execution model of the
 Job Types. An execution model value of *Scheduled* means that the Job will be executed by the
 *ScheduledJob*, while a value of *Continous* means that the Job will be executed by the *ContinousJob*.
@@ -337,6 +374,9 @@ Out of the box the PnP Partner Pack defines the following types of jobs:
 * *SubSiteProvisioningJob*: provisions a new Sub-Site.
 * *GetProvisioningTemplateJob*: extracts the PnP Provisioning Template from an existing source.
 * *ApplyProvisioningTemplateJob*: applies a PnP Provisioning Template to a target. 
+* *BrandingJob*: applies the SharePoint-wide branding settings to all sites and site collections.
+* *SiteCollectionsBatchJob*: handles the batch creation of a bunch of site collections.
+* *RefreshSitesJob*: refreshes the provisioning template of all the sites and site collections created with the PnP Partner Pack v. 2.0.
 
 Every single Job document is stored in the *PnPProvisioningJobs* Document Library with some
 custom metadata fields, which allow to define the type of job (can be a Site Collection Provisioning,
@@ -359,6 +399,9 @@ Here are the out of the box available Job Handlers:
 (i.e. *SubSiteProvisioningJob* instances).
 * *ProvisioningTemplateJobHandler*: handles extraction and application of PnP Provisioning Templates
 (i.e. *GetProvisioningTemplateJob* and *ApplyProvisioningTemplateJob* instances).
+* *BrandingJobHandler*: handles the branding jobs (i.e. BrandingJob)
+* *SiteCollectionsBatchJobHandler*: handles the batch creation of site collections (i.e. SiteCollectionsBatchJob)
+* *RefreshSitesJobHandler*: handles the refresh of templates for sites and site collections created with the PnP Partner Pack v. 2.0 (i.e. RefreshSitesJob)
 
 Based on the kind of job and on some configuration elements in the .config files of the PnP Partner Pack
 modules, the jobs can be executed by the *ContinousJob*, or by the *ScheduledJob*. In fact,
@@ -401,3 +444,30 @@ Because the the PnP Partner Pack runs with an AppOnly token against SharePoint O
 support applying taxonomies while applying any PnP Provisioning Template. Thus, if you are going to 
 apply a PnP Provisioning Template that includes Term Groups, those will be remove from the template
 before applying it.
+
+<<<<<<< HEAD
+###Search Settings Support
+Because the the PnP Partner Pack runs with an AppOnly token against SharePoint Online, it does not 
+support applying search settings while applying any PnP Provisioning Template. Thus, if you are going to 
+apply a PnP Provisioning Template that includes Search Settings, those will be remove from the template
+before applying it.
+
+###Home Page Extraction Support
+Because the the PnP Partner Pack runs with an AppOnly token against SharePoint Online, and due to restrictions
+of the current implementation of the CSOM library when running with an AppOnly token, the PnP Partner Pack does not 
+support extraction of the Home Page, when saving a template from a site. Thus, if you need to include the Home Page in a template that you
+want to reuse, you will have to extract the template manually (for example using the Get-SPOProvisioningTemplate cmdlet)
+and upload it into the Infrastructural Site Collection.
+
+###Telemetry
+In order to measure and track the usage of the PnP Partner Pack, we introduced a "call home" function in the Index action
+of the Home controller of the PnP Partner Pack. Thus, we will be able to monitor and track what are the Office 365 tenants 
+that benefit from using the PnP Partner Pack. Moreover, every single view (.CSHTML) of the project includes a 1 pixel tracking
+image tag, at the very end of the view, in order to track usage of the various functionalities of the PnP Partner Pack.
+This kind of monitoring and telemetry allows us to better invest our time and money in implementing and improving what people
+in the community really use.
+However, if you don't like to have tracking and telemetry in your deployment, you can remove the "call home" function in the
+Index action of the Home controller, and you can remove the image elements at the end of all of the view. This is an open source
+project, thus you have the source code and you can do whatever you like with it.
+
+<img src="https://telemetry.sharepointpnp.com/pnp-partner-pack/documentation/architecture-and-implementation" /> 

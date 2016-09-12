@@ -17,6 +17,12 @@ using System.Drawing;
 using System.IO;
 using System.Drawing.Imaging;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
+using System.Net.Http;
+using OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml;
+using OfficeDevPnP.Core.Framework.Provisioning.Connectors;
+using System.Net.Http.Headers;
+using System.Net;
 
 namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
 {
@@ -29,14 +35,17 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
 
             using (var ctx = PnPPartnerPackContextProvider.GetAppOnlyClientContext(PnPPartnerPackSettings.InfrastructureSiteUrl))
             {
+                // Track usage of the PnP Partner Pack
+                ctx.ClientTag = "SPDev:PartnerPack";
+
                 Web web = ctx.Web;
                 ctx.Load(web, w => w.Title, w => w.Url);
-                ctx.ExecuteQueryRetry();
+                ctx.ExecuteQuery();
 
                 model.InfrastructuralSiteUrl = web.Url;
             }
 
-            var currentUser = GetCurrentUser();
+            var currentUser = UserUtility.GetCurrentUser();
             if (currentUser != null)
             {
                 model.CurrentUserPrincipalName = currentUser.UserPrincipalName;
@@ -53,7 +62,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         public ActionResult CreateSiteCollection()
         {
             CreateSiteCollectionViewModel model = new CreateSiteCollectionViewModel();
-            model.Scope = TemplateScope.Site;
+            model.Scope = TargetScope.Site;
             model.ParentSiteUrl = String.Empty;
             model.PartnerPackExtensionsEnabled = true;
             model.ResponsiveDesignEnabled = true;
@@ -63,90 +72,89 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         [HttpPost]
         public ActionResult CreateSiteCollection(CreateSiteCollectionViewModel model)
         {
-            switch (model.Step)
-            {
-                case CreateSiteStep.SiteInformation:
-                    ModelState.Clear();
-                    if (String.IsNullOrEmpty(model.Title))
-                    {
-                        // Set initial value for PnP Partner Pack Extensions Enabled
-                        model.PartnerPackExtensionsEnabled = true;
-                        model.ResponsiveDesignEnabled = true;
-                    }
-                    break;
-                case CreateSiteStep.TemplateParameters:
-                    if (!ModelState.IsValid)
-                    {
-                        model.Step = CreateSiteStep.SiteInformation;
-                    }
-                    else
-                    {
-                        if (!String.IsNullOrEmpty(model.ProvisioningTemplateUrl) &&
-                            model.ProvisioningTemplateUrl.IndexOf(PnPPartnerPackConstants.PnPProvisioningTemplates) > 0)
-                        {
-                            String templateSiteUrl = model.ProvisioningTemplateUrl.Substring(0, model.ProvisioningTemplateUrl.IndexOf(PnPPartnerPackConstants.PnPProvisioningTemplates));
-                            String templateFileName = model.ProvisioningTemplateUrl.Substring(model.ProvisioningTemplateUrl.IndexOf(PnPPartnerPackConstants.PnPProvisioningTemplates) + PnPPartnerPackConstants.PnPProvisioningTemplates.Length + 1);
-                            String templateFolder = String.Empty;
 
-                            if (templateFileName.IndexOf("/") > 0)
-                            {
-                                templateFolder = templateFileName.Substring(0, templateFileName.LastIndexOf("/") - 1);
-                                templateFileName = templateFileName.Substring(templateFolder.Length + 1);
-                            }
-                            model.TemplateParameters = PnPPartnerPackUtilities.GetProvisioningTemplateParameters(
-                                    templateSiteUrl,
-                                    templateFolder,
-                                    templateFileName);
+            if (model.Step == CreateSiteStep.SiteInformation)
+            {
+                ModelState.Clear();
+                if (String.IsNullOrEmpty(model.Title))
+                {
+                    // Set initial value for PnP Partner Pack Extensions Enabled
+                    model.PartnerPackExtensionsEnabled = true;
+                    model.ResponsiveDesignEnabled = true;
+                }
+            }
+            if (model.Step == CreateSiteStep.TemplateParameters)
+            {
+                if (!ModelState.IsValid)
+                {
+                    model.Step = CreateSiteStep.SiteInformation;
+                }
+                else
+                {
+                    if (!String.IsNullOrEmpty(model.ProvisioningTemplateUrl) &&
+                        !String.IsNullOrEmpty(model.TemplatesProviderTypeName))
+                    {
+                        var templatesProvider = PnPPartnerPackSettings.TemplatesProviders[model.TemplatesProviderTypeName];
+                        if (templatesProvider != null)
+                        {
+                            var template = templatesProvider.GetProvisioningTemplate(model.ProvisioningTemplateUrl);
+                            model.TemplateParameters = template.Parameters;
                         }
                     }
-                    break;
-                case CreateSiteStep.SiteCreated:
-                    AntiForgery.Validate();
-                    if (ModelState.IsValid)
+
+                    if (model.TemplateParameters == null || model.TemplateParameters.Count == 0)
                     {
-                        // Prepare the Job to provision the Site Collection
-                        SiteCollectionProvisioningJob job = new SiteCollectionProvisioningJob();
-
-                        // Prepare all the other information about the Provisioning Job
-                        job.SiteTitle = model.Title;
-                        job.Description = model.Description;
-                        job.Language = model.Language;
-                        job.TimeZone = model.TimeZone;
-                        job.RelativeUrl = String.Format("/{0}/{1}", model.ManagedPath, model.RelativeUrl);
-                        job.SitePolicy = model.SitePolicy;
-                        job.Owner = ClaimsPrincipal.Current.Identity.Name;
-
-                        job.PrimarySiteCollectionAdmin = model.PrimarySiteCollectionAdmin != null &&
-                            model.PrimarySiteCollectionAdmin.Length > 0 ? 
-                                (!String.IsNullOrEmpty(model.PrimarySiteCollectionAdmin[0].Email) ? 
-                                model.PrimarySiteCollectionAdmin[0].Email : 
-                                model.PrimarySiteCollectionAdmin[0].Login.Split('|')[2]) : null;
-                        job.SecondarySiteCollectionAdmin = model.SecondarySiteCollectionAdmin != null &&
-                            model.SecondarySiteCollectionAdmin.Length > 0 ?
-                                (!String.IsNullOrEmpty(model.SecondarySiteCollectionAdmin[0].Email) ? 
-                                model.SecondarySiteCollectionAdmin[0].Email : 
-                                model.SecondarySiteCollectionAdmin[0].Login.Split('|')[2]) : null;
-
-                        job.ProvisioningTemplateUrl = model.ProvisioningTemplateUrl;
-                        job.StorageMaximumLevel = model.StorageMaximumLevel;
-                        job.StorageWarningLevel = model.StorageWarningLevel;
-                        job.UserCodeMaximumLevel = model.UserCodeMaximumLevel;
-                        job.UserCodeWarningLevel = model.UserCodeWarningLevel;
-                        job.ExternalSharingEnabled = model.ExternalSharingEnabled;
-                        job.ResponsiveDesignEnabled = model.ResponsiveDesignEnabled;
-                        job.PartnerPackExtensionsEnabled = model.PartnerPackExtensionsEnabled;
-                        job.Title = String.Format("Provisioning of Site Collection \"{1}\" with Template \"{0}\" by {2}",
-                            job.ProvisioningTemplateUrl,
-                            job.RelativeUrl,
-                            job.Owner);
-
-                        job.TemplateParameters = model.TemplateParameters;
-
-                        model.JobId = ProvisioningRepositoryFactory.Current.EnqueueProvisioningJob(job);
+                        model.Step = CreateSiteStep.SiteCreated;
                     }
-                    break;
-                default:
-                    break;
+                }
+            }
+            if (model.Step == CreateSiteStep.SiteCreated)
+            {
+                AntiForgery.Validate();
+                if (ModelState.IsValid)
+                {
+                    // Prepare the Job to provision the Site Collection
+                    SiteCollectionProvisioningJob job = new SiteCollectionProvisioningJob();
+
+                    // Prepare all the other information about the Provisioning Job
+                    job.SiteTitle = model.Title;
+                    job.Description = model.Description;
+                    job.Language = model.Language;
+                    job.TimeZone = model.TimeZone;
+                    job.RelativeUrl = String.Format("/{0}/{1}", model.ManagedPath, model.RelativeUrl);
+                    job.SitePolicy = model.SitePolicy;
+                    job.Owner = ClaimsPrincipal.Current.Identity.Name;
+                    job.ApplyTenantBranding = model.ApplyTenantBranding;
+
+                    job.PrimarySiteCollectionAdmin = model.PrimarySiteCollectionAdmin != null &&
+                        model.PrimarySiteCollectionAdmin.Principals.Count > 0 ?
+                            (!String.IsNullOrEmpty(model.PrimarySiteCollectionAdmin.Principals[0].Mail) ?
+                            model.PrimarySiteCollectionAdmin.Principals[0].Mail :
+                            null) : null;
+                    job.SecondarySiteCollectionAdmin = model.SecondarySiteCollectionAdmin != null &&
+                        model.SecondarySiteCollectionAdmin.Principals.Count > 0 ?
+                            (!String.IsNullOrEmpty(model.SecondarySiteCollectionAdmin.Principals[0].Mail) ?
+                            model.SecondarySiteCollectionAdmin.Principals[0].Mail :
+                            null) : null;
+
+                    job.ProvisioningTemplateUrl = model.ProvisioningTemplateUrl;
+                    job.TemplatesProviderTypeName = model.TemplatesProviderTypeName;
+                    job.StorageMaximumLevel = model.StorageMaximumLevel;
+                    job.StorageWarningLevel = model.StorageWarningLevel;
+                    job.UserCodeMaximumLevel = model.UserCodeMaximumLevel;
+                    job.UserCodeWarningLevel = model.UserCodeWarningLevel;
+                    job.ExternalSharingEnabled = model.ExternalSharingEnabled;
+                    job.ResponsiveDesignEnabled = model.ResponsiveDesignEnabled;
+                    job.PartnerPackExtensionsEnabled = model.PartnerPackExtensionsEnabled;
+                    job.Title = String.Format("Provisioning of Site Collection \"{1}\" with Template \"{0}\" by {2}",
+                        job.ProvisioningTemplateUrl,
+                        job.RelativeUrl,
+                        job.Owner);
+
+                    job.TemplateParameters = model.TemplateParameters;
+
+                    model.JobId = ProvisioningRepositoryFactory.Current.EnqueueProvisioningJob(job);
+                }
             }
 
             return PartialView(model.Step.ToString(), model);
@@ -156,8 +164,10 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         public ActionResult CreateSubSite()
         {
             CreateSubSiteViewModel model = new CreateSubSiteViewModel();
-            model.Scope = TemplateScope.Web;
+            model.Scope = TargetScope.Web;
             model.ParentSiteUrl = HttpContext.Request["SPHostUrl"];
+
+            PnPPartnerPackSettings.ParentSiteUrl = model.ParentSiteUrl;
 
             return View("CreateSite", model);
         }
@@ -165,85 +175,117 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         [HttpPost]
         public ActionResult CreateSubSite(CreateSubSiteViewModel model)
         {
-            switch (model.Step)
+            PnPPartnerPackSettings.ParentSiteUrl = model.ParentSiteUrl;
+
+            if (model.Step == CreateSiteStep.SiteInformation)
             {
-                case CreateSiteStep.SiteInformation:
-                    ModelState.Clear();
+                ModelState.Clear();
 
-                    // If it is the first time that we are here
-                    if (String.IsNullOrEmpty(model.Title))
+                // If it is the first time that we are here
+                if (String.IsNullOrEmpty(model.Title))
+                {
+                    model.InheritPermissions = true;
+                    using (var ctx = PnPPartnerPackContextProvider.GetAppOnlyClientContext(model.ParentSiteUrl))
                     {
-                        model.InheritPermissions = true;
-                        using (var ctx = PnPPartnerPackContextProvider.GetAppOnlyClientContext(model.ParentSiteUrl))
-                        {
-                            Web web = ctx.Web;
-                            ctx.Load(web, w => w.Language, w => w.RegionalSettings.TimeZone);
-                            ctx.ExecuteQueryRetry();
+                        Web web = ctx.Web;
+                        ctx.Load(web, w => w.Language, w => w.RegionalSettings.TimeZone);
+                        ctx.ExecuteQueryRetry();
 
-                            model.Language = (Int32)web.Language;
-                            model.TimeZone = web.RegionalSettings.TimeZone.Id;
+                        model.Language = (Int32)web.Language;
+                        model.TimeZone = web.RegionalSettings.TimeZone.Id;
+                    }
+                }
+            }
+            if (model.Step == CreateSiteStep.TemplateParameters)
+            {
+                if (!ModelState.IsValid)
+                {
+                    model.Step = CreateSiteStep.SiteInformation;
+                }
+                else
+                {
+                    if (!String.IsNullOrEmpty(model.ProvisioningTemplateUrl) &&
+                        !String.IsNullOrEmpty(model.TemplatesProviderTypeName))
+                    {
+                        var templatesProvider = PnPPartnerPackSettings.TemplatesProviders[model.TemplatesProviderTypeName];
+                        if (templatesProvider != null)
+                        {
+                            var template = templatesProvider.GetProvisioningTemplate(model.ProvisioningTemplateUrl);
+                            model.TemplateParameters = template.Parameters;
+                        }
+
+                        if (model.TemplateParameters == null || model.TemplateParameters.Count == 0)
+                        {
+                            model.Step = CreateSiteStep.SiteCreated;
                         }
                     }
-                    break;
-                case CreateSiteStep.TemplateParameters:
-                    if (!ModelState.IsValid)
-                    {
-                        model.Step = CreateSiteStep.SiteInformation;
-                    }
-                    else
-                    {
-                        if (!String.IsNullOrEmpty(model.ProvisioningTemplateUrl) &&
-                            model.ProvisioningTemplateUrl.IndexOf(PnPPartnerPackConstants.PnPProvisioningTemplates) > 0)
-                        {
-                            String templateSiteUrl = model.ProvisioningTemplateUrl.Substring(0, model.ProvisioningTemplateUrl.IndexOf(PnPPartnerPackConstants.PnPProvisioningTemplates));
-                            String templateFileName = model.ProvisioningTemplateUrl.Substring(model.ProvisioningTemplateUrl.IndexOf(PnPPartnerPackConstants.PnPProvisioningTemplates) + PnPPartnerPackConstants.PnPProvisioningTemplates.Length + 1);
-                            String templateFolder = String.Empty;
+                }
+            }
+            if (model.Step == CreateSiteStep.SiteCreated)
+            {
+                AntiForgery.Validate();
+                if (ModelState.IsValid)
+                {
+                    // Prepare the Job to provision the Sub Site 
+                    SubSiteProvisioningJob job = new SubSiteProvisioningJob();
 
-                            if (templateFileName.IndexOf("/") > 0)
-                            {
-                                templateFolder = templateFileName.Substring(0, templateFileName.LastIndexOf("/") - 1);
-                                templateFileName = templateFileName.Substring(templateFolder.Length + 1);
-                            }
-                            model.TemplateParameters = PnPPartnerPackUtilities.GetProvisioningTemplateParameters(
-                                    templateSiteUrl,
-                                    templateFolder,
-                                    templateFileName);
-                        }
-                    }
-                    break;
-                case CreateSiteStep.SiteCreated:
-                    AntiForgery.Validate();
-                    if (ModelState.IsValid)
-                    {
-                        // Prepare the Job to provision the Sub Site 
-                        SubSiteProvisioningJob job = new SubSiteProvisioningJob();
+                    // Prepare all the other information about the Provisioning Job
+                    job.SiteTitle = model.Title;
+                    job.Description = model.Description;
+                    job.Language = model.Language;
+                    job.TimeZone = model.TimeZone;
+                    job.ParentSiteUrl = model.ParentSiteUrl;
+                    job.RelativeUrl = model.RelativeUrl;
+                    job.SitePolicy = model.SitePolicy;
+                    job.Owner = ClaimsPrincipal.Current.Identity.Name;
+                    job.ApplyTenantBranding = model.ApplyTenantBranding;
 
-                        // Prepare all the other information about the Provisioning Job
-                        job.SiteTitle = model.Title;
-                        job.Description = model.Description;
-                        job.Language = model.Language;
-                        job.TimeZone = model.TimeZone;
-                        job.ParentSiteUrl = model.ParentSiteUrl;
-                        job.RelativeUrl = model.RelativeUrl;
-                        job.SitePolicy = model.SitePolicy;
-                        job.Owner = ClaimsPrincipal.Current.Identity.Name;
-                        job.ProvisioningTemplateUrl = model.ProvisioningTemplateUrl;
-                        job.InheritPermissions = model.InheritPermissions;
-                        job.Title = String.Format("Provisioning of Sub Site \"{1}\" with Template \"{0}\" by {2}",
-                            job.ProvisioningTemplateUrl,
-                            job.RelativeUrl,
-                            job.Owner);
+                    job.ProvisioningTemplateUrl = model.ProvisioningTemplateUrl;
+                    job.TemplatesProviderTypeName = model.TemplatesProviderTypeName;
+                    job.InheritPermissions = model.InheritPermissions;
+                    job.Title = String.Format("Provisioning of Sub Site \"{1}\" with Template \"{0}\" by {2}",
+                        job.ProvisioningTemplateUrl,
+                        job.RelativeUrl,
+                        job.Owner);
 
-                        job.TemplateParameters = model.TemplateParameters;
+                    job.TemplateParameters = model.TemplateParameters;
 
-                        model.JobId = ProvisioningRepositoryFactory.Current.EnqueueProvisioningJob(job);
-                    }
-                    break;
-                default:
-                    break;
+                    model.JobId = ProvisioningRepositoryFactory.Current.EnqueueProvisioningJob(job);
+                }
             }
 
             return PartialView(model.Step.ToString(), model);
+        }
+
+        [HttpPost]
+        public ActionResult SearchTemplates(OfficeDevPnP.PartnerPack.Infrastructure.TargetScope scope, String parentSiteUrl, String templatesProvider, String searchText)
+        {
+            PnPPartnerPackSettings.ParentSiteUrl = parentSiteUrl;
+
+            SearchTemplatesViewModel model = new SearchTemplatesViewModel();
+
+            if (!PnPPartnerPackSettings.TemplatesProviders.ContainsKey(templatesProvider))
+            {
+                throw new Exception("Invalid templates provider key!");
+            }
+
+            model.SearchResults = PnPPartnerPackSettings.TemplatesProviders[templatesProvider]
+                .SearchProvisioningTemplates(searchText, TargetPlatform.SharePointOnline, scope);
+
+            //List<ProvisioningTemplateInformation> result = new List<ProvisioningTemplateInformation>();
+
+            //var globalTemplates = ProvisioningRepositoryFactory.Current.GetGlobalProvisioningTemplates(scope);
+            //result.AddRange(globalTemplates);
+
+            //if (scope != TargetScope.Site)
+            //{
+            //    var localTemplates = ProvisioningRepositoryFactory.Current.GetLocalProvisioningTemplates(parentSiteUrl, scope);
+            //    result.AddRange(localTemplates);
+            //}
+
+            //model.SearchResults = result.ToArray();
+
+            return PartialView(model);
         }
 
         [HttpGet]
@@ -280,13 +322,13 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
                     if (web.Id == rootWeb.Id)
                     {
                         // We are in the Root Site of the Site Collection
-                        job.Scope = TemplateScope.Site;
+                        job.Scope = TargetScope.Site;
                         storageLocationUrl = rootWeb.Url;
                     }
                     else
                     {
                         // Otherwise we are in a Sub Site of the Site Collection
-                        job.Scope = TemplateScope.Web;
+                        job.Scope = TargetScope.Web;
                     }
                 }
 
@@ -402,12 +444,6 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetPeoplePickerData()
-        {
-            return Json(PeoplePickerHelper.GetPeoplePickerSearchData());
-        }
-
-        [HttpPost]
         public ActionResult GetSiteCollectionSettings(String siteCollectionUri)
         {
             return PartialView(PnPPartnerPackUtilities.GetSiteCollectionSettings(siteCollectionUri));
@@ -434,90 +470,34 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
             throw new Exception(message);
         }
 
-        public ActionResult GetPersonaPhoto(String upn, Int32 width = 0, Int32 height = 0)
+        [HttpGet]
+        public ActionResult GetTemplateImagePreviewFromPnP(String imagePreviewUri)
         {
-            Stream result = null;
-            String contentType = "image/png";
-
-            var sourceStream = GetUserPhoto(upn);
-
-            if (sourceStream != null && width != 0 && height != 0)
+            if (String.IsNullOrEmpty(imagePreviewUri))
             {
-                Image sourceImage = Image.FromStream(sourceStream);
-                Image resultImage = ScaleImage(sourceImage, width, height);
-
-                result = new MemoryStream();
-                resultImage.Save(result, ImageFormat.Png);
-                result.Position = 0;
-            }
-            else
-            {
-                result = sourceStream;
+                throw new ArgumentNullException("imagePreviewUri");
             }
 
-            if (result != null)
+            // Recover the original protocol moniker
+            var sourceUrl = imagePreviewUri.Replace("pnps://", "https://").Replace("pnp://", "http://");
+            var imagePreviewFile = sourceUrl.Substring(sourceUrl.LastIndexOf("/") + 1);
+            var pnpFileUrl = sourceUrl.Substring(0, sourceUrl.LastIndexOf("/"));
+            var pnpFileName = pnpFileUrl.Substring(pnpFileUrl.LastIndexOf("/") + 1);
+            var sourceSiteUrl = PnPPartnerPackUtilities.GetSiteCollectionRootUrl(pnpFileUrl);
+            var sourceSiteFolder = pnpFileUrl.Substring(sourceSiteUrl.Length + 1, pnpFileUrl.LastIndexOf("/") - sourceSiteUrl.Length - 1);
+
+            using (var repositoryContext = PnPPartnerPackContextProvider.GetAppOnlyClientContext(sourceSiteUrl))
             {
-                return base.File(result, contentType);
+                var repositoryWeb = repositoryContext.Web;
+                repositoryWeb.EnsureProperty(w => w.Url);
+
+                XMLTemplateProvider provider = new XMLOpenXMLTemplateProvider(pnpFileName,
+                    new SharePointConnector(repositoryContext, repositoryWeb.Url, sourceSiteFolder));
+
+                var imageFileStream = provider.Connector.GetFileStream(imagePreviewFile);
+
+                return (base.File(imageFileStream, "image/png"));
             }
-            else
-            {
-                return new HttpStatusCodeResult(System.Net.HttpStatusCode.NoContent);
-            }
-        }
-
-        /// <summary>
-        /// This method retrieves the current user from Azure AD
-        /// </summary>
-        /// <returns>The user retrieved from Azure AD</returns>
-        public static LightGraphUser GetCurrentUser()
-        {
-            String jsonResponse = MicrosoftGraphHelper.MakeGetRequestForString(
-                String.Format("{0}me",
-                    MicrosoftGraphHelper.MicrosoftGraphV1BaseUri));
-
-            if (jsonResponse != null)
-            {
-                var user = JsonConvert.DeserializeObject<LightGraphUser>(jsonResponse);
-                return (user);
-            }
-            else
-            {
-                return (null);
-            }
-        }
-
-        /// <summary>
-        /// This method retrieves the photo of a single user from Azure AD
-        /// </summary>
-        /// <param name="upn">The UPN of the user</param>
-        /// <returns>The user's photo retrieved from Azure AD</returns>
-        private static Stream GetUserPhoto(String upn)
-        {
-            String contentType = "image/png";
-
-            var result = MicrosoftGraphHelper.MakeGetRequestForStream(
-                String.Format("{0}users/{1}/photo/$value",
-                    MicrosoftGraphHelper.MicrosoftGraphV1BaseUri, upn),
-                contentType);
-
-            return (result);
-        }
-
-        private Image ScaleImage(Image image, int maxWidth, int maxHeight)
-        {
-            var ratioX = (double)maxWidth / image.Width;
-            var ratioY = (double)maxHeight / image.Height;
-            var ratio = Math.Min(ratioX, ratioY);
-
-            var newWidth = (int)(image.Width * ratio);
-            var newHeight = (int)(image.Height * ratio);
-
-            var newImage = new Bitmap(newWidth, newHeight);
-
-            using (var graphics = Graphics.FromImage(newImage))
-                graphics.DrawImage(image, 0, 0, newWidth, newHeight);
-
-            return newImage;
         }
     }
 }

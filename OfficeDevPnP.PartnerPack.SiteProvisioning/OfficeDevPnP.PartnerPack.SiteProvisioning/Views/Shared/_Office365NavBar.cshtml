@@ -1,20 +1,37 @@
-﻿<div class="ms-NavBar">
+﻿@{ 
+
+    var userIsTenantGlobalAdmin = OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackUtilities.UserIsTenantGlobalAdmin();
+    var userIsSharePointAdmin = OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackUtilities.UserIsSPOAdmin();
+}
+<div class="ms-NavBar">
     <div class="ms-NavBar-openMenu js-openMenu">
         <i class="ms-Icon ms-Icon--menu"></i>
     </div>
     <ul class="ms-NavBar-items">
-        @*<li class="ms-NavBar-item ms-NavBar-item--search ms-u-hiddenSm">
-            <div class="ms-TextField">
-                <input class="ms-TextField-field">
-            </div>
-        </li>*@
         <li class="ms-NavBar-item"><a class="ms-NavBar-link" href="/Home/Index"><i class="ms-Icon ms-Icon--home"></i> Home</a></li>
         <li class="ms-NavBar-item"><a class="ms-NavBar-link" href="/Home/CreateSiteCollection"><i class="ms-Icon ms-Icon--onlineAdd"></i> Create Site Collection</a></li>
-        @*<li class="ms-NavBar-item"><a class="ms-NavBar-link" href="/Home/CreateSubSite"><i class="ms-Icon ms-Icon--plus"></i> Create Sub Site</a></li>
-        <li class="ms-NavBar-item"><a class="ms-NavBar-link" href="/Home/ApplyProvisioningTemplate"><i class="ms-Icon ms-Icon--tile"></i> Apply Provisioning Template</a></li>*@
         <li class="ms-NavBar-item"><a class="ms-NavBar-link" href="/Home/MyProvisionedSites"><i class="ms-Icon ms-Icon--listBullets"></i> My Site Collections</a></li>
 
-        @if (OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackUtilities.UserIsTenantGlobalAdmin())
+        @if (userIsTenantGlobalAdmin || userIsSharePointAdmin)
+        {
+            <li class="ms-NavBar-item ms-NavBar-item--hasMenu">
+                <a class="ms-NavBar-link">Governance</a>
+                <i class="ms-NavBar-chevronDown ms-Icon ms-Icon--chevronDown" aria-hidden="true"></i>
+                <ul class="ms-ContextualMenu">
+                    <li class="ms-ContextualMenu-item">
+                        <a class="ms-ContextualMenu-link" href="/Governance/Branding">SharePoint Branding</a>
+                    </li>
+                    <li class="ms-ContextualMenu-item">
+                        <a class="ms-ContextualMenu-link" href="/Governance/RefreshSites">Refresh Sites</a>
+                    </li>
+                    <li class="ms-ContextualMenu-item">
+                        <a class="ms-ContextualMenu-link" href="/Governance/SiteCollectionsBatch">Site Collections Batch</a>
+                    </li>
+                </ul>
+            </li>
+        }
+
+        @if (userIsTenantGlobalAdmin || userIsSharePointAdmin)
         {
             <li class="ms-NavBar-item ms-NavBar-item--right"><a class="ms-NavBar-link" href="/Home/Settings"><i class="ms-Icon ms-Icon--gear"></i> Settings</a></li>
         }

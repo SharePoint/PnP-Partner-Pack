@@ -3,13 +3,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="table">
-    <div class="row">
-        <div class="col-sm-12">
-            <h3>@Model.Exception.Message</h3>
+<div class="ms-Grid">
+    <div class="ms-Grid-row">
+        <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
 
-            <div class="showErrorLink"><a href="#">Click here to see more details</a></div>
-            <div class="error">
+            <div class="ms-font-xxl">@Model.Exception.Message</>
+
+            <div class="showErrorLink ms-font-l"><a href="#">Click here to see more details</a></div>
+            <div class="error ms-font-m">
                 <hr />
                 <div>@Model.Exception.StackTrace</div>
             </div>

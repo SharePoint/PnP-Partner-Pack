@@ -6,60 +6,159 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using OfficeDevPnP.PartnerPack.Infrastructure;
+using Microsoft.Graph;
+using System.Threading.Tasks;
+using OfficeDevPnP.PartnerPack.SiteProvisioning.Models;
 
 namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Components
 {
     public class PeoplePickerHelper
     {
-        private static int GroupID = -1;
+        private GraphServiceClient graphClient = MicrosoftGraphHelper.GetNewGraphClient();
 
-        public static string GetPeoplePickerSearchData()
+        public async Task<PrincipalsViewModel> GetPeoplePickerSearchData(string nameToSearch, bool searchGroups = true, List<Guid> validationSkus = null, int maxResultCount = 6)
         {
-            using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(PnPPartnerPackSettings.InfrastructureSiteUrl))
+            PrincipalsViewModel result = new PrincipalsViewModel();
+            try
             {
-                return GetPeoplePickerSearchData(context);
+                var filteredUsers = await GetUsers(nameToSearch);
+                result.Principals.AddRange(filteredUsers.Principals);
+
+                if (searchGroups)
+                {
+                    var filteredGroups = await GetGroups(nameToSearch);
+                    result.Principals.AddRange(filteredGroups.Principals);
+                }
+
+                if (result.Principals.Count > maxResultCount)
+                {
+                    result.Principals = result.Principals.Take(maxResultCount).ToList();
+                }
             }
+            catch (Exception e)
+            {
+                // TODO: Handle exceptions with specific JSON response
+                throw e;
+            }
+
+            return result;
         }
 
-        public static string GetPeoplePickerSearchData(ClientContext context)
+        private async Task<PrincipalsViewModel> GetUsers(string nameToSearch, IGraphServiceUsersCollectionRequest request = null)
         {
-            //get searchstring and other variables
-            var searchString = (string)HttpContext.Current.Request["SearchString"];
-            int principalType = Convert.ToInt32(HttpContext.Current.Request["PrincipalType"]);
-            string spGroupName = (string)HttpContext.Current.Request["SPGroupName"];
+            PrincipalsViewModel result = new PrincipalsViewModel();
 
-            ClientPeoplePickerQueryParameters querryParams = new ClientPeoplePickerQueryParameters();
-            querryParams.AllowMultipleEntities = false;
-            querryParams.MaximumEntitySuggestions = 2000;
-            querryParams.PrincipalSource = PrincipalSource.All;
-            querryParams.PrincipalType = (PrincipalType)principalType;
-            querryParams.QueryString = searchString;
+            var filteredUsers = await graphClient.Users.Request()
+                    .Select("DisplayName,UserPrincipalName,Mail")
+                    .Filter($"startswith(DisplayName,'{nameToSearch}') or startswith(UserPrincipalName,'{nameToSearch}') or startswith(Mail,'{nameToSearch}')")
+                    .GetAsync();
 
-            if (!string.IsNullOrEmpty(spGroupName))
+            var t = await MapUsers(filteredUsers);
+            result.Principals.AddRange(t.Principals);
+
+            if (filteredUsers.NextPageRequest != null)
             {
-                if (PeoplePickerHelper.GroupID == -1)
-                {
-                    var group = context.Web.SiteGroups.GetByName(spGroupName);
-                    if (group != null)
-                    {
-                        context.Load(group, p => p.Id);
-                        context.ExecuteQuery();
+                var additionalUsers = await GetUsers(nameToSearch, filteredUsers.NextPageRequest);
 
-                        PeoplePickerHelper.GroupID = group.Id;
-
-                        querryParams.SharePointGroupID = group.Id;
-                    }
-                }
-                else
+                if (additionalUsers.Principals.Count > 0)
                 {
-                    querryParams.SharePointGroupID = PeoplePickerHelper.GroupID;
+                    result.Principals.AddRange(additionalUsers.Principals);
                 }
             }
 
-            //execute query to Sharepoint
-            ClientResult<string> clientResult = Microsoft.SharePoint.ApplicationPages.ClientPickerQuery.ClientPeoplePickerWebServiceInterface.ClientPeoplePickerSearchUser(context, querryParams);
-            context.ExecuteQuery();
-            return clientResult.Value;
+            return result;
+        }
+
+        private async Task<PrincipalsViewModel> MapUsers(IGraphServiceUsersCollectionPage source)
+        {
+            PrincipalsViewModel result = new PrincipalsViewModel();
+
+            if (source != null)
+            {
+                foreach (var u in source.Where(us => !String.IsNullOrEmpty(us.Mail)))
+                {
+                    result.Principals.Add(await MapUser(u));
+                }
+            }
+
+            return result;
+        }
+
+        private async Task<PrincipalViewModel> MapUser(Microsoft.Graph.User u)
+        {
+            if (u == null)
+            {
+                return null;
+            }
+
+            PrincipalViewModel user = new PrincipalViewModel()
+            {
+                UserPrincipalName = u.UserPrincipalName,
+                DisplayName = u.DisplayName,
+                Mail = u.Mail,
+                FirstName = u.GivenName,
+                LastName = u.Surname,
+                JobTitle = u.JobTitle
+            };
+
+            return user;
+        }
+
+        private async Task<PrincipalsViewModel> GetGroups(string nameToSearch, IGraphServiceGroupsCollectionRequest request = null)
+        {
+            PrincipalsViewModel result = new PrincipalsViewModel();
+
+            var filteredGroups = await graphClient.Groups.Request()
+                    .Select("DisplayName,Description")
+                    .Filter("groupTypes/any(grp: grp ne 'Unified')") //DynamicMembership 
+                    .GetAsync();
+
+            var t = await MapGroups(filteredGroups);
+            result.Principals.AddRange(t.Principals);
+
+            if (filteredGroups.NextPageRequest != null)
+            {
+                var additionalGroups = await GetGroups(nameToSearch, filteredGroups.NextPageRequest);
+
+                if (additionalGroups.Principals.Count > 0)
+                {
+                    result.Principals.AddRange(additionalGroups.Principals);
+                }
+            }
+
+            return result;
+        }
+
+        private async Task<PrincipalsViewModel> MapGroups(IGraphServiceGroupsCollectionPage source)
+        {
+            PrincipalsViewModel result = new PrincipalsViewModel();
+
+            if (source != null)
+            {
+                foreach (var g in source)
+                {
+                    result.Principals.Add(await MapGroup(g));
+                }
+            }
+
+            return result;
+        }
+
+        private async Task<PrincipalViewModel> MapGroup(Microsoft.Graph.Group g)
+        {
+            if (g == null)
+            {
+                return null;
+            }
+
+            PrincipalViewModel group = new PrincipalViewModel()
+            {
+                DisplayName = g.DisplayName,
+                Mail = g.Mail,
+                JobTitle = "Group"
+            };
+
+            return group;
         }
     }
 }

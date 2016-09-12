@@ -2,6 +2,8 @@
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Newtonsoft.Json;
+using OfficeDevPnP.Core.Enums;
+using OfficeDevPnP.Core.Framework.Provisioning.Connectors;
 using OfficeDevPnP.Core.Framework.Provisioning.Model;
 using OfficeDevPnP.Core.Framework.Provisioning.ObjectHandlers;
 using OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml;
@@ -28,12 +30,12 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
             return;
         }
 
-        public ProvisioningTemplateInformation[] GetGlobalProvisioningTemplates(TemplateScope scope)
+        public ProvisioningTemplateInformation[] GetGlobalProvisioningTemplates(TargetScope scope)
         {
             return (GetLocalProvisioningTemplates(PnPPartnerPackSettings.InfrastructureSiteUrl, scope));
         }
 
-        public ProvisioningTemplateInformation[] GetLocalProvisioningTemplates(string siteUrl, TemplateScope scope)
+        public ProvisioningTemplateInformation[] GetLocalProvisioningTemplates(string siteUrl, TargetScope scope)
         {
             List<ProvisioningTemplateInformation> result =
                 new List<ProvisioningTemplateInformation>();
@@ -98,7 +100,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
 
                         result.Add(new ProvisioningTemplateInformation
                         {
-                            Scope = (TemplateScope)Enum.Parse(typeof(TemplateScope), (String)item[PnPPartnerPackConstants.PnPProvisioningTemplateScope], true),
+                            Scope = (TargetScope)Enum.Parse(typeof(TargetScope), (String)item[PnPPartnerPackConstants.PnPProvisioningTemplateScope], true),
                             TemplateSourceUrl = item[PnPPartnerPackConstants.PnPProvisioningTemplateSourceUrl] != null ? ((FieldUrlValue)item[PnPPartnerPackConstants.PnPProvisioningTemplateSourceUrl]).Url : null,
                             TemplateFileUri = String.Format("{0}/{1}/{2}", web.Url, PnPPartnerPackConstants.PnPProvisioningTemplates, item.File.Name),
                             TemplateImageUrl = template.ImagePreviewUrl,
@@ -146,6 +148,12 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
 
         private void SaveProvisioningTemplateInternal(ClientContext context, GetProvisioningTemplateJob job, Boolean globalRepository = true)
         {
+            // Fix the job filename if it is missing the .pnp extension
+            if (!job.FileName.ToLower().EndsWith(".pnp"))
+            {
+                job.FileName += ".pnp";
+            }
+
             // Get a reference to the target web site
             Web web = context.Web;
             context.Load(web, w => w.Url);
@@ -159,7 +167,8 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
             if (globalRepository)
             {
                 // Get a reference to the global repository web site and context
-                repositoryContext = PnPPartnerPackContextProvider.GetAppOnlyClientContext(PnPPartnerPackSettings.InfrastructureSiteUrl);
+                repositoryContext = PnPPartnerPackContextProvider.GetAppOnlyClientContext(
+                    PnPPartnerPackSettings.InfrastructureSiteUrl);
             }
             else
             {
@@ -174,9 +183,9 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
                 repositoryContext.ExecuteQueryRetry();
 
                 // Configure the XML SharePoint provider for the Infrastructural Site Collection
-                XMLTemplateProvider provider =
-                        new XMLSharePointTemplateProvider(repositoryContext, repositoryWeb.Url,
-                            PnPPartnerPackConstants.PnPProvisioningTemplates);
+                XMLTemplateProvider provider = new XMLOpenXMLTemplateProvider(job.FileName,
+                    new SharePointConnector(repositoryContext, repositoryWeb.Url,
+                            PnPPartnerPackConstants.PnPProvisioningTemplates));
 
                 ProvisioningTemplateCreationInformation ptci =
                     new ProvisioningTemplateCreationInformation(web);
@@ -187,10 +196,11 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
                 ptci.IncludeSiteGroups = job.IncludeSiteGroups;
                 ptci.PersistBrandingFiles = job.PersistComposedLookFiles;
 
-                // We do intentionally remove taxonomies, which are not supported 
+                // We do intentionally remove taxonomies and search, which are not supported 
                 // in the AppOnly Authorization model
                 // For further details, see the PnP Partner Pack documentation 
                 ptci.HandlersToProcess ^= Handlers.TermGroups;
+                ptci.HandlersToProcess ^= Handlers.SearchSettings;
 
                 // Extract the current template
                 ProvisioningTemplate templateToSave = web.GetProvisioningTemplate(ptci);
@@ -203,26 +213,25 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
                 repositoryContext.Load(templatesFolder, f => f.ServerRelativeUrl, f => f.Name);
                 repositoryContext.ExecuteQueryRetry();
 
-                // Fix the job filename if it is missing the .xml extension
-                if (!job.FileName.ToLower().EndsWith(".xml"))
-                {
-                    job.FileName += ".xml";
-                }
-
                 // If there is a preview image
                 if (job.TemplateImageFile != null)
                 {
-                    String previewImageFileName = job.FileName.ToLower().Replace(".xml", "_preview.png");
-                    templatesFolder.UploadFile(previewImageFileName,
-                        job.TemplateImageFile.ToStream(), true);
+                    // Determine the preview image file name
+                    String previewImageFileName = job.FileName.ToLower().Replace(".pnp", "_preview.png");
+
+                    // Save the preview image inside the Open XML package
+                    provider.Connector.SaveFileStream(previewImageFileName, job.TemplateImageFile.ToStream());
 
                     // And store URL in the XML file
-                    templateToSave.ImagePreviewUrl = String.Format("{0}/{1}/{2}",
-                        repositoryWeb.Url, templatesFolder.Name, previewImageFileName);
+                    templateToSave.ImagePreviewUrl = String.Format("{0}{1}/{2}/{3}/{4}",
+                        repositoryWeb.Url.ToLower().StartsWith("https") ? "pnps" : "pnp",
+                        repositoryWeb.Url.Substring(repositoryWeb.Url.IndexOf("://")), 
+                        templatesFolder.Name, job.FileName, previewImageFileName);
+
                 }
 
                 // And save it on the file system
-                provider.SaveAs(templateToSave, job.FileName);
+                provider.SaveAs(templateToSave, job.FileName.ToLower().Replace(".pnp", ".xml"));
 
                 Microsoft.SharePoint.Client.File templateFile = templatesFolder.GetFile(job.FileName);
                 ListItem item = templateFile.ListItemAllFields;
@@ -461,6 +470,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
             resultItem.ErrorMessage = (String)jobItem[PnPPartnerPackConstants.PnPProvisioningJobError];
             resultItem.Type = (String)jobItem[PnPPartnerPackConstants.PnPProvisioningJobType];
             resultItem.Owner = ((FieldUserValue)jobItem[PnPPartnerPackConstants.PnPProvisioningJobOwner]).LookupValue;
+            resultItem.ScheduledOn = (DateTime)jobItem[jobItem.ParentList.GetFieldById<FieldDateTime>(BuiltInFieldId.Created).InternalName];
 
             if (includeFileStream)
             {

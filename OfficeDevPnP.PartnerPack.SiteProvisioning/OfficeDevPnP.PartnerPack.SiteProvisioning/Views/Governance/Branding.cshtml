@@ -1,0 +1,125 @@
+﻿@model OfficeDevPnP.PartnerPack.SiteProvisioning.Models.BrandingViewModel
+
+@{
+    ViewBag.Title = "SharePoint Branding";
+}
+
+@if (Model.JobId.HasValue && Model.JobId.Value != Guid.Empty)
+{
+    <div class="ms-Grid">
+        <div class="ms-Grid-row">
+            <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                The Branding settings will be applied tenant-wide to all Site Collections and Sites. The ID assigned to the Job is: @Model.JobId.
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    using (Html.BeginForm("Branding", "Governance", "", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="inputForm">
+
+            <input type="hidden" id="@Html.IdFor(model => model.RollOut)" name="@Html.NameFor(model => model.RollOut)" value="@Model.RollOut" />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="ms-Grid">
+
+                <div class="ms-Grid-row">
+                    <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                        @Html.EditorFor(model => model.LogoImageUrl, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+
+                <div class="ms-Grid-row">
+                    <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                        @Html.EditorFor(model => model.BackgroundImageUrl, new { htmlAttributes = new { @class = "form-control", rows = "5", columns = "50" } })
+                    </div>
+                </div>
+
+                <div class="ms-Grid-row">
+                    <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                        @Html.EditorFor(model => model.ColorFileUrl, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+
+                <div class="ms-Grid-row">
+                    <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                        @Html.EditorFor(model => model.FontFileUrl, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+
+                <div class="ms-Grid-row">
+                    <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                        @Html.EditorFor(model => model.CSSOverrideUrl, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+
+                <div class="ms-Grid-row">
+                    <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                        @Html.EditorFor(model => model.UICustomActionsUrl, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <button class="ms-Button ms-Button--primary ApplyBranding">
+            <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+            <span class="ms-Button-label">Apply</span>
+            <span class="ms-Button-description">Apply branding</span>
+        </button>
+
+        <button class="ms-Button RollOutBranding">
+            <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+            <span class="ms-Button-label">Roll out</span>
+            <span class="ms-Button-description">Roll out</span>
+        </button>
+    }
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(function () {
+
+            // Hide the Working On It panel
+            $("#WorkingOnIt").hide();
+
+            // Handle wizard steps
+            $(document).on("click", ".ApplyBranding", applyBranding);
+            $(document).on("click", ".RollOutBranding", rollOutBranding);
+        });
+
+        function applyBranding(e) {
+
+            // Prevent default event
+            e.preventDefault();
+
+            // Prevent rollout
+            $("#@Html.IdFor(model => model.RollOut)").val("false");
+
+            // Submit the form
+            $("form")[0].submit();
+        }
+
+        function rollOutBranding(e) {
+
+            // Prevent default event
+            e.preventDefault();
+
+            // Schedule rollout
+            $("#@Html.IdFor(model => model.RollOut)").val("true");
+
+            // Submit the form
+            $("form")[0].submit();
+        }
+
+    </script>
+}
+
+<img src="https://telemetrypartnerpack.sharepointpnp.com/Governance/Branding" />

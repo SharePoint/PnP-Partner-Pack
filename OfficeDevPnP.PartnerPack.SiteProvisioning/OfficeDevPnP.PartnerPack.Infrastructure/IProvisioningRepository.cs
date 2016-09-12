@@ -17,7 +17,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
         /// </summary>
         /// <param name="scope">The scope to filter the provisioning templates</param>
         /// <returns>Returns the list of Provisioning Templates</returns>
-        ProvisioningTemplateInformation[] GetGlobalProvisioningTemplates(TemplateScope scope);
+        ProvisioningTemplateInformation[] GetGlobalProvisioningTemplates(TargetScope scope);
 
         /// <summary>
         /// Retrieves the list of Local Provisioning Templates
@@ -25,7 +25,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
         /// <param name="siteUrl">The local Site Collection to retrieve the templates from</param>
         /// <param name="scope">The scope to filter the provisioning templates</param>
         /// <returns>Returns the list of Provisioning Templates</returns>
-        ProvisioningTemplateInformation[] GetLocalProvisioningTemplates(String siteUrl, TemplateScope scope);
+        ProvisioningTemplateInformation[] GetLocalProvisioningTemplates(String siteUrl, TargetScope scope);
 
         /// <summary>
         /// Saves a Provisioning Template into the target Global repository

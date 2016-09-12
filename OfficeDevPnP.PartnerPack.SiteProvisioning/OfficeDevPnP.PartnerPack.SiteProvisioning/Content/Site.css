@@ -9,6 +9,10 @@
     padding-right: 15px;
 }
 
+#mainContent {
+    margin-top: 20px;
+}
+
 .container {
     margin-left: 145px;
 }
@@ -38,6 +42,14 @@ textarea {
     max-width: 280px;
 }
 
+.form-control {
+    border-radius: 0px !important;
+}
+
+.inputForm {
+    margin-bottom: 20px;
+}
+
 a {
     text-decoration: none !important;
 }
@@ -47,13 +59,13 @@ a:hover {
 }
 
 .scrollableContent {
-    overflow: auto;
+    /* overflow: auto; */
 }
 
 .waitWorking {
     width: 350px; 
     margin-top: 50px; 
-    margin-left:150px; 
+    margin-left: 50px; 
     margin-bottom: 50px;
     vertical-align: middle;
 }
@@ -153,4 +165,28 @@ input[type=checkbox], input[type=radio] {
 img.templatepreview {
     line-height: 170px;
     text-align: left;       
+}
+
+.templatesTable {
+    width: 80%;
+    margin-bottom: 20px;
+}
+
+.gridSettings {
+    margin-bottom: 20px;
+}
+
+.stepcontainer .ms-Dropdown .ms-Label {
+    margin-bottom: 0px !important;
+}
+
+.ms-SearchBox-label {
+    font-weight: normal !important;
+}
+
+.WarningMessage
+{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: red;
 }
