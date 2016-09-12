@@ -1,5 +1,5 @@
-# PnP Partner Pack 
-This is the repository for PnP Partner Pack, which is part of the community driven [Office 365 Developer Patterns and Practices](http://aka.ms/OfficeDevPnP) (PnP) initiate. 
+# PnP Partner Pack v. 2.0
+This is the repository for PnP Partner Pack, which is part of the community driven [Office 365 Developer Patterns and Practices](http://aka.ms/OfficeDevPnP) (PnP) initiative. 
 
 ![](http://i.imgur.com/5L34MNk.png)
 
@@ -18,6 +18,7 @@ PnP Partner Pack solution is demonstrating following capabilities:
 	- Uses JavaScript and custom CSS files to transform oob SP sites as responsive
 	- Can be applied to any SharePoint site and does not dependencies on the PnP Partner Pack
 - UI widget implementations with JavaScript embedding pattern to avoid custom master pages
+- Governance tools for administrators: apply SharePoint farm-wide branding, refresh site templates, bulk creation of site collections 
 - Reference governance remote timer jobs (Azure WebJobs) to perform typical enterprise governance operations to existing site collections and sites
 - Configurable branding and text elements for easy branding element changes
 
@@ -26,8 +27,8 @@ If you are interested on more detailed architectural description, please have a 
 # How do I install PnP Partner Pack #
 PnP Partner Pack requires quite a few installation steps. Here's resources around the installation and configuration.
 
-- <a href="./Documentation/Manual-Setup-Guide.md">Step-by-Step guidance</a> on how to setup apps to Office 365 tenant and Azure
-- [PnP Partner Pack - Setup Guide video](https://channel9.msdn.com/blogs/OfficeDevPnP/PnP-Partner-Pack-Setup-and-configuration) at Channel 9.
+- [Step-by-Step guidance](./Documentation/Manual-Setup-Guide.md) on how to setup apps to Office 365 tenant and Azure
+- [PnP Partner Pack - Setup Guide video](https://channel9.msdn.com/blogs/OfficeDevPnP/PnP-Partner-Pack-Setup-and-configuration) at Channel 9. Be careful that the referenced video covers the PnP Partner Pack v. 1.x and not yet the PnP Partner Pack v. 2.0.
 
 
 # What's the supportability story around this? #
