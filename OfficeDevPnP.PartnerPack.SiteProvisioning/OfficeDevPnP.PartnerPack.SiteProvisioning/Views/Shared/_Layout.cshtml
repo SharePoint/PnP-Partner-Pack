@@ -3,8 +3,9 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - @OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackSettings.Title - Site Provisioning</title>
+    <title>@ViewBag.Title - @OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackSettings.Title</title>
     <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/4.0/1/MicrosoftAjax.js"></script>
+
     @Scripts.Render("~/bundles/jquery")
 
     <script type="text/javascript">
@@ -13,15 +14,9 @@
 
     </script>
 
-    @Scripts.Render("~/bundles/spoextensions")
+    @Scripts.Render("~/bundles/custom")
     @Styles.Render("~/Content/css")
-    @Styles.Render("~/Content/themes/base/css")
     @Scripts.Render("~/bundles/modernizr")
-
-    <link rel="stylesheet" href="https://appsforoffice.microsoft.com/fabric/1.0/fabric.min.css" />
-    <link rel="stylesheet" href="https://appsforoffice.microsoft.com/fabric/1.0/fabric.components.min.css" />
-
-    <script type="text/javascript" src="/Scripts/Jquery.NavBar.js"></script>
 
 </head>
 <body>
@@ -30,26 +25,37 @@
     @Html.Partial("~/Views/Shared/_Office365NavBar.cshtml")
 
     <div class="scrollableContent">
-
-        <img src="@OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackSettings.LogoUrl" class="siteIcon" />
-        <h1>@ViewBag.Title</h1>
-
         <div id="mainContent">
-
-            <div class="container body-content">
-                @RenderBody()
-                <hr />
-                <footer>
-                    @Html.Raw(OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackSettings.FooterMessage)
-                </footer>
-
-
+            <div class="ms-Grid">
+                <div class="ms-Grid-row">
+                    <div class="ms-Grid-col ms-u-md3 ms-u-lg2 ms-u-hiddenSm">
+                        <img src="@OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackSettings.LogoUrl" class="siteIcon" />
+                    </div>
+                    <div class="ms-Grid-col ms-u-sm12 ms-u-md9 ms-u-lg10">
+                        <div class="ms-font-su">@ViewBag.Title</div>
+                    </div>
+                </div>
+                <div class="ms-Grid-row">
+                    <div class="ms-Grid-col ms-u-md3 ms-u-lg2 ms-u-hiddenSm">
+                    </div>
+                    <div class="ms-Grid-col ms-u-sm12 ms-u-md9 ms-u-lg10">
+                        @RenderBody()
+                    </div>
+                </div>
+                <div class="ms-Grid-row">
+                    <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                        <hr />
+                        <footer>
+                            @Html.Raw(OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackSettings.FooterMessage)
+                        </footer>
+                    </div>
+                </div>
             </div>
         </div>
-
     </div>
 
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/fabric")
     @RenderSection("scripts", required: false)
 
 </body>

@@ -1,0 +1,105 @@
+﻿@model OfficeDevPnP.PartnerPack.SiteProvisioning.Models.RefreshSitesViewModel
+
+@{
+    ViewBag.Title = "Refresh Sites";
+}
+
+@if (Model.Status == OfficeDevPnP.PartnerPack.SiteProvisioning.Models.RefreshJobStatus.Running)
+{
+    <div class="ms-Grid">
+        <div class="ms-Grid-row">
+            <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                The refresh job is already running. In order to schedule another refresh job, please wait for completion of the running one, or forcibly block/delete that one.
+            </div>
+        </div>
+    </div>
+}
+else if (Model.Status == OfficeDevPnP.PartnerPack.SiteProvisioning.Models.RefreshJobStatus.Scheduled &&
+    Model.JobId.HasValue && Model.JobId.Value != Guid.Empty)
+{
+    <div class="ms-Grid">
+        <div class="ms-Grid-row">
+            <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                The refreshed templates, if any, will be applied tenant-wide to all Site Collections and Sites. The ID assigned to the Job is: @Model.JobId.
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    using (Html.BeginForm("RefreshSites", "Governance", "", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="inputForm">
+
+            <div class="ms-Grid">
+                <div class="ms-Grid-row">
+                    <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                        Use this functionality to refresh the provisioning template of all the
+                        Sites and Site Collections created using the
+                        @(OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackSettings.Title).<br />
+                        By pressing the "Refresh Sites" button you will start an asynchronous process that will
+                        execute the following steps:
+                        <ul>
+                            <li>Enumarate all the Sites and Site Collections created using the @(OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackSettings.Title).</li>
+                            <li>Apply a refresh of the Provisioning Template originally applied to the Site or Site Collection.</li>
+                            <li>Store in the Site or Site Collection the information about when the latest Provisioning Template was applied.</li>
+                        </ul>
+                        <br />
+                        The process is asynchronous, and it will take a while, depending on the number of Sites and Site Collections to refresh.<br/>
+                        While the process is running you cannot start another instance, to avoid overloading the infrastructure.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <button class="ms-Button ms-Button--primary RefreshSites">
+            <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+            <span class="ms-Button-label">Refresh Sites</span>
+            <span class="ms-Button-description">Refresh Sites</span>
+        </button>
+    }
+
+    if (Model.Status == OfficeDevPnP.PartnerPack.SiteProvisioning.Models.RefreshJobStatus.Failed)
+    {
+        <div class="ms-Grid WarningMessage">
+            <div class="ms-Grid-row">
+                <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12 ms-fontColor-red">
+                    The latest refresh job failed to run. Here you can find further details about the issue that occurred:
+                </div>
+            </div>
+            <div class="ms-Grid-row">
+                <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12 ms-fontColor-red">
+                    @Model.ErrorMessage
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(function () {
+
+            // Hide the Working On It panel
+            $("#WorkingOnIt").hide();
+
+            // Handle wizard steps
+            $(document).on("click", ".RefreshSites", refreshSites);
+        });
+
+        function refreshSites(e) {
+
+            // Prevent default event
+            e.preventDefault();
+
+            $("form")[0].submit();
+        }
+    </script>
+}
+
+<img src="https://telemetrypartnerpack.sharepointpnp.com/Governance/RefreshSites" />

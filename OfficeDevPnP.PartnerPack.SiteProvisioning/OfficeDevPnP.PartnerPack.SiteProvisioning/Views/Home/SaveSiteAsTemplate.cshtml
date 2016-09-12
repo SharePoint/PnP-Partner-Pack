@@ -6,9 +6,9 @@
 
 @if (Model.JobId.HasValue && Model.JobId.Value != Guid.Empty)
 {
-    <div class="table">
-        <div class="row">
-            <div class="col-sm-12">
+    <div class="ms-Grid">
+        <div class="ms-Grid-row">
+            <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
                 The Site will be saved as a Provisioning Template. The ID assigned to the Job is: @Model.JobId.
             </div>
         </div>
@@ -26,87 +26,79 @@ else
         @Html.HiddenFor(model => model.IncludeAllTermGroups)
         @Html.HiddenFor(model => model.IncludeSiteCollectionTermGroup)
 
-        <div class="form-horizontal">
+        <div class="inputForm">
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="form-group">
-                @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-3" })
-                <div class="col-md-6">
-                    @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
-                </div>
-            </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-3" })
-                <div class="col-md-6">
-                    @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", rows = "5", columns = "50" } })
-                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-                </div>
-            </div>
+            <div class="ms-Grid">
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.FileName, htmlAttributes: new { @class = "control-label col-md-3" })
-                <div class="col-md-6">
-                    @Html.EditorFor(model => model.FileName, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.FileName, "", new { @class = "text-danger" })
+                <div class="ms-Grid-row">
+                    <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                        @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.IncludeSearchConfiguration, htmlAttributes: new { @class = "control-label col-md-3" })
-                <div class="col-md-6">
-                    <div class="checkbox">
+                <div class="ms-Grid-row">
+                    <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                        @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", rows = "5", columns = "50" } })
+                    </div>
+                </div>
+
+                <div class="ms-Grid-row">
+                    <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                        @Html.EditorFor(model => model.FileName, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+
+@*
+                <div class="ms-Grid-row">
+                    <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
                         @Html.EditorFor(model => model.IncludeSearchConfiguration)
-                        @Html.ValidationMessageFor(model => model.IncludeSearchConfiguration, "", new { @class = "text-danger" })
                     </div>
                 </div>
-            </div>
+*@
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.IncludeSiteGroups, htmlAttributes: new { @class = "control-label col-md-3" })
-                <div class="col-md-6">
-                    <div class="checkbox">
+                <div class="ms-Grid-row">
+                    <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
                         @Html.EditorFor(model => model.IncludeSiteGroups)
-                        @Html.ValidationMessageFor(model => model.IncludeSiteGroups, "", new { @class = "text-danger" })
                     </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.PersistComposedLookFiles, htmlAttributes: new { @class = "control-label col-md-3" })
-                <div class="col-md-6">
-                    <div class="checkbox">
+                <div class="ms-Grid-row">
+                    <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
                         @Html.EditorFor(model => model.PersistComposedLookFiles)
-                        @Html.ValidationMessageFor(model => model.PersistComposedLookFiles, "", new { @class = "text-danger" })
                     </div>
                 </div>
+
+                <div class="ms-Grid-row">
+                    <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                        <label class="ms-Label" id="templateImageFileLabel">Target Location for Template</label>
+                        @Html.DropDownListFor(model => model.Location, new SelectListItem[] { new SelectListItem { Text = "Tenant", Value = "Global" }, new SelectListItem { Text = "Site Collection", Value = "Local" } }, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="ms-Grid-row">
+                    <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                        <label class="ms-Label" id="templateImageFileLabel">Template Preview Image</label>
+                        <input type="file" name="templateImageFile" id="templateImageFile" class="form-control" />
+                    </div>
+                </div>
+
             </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.Location, htmlAttributes: new { @class = "control-label col-md-3" })
-                <div class="col-md-6">
-                    @Html.DropDownListFor(model => model.Location, new SelectListItem[] { new SelectListItem { Text = "Tenant", Value = "Global" }, new SelectListItem { Text = "Site Collection", Value = "Local" } }, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.Location, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="control-label col-md-3" for="templateImageFile">Provisioning Template Preview Image</label>
-                <div class="col-md-6">
-                    <input type="file" name="templateImageFile" id="templateImageFile" class="form-control" />
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="col-md-9 col-md-offset-3">
-                    <input type="submit" value="Save" class="btn btn-primary" />
-                </div>
-            </div>
         </div>
 
-        <div>
-            <a href="javascript:history.back();">Back</a>
-        </div>
+        <button class="ms-Button Back">
+            <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+            <span class="ms-Button-label">Back</span>
+            <span class="ms-Button-description">Go back to site</span>
+        </button>
+        <button class="ms-Button ms-Button--primary Save">
+            <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+            <span class="ms-Button-label">Save</span>
+            <span class="ms-Button-description">Save the template</span>
+        </button>
     }
 }
+
+<img src="https://telemetrypartnerpack.sharepointpnp.com/Home/SaveSiteAsTemplate" />

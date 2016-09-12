@@ -2,6 +2,10 @@
 @using System.Xml.Linq
 
 @{
+    var fieldId = Html.IdFor(m => m);
+    var fieldName = Html.NameFor(m => m);
+    var isRequired = ViewData.ModelMetadata.IsRequired;
+
     XElement supportedUILanguages = XElement.Load(Server.MapPath("/Content/SupportedUILanguages.xml"));
 
     var culturesList = from l in supportedUILanguages.Descendants("supportedUILanguage")
@@ -9,8 +13,11 @@
                        {
                            Text = l.Attribute("description").Value,
                            Value = l.Attribute("value").Value,
-                           Selected = Int32.Parse(l.Attribute("value").Value) == Model
+                           Selected = (Model != 0 ? Int32.Parse(l.Attribute("value").Value) == Model : Int32.Parse(l.Attribute("value").Value) == 1033)
                        };
 }
-@Html.DropDownListFor(model => model, culturesList, new { @class = "form-control" })
-@Html.ValidationMessageFor(model => model)
+<div class="ms-f" id="@($"{fieldId}Div")">
+    <label class="ms-Label @(isRequired ? "is-required" : "")" id="@($"{fieldId}Label")">@(!String.IsNullOrEmpty(ViewData.ModelMetadata.DisplayName) ? ViewData.ModelMetadata.DisplayName : ViewData.ModelMetadata.PropertyName)</label>
+    @Html.DropDownListFor(model => model, culturesList, new { @class = "form-control" })
+    @Html.ValidationMessageFor(model => model)
+</div>

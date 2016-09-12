@@ -1,0 +1,40 @@
+﻿@model OfficeDevPnP.PartnerPack.SiteProvisioning.Models.SearchTemplatesViewModel
+
+@using OfficeDevPnP.PartnerPack.Infrastructure
+
+@functions{
+
+    String ProcessImagePreviewUrl(String imagePreviewUrl)
+    {
+        if (imagePreviewUrl != null && (imagePreviewUrl.ToLower().StartsWith("pnps://") || imagePreviewUrl.ToLower().StartsWith("pnp://")))
+        {
+            return ($"/Home/GetTemplateImagePreviewFromPnP?imagePreviewUri={imagePreviewUrl}");
+        }
+        else
+        {
+            return (imagePreviewUrl);
+        }
+    }
+
+}
+
+@if (Model.SearchResults.Length == 0)
+{
+    <script>
+        $(".WarningMessage").text("There are no templates matching the search criteria");
+    </script>
+}
+else
+{
+    foreach (var template in Model.SearchResults)
+    {
+        <div class="provtemplate" data-pnp-template-url="@template.TemplateFileUri">
+            <div class="roundmask">
+                <img alt="@template.DisplayName" src="@ProcessImagePreviewUrl(template.TemplateImageUrl)" class="templatepreview" />
+            </div>
+            <div class="ms-font-m-plus ms-u-textAlignCenter">@template.DisplayName</div>
+            <span class="ms-font-m ms-u-textAlignCenter">@template.Description</span>
+        </div>
+    }
+}
+

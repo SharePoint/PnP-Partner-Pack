@@ -21,8 +21,6 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            ModelBinders.Binders.Add(typeof(PeoplePickerUser[]), new PeoplePickerUserBinder());
-
             AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
         }
     }

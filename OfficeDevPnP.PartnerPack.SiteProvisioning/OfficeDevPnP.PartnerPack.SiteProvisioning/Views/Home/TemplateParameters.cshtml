@@ -5,7 +5,9 @@
 
     <input type="hidden" id="@Html.IdFor(model => model.Step)" name="@Html.NameFor(model => model.Step)" value="@Model.Step" />
 
-    <h3>Template Parameters</h3>
+    <div class="ms-font-xxl">Template Parameters</div>
+
+    <input type="hidden" id="TemplateParametersCount" name="TemplateParametersCount" value="@(Model.TemplateParameters != null ? Model.TemplateParameters.Count : 0)" />
 
     @if (Model.Step == CreateSiteStep.TemplateParameters && (Model.TemplateParameters == null || Model.TemplateParameters.Count == 0))
     {
@@ -13,26 +15,39 @@
     }
     else
     {
-        <div class="form-horizontal">
+        <div class="inputForm">
             <hr />
-            @{
-                int i = 0;
-                foreach (var parameter in Model.TemplateParameters)
-                {
-                    <div class="form-group">
-                        <input type="hidden" name="TemplateParameters[@i].Key" value="@parameter.Key" />
-                        <label class="control-label col-md-3" for="templateImageFile">@parameter.Key</label>
-                        <div class="col-md-6">
-                            <input name="TemplateParameters[@i].Value" value="@parameter.Value" class="form-control" />
+            <div class="ms-Grid">
+                @{
+                    int i = 0;
+                    foreach (var parameter in Model.TemplateParameters)
+                    {
+                        <div class="ms-Grid-row">
+                            <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                                <div class="ms-TextField">
+                                    <input type="hidden" name="TemplateParameters[@i].Key" value="@parameter.Key" />
+                                    <label class="ms-Label" for="TemplateParameters[@i].Key">@parameter.Key</label>
+                                    <input name="TemplateParameters[@i].Value" value="@parameter.Value" class="form-control" />
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    i++;
+
+                        i++;
+                    }
                 }
-            }
+            </div>
         </div>
     }
 
-    <input type="button" class="btn-default btn PreviousStep" value="Previous" />
-    <input type="button" class="btn-primary btn NextStep" value="Create" />
+    <button class="ms-Button PreviousStep">
+        <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+        <span class="ms-Button-label">Previous</span>
+        <span class="ms-Button-description">Go back to the Site information</span>
+    </button>
+    <button class="ms-Button ms-Button--primary NextStep">
+        <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+        <span class="ms-Button-label">Create</span>
+        <span class="ms-Button-description">Create the Site</span>
+    </button>
 
-    </div>
+</div>

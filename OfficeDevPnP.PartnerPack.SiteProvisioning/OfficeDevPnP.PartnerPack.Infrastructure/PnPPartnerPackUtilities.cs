@@ -1,7 +1,9 @@
 ﻿using Microsoft.SharePoint.Client;
+using Newtonsoft.Json;
 using OfficeDevPnP.Core.Framework.Provisioning.Model;
 using OfficeDevPnP.Core.Framework.Provisioning.ObjectHandlers;
 using OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml;
+using OfficeDevPnP.PartnerPack.Infrastructure.Jobs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,11 +43,8 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
         {
             using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(siteUrl))
             {
-                ApplyProvisioningTemplateToSite(context,
-                    PnPPartnerPackSettings.InfrastructureSiteUrl,
-                    "Responsive",
-                    "SPO-Responsive.xml",
-                    handlers: Handlers.CustomActions);
+                Web web = context.Web;
+                web.EnableResponsiveUI(PnPPartnerPackSettings.InfrastructureSiteUrl);
             }
         }
 
@@ -83,8 +82,32 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
             return (result);
         }
 
+        public static String GetPropertyBagValueFromInfrastructure(String propertyKey)
+        {
+            using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(
+                PnPPartnerPackSettings.InfrastructureSiteUrl))
+            {
+                var web = context.Web;
+                var result = web.GetPropertyBagValueString(propertyKey, null);
+
+                return (result);
+            }
+        }
+
+        public static void SetPropertyBagValueToInfrastructure(String propertyKey, String value)
+        {
+            using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(
+                PnPPartnerPackSettings.InfrastructureSiteUrl))
+            {
+                var web = context.Web;
+                web.SetPropertyBagValue(propertyKey, value);
+            }
+        }
+
         private static void ApplyProvisioningTemplateToSite(ClientContext context, String siteUrl, String folder, String fileName, Dictionary<String, String> parameters = null, Handlers handlers = Handlers.All)
         {
+            // TODO: Move to Open XML
+
             // Configure the XML file system provider
             XMLTemplateProvider provider =
                 new XMLSharePointTemplateProvider(context, siteUrl,
@@ -95,7 +118,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
             ProvisioningTemplate template = provider.GetTemplate(fileName);
             template.Connector = provider.Connector;
 
-            ProvisioningTemplateApplyingInformation ptai = 
+            ProvisioningTemplateApplyingInformation ptai =
                 new ProvisioningTemplateApplyingInformation();
 
             // We exclude Term Groups because they are not supported in AppOnly
@@ -113,29 +136,6 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
 
             // Apply the template to the target site
             context.Site.RootWeb.ApplyProvisioningTemplate(template, ptai);
-        }
-
-        public static ProvisioningTemplate GetProvisioningTemplate(ClientContext context, String siteUrl, String folder, String fileName)
-        {
-            // Configure the XML file system provider
-            XMLTemplateProvider provider =
-                new XMLSharePointTemplateProvider(context, siteUrl,
-                    PnPPartnerPackConstants.PnPProvisioningTemplates +
-                    (!String.IsNullOrEmpty(folder) ? "/" + folder : String.Empty));
-
-            // Load the template from the XML stored copy
-            ProvisioningTemplate template = provider.GetTemplate(fileName);
-
-            return (template);
-        }
-
-        public static Dictionary<String, String> GetProvisioningTemplateParameters(String siteUrl, String folder, String fileName)
-        {
-            using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(siteUrl))
-            {
-                ProvisioningTemplate template = GetProvisioningTemplate(context, siteUrl, folder, fileName);
-                return (template.Parameters);
-            }
         }
 
         public static void EnablePartnerPackInfrastructureOnSite(String siteUrl)
@@ -164,8 +164,38 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
 
         public static Boolean UserIsTenantGlobalAdmin()
         {
-            // TODO: Implement method UserIsTenantGlobalAdmin
-            return (true);
+            return (UserIsAdmin(MicrosoftGraphConstants.GlobalTenantAdminRole));
+        }
+
+        public static Boolean UserIsSPOAdmin()
+        {
+            return (UserIsAdmin(MicrosoftGraphConstants.GlobalSPOAdminRole));
+        }
+
+        private static Boolean UserIsAdmin(String targetRole)
+        {
+            try
+            {
+                // Retrieve (using the Microsoft Graph) the current user's roles
+                String jsonResponse = HttpHelper.MakeGetRequestForString(
+                    String.Format("{0}me/memberOf?$select=id,displayName",
+                        MicrosoftGraphConstants.MicrosoftGraphV1BaseUri),
+                    MicrosoftGraphHelper.GetAccessTokenForCurrentUser(MicrosoftGraphConstants.MicrosoftGraphResourceId));
+
+                if (jsonResponse != null)
+                {
+                    var result = JsonConvert.DeserializeObject<UserRoles>(jsonResponse);
+                    // Check if the requested role (of type DirectoryRole) is included in the list
+                    return (result.Roles.Any(r => r.DisplayName == targetRole && 
+                        r.DataType.Equals("#microsoft.graph.directoryRole", StringComparison.InvariantCultureIgnoreCase)));
+                }
+            }
+            catch (Exception)
+            {
+                // Ignore any exception and return false (user is not member of ...)
+            }
+
+            return (false);
         }
 
         public static String GetSiteCollectionRootUrl(String siteUrl)
@@ -182,6 +212,24 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
             }
 
             return (siteUrl);
+        }
+
+        /// <summary>
+        /// Helper method for reading branding settings from the Infrastructural Site Collection
+        /// </summary>
+        /// <returns></returns>
+        public static BrandingSettings GetTenantBrandingSettings()
+        {
+            // Get the current settings from the Infrastructural Site Collection
+            var jsonBrandingSettings = PnPPartnerPackUtilities.GetPropertyBagValueFromInfrastructure(
+                PnPPartnerPackConstants.PropertyBag_Branding);
+
+            // Read the current branding settings, if any
+            var branding = jsonBrandingSettings != null ?
+                JsonConvert.DeserializeObject<BrandingSettings>(jsonBrandingSettings) :
+                new BrandingSettings();
+
+            return branding;
         }
     }
 }

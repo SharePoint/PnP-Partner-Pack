@@ -1,0 +1,68 @@
+﻿@model OfficeDevPnP.PartnerPack.SiteProvisioning.Models.SiteCollectionsBatchViewModel
+
+@using OfficeDevPnP.PartnerPack.SiteProvisioning.Models
+
+<div class="stepcontainer">
+
+    <input type="hidden" id="@Html.IdFor(model => model.Step)" name="@Html.NameFor(model => model.Step)" value="@Model.Step" />
+    <input type="hidden" id="@Html.IdFor(model => model.SitesJson)" name="@Html.NameFor(model => model.SitesJson)" value="@Model.SitesJson" />
+
+    <div class="ms-font-xxl">Preview Batch Process</div>
+
+    <div class="ms-Grid inputForm">
+        <div class="ms-Grid-row">
+            <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                <table class="ms-Table templatesTable">
+                    <thead>
+                        <tr>
+                            <th class="noOverflow">Title</th>
+                            <th class="noOverflow">URL</th>
+                            <th>Language</th>
+                            <th>Time Zone</th>
+                            <th>Site Policy</th>
+                            <th>Site Collection Admins</th>
+                            <th>Storage Quota (MB)</th>
+                            <th>External Sharing</th>
+                            <th>PnP Partner Pack</th>
+                            <th>Responsive UI</th>
+                            <th>Branding</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var site in Model.Sites.siteCollection)
+                        {
+                            <tr>
+                                <td class="noOverflow">@site.title</td>
+                                <td class="noOverflow">@($"{site.managedPath}/{site.relativeUrl}")</td>
+                                <td>@site.language</td>
+                                <td>@site.timeZone</td>
+                                <td>@site.sitePolicy</td>
+                                <td>@site.primarySiteCollectionAdmin<br/>@site.secondarySiteCollectionAdmin</td>
+                                <td>@site.storageMaximulLevel (Warning: @site.storageWarningLevel)</td>
+                                <td>@site.externalSharingEnabled</td>
+                                <td>@site.partnerPackExtensionsEnabled</td>
+                                <td>@site.responsiveDesignEnabled</td>
+                                <td>@site.applyTenantBranding</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <button class="ms-Button PreviousStep">
+        <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+        <span class="ms-Button-label">Previous</span>
+        <span class="ms-Button-description">Go back to template selection</span>
+    </button>
+    <button class="ms-Button ms-Button--primary NextStep">
+        <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+        <span class="ms-Button-label">Start</span>
+        <span class="ms-Button-description">Start the batch process</span>
+    </button>
+
+</div>
+
+
+

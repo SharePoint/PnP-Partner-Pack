@@ -2,7 +2,7 @@
 @using OfficeDevPnP.PartnerPack.SiteProvisioning.Models
 
 @{
-    if (Model.Scope != OfficeDevPnP.PartnerPack.Infrastructure.TemplateScope.Site)
+    if (Model.Scope != OfficeDevPnP.PartnerPack.Infrastructure.TargetScope.Site)
     {
         ViewBag.Title = "Create Sub Site";
     }
@@ -19,7 +19,7 @@
     @Html.HiddenFor(model => model.Scope)
     @Html.HiddenFor(model => model.ParentSiteUrl)
 
-    <div>
+    <div id="SiteCreationWizardContainer">
         @Html.Partial("~/Views/Shared/_WorkingOnIt.cshtml")
         <div id="SiteCreationWizard">
             <div id="@CreateSiteStep.TemplateSelection">
@@ -35,12 +35,6 @@
     </div>
     }
 
-    <div>&nbsp;</div>
-
-    <div>
-        <a href="javascript:history.back();">Back</a>
-    </div>
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 
@@ -48,10 +42,12 @@
         $(function () {
 
             // Hide the Working On It panel
-            $("#WorkingOnIt").hide();
+            // $("#WorkingOnIt").hide();
 
             // Handle wizard steps
             $(document).on("click", ".NextStep,.PreviousStep", moveWizardStep);
+
+            $(document).on("click", ".BackButton", function () { history.back(); });
 
             // Handle template selection
             $(document).on("click", ".provtemplate", function () {
@@ -59,10 +55,17 @@
                     .val($(this).attr("data-pnp-template-url"));
                 $(".provtemplate").removeClass("active");
                 $(this).addClass("active");
+
+                $(".WarningMessage").text("");
             });
+
+            $(document).on("click", ".templatesSearchButton", searchTemplates);
         });
 
-        function moveWizardStep() {
+        function moveWizardStep(e) {
+
+            // Prevent default event
+            e.preventDefault();
 
             var direction = $(this).hasClass("NextStep") ? "forward" : "backward";
             $("#SiteCreationWizard > div").hide();
@@ -74,6 +77,13 @@
                     if ($("#ProvisioningTemplateUrl").val() != "")
                     {
                         currentStep = "@CreateSiteStep.SiteInformation";
+                    }
+                    else
+                    {
+                        $(".WarningMessage").text("Please select a template!");
+                        $("#SiteCreationWizard > div").show();
+                        $("#WorkingOnIt").hide();
+                        return;
                     }
                     break;
                 case "@CreateSiteStep.SiteInformation":
@@ -88,18 +98,18 @@
 
             $.ajax({
                 method: "POST",
-                url: "@Url.Action(Model.Scope == OfficeDevPnP.PartnerPack.Infrastructure.TemplateScope.Site ? "CreateSiteCollection" : "CreateSubSite")",
+                url: "@Url.Action(Model.Scope == OfficeDevPnP.PartnerPack.Infrastructure.TargetScope.Site ? "CreateSiteCollection" : "CreateSubSite")",
                 data: $("form").serialize(),
                 success: function (result) {
                     if (result) {
                         $("#@Html.IdFor(model => model.Step)").remove();
 
                         var htmlResult = $.parseHTML(result);
-                        var newStep = $("#@Html.IdFor(model => model.Step )", htmlResult).val();
+                        var newStep = $("#@Html.IdFor(model => model.Step)", htmlResult).val();
                         $("#WorkingOnIt").hide();
                         $("#" + newStep).html(result).show();
 
-                        spApp.setup();
+                        applyOfficeUIFabricStyles();
                     }
                 },
                 error: function (xhr, status, error) {
@@ -108,5 +118,64 @@
             });
         }
 
+        function searchTemplates(e) {
+
+            // Prevent default event
+            if (e != null && e != undefined) {
+                e.preventDefault();
+            }
+            
+            var searchText = $("#templatesSearch").val();
+            var templatesProvider = $("#templateProviders").val();
+
+            if ((searchText == "" || searchText == null || searchText == undefined) && (e != null && e != undefined))
+            {
+                $(".WarningMessage").text("Please provide a text to search for!");
+                $("#SiteCreationWizard > div").show();
+                $("#WorkingOnIt").hide();
+                return;
+            }
+            else
+            {
+                $(".WarningMessage").text("");
+            }
+
+            $("#@(Html.IdFor(model => model.TemplatesProviderTypeName))").val(templatesProvider);
+
+            $("#TemplatesSelectionList").empty();
+            $("#WorkingOnIt").prependTo($("#TemplatesSelectionList"));
+            $("#WorkingOnIt").show();
+            
+            $.ajax({
+                method: "POST",
+                url: "@Url.Action("SearchTemplates")",
+                data: {
+                    scope: "@(Model.Scope)",
+                    parentSiteUrl: "@(Model.ParentSiteUrl)",
+                    templatesProvider: templatesProvider,
+                    searchText: searchText,
+                },
+                success: function (result) {
+                    if (result) {
+
+                        var htmlResult = $.parseHTML(result);
+
+                        $("#WorkingOnIt").hide();
+                        $("#WorkingOnIt").prependTo($("#SiteCreationWizardContainer"));
+
+                        $("#TemplatesSelectionList").html(result).show();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    $("#WorkingOnIt").hide();
+                    $("#WorkingOnIt").prependTo($("#SiteCreationWizardContainer"));
+
+                    alert("Error searching for templates: " + error);
+                }
+            });
+        }
+
     </script>
 }
+
+<img src="https://telemetrypartnerpack.sharepointpnp.com/Home/CreateSite" />

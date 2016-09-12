@@ -74,6 +74,10 @@
       <HintPath>..\packages\Microsoft.Data.Services.Client.5.7.0\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Graph, Version=1.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Graph.1.0.1\lib\portable-net45+netcore45+wpa81+win8\Microsoft.Graph.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.IdentityModel, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
@@ -91,63 +95,63 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Office.Client.Policy, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5521.1200\lib\net45\Microsoft.Office.Client.Policy.dll</HintPath>
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5626.1200\lib\net45\Microsoft.Office.Client.Policy.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Office.Client.TranslationServices, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5521.1200\lib\net45\Microsoft.Office.Client.TranslationServices.dll</HintPath>
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5626.1200\lib\net45\Microsoft.Office.Client.TranslationServices.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Office.SharePoint.Tools, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5521.1200\lib\net45\Microsoft.Office.SharePoint.Tools.dll</HintPath>
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5626.1200\lib\net45\Microsoft.Office.SharePoint.Tools.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Online.SharePoint.Client.Tenant, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5521.1200\lib\net45\Microsoft.Online.SharePoint.Client.Tenant.dll</HintPath>
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5626.1200\lib\net45\Microsoft.Online.SharePoint.Client.Tenant.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ProjectServer.Client, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5521.1200\lib\net45\Microsoft.ProjectServer.Client.dll</HintPath>
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5626.1200\lib\net45\Microsoft.ProjectServer.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.SharePoint.Client, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5521.1200\lib\net45\Microsoft.SharePoint.Client.dll</HintPath>
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5626.1200\lib\net45\Microsoft.SharePoint.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.SharePoint.Client.DocumentManagement, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5521.1200\lib\net45\Microsoft.SharePoint.Client.DocumentManagement.dll</HintPath>
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5626.1200\lib\net45\Microsoft.SharePoint.Client.DocumentManagement.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.SharePoint.Client.Publishing, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5521.1200\lib\net45\Microsoft.SharePoint.Client.Publishing.dll</HintPath>
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5626.1200\lib\net45\Microsoft.SharePoint.Client.Publishing.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.SharePoint.Client.Runtime, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5521.1200\lib\net45\Microsoft.SharePoint.Client.Runtime.dll</HintPath>
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5626.1200\lib\net45\Microsoft.SharePoint.Client.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.SharePoint.Client.Runtime.Windows, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5521.1200\lib\net45\Microsoft.SharePoint.Client.Runtime.Windows.dll</HintPath>
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5626.1200\lib\net45\Microsoft.SharePoint.Client.Runtime.Windows.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.SharePoint.Client.Search, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5521.1200\lib\net45\Microsoft.SharePoint.Client.Search.dll</HintPath>
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5626.1200\lib\net45\Microsoft.SharePoint.Client.Search.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.SharePoint.Client.Search.Applications, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5521.1200\lib\net45\Microsoft.SharePoint.Client.Search.Applications.dll</HintPath>
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5626.1200\lib\net45\Microsoft.SharePoint.Client.Search.Applications.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.SharePoint.Client.Taxonomy, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5521.1200\lib\net45\Microsoft.SharePoint.Client.Taxonomy.dll</HintPath>
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5626.1200\lib\net45\Microsoft.SharePoint.Client.Taxonomy.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.SharePoint.Client.UserProfiles, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5521.1200\lib\net45\Microsoft.SharePoint.Client.UserProfiles.dll</HintPath>
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5626.1200\lib\net45\Microsoft.SharePoint.Client.UserProfiles.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.SharePoint.Client.WorkflowServices, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5521.1200\lib\net45\Microsoft.SharePoint.Client.WorkflowServices.dll</HintPath>
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.5626.1200\lib\net45\Microsoft.SharePoint.Client.WorkflowServices.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Storage, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -158,8 +162,8 @@
       <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OfficeDevPnP.Core, Version=2.6.1608.0, Culture=neutral, PublicKeyToken=3751622786b357c2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharePointPnPCoreOnline.2.6.1608.0\lib\net45\OfficeDevPnP.Core.dll</HintPath>
+    <Reference Include="OfficeDevPnP.Core, Version=2.7.1609.3, Culture=neutral, PublicKeyToken=3751622786b357c2, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharePointPnPCoreOnline.2.7.1609.3\lib\net45\OfficeDevPnP.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -271,31 +275,36 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="Binders\PeoplePickerUserBinder.cs" />
     <Compile Include="Components\LightGraphUser.cs" />
     <Compile Include="Components\MicrosoftGraphHelper.cs" />
     <Compile Include="Components\MSGraphAPIContext.cs" />
     <Compile Include="Components\MSGraphAPISettings.cs" />
     <Compile Include="Components\PeoplePickerHelper.cs" />
+    <Compile Include="Binders\PrincipalViewModelBinder.cs" />
     <Compile Include="Components\SessionADALCache.cs" />
     <Compile Include="Components\SystemWebCookieManager.cs" />
+    <Compile Include="Components\UserUtility.cs" />
+    <Compile Include="Controllers\GovernanceController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PersonaController.cs" />
     <Compile Include="Filters\SharePointContextFilterAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\AdalTokenCache.cs" />
-    <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\ApplyProvisioningTemplateViewModel.cs" />
+    <Compile Include="Models\BrandingViewModel.cs" />
     <Compile Include="Models\CreateSiteCollectionViewModel.cs" />
     <Compile Include="Models\CreateSiteViewModel.cs" />
     <Compile Include="Models\CreateSubSiteViewModel.cs" />
     <Compile Include="Models\IndexViewModel.cs" />
     <Compile Include="Models\JobViewModel.cs" />
     <Compile Include="Models\MyProvisionedSitesViewModel.cs" />
-    <Compile Include="Models\PeoplePickerUser.cs" />
+    <Compile Include="Models\PrincipalViewModel.cs" />
     <Compile Include="Models\SaveTemplateViewModel.cs" />
+    <Compile Include="Models\SearchTemplatesViewModel.cs" />
     <Compile Include="Models\SettingsViewModel.cs" />
+    <Compile Include="Models\SiteCollectionsBatchViewModel.cs" />
+    <Compile Include="Models\UpdateTemplatesViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SharePointContext.cs" />
     <Compile Include="Startup.cs" />
@@ -303,10 +312,19 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AppIcon.png" />
+    <Content Include="SupportFiles\BatchModel.xml" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\fabric.components.css" />
+    <Content Include="Content\fabric.components.min.css" />
+    <Content Include="Content\fabric.components.rtl.css" />
+    <Content Include="Content\fabric.components.rtl.min.css" />
+    <Content Include="Content\fabric.css" />
+    <Content Include="Content\fabric.min.css" />
+    <Content Include="Content\fabric.rtl.css" />
+    <Content Include="Content\fabric.rtl.min.css" />
     <Content Include="Content\Office365SuiteBar.css" />
     <Content Include="Content\peoplepickercontrol.css" />
     <Content Include="Content\SupportedUILanguages.xml" />
@@ -324,17 +342,51 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Content\sass\_Office.Color.Variables.scss" />
+    <Content Include="Content\sass\_Fabric.ZIndex.Variables.scss" />
+    <Content Include="Content\sass\_Fabric.Utilities.scss" />
+    <Content Include="Content\sass\_Fabric.Typography.Variables.scss" />
+    <Content Include="Content\sass\_Fabric.Typography.scss" />
+    <Content Include="Content\sass\_Fabric.Typography.Language.Overrides.scss" />
+    <Content Include="Content\sass\_Fabric.Typography.Fonts.scss" />
+    <Content Include="Content\sass\_Fabric.Responsive.Variables.scss" />
+    <Content Include="Content\sass\_Fabric.Responsive.Utilities.Variables.scss" />
+    <Content Include="Content\sass\_Fabric.Mixins.scss" />
+    <Content Include="Content\sass\_Fabric.Mixins.RTL.scss" />
+    <Content Include="Content\sass\_Fabric.Icons.scss" />
+    <Content Include="Content\sass\_Fabric.Grid.scss" />
+    <Content Include="Content\sass\_Fabric.Common.scss" />
+    <Content Include="Content\sass\_Fabric.Color.Variables.scss" />
+    <Content Include="Content\sass\_Fabric.Color.Mixins.scss" />
+    <Content Include="Content\sass\_Fabric.Animations.scss" />
+    <Content Include="Content\sass\_Fabric.Animations.RTL.scss" />
+    <Content Include="Content\sass\Fabric.Utilities.Output.scss" />
+    <Content Include="Content\sass\Fabric.Typography.Output.scss" />
+    <Content Include="Content\sass\Fabric.Typography.Language.Overrides.Output.scss" />
+    <Content Include="Content\sass\Fabric.Typography.Fonts.Output.scss" />
+    <Content Include="Content\sass\Fabric.scss" />
+    <Content Include="Content\sass\Fabric.RTL.scss" />
+    <Content Include="Content\sass\Fabric.Responsive.Utilities.Output.scss" />
+    <Content Include="Content\sass\Fabric.Icons.RTL.Output.scss" />
+    <Content Include="Content\sass\Fabric.Icons.Output.scss" />
+    <Content Include="Content\sass\Fabric.Icons.Font.Output.scss" />
+    <Content Include="Content\sass\Fabric.Grid.Output.scss" />
+    <Content Include="Content\sass\Fabric.Components.scss" />
+    <Content Include="Content\sass\Fabric.Color.Mixins.Output.scss" />
+    <Content Include="Content\sass\Fabric.Animations.RTL.Output.scss" />
+    <Content Include="Content\sass\Fabric.Animations.Output.scss" />
     <None Include="Properties\PublishProfiles\Local-File-System.pubxml" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\csompeoplepickercontrol.js" />
     <Content Include="Scripts\custom.js" />
+    <Content Include="Scripts\custom.principals.js" />
     <Content Include="Scripts\jquery-2.2.1.js" />
     <Content Include="Scripts\jquery-2.2.1.min.js" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.2.3.js" />
     <Content Include="Scripts\jquery-2.2.3.min.js" />
-    <Content Include="Scripts\Jquery.NavBar.js" />
+    <Content Include="Scripts\jquery.fabric.js" />
+    <Content Include="Scripts\jquery.fabric.min.js" />
     <Content Include="Scripts\jquery-2.2.1.min.map" />
     <Content Include="Scripts\jquery-2.2.3.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -343,9 +395,6 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Scripts\peoplepickercontrol.js" />
-    <Content Include="Scripts\csompeoplepickercontrol_resources.en.js" />
-    <Content Include="Scripts\peoplepickercontrol_resources.en.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
@@ -357,7 +406,6 @@
     <Content Include="Templates\CustomBar\SPO-CustomBar.js" />
     <Content Include="Templates\Overrides\PnP-Partner-Pack-Overrides.xml" />
     <Content Include="Templates\Overrides\PnP-Partner-Pack-Overrides.js" />
-    <Content Include="Scripts\sppeoplepicker.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Templates\PnP-Empty-Site.xml" />
     <Content Include="Templates\PnP-Empty-Sub-Site.xml" />
@@ -380,7 +428,6 @@
     <Content Include="Views\Home\CreateSite.cshtml" />
     <Content Include="Views\Home\SaveSiteAsTemplate.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\LocaleID.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\PeoplePickerUser[].cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SitePolicy.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\TimeZoneInfo.cshtml" />
     <Content Include="Views\Shared\_Office365SuiteBar.cshtml" />
@@ -400,6 +447,29 @@
     <Content Include="Views\Home\SubSiteInformation.cshtml" />
     <Content Include="Views\Home\MyProvisionedSitesGrid.cshtml" />
     <Content Include="Views\Shared\_WorkingOnIt.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Boolean.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Double.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FileUpload.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Int32.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Multilines.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\MultipleFilesUpload.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Principals.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\RadioButtons.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\String.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Time.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Int64.cshtml" />
+    <Content Include="Views\Home\SearchTemplates.cshtml" />
+    <Content Include="Views\Governance\Temporary.cshtml" />
+    <Content Include="Views\Governance\Branding.cshtml" />
+    <Content Include="Views\Governance\RefreshSites.cshtml" />
+    <Content Include="Views\Governance\SiteCollectionsBatch.cshtml" />
+    <None Include="SupportFiles\PnPPartnerPackBatch.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="Views\Governance\BatchStartup.cshtml" />
+    <Content Include="Views\Governance\BatchFileUploaded.cshtml" />
+    <Content Include="Views\Governance\BatchScheduled.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

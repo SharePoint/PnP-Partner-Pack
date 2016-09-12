@@ -4,12 +4,23 @@
 
     <input type="hidden" id="@Html.IdFor(model => model.Step)" name="@Html.NameFor(model => model.Step)" value="@Model.Step" />
 
-    <div class="table">
-        <div class="row">
-            <div class="col-sm-12">
+    <div class="ms-Grid">
+        <div class="ms-Grid-row">
+            <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
                 The Site Provisioning Job has been scheduled. The ID assigned to the Job is: @Model.JobId.
             </div>
         </div>
     </div>
+
+    @if (Model.Scope == OfficeDevPnP.PartnerPack.Infrastructure.TargetScope.Web)
+    {
+        <div>
+            <button class="ms-Button BackButton">
+                <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+                <span class="ms-Button-label">Back</span>
+                <span class="ms-Button-description">Go back</span>
+            </button>
+        </div>
+    }
 
 </div>

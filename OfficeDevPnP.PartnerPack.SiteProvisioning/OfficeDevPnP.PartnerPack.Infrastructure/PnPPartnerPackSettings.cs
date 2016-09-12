@@ -9,6 +9,7 @@ using System.Xml.Linq;
 using OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml;
 using System.Xml;
 using OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers;
+using System.Runtime.Remoting.Messaging;
 
 namespace OfficeDevPnP.PartnerPack.Infrastructure
 {
@@ -152,6 +153,8 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
                 return (_tenant);
             }
         }
+
+        public static String Authority = AADInstance + Tenant;
 
         /// <summary>
         /// Provides the URL of the PnP Partner Pack Infrastructural Site
@@ -338,5 +341,51 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
         /// The name of the Azure Storage Queue used for Continously running Jobs
         /// </summary>
         public const String StorageQueueName = "pnppartnerpackjobsqueue";
+
+        public static String ParentSiteUrl {
+            get
+            {
+                return (CallContext.LogicalGetData(typeof(PnPPartnerPackSettings).Name + ".ParentSiteUrl") as String);
+            }
+            set
+            {
+                CallContext.LogicalSetData(typeof(PnPPartnerPackSettings).Name + ".ParentSiteUrl", value);
+            }
+        }
+
+        public static IReadOnlyDictionary<String, ITemplatesProvider> TemplatesProviders
+        {
+            get
+            {
+                Dictionary<String, ITemplatesProvider> providers = new Dictionary<String, ITemplatesProvider>();
+
+                // Browse through the configured Job Handlers
+                if (_configuration.TemplatesProviders != null)
+                {
+                    // Go through the enabled template providers
+                    foreach (var provider in _configuration.TemplatesProviders.Where(p => p.enabled))
+                    {
+                        Type providerType = Type.GetType(provider.type, true);
+                        ITemplatesProvider providerInstance = (ITemplatesProvider)Activator.CreateInstance(providerType);
+
+                        if(provider.Configuration != null)
+                        {
+                            // Convert it into a XElement
+                            using (XmlReader reader = new XmlNodeReader(provider.Configuration))
+                            {
+                                XElement configuration = XElement.Load(reader);
+
+                                // Initialize the Templates Provider
+                                providerInstance.Init(configuration);
+                            }
+                        }
+
+                        providers.Add(provider.name, providerInstance);
+                    }
+                }
+
+                return (providers);
+            }
+        }
     }
 }

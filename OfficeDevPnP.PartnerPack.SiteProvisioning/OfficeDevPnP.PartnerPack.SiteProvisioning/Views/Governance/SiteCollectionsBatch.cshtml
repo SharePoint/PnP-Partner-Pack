@@ -1,0 +1,104 @@
+﻿@model OfficeDevPnP.PartnerPack.SiteProvisioning.Models.SiteCollectionsBatchViewModel
+
+@using OfficeDevPnP.PartnerPack.SiteProvisioning.Models
+
+@{
+    ViewBag.Title = "Site Collections Batch";
+}
+
+<div class="ms-Grid">
+    <div class="ms-Grid-row">
+        <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12 ms-font-m">
+
+            @using (Html.BeginForm("SiteCollectionsBatch", "Governance", "", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div id="BatchWizardContainer">
+                    @Html.Partial("~/Views/Shared/_WorkingOnIt.cshtml")
+                    <div id="BatchWizard">
+                        <div id="@BatchStep.BatchStartup">
+                            @Html.Partial("BatchStartup")
+                        </div>
+                        <div id="@BatchStep.BatchFileUploaded">
+                        </div>
+                        <div id="@BatchStep.BatchScheduled">
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(function () {
+
+            // Hide the Working On It panel
+            $("#WorkingOnIt").hide();
+
+            // Handle wizard steps
+            $(document).on("click", ".NextStep,.PreviousStep", moveWizardStep);
+
+            $(document).on("click", ".BackButton", function () { history.back(); });
+        });
+
+        function moveWizardStep(e) {
+
+            // Prevent default event
+            e.preventDefault();
+
+            var direction = $(this).hasClass("NextStep") ? "forward" : "backward";
+            $("#BatchWizard > div").hide();
+            $("#WorkingOnIt").show();
+
+            var currentStep = $("#@Html.IdFor(model => model.Step)").val();
+            switch (currentStep) {
+                case "@BatchStep.BatchStartup":
+                    if ($("#ProvisioningTemplateUrl").val() != "") {
+                        currentStep = "@BatchStep.BatchFileUploaded";
+                    }
+                    break;
+                case "@BatchStep.BatchFileUploaded":
+                    currentStep = direction == "forward" ? "@BatchStep.BatchScheduled" : "@BatchStep.BatchStartup";
+                    break;
+            }
+
+            $("#@Html.IdFor(model => model.Step)").val(currentStep);
+
+            $.ajax({
+                method: "POST",
+                url: "@Url.Action("SiteCollectionsBatch")",
+                data: new FormData( $("form")[0] ),
+                processData: false,
+                contentType: false,
+                success: function (result) {
+                    if (result) {
+                        $("#@Html.IdFor(model => model.Step)").remove();
+
+                        var htmlResult = $.parseHTML(result);
+                        var newStep = $("#@Html.IdFor(model => model.Step)", htmlResult).val();
+                        $("#WorkingOnIt").hide();
+                        $("#" + newStep).html(result).show();
+
+                        applyOfficeUIFabricStyles();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    if (currentStep == "@BatchStep.BatchFileUploaded")
+                    {
+                        alert("Invalid batch file! Please provide another file.");
+                        location.href = "/Governance/SiteCollectionsBatch";
+                    }
+                }
+            });
+        }
+
+    </script>
+}
+
+<img src="https://telemetrypartnerpack.sharepointpnp.com/Governance/SiteCollectionsBatch" />

@@ -29,16 +29,17 @@
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
+    <div class="inputForm">
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.SelectedSiteCollection, htmlAttributes: new { @class = "control-label col-md-3" })
-            <div class="col-md-6">
-                <div class="dropdown-toggle">
+        <div class="ms-Grid">
+            <div class="ms-Grid-row">
+                <div class="ms-Grid-col ms-u-sm4 ms-u-md2 ms-u-lg2">
+                    @Html.LabelFor(model => model.SelectedSiteCollection, htmlAttributes: new { @class = "ms-Label" })
+                </div>
+                <div class="ms-Grid-col ms-u-sm8 ms-u-md10 ms-u-lg10">
                     @Html.DropDownListFor(model => model.SelectedSiteCollection, GetSiteCollections(), new { @class = "form-control", style = "width: 400px;" })
-                    @Html.ValidationMessageFor(model => model.SelectedSiteCollection)
                 </div>
             </div>
         </div>
@@ -50,10 +51,6 @@
         </div>
     </div>
 }
-
-<div>
-    <a href="javascript:history.back();">Back</a>
-</div>
 
 <script language="javascript">
 
@@ -98,7 +95,10 @@
         });
     }
 
-    function togglePnPPartnerPack() {
+    function togglePnPPartnerPack(e) {
+
+        // Prevent default event
+        e.preventDefault();
 
         // Get the currently selected site collection and action to perform
         var siteCollectionUri = $("#SelectedSiteCollection > option:selected").val();
@@ -129,3 +129,5 @@
     }
 
 </script>
+
+<img src="https://telemetrypartnerpack.sharepointpnp.com/Home/Settings" />

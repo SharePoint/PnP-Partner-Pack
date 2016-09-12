@@ -5,81 +5,83 @@
 
     <input type="hidden" id="@Html.IdFor(model => model.Step)" name="@Html.NameFor(model => model.Step)" value="@Model.Step" />
 
-    <h3>Site Configuration</h3>
+    <div class="ms-font-xxl">Site Configuration</div>
 
-    <div class="form-horizontal">
+    <div class="inputForm">
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-3" })
-            <div class="col-md-9">
-                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+
+        <div class="ms-Grid">
+
+            <div class="ms-Grid-row">
+                <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                    @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.RelativeUrl, htmlAttributes: new { @class = "control-label col-md-3" })
-            <div class="col-md-9">
-                @if (Model.Scope == OfficeDevPnP.PartnerPack.Infrastructure.TemplateScope.Site)
-                {
-                    @Html.EditorFor(model => ((CreateSiteCollectionViewModel)model).ManagedPath)
-                }
-                @Html.EditorFor(model => model.RelativeUrl, new { htmlAttributes = new { @class = "form-control", style = "width: 280px; display: inline;" } })
-                @Html.ValidationMessageFor(model => model.RelativeUrl, "", new { @class = "text-danger" })
+            <div class="ms-Grid-row">
+                <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                    @if (Model.Scope == OfficeDevPnP.PartnerPack.Infrastructure.TargetScope.Site)
+                    {
+                        @Html.EditorFor(model => ((CreateSiteCollectionViewModel)model).ManagedPath)
+                    }
+                    @Html.EditorFor(model => model.RelativeUrl, new { htmlAttributes = new { @class = "form-control", style = "width: 280px; display: inline;" } })
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.SitePolicy, htmlAttributes: new { @class = "control-label col-md-3" })
-            <div class="col-md-9">
-                @Html.EditorFor(model => model.SitePolicy, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.SitePolicy, "", new { @class = "text-danger" })
+            <div class="ms-Grid-row">
+                <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                    @Html.EditorFor(model => model.SitePolicy, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-3" })
-            <div class="col-md-9">
-                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            <div class="ms-Grid-row">
+                <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                    @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Language, htmlAttributes: new { @class = "control-label col-md-3" })
-            <div class="col-md-9">
-                @Html.EditorFor(model => model.Language, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Language, "", new { @class = "text-danger" })
+            <div class="ms-Grid-row">
+                <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                    @Html.EditorFor(model => model.Language, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.TimeZone, htmlAttributes: new { @class = "control-label col-md-3" })
-            <div class="col-md-9">
-                @Html.EditorFor(model => model.TimeZone, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.TimeZone, "", new { @class = "text-danger" })
+            <div class="ms-Grid-row">
+                <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                    @Html.EditorFor(model => model.TimeZone, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
             </div>
-        </div>
 
-        @if (Model.Scope == OfficeDevPnP.PartnerPack.Infrastructure.TemplateScope.Site)
-        {
-            @Html.Partial("SiteCollectionInformation")
-        }
+            @if (Model.Scope == OfficeDevPnP.PartnerPack.Infrastructure.TargetScope.Site)
+            {
+                @Html.Partial("SiteCollectionInformation")
+            }
 
-        @if (Model.Scope == OfficeDevPnP.PartnerPack.Infrastructure.TemplateScope.Web)
-        {
-            @Html.Partial("SubSiteInformation")
-        }
+            @if (Model.Scope == OfficeDevPnP.PartnerPack.Infrastructure.TargetScope.Web)
+            {
+                @Html.Partial("SubSiteInformation")
+            }
 
-
-        <div class="form-group">
-            <div class="col-md-9 col-md-offset-3">
-                <input type="button" class="btn-default btn PreviousStep" value="Previous" />
-                <input type="button" class="btn-primary btn NextStep" value="Next" />
+            <div class="ms-Grid-row">
+                <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                    @Html.EditorFor(model => model.ApplyTenantBranding)
+                </div>
             </div>
+
         </div>
 
     </div>
+
+    <button class="ms-Button PreviousStep">
+        <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+        <span class="ms-Button-label">Previous</span>
+        <span class="ms-Button-description">Go back to template selection</span>
+    </button>
+    <button class="ms-Button ms-Button--primary NextStep">
+        <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+        <span class="ms-Button-label">Next</span>
+        <span class="ms-Button-description">Go forward to parameters</span>
+    </button>
 
 </div>

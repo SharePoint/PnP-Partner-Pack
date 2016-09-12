@@ -1,0 +1,14 @@
+﻿@model List<HttpPostedFileBase>
+@{
+    var fieldId = Html.IdFor(m => m);
+    var fieldName = Html.NameFor(m => m);
+    var isRequired = ViewData.ModelMetadata.IsRequired;
+    var isReadOnly = ViewData.Keys.Contains("readonly");
+
+}
+
+<div id="@($"{fieldId}Div")">
+    <label class="ms-Label @(isRequired ? "is-required" : "")"  id="@($"{fieldId}Label")">@(!String.IsNullOrEmpty(ViewData.ModelMetadata.Description) ? ViewData.ModelMetadata.Description : ViewData.ModelMetadata.DisplayName)</label>
+    <input type="file" id="@fieldId" name="@fieldName" multiple="multiple" @((isReadOnly) ? "readonly" : "") />
+    <br/>
+</div>

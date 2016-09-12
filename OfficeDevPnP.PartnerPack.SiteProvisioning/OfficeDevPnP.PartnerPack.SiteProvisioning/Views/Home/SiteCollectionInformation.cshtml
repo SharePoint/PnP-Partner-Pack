@@ -1,73 +1,57 @@
 ﻿@model OfficeDevPnP.PartnerPack.SiteProvisioning.Models.CreateSiteCollectionViewModel
 
-<div class="form-group">
-    @Html.LabelFor(model => model.PrimarySiteCollectionAdmin, htmlAttributes: new { @class = "control-label col-md-3" })
-    <div class="col-md-6">
+<div class="ms-Grid-row">
+    <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
         @Html.EditorFor(model => model.PrimarySiteCollectionAdmin)
-        @Html.ValidationMessageFor(model => model.PrimarySiteCollectionAdmin, "", new { @class = "text-danger" })
     </div>
 </div>
 
-<div class="form-group">
-    @Html.LabelFor(model => model.SecondarySiteCollectionAdmin, htmlAttributes: new { @class = "control-label col-md-3" })
-    <div class="col-md-6">
+<div class="ms-Grid-row">
+    <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
         @Html.EditorFor(model => model.SecondarySiteCollectionAdmin)
-        @Html.ValidationMessageFor(model => model.SecondarySiteCollectionAdmin, "", new { @class = "text-danger" })
     </div>
 </div>
 
-<div class="form-group">
-    @Html.LabelFor(model => model.StorageMaximumLevel, htmlAttributes: new { @class = "control-label col-md-3" })
-    <div class="col-md-9">
+<div class="ms-Grid-row">
+    <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
         @Html.EditorFor(model => model.StorageMaximumLevel, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.StorageMaximumLevel, "", new { @class = "text-danger" })
     </div>
 </div>
 
-<div class="form-group">
-    @Html.LabelFor(model => model.StorageWarningLevel, htmlAttributes: new { @class = "control-label col-md-3" })
-    <div class="col-md-9">
+<div class="ms-Grid-row">
+    <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
         @Html.EditorFor(model => model.StorageWarningLevel, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.StorageWarningLevel, "", new { @class = "text-danger" })
     </div>
 </div>
 
-<div class="form-group">
-    @Html.LabelFor(model => model.UserCodeMaximumLevel, htmlAttributes: new { @class = "control-label col-md-3" })
-    <div class="col-md-9">
+@*
+<div class="ms-Grid-row">
+    <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
         @Html.EditorFor(model => model.UserCodeMaximumLevel, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.UserCodeMaximumLevel, "", new { @class = "text-danger" })
     </div>
 </div>
 
-<div class="form-group">
-    @Html.LabelFor(model => model.UserCodeWarningLevel, htmlAttributes: new { @class = "control-label col-md-3" })
-    <div class="col-md-9">
+<div class="ms-Grid-row">
+    <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
         @Html.EditorFor(model => model.UserCodeWarningLevel, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.UserCodeWarningLevel, "", new { @class = "text-danger" })
     </div>
 </div>
+*@
 
-<div class="form-group">
-    @Html.LabelFor(model => model.ExternalSharingEnabled, htmlAttributes: new { @class = "control-label col-md-3" })
-    <div class="col-md-9">
+<div class="ms-Grid-row">
+    <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
         @Html.EditorFor(model => model.ExternalSharingEnabled)
-        @Html.ValidationMessageFor(model => model.ExternalSharingEnabled, "", new { @class = "text-danger" })
     </div>
 </div>
 
-<div class="form-group">
-    @Html.LabelFor(model => model.PartnerPackExtensionsEnabled, htmlAttributes: new { @class = "control-label col-md-3" })
-    <div class="col-md-9">
+<div class="ms-Grid-row">
+    <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
         @Html.EditorFor(model => model.PartnerPackExtensionsEnabled)
-        @Html.ValidationMessageFor(model => model.PartnerPackExtensionsEnabled, "", new { @class = "text-danger" })
     </div>
 </div>
 
-<div class="form-group">
-    @Html.LabelFor(model => model.ResponsiveDesignEnabled, htmlAttributes: new { @class = "control-label col-md-3" })
-    <div class="col-md-9">
+<div class="ms-Grid-row">
+    <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
         @Html.EditorFor(model => model.ResponsiveDesignEnabled)
-        @Html.ValidationMessageFor(model => model.ResponsiveDesignEnabled, "", new { @class = "text-danger" })
     </div>
 </div>

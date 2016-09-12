@@ -4,28 +4,26 @@
     ViewBag.Title = "My Site Collections";
 }
 
-<div class="table">
-    <div class="row">
-        <div class="col-md-12">
+<div class="ms-Grid">
+    <div class="ms-Grid-row">
+        <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12 ms-font-m">
             Here you can find the list of your provisioned site collections.
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-12">
+    <div class="ms-Grid-row">
+        <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
             &nbsp;
         </div>
     </div>
 
-    <div>
-        @Html.Partial("~/Views/Shared/_WorkingOnIt.cshtml")
-        <div id="SiteCollectionsList">
+    <div class="ms-Grid-row">
+        <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+            @Html.Partial("~/Views/Shared/_WorkingOnIt.cshtml")
+            <div id="SiteCollectionsList">
+            </div>
         </div>
     </div>
 
-</div>
-
-<div>
-    <a href="javascript:history.back();">Back</a>
 </div>
 
 <script language="javascript">
@@ -70,3 +68,4 @@
 </script>
 
 
+<img src="https://telemetrypartnerpack.sharepointpnp.com/Home/MyProvisionedSites" />

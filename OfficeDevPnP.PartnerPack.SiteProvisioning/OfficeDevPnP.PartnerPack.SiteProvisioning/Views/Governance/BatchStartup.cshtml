@@ -1,0 +1,40 @@
+﻿@model OfficeDevPnP.PartnerPack.SiteProvisioning.Models.SiteCollectionsBatchViewModel
+
+@using OfficeDevPnP.PartnerPack.SiteProvisioning.Models
+
+<div class="stepcontainer">
+
+    <input type="hidden" id="@Html.IdFor(model => model.Step)" name="@Html.NameFor(model => model.Step)" value="@Model.Step" />
+
+    <div class="ms-font-xxl">Upload Batch File</div>
+
+    <div class="ms-Grid inputForm">
+        <div class="ms-Grid-row">
+            <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12 ms-font-m">
+                Use this page to create a batch of Site Collections.<br />
+                You need to upload a batch XML file (accordingly to the <a target="_blank" href="~/SupportFiles/BatchModel.xml">following model file</a>).
+                The XML file adheres to <a target="_blank" href="~/SupportFiles/PnPPartnerPackBatch.xsd">this XML Schema</a>.
+            </div>
+        </div>
+        <div class="ms-Grid-row">
+            <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                <label class="ms-Label" id="batchFileLabel">Batch File</label>
+                <input type="file" name="batchFile" id="batchFile" class="form-control" />
+            </div>
+        </div>
+    </div>
+
+    <button class="ms-Button BackButton">
+        <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+        <span class="ms-Button-label">Back</span>
+        <span class="ms-Button-description">Go back</span>
+    </button>
+    <button class="ms-Button ms-Button--primary NextStep">
+        <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+        <span class="ms-Button-label">Upload</span>
+        <span class="ms-Button-description">Upload the batch file</span>
+    </button>
+
+</div>
+
+

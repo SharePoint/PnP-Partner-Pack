@@ -1,9 +1,16 @@
 ﻿@model System.String
 
 @{
+    var fieldId = Html.IdFor(m => m);
+    var fieldName = Html.NameFor(m => m);
+    var isRequired = ViewData.ModelMetadata.IsRequired;
+
     var managedPaths = new SelectListItem[] {
         new SelectListItem { Text = "/sites/", Value = "sites", Selected = Model == "sites" },
         new SelectListItem { Text = "/teams/", Value = "teams", Selected = Model == "teams"  },
     };
 }
-@Html.DropDownListFor(model => model, managedPaths, new { @class = "form-control", style = "width: 100px; display: inline;" })
+<div class="ms-f" id="@($"{fieldId}Div")">
+    <label class="ms-Label @(isRequired ? "is-required" : "")" id="@($"{fieldId}Label")">@(!String.IsNullOrEmpty(ViewData.ModelMetadata.DisplayName) ? ViewData.ModelMetadata.DisplayName : ViewData.ModelMetadata.PropertyName)</label>
+    @Html.DropDownListFor(model => model, managedPaths, new { @class = "form-control", style = "width: 100px; display: inline;" })
+</div>

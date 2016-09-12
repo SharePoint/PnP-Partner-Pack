@@ -2,6 +2,11 @@
 @using System.Xml.Linq
 
 @{
+
+    var fieldId = Html.IdFor(m => m);
+    var fieldName = Html.NameFor(m => m);
+    var isRequired = ViewData.ModelMetadata.IsRequired;
+
     XElement timeZones = XElement.Load(Server.MapPath("/Content/TimeZones.xml"));
 
     var timeZoneList = from t in timeZones.Descendants("timeZone")
@@ -12,5 +17,8 @@
                            Selected = Int32.Parse(t.Attribute("value").Value) == Model
                        };
 }
-@Html.DropDownListFor(model => model, timeZoneList, new { @class = "form-control" })
-@Html.ValidationMessageFor(model => model)
+<div class="ms-f" id="@($"{fieldId}Div")">
+    <label class="ms-Label @(isRequired ? "is-required" : "")" id="@($"{fieldId}Label")">@(!String.IsNullOrEmpty(ViewData.ModelMetadata.DisplayName) ? ViewData.ModelMetadata.DisplayName : ViewData.ModelMetadata.PropertyName)</label>
+    @Html.DropDownListFor(model => model, timeZoneList, new { @class = "form-control" })
+    @Html.ValidationMessageFor(model => model)
+</div>
