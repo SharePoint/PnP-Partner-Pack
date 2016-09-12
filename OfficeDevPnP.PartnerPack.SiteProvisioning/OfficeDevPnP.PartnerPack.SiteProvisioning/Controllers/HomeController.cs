@@ -40,7 +40,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
 
                 Web web = ctx.Web;
                 ctx.Load(web, w => w.Title, w => w.Url);
-                ctx.ExecuteQueryRetry();
+                ctx.ExecuteQuery();
 
                 model.InfrastructuralSiteUrl = web.Url;
             }
