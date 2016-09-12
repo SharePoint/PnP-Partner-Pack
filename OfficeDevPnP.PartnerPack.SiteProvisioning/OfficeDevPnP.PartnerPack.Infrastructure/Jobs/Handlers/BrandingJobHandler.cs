@@ -84,14 +84,22 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                         PnPPartnerPackConstants.PnPProvisioningTemplates));
 
             // Prepare the branding provisioning template
-            var template = new ProvisioningTemplate();
+            var template = new ProvisioningTemplate()
+            {
+                Id = $"Branding-{Guid.NewGuid()}",
+                DisplayName = "Branding Template",
+            };
+
             template.WebSettings = new WebSettings
             {
                 AlternateCSS = brandingSettings.CSSOverrideUrl,
                 SiteLogo = brandingSettings.LogoImageUrl,
             };
 
-            template.ComposedLook = new ComposedLook();
+            template.ComposedLook = new ComposedLook()
+            {
+                Name = "SharePointBranding",
+            };
 
             if (!String.IsNullOrEmpty(brandingSettings.BackgroundImageUrl))
             {
@@ -106,6 +114,10 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                     Folder = "SiteAssets",
                     Overwrite = true,
                 });
+            }
+            else
+            {
+                template.ComposedLook.BackgroundFile = String.Empty;
             }
 
             if (!String.IsNullOrEmpty(brandingSettings.FontFileUrl))
@@ -122,6 +134,10 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                     Overwrite = true,
                 });
             }
+            else
+            {
+                template.ComposedLook.FontFile = String.Empty;
+            }
 
             if (!String.IsNullOrEmpty(brandingSettings.ColorFileUrl))
             {
@@ -136,6 +152,10 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                     Folder = "{themecatalog}/15",
                     Overwrite = true,
                 });
+            }
+            else
+            {
+                template.ComposedLook.ColorFile = String.Empty;
             }
 
             // Save the template, ready to be applied

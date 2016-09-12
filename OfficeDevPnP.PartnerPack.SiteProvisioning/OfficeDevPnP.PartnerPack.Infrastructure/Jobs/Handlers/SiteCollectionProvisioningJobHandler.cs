@@ -209,6 +209,11 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                                 PnPPartnerPackSettings.InfrastructureSiteUrl))
                             {
                                 var brandingTemplate = BrandingJobHandler.PrepareBrandingTemplate(repositoryContext, brandingSettings);
+
+                                // Fixup Title and Description
+                                brandingTemplate.WebSettings.Title = job.SiteTitle;
+                                brandingTemplate.WebSettings.Description = job.Description;
+
                                 BrandingJobHandler.ApplyBrandingOnWeb(web, brandingSettings, brandingTemplate);
                             }
                         }

@@ -162,8 +162,8 @@
       <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OfficeDevPnP.Core, Version=2.7.1609.2, Culture=neutral, PublicKeyToken=3751622786b357c2, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharePointPnPCoreOnline.2.7.1609.2\lib\net45\OfficeDevPnP.Core.dll</HintPath>
+    <Reference Include="OfficeDevPnP.Core, Version=2.7.1609.3, Culture=neutral, PublicKeyToken=3751622786b357c2, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharePointPnPCoreOnline.2.7.1609.3\lib\net45\OfficeDevPnP.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -382,7 +382,6 @@
     <Content Include="Scripts\custom.principals.js" />
     <Content Include="Scripts\jquery-2.2.1.js" />
     <Content Include="Scripts\jquery-2.2.1.min.js" />
-    <None Include="Properties\PublishProfiles\pnp-partner-pack - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.2.3.js" />
     <Content Include="Scripts\jquery-2.2.3.min.js" />
