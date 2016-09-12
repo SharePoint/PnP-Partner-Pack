@@ -6,7 +6,7 @@
 
     String ProcessImagePreviewUrl(String imagePreviewUrl)
     {
-        if (imagePreviewUrl.ToLower().StartsWith("pnps://") || imagePreviewUrl.ToLower().StartsWith("pnp://"))
+        if (imagePreviewUrl != null && (imagePreviewUrl.ToLower().StartsWith("pnps://") || imagePreviewUrl.ToLower().StartsWith("pnp://")))
         {
             return ($"/Home/GetTemplateImagePreviewFromPnP?imagePreviewUri={imagePreviewUrl}");
         }
