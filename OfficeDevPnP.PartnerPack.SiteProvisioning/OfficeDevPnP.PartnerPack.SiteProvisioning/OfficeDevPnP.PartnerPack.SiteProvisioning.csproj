@@ -382,7 +382,6 @@
     <Content Include="Scripts\custom.principals.js" />
     <Content Include="Scripts\jquery-2.2.1.js" />
     <Content Include="Scripts\jquery-2.2.1.min.js" />
-    <None Include="Properties\PublishProfiles\pnp-partner-pack - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.2.3.js" />
     <Content Include="Scripts\jquery-2.2.3.min.js" />
@@ -456,7 +455,6 @@
     <Content Include="Views\Shared\EditorTemplates\Multilines.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\MultipleFilesUpload.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Principals.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\RadioButtons.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\String.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Time.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Int64.cshtml" />
