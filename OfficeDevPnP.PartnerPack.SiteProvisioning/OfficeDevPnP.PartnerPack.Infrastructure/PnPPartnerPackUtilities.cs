@@ -44,7 +44,16 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
             using (var context = PnPPartnerPackContextProvider.GetAppOnlyClientContext(siteUrl))
             {
                 Web web = context.Web;
-                web.EnableResponsiveUI(PnPPartnerPackSettings.InfrastructureSiteUrl);
+                Site site = context.Site;
+
+                if (web.IsSubSite())
+                {
+                    web.EnableResponsiveUI(PnPPartnerPackSettings.InfrastructureSiteUrl);
+                }
+                else
+                {
+                    site.EnableResponsiveUI(PnPPartnerPackSettings.InfrastructureSiteUrl);
+                }
             }
         }
 
