@@ -13,6 +13,7 @@ using System.Web.Mvc;
 
 namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
 {
+    [Authorize]
     public class PersonaController : Controller
     {
         public ActionResult GetPhoto(String upn, Int32 width = 0, Int32 height = 0)
