@@ -36,11 +36,11 @@ The manual installation requires to accomplish the following steps:
 * [Create the self-signed certificate](#createcertificate)
 * [Azure Blob Storage creation](#azureblob)
 * [Azure Web App provisioning](#azurewebapp)
-* [Azure Active Directory Application registration, as Office 365 Application](#azuread)
+* [App Only certificate configuration in the Azure Web App](#apponlywebapp)
+* [Azure Active Directory Application registration](#azuread)
 * [Update Azure AD Application manifest](#apponlyazuread)
 * [Infrastructural Site Collection provisioning](#sitecollection)
 * [Update Azure Web App Configuration files](#configconfigs)
-* [App Only certificate configuration in the Azure Web App](#apponlywebapp)
 * [Azure Web Jobs provisioning](#webjobs)
 
 During the setup guide you will often find two suitable alternatives to achieve your goal. The first option will be to use some ready to go PowerShell scripts, which is the preferred solution. Alternatively if you rather prefer to setup everything manually you will find some detailed manual steps.
