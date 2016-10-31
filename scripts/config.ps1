@@ -1,12 +1,11 @@
-param($force = $true)
-if($Global:config -eq $null -or $force )
+if($Global:config -eq $null )
 {
     $Global:config = @{
         # Update with the name of your subscription.
         SubscriptionName = "Contoso Production"
 
         #Office 365 Tenant name(ie: 'contoso' if tenant is contoso.sharepoint.com)
-        Tenant = "contoso"
+        Tenant = "contoso.onmicrosoft.com"
 
         #Full URL of where the partner pack is to be deployed
         InfrastructureSiteUrl ="https://contoso.sharepoint.com/sites/PnP-Partner-Pack-Infrastructure"
@@ -18,6 +17,7 @@ if($Global:config -eq $null -or $force )
         #storage account is not created should there be a default account already in polace
         StorageAccountName = "pnppartnerpackstorage9"
         StorageAccountSku ="Standard_LRS"
+        StorageAccountKey=$null
         #Azure datacenter location. prefer using lower case
         Location = $null
         #resource group 
@@ -36,9 +36,11 @@ if($Global:config -eq $null -or $force )
         #password to be used in certificate. 
         CertificatePassword = ./New-AppSecret.ps1 -length 10 
         # randomly generated app secret. 
-        AppClientSecret=./New-AppSecret.ps1 
+        ClientSecret= $null 
+        ClientId=$null
         #ApplicationIdentifierUri is identifier used by Azure AD Application
         ApplicationIdentifierUri = $null 
+        StorageAccountConnectionString = $null
     }
 }
 

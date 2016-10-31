@@ -1,6 +1,7 @@
 ﻿Param(
    [Parameter(Mandatory=$true)]
    [string]$CertificateFile
+   
 )
 
 $certPath = Resolve-Path ".\$($CertificateFile).cer"
@@ -20,6 +21,8 @@ $KeyId = [System.Guid]::NewGuid().ToString() #$AppClientId
       value =   "$base64Cert"
      }
  )
+($result |ConvertTo-Json)
+
 ($result |ConvertTo-Json) | Out-File "./thumb.txt" -Append:$false -Force -Encoding string
 ("Certificate Thumbprint: $($cert.Thumbprint)")| Out-File "./thumb.txt" -Append:$true -Force -Encoding string
 Write-Host "Certificate Thumbprint:" $cert.Thumbprint

@@ -31,9 +31,8 @@ param
     [Parameter(Mandatory = $true, HelpMessage="App Service Identifier Uri. ")]
     $ApplicationIdentifierUri,
   
-    [Parameter(Mandatory = $true, HelpMessage="Certificate used for ssl binding.")]
-    $CertificateFile
-
+    [Parameter(Mandatory = $true, HelpMessage="Key Credentials to be used by Azure Web App.")]
+    $KeyCredentials
 )
 
 write-host "Create-AzureADApplication.ps1 -ApplicationServiceName $ApplicationServiceName -ApplicationServiceName $ApplicationServiceName -ApplicationIdentifierUri $ApplicationIdentifierUri -AppServiceTier $AppServiceTier" -ForegroundColor Yellow
@@ -47,13 +46,14 @@ function SetKeys
                                         $null -ne $_.CustomKeyIdentifier -and $enc.GetString($_.CustomKeyIdentifier) -eq $KeyIdentifier 
                                     }| ForEach-Object {
                                        Remove-AzureADApplicationKeyCredential -ObjectId $app.ObjectId -KeyId $_.KeyId
+                                       Sleep -Seconds 1
                                     }
     Sleep -Seconds 2
     New-AzureADApplicationKeyCredential -ObjectId $app.ObjectId `
-                                    -CustomKeyIdentifier $KeyIdentifier `
+                                    -CustomKeyIdentifier $KeyCredentials.customKeyIdentifier `
                                     -StartDate (Get-DAte).ToUniversalTime() `
                                     -EndDate (get-Date).AddYears(2) -Usage Verify `
-                                    -Value $certificateInfo.KeyCredentials.value -Type AsymmetricX509Cert |Out-Null
+                                    -Value $KeyCredentials.value -Type AsymmetricX509Cert |Out-Null
     Get-AzureADApplicationPasswordCredential -ObjectId $app.ObjectId | 
                                     Where-Object { 
                                         $enc.GetString($_.CustomKeyIdentifier) -eq $keyIdentifier 
@@ -62,10 +62,8 @@ function SetKeys
                                     }
     Sleep -Seconds 2
 
-    New-AzureADApplicationPasswordCredential -ObjectId $app.ObjectId -CustomKeyIdentifier $keyIdentifier `
-                                    -Value $config.AppClientSecret |Out-Null
- 
-
+    $passwordCredential = New-AzureADApplicationPasswordCredential -ObjectId $app.ObjectId -CustomKeyIdentifier $keyIdentifier 
+    return $passwordCredential.Value                                    
 
 }
 function SetServicePrincipal
@@ -79,16 +77,19 @@ function SetServicePrincipal
     }
 }
 $homepage = "https://$ApplicationServiceName.azurewebsites.net/".ToLower()
-$certificateInfo =  ./GEt-SelfSignedCertificateInformation.ps1 -CertificateFile $CertificateFile 
+#$certificateInfo =  ./GEt-SelfSignedCertificateInformation.ps1 -CertificateFile $CertificateFile 
 $app = ((Get-AzureRmADApplication) | Where-Object { $_.IdentifierUris -contains $ApplicationIdentifierUri.ToString()} )
 if($null -eq $app){
-    $app = New-AzureRmADApplication -DisplayName $ApplicationServiceName  -HomePage $homepage -IdentifierUris $ApplicationIdentifierUri.ToLower() -CertValue $certificateInfo.KeyCredentials.value # $.$key 
+    $app = New-AzureRmADApplication -DisplayName $ApplicationServiceName  -HomePage $homepage -IdentifierUris $ApplicationIdentifierUri.ToLower() -CertValue $KeyCredentials.value # $.$key 
 }
 
-SetKeys
+$clientSecret = SetKeys
 
 Set-AzureRmADApplication -ObjectId $app.ObjectId  -ReplyUrls @($homepage.ToLower(),"https://localhost:44300/")
 
 SetServicePrincipal
+return @{
+ClientSecret = $ClientSecret 
+AADApp = $app
 
-$app
+}
