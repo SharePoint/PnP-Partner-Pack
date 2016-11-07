@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+
+  <parameter name="WelcomeMessage"
+               description="message to be displayed on PartnerPack landing page"
+               defaultValue="   Welcome to the PnP Partner Pack, which is a project managed by the &lt;a href=&quot;http://aka.ms/OfficeDevPnP&quot; target=&quot;_blank&quot;&gt;Office 365 Developers Patterns &amp;amp; Practices&lt;/a&gt; team!&lt;br/&gt;
+          This is a sample solution, including source code, that illustrates to the partners' ecosystem and customers how to get started truly on the transformation, and with typical SP add-in model implementations.&lt;br/&gt;
+          Here you can find samples about how to manage the provisioning of Site Collection or Sub Sites, applying one or more provisioning templates.&lt;br/&gt;
+          The provisioning is based on the new Remote Provisioning technique, by leveraging the PnP Provisioning Engine.&lt;br/&gt;
+          Let's play with this sample solution and enjoy the new Add-In Model for Microsoft SharePoint and Microsoft Office 365.">
+    <parameterEntry kind="XmlFile" scope="App.config"
+                    match="/configuration/PnPPartnerPackConfiguration/GeneralSettings/WelcomeMessage" />
+  </parameter>
+  <parameter name="FooterMessage"
+              description=" Partner Pack's footer messaage. displayed on all screens"
+              defaultValue=" &lt;p&gt;
+            &amp;copy; &lt;a href=&quot;http://aka.ms/OfficeDevPnP&quot;&gt;Office 365 Developers Patterns &amp;amp; Practices&lt;/a&gt; - PnP Partner Pack version: 2.0 (September 2016)
+          &lt;/p&gt;">
+    <parameterEntry kind="XmlFile" scope="App.config"
+                    match="/configuration/PnPPartnerPackConfiguration/GeneralSettings/FooterMessage" />
+  </parameter>
+  <parameter name="ClientId"
+             description="value of the Azure AD Application's Application Id field. Usually Known as ClientId "
+             defaultValue="">
+    <parameterEntry kind="XmlFile" scope="App.config"
+                    match="/configuration/appSettings/add[@key='ida:ClientId']/@value" />
+  </parameter>
+  <parameter name="ClientSecret"
+             description="value of the Azure AD Application's Application Id field "
+             defaultValue="">
+    <parameterEntry kind="XmlFile" scope="App.config"
+                    match="/configuration/appSettings/add[@key='ida:ClientSecret']/@value" />
+  </parameter>
+  <parameter  name="StorageAccountConnectionString"
+               description="Azure Storage Account"
+               defaultValue="">
+    <parameterEntry kind="XmlFile" scope="App.config"
+                    match="/configuration/connectionStrings[name='AzureWebJobsStorage']/@connectionString" />
+  </parameter>
+  <parameter  name="Tenant"
+              description="Office 365 Tenant Name"
+              defaultValue="">
+    <parameterEntry kind="XmlFile" scope="App.config"
+                    match="/configuration/PnPPartnerPackConfiguration/TenantSettings/@tenant" />
+  </parameter>
+  <parameter  name="CertificateThumbprint"
+              description="Certificate's thumbprint"
+              defaultValue="">
+    <parameterEntry kind="XmlFile" scope="App.config"
+                    match="/configuration/PnPPartnerPackConfiguration/TenantSettings/@appOnlyCertificateThumbprint" />
+  </parameter>
+  <parameter  name="InfrastructureSiteUrl"
+              description="Partner Pack Infrastructure Site Collection Url"
+              defaultValue="">
+    <parameterEntry kind="XmlFile" scope="App.config"
+                    match="/configuration/PnPPartnerPackConfiguration/TenantSettings/@infrastructureSiteUrl" />
+  </parameter>
+
+  <parameter  name="Templates Gallery Url"
+              description=""
+              defaultValue="https://pnp-templates-gallery.azurewebsites.net/">
+    <parameterEntry kind="XmlFile" scope="App.config"
+                    match="/configuration/PnPPartnerPackConfiguration/TemplatesProviders/TemplatesProvider[@name='TemplatesGallery']/Configuration/gallery/@url" />
+  </parameter>
+</parameters>
