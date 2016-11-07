@@ -317,7 +317,6 @@
   <ItemGroup>
     <Content Include="AppIcon.png" />
     <Content Include="Parameters.xml" />
-    <Content Include="Properties\PublishProfiles\Web Deploy Package.pubxml.user" />
     <Content Include="SupportFiles\BatchModel.xml" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
@@ -388,7 +387,6 @@
     <Content Include="Scripts\jquery-2.2.1.js" />
     <Content Include="Scripts\jquery-2.2.1.min.js" />
     <None Include="Properties\PublishProfiles\FileSystem.pubxml" />
-    <None Include="Properties\PublishProfiles\Web Deploy Package.pubxml" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.2.3.js" />
     <Content Include="Scripts\jquery-2.2.3.min.js" />

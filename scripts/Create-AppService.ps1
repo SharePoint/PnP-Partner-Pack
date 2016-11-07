@@ -73,31 +73,33 @@ function SetProperties
 }
 function SetSslCertificate{
 
-if((Get-AzureRmWebAppSSLBinding -WebAppName $name -Name $CertificateCommonName -ResourceGroupName $ResourceGroupName).Count -eq 0){
+    if((Get-AzureRmWebAppSSLBinding -WebAppName $name -Name $CertificateCommonName -ResourceGroupName $ResourceGroupName).Count -gt 0){
+        Remove-AzureRmWebAppSSLBinding -WebAppName $name -Name $CertificateCommonName -ResourceGroupName $ResourceGroupName -DeleteCertificate:$true -Force   
+        Sleep -Seconds 1
+    }
     $pfxPath = resolve-path "./$($CertificateFile).pfx"
     $cerPath = resolve-path "./$($CertificateFile).cer"
 
-try{
-    ### from https://github.com/Azure/azure-powershell/issues/2108
-    ## this is a bit of a hacky way of achieving the outcome, but it does work.
-    New-AzureRmWebAppSSLBinding -ResourceGroupName $ResourceGroupName  `
-                                -WebAppName $Name -CertificateFilePath  $pfxPath  `
-                                -CertificatePassword $CertificatePassword  `
-                                -Name $CertificateCommonName -ErrorAction Stop  -WarningAction SilentlyContinue   #Suppress the Warning on CNAME record
-} catch {
+    try{
+        ### from https://github.com/Azure/azure-powershell/issues/2108
+        ## this is a bit of a hacky way of achieving the outcome, but it does work.
+ 
+        New-AzureRmWebAppSSLBinding -ResourceGroupName $ResourceGroupName  `
+                                    -WebAppName $Name -CertificateFilePath  $pfxPath  `
+                                    -CertificatePassword $CertificatePassword  `
+                                    -Name $CertificateCommonName -ErrorAction Stop  -WarningAction SilentlyContinue   #Suppress the Warning on CNAME record
+    } catch {
         <# need to suppress the error of the SSL Binding - replace the cmdlet when changes#>
         $msg = $_
         $hostnamemsg = "Hostname '" + $CertificateCommonName + "' does not exist."
         if($msg.tostring() -eq $hostnamemsg.tostring()) {
-             $ReturnValue = $True
+                $ReturnValue = $True
         }else {
             write-host "Encountered error while uploading the certificate to the WebApp. Error Message is $msg." -ForegroundColor Red
         }
     } 
 } 
 
-
-}
 write-host "Create-AppService.ps1  -Name $Name  -Location $Location -ResourceGroupName $ResourceGroupName " -ForegroundColor Yellow
 
 $name = ./Confirm-ParameterValue.ps1 "Confirm your App Service/Web App name" -value $name

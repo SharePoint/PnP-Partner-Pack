@@ -29,6 +29,7 @@ function Init-Session
     write-host "Authenticating using 3 different methods, Add-AzureAccount, Connect-AzureAD and Login-AzureRMAccount" -ForegroundColor Yellow
     $cred = New-Object System.Management.Automation.PSCredential($userName, $securePassword)
     try{
+        #performs authentication 
         Add-AzureAccount -Credential $cred | Out-Null
         Connect-AzureAD -Credential $cred | Out-Null
         Login-AzureRmAccount -Credential $cred | Out-Null
@@ -37,7 +38,8 @@ function Init-Session
         throw
     }
     write-host "authenticated, now collecting some of the required values" -ForegroundColor Yellow
-
+    #prepares $config property values
+    #these properties are used throughout this script
     $config.Tenant = (./Confirm-ParameterValue.ps1 -prompt "Confirm your Office 365 Tenant name" -value $config.Tenant)
     if(-not $config.Tenant.Contains(".")){
         $config.Tenant ="$($config.Tenant).onmicrosoft.com"
@@ -59,12 +61,15 @@ function Init-Session
     select-azuresubscription -SubscriptionName $config.SubscriptionName
 }
 function CreateStorageAccount{
-    $storage =  ./Create-StorageAccount.ps1 -name $config.StorageAccountName -ResourceGroupName  $config.ResourceGroupName -Location $config.Location -SubscriptionName $config.SubscriptionName -Sku $config.StorageAccountSku
+    $storage =  ./Create-StorageAccount.ps1 -Name $config.StorageAccountName `
+                                            -ResourceGroupName  $config.ResourceGroupName `
+                                            -Location $config.Location `
+                                            -SubscriptionName $config.SubscriptionName `
+                                            -Sku $config.StorageAccountSku
     $config.StorageAccountName = $storage.Name
     $config.StorageAccountSku = $storage.Sku
     $config.StorageAccountKey = $storage.Key
     $config.StorageAccountConnectionString = "DefaultEndpointsProtocol=https;AccountName=$($config.StorageAccountName);AccountKey=$($config.StorageAccountKey)";
-
 }
 function CreateAppService
 {
@@ -115,23 +120,24 @@ function CreateSelfSignedCertificate
 {
     $config.CertificateCommonName = ./Confirm-ParameterValue.ps1 -prompt "Confirm your Certificate common name" -value $config.CertificateCommonName
     $config.CertificatePassword = ./Confirm-ParameterValue.ps1 -prompt "Confirm your Certificate Password" -value $config.CertificatePassword
-    $certificate = ./Create-SelfSignedCertificate.ps1 -CommonName $config.CertificateCommonName -StartDate (get-date).AddDays(-1) -EndDate (get-date).AddYears(5) -Password $config.CertificatePassword
+    $certificate = ./Create-SelfSignedCertificate.ps1   -CommonName $config.CertificateCommonName `
+                                                        -StartDate (get-date).AddDays(-1) `
+                                                        -EndDate (get-date).AddYears(5) `
+                                                        -Password $config.CertificatePassword
     $certificateInfo =  ./Get-SelfSignedCertificateInformation.ps1 -CertificateFile $config.CertificateCommonName  
     $config.CertificateThumbprint = $certificateInfo.CertificateThumbprint
     $config.KeyCredentials = $certificateInfo.KeyCredentials
 }
-function ConfigureConfigs{
-
+function ConfigureConfigs
+{
     write-host "preparing config files" -ForegroundColor Yellow
     .\Configure-Configs.ps1    -AzureStorageAccountName $config.StorageAccountName `
                                 -AzureStoragePrimaryAccessKey $config.StorageAccountKey `
                                 -ClientId $config.ClientId  `
                                 -ClientSecret $config.ClientSecret `
-                                -ADTenant "$($config.Tenant).onmicrosoft.com" `
+                                -ADTenant "$($config.Tenant)" `
                                 -CertificateThumbprint $config.CertificateThumbprint `
                                 -InfrastructureSiteUrl $config.InfrastructureSiteUrl
-
-
 }
 function BuildPackage
 {
@@ -158,10 +164,12 @@ function DeployApplication
         $updatedParameters =   .\Update-SetParameters.ps1 $parametersFile -config $config 
         $updatedParametersFile = "./tempSetParameters.xml"
         $updatedParameters.OuterXml | Out-file $updatedParametersFile -Append:$false -force utf8
-        Publish-AzureWebsiteProject -Name $config.AppServiceName  -Package ..\deploy\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning.zip -SetParametersFile $updatedParametersFile #>
+        Publish-AzureWebsiteProject -Name $config.AppServiceName  `
+                                    -Package ..\deploy\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning.zip `
+                                    -SetParametersFile $updatedParametersFile 
         Sleep -Seconds 1
         Restart-AzureWebsite -Name  $config.AppServiceName 
-    #    Remove-Item "./tempSetParameters.xml" -Force -ErrorAction SilentlyContinue
+        Remove-Item "./tempSetParameters.xml" -Force -ErrorAction SilentlyContinue
     }
 }
 
@@ -184,9 +192,6 @@ ConfigureConfigs
 DeployApplication
 
 
-#$azureWebJobsDashBoardNodeValue = "DefaultEndpointsProtocol=https;AccountName=$($config.StorageAccountName);AccountKey=$($config.StorageAccountKey)";
-
-#Publish-AzureWebsiteProject -Name $config.AppServiceName -Package ..\deploy\OfficeDevPnP.PartnerPack.SiteProvisioning\ -ClientId $config.AzureADApplicationId -ClientSecret $config.AppClientSecret -StorageAccount $config.StorageAccountName $azureWebJobsDashBoardNodeValue -Tenant "$($config.Tenant).onmicrosoft.com" -AppOnlyCertificateThumbprint $config.CertificateThumbprint -InfrastructureSiteUrl $config.InfrastructureSiteUrl
 write-host "Scripted configuration completed. You need to configure the required API permissions within Azure AD for Application $($config.AppServiceName) " -ForegroundColor Yellow
 write-host "You might need to see what was the final configuration values, so here you go." 
 ($config |ConvertTo-Json) | Out-File ".\config.json" -Append:$false -Force:$true
@@ -195,4 +200,3 @@ write-host ($config |ConvertTo-Json) -ForegroundColor Cyan
 
 write-host "You'll need the value of the Property Key Credentials field from json string above" -ForegroundColor Yellow
  
-break

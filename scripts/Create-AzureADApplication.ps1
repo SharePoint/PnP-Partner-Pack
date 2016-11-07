@@ -39,6 +39,15 @@ write-host "Create-AzureADApplication.ps1 -ApplicationServiceName $ApplicationSe
 
 function SetKeys
 {
+    ##### 2016-11-07 20-08 Azure AD API is behaving oddly. Some quests will throw an exception when adding an artefact shortly after removing one of its kind.
+    #### both New-AzureADApplicationKeyCredential and New-AzureADApplicationPasswordCredential throw the following exception
+    #### New-AzureADApplicationKeyCredential : Error occurred while executing SetApplication 
+    #### StatusCode: BadRequest
+    #### ErrorCode: Request_BadRequest
+    #### Message: A stream property was found in a JSON Light request payload. Stream properties are only supported in responses.
+
+    #### it seems that issue is mitigated by adding Sleep calls 
+
     $enc = [System.Text.Encoding]::ASCII
     $KeyIdentifier = "pnppartnerpack"
     Get-AzureADApplicationKeyCredential -ObjectId $app.ObjectId | 
@@ -46,21 +55,23 @@ function SetKeys
                                         $null -ne $_.CustomKeyIdentifier -and $enc.GetString($_.CustomKeyIdentifier) -eq $KeyIdentifier 
                                     }| ForEach-Object {
                                        Remove-AzureADApplicationKeyCredential -ObjectId $app.ObjectId -KeyId $_.KeyId
-                                       Sleep -Seconds 1
+                                       Sleep -Seconds 10
                                     }
-    Sleep -Seconds 2
     New-AzureADApplicationKeyCredential -ObjectId $app.ObjectId `
                                     -CustomKeyIdentifier $KeyCredentials.customKeyIdentifier `
                                     -StartDate (Get-DAte).ToUniversalTime() `
                                     -EndDate (get-Date).AddYears(2) -Usage Verify `
                                     -Value $KeyCredentials.value -Type AsymmetricX509Cert |Out-Null
+    
+    Sleep -Seconds 2
     Get-AzureADApplicationPasswordCredential -ObjectId $app.ObjectId | 
                                     Where-Object { 
                                         $enc.GetString($_.CustomKeyIdentifier) -eq $keyIdentifier 
                                     } | ForEach-Object {
                                         Remove-AzureADApplicationPasswordCredential -ObjectId $app.ObjectId -KeyId $_.KeyId
+                                        Sleep -Seconds 10
                                     }
-    Sleep -Seconds 2
+    
 
     $passwordCredential = New-AzureADApplicationPasswordCredential -ObjectId $app.ObjectId -CustomKeyIdentifier $keyIdentifier 
     return $passwordCredential.Value                                    
@@ -84,8 +95,9 @@ if($null -eq $app){
 }
 
 $clientSecret = SetKeys
-
-Set-AzureRmADApplication -ObjectId $app.ObjectId  -ReplyUrls @($homepage.ToLower(),"https://localhost:44300/")
+$replyUrls = @($homepage.ToLower())
+$replyUrls += "https://localhost:44300/" 
+Set-AzureRmADApplication -ObjectId $app.ObjectId  -ReplyUrls $replyUrls
 
 SetServicePrincipal
 return @{
