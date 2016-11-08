@@ -22,6 +22,7 @@ In order to setup the PnP Partner Pack you need:
 * The **PnP PowerShell cmdlets** (available here: http://aka.ms/OfficeDevPnPPowerShell). The minimum version you need is version 2.7.1609.2. To double-check the version of the PnP PowerShell cmdlets, you can invoke the `Connect-SPOOnline`  cmdlet with the `-Verbose` argument
 *  **Azure Active Directory PowerShell Module - Version 2 *** (information here: https://msdn.microsoft.com/en-us/library/azure/mt757189.aspx) 
 *  **Azure and Azure Resource Manager PowerShell Modules *** (information here: http://go.microsoft.com/fwlink/p/?LinkID=320552).
+* **Visual Studio 2015 ***. Required if you wish to build, package and deploy solution. 
 
 The scripted installation performs most of the steps required in order to deploy the Partner Pack Solution, however there are 2 manual step required after script has been completed.
 * [Azure Active Directory Application API Access Required](#aad-apipermissions)
@@ -34,8 +35,14 @@ The scripted installation performs most of the steps required in order to deploy
 <a name="partnerpackscript"></a>
 ### Execute Configure-PartnerPack.ps1
 
-Configure-PartnerPack.ps1 is the script that creates the resources required for this solution to work.
-You need to run this in a PowerShell console, running as administrator (Certificate step requires admin permissions)
+Configure-PartnerPack.ps1 creates the resources required for this solution to work, and attempts to deploy the Partner Pack solution to the Azure Web App.
+To run this open a PowerShell console, running as administrator (Certificate step requires admin permissions). Then navigate to the Partner Pack scripts folder 
+
+```PowerShell
+ ./Configure-PartnerPack.ps1
+```
+
+
 
 The following resources are expected to be created.
 - 1 Resource group

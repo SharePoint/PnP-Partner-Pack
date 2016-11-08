@@ -32,7 +32,7 @@ if($Global:config -eq $null )
         AppServicePlanName = "PnPPartnerPack"
 
         #Self Signed Certificate common name.(cn=$CertificateCommonName ). Name is irrelevant as certificate isn't bound to HTTPS requests.
-        CertificateCommonName = "contoso.com"
+        CertificateCommonName = ("contoso{0}.com" -f (get-date).ToString("yyyyddMMhhMM"))
         #password to be used in certificate. 
         CertificatePassword = ./New-AppSecret.ps1 -length 10 
         # randomly generated app secret. 
@@ -41,6 +41,8 @@ if($Global:config -eq $null )
         #ApplicationIdentifierUri is identifier used by Azure AD Application
         ApplicationIdentifierUri = $null 
         StorageAccountConnectionString = $null
+        LocalDebug = $false
+       
     }
 }
 

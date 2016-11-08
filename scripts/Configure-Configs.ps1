@@ -33,7 +33,7 @@ param
     [String]
     $AzureStoragePrimaryAccessKey,
 
-	[Parameter(Mandatory = $true, HelpMessage="Enter the client id for your Azure AD App")]
+    [Parameter(Mandatory = $true, HelpMessage="Enter the client id for your Azure AD App")]
     [String]
     $ClientId,
 
@@ -42,21 +42,20 @@ param
     $ClientSecret,
 
     [Parameter(Mandatory = $true, HelpMessage="Enter the AD tenant name, e.g. mytenant.onmicrosoft.com")]
-	[String]
-	$ADTenant,
+    [String]
+    $ADTenant,
 
-	[Parameter(Mandatory = $false, HelpMessage="The full path to the certificate file that you uploaded to the azure web site for app authentication", ParameterSetName="CertificatePath")]
+    [Parameter(Mandatory = $false, HelpMessage="The full path to the certificate file that you uploaded to the azure web site for app authentication", ParameterSetName="CertificatePath")]
     [String]
     $CertificatePath,
 
-	[Parameter(Mandatory = $false, HelpMessage="The certificate thumbprint value", ParameterSetName="Thumbprint")]
+    [Parameter(Mandatory = $false, HelpMessage="The certificate thumbprint value", ParameterSetName="Thumbprint")]
     [String]
     $CertificateThumbprint,
 
-	[Parameter(Mandatory = $true)]
+    [Parameter(Mandatory = $true)]
     [String]
     $InfrastructureSiteUrl
-
 )
 # DO NOT MODIFY BELOW
 $basePath = "$(convert-path ..)\OfficeDevPnP.PartnerPack.SiteProvisioning"
@@ -65,7 +64,6 @@ $configFiles =  "OfficeDevPnP.PartnerPack.CheckAdminsJob\App.config",
                 "OfficeDevPnP.PartnerPack.ContinousJob\App.config",
                 "OfficeDevPnP.PartnerPack.ScheduledJob\App.config",
                 "OfficeDevPnP.PartnerPack.SiteProvisioning\Web.config"
-
 
 $azureWebJobsDashBoardNodeValue = "DefaultEndpointsProtocol=https;AccountName=$AzureStorageAccountName;AccountKey=$AzureStoragePrimaryAccessKey";
 
@@ -99,6 +97,6 @@ foreach($configFile in $configFiles)
         $tenantSettingsNode.appOnlyCertificateThumbprint = $cert.Thumbprint
     }
     $tenantSettingsNode.infrastructureSiteUrl = $InfrastructureSiteUrl
-
+   
     $configDoc.Save("$basePath\$configFile")
 }
