@@ -37,7 +37,7 @@ The manual installation requires to accomplish the following steps:
 * [Create the self-signed certificate](#createcertificate)
 * [App Only certificate configuration in the Azure AD Application](#apponlyazuread)
 * [Infrastructural Site Collection provisioning](#sitecollection)
-* [Azure Blob Storage creation](#azureblob)
+* [Azure Storage Queue creation](#azurequeue)
 * [Azure Web App provisioning and configuration](#azurewebapp)
 * [App Only certificate configuration in the Azure Web App](#apponlywebapp)
 * [Azure Web Jobs provisioning](#webjobs)
@@ -249,11 +249,11 @@ To have a look at these libraries, you can open links like the following ones:
 
 In the latter library, you will already find some Provisioning Templates, organized in sub-folders. You will use them later in this setup guide.
 
-<a name="azureblob"></a>
-### Azure Blob Storage configuration
-To handle some asynchronous tasks, the PnP Partner Pack uses an Azure Blob Storage service to queue items. Thus, you will need to configure an Azure Blob Storage account.
+<a name="azurequeue"></a>
+### Azure Storage configuration
+To handle some asynchronous tasks, the PnP Partner Pack uses an Azure Storage Queue to queue items. Thus, you will need to configure an Azure Storage account.
 
-Open the Microsoft Azure Management Portal, with a valid Microsoft Azure subscription, and create a **new Azure Blob Storage account**. For example, you can call the Azure Blob Storage account with a name like pnppartnerpack[tenant], or whatever else you like. After having created the Azure Blob Storage account, open the "Manage Access Keys" popup screen and copy the values of **"Storage Account Name"**, and **"Primary Access Key"**. Alternatively if using the new Azure Portal, click on your Storage account, click on **"'Accss keys'** under the Settings header and copy out the **"Storage account name"** and **"key1"** values.
+Open the Microsoft Azure Management Portal, with a valid Microsoft Azure subscription, and create a **new Azure Storage account**. For example, you can call the Azure Storage account with a name like pnppartnerpack[tenant], or whatever else you like. After having created the Azure Storage account, open the "Manage Access Keys" popup screen and copy the values of **"Storage Account Name"**, and **"Primary Access Key"**. Alternatively if using the new Azure Portal, click on your Storage account, click on **"'Accss keys'** under the Settings header and copy out the **"Storage account name"** and **"key1"** values.
 
 <a name="azurewebapp"></a>
 ### Azure App Service provisioning and configuration
