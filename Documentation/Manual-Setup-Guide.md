@@ -35,12 +35,12 @@ In order to setup the PnP Partner Pack you need:
 The manual installation requires to accomplish the following steps:
 * [Create the self-signed certificate](#createcertificate)
 * [Azure Blob Storage creation](#azureblob)
-* [Azure Web App provisioning](#azurewebapp)
-* [App Only certificate configuration in the Azure Web App](#apponlywebapp)
+* [Azure App Service provisioning](#azurewebapp)
+* [App Only certificate configuration in the Azure App Service](#apponlywebapp)
 * [Azure Active Directory Application registration](#azuread)
 * [Update Azure AD Application manifest](#apponlyazuread)
 * [Infrastructural Site Collection provisioning](#sitecollection)
-* [Partner Pack solution Configuration](#configconfigs)
+* [Partner Pack solution configuration](#configconfigs)
 * [Azure Web Jobs provisioning](#webjobs)
 
 During the setup guide you will often find two suitable alternatives to achieve your goal. The first option will be to use some ready to go PowerShell scripts, which is the preferred solution. Alternatively if you rather prefer to setup everything manually you will find some detailed manual steps.
@@ -121,7 +121,7 @@ In the following figure you can see a sample configuration.
 
 
 <a name="azuread"></a>
-### Azure Active Directory Application Registration
+### Azure Active Directory Application registration
 First of all, because the PnP Partner Pack is an Office 365 Application, you have to **register it in the Azure Active Directory tenant** that is linked to your Office 365 tenant. In order to do that, open the Office 365 Admin Center (https://portal.office.com) using the account of a user member of the Tenant Global Admins group.
 
 Click on the "Azure AD" link that is available under the "Admin centers" group in the left-side treeview of the Office 365 Admin Center. In the new browser's tab that will be opened you will find the Microsoft Azure Management Portal. If it is the first time that you access the Azure Management Portal with your account, you will have to register a new Azure subscription, providing some information and a credit card for any payment need. But don't worry, in order to play with Azure AD and to register an Office 365 Application you will not pay anything. In fact, those are free capabilities. 
@@ -184,7 +184,7 @@ The "Application Permissions" are those granted to the application when running 
 
 
 <a name="apponlyazuread"></a>
-### Update Azure AD Application Manifest
+### Update Azure AD Application manifest
 
 You can execute the <a href="../scripts/Get-SelfSignedCertificateInformation.ps1">Get-SelfSignedCertificateInformation.ps1</a> script. This script is available in the 
 <a href="../scripts/">Scripts folder</a> of this repository:
