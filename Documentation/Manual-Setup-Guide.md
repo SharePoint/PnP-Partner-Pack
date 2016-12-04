@@ -40,7 +40,7 @@ The manual installation requires to accomplish the following steps:
 * [Azure Active Directory Application registration](#azuread)
 * [Update Azure AD Application manifest](#apponlyazuread)
 * [Infrastructural Site Collection provisioning](#sitecollection)
-* [Update Azure Web App Configuration files](#configconfigs)
+* [Partner Pack solution Configuration](#configconfigs)
 * [Azure Web Jobs provisioning](#webjobs)
 
 During the setup guide you will often find two suitable alternatives to achieve your goal. The first option will be to use some ready to go PowerShell scripts, which is the preferred solution. Alternatively if you rather prefer to setup everything manually you will find some detailed manual steps.
@@ -300,10 +300,8 @@ To have a look at these libraries, you can open links like the following ones:
 
 In the latter library, you will already find some Provisioning Templates, organized in sub-folders. You will use them later in this setup guide.
 
-
 <a name="configconfigs"></a>
 ### Partner Pack solution configuration
-
 Once you've completed the previous steps you'll have all the information needed to prepare the publishing of the PnP components to the Azure App Service. Before you can publish the PnP Partner Pack to the Azure App Service you need to configure all the web.config and app.config files. The recommended approach here is to use the <a href="../scripts/Configure-Configs.ps1">Configure-Configs.ps1</a> script. This script is available in the 
 <a href="../scripts/">Scripts folder</a> of this repository and requires following input:
 
@@ -408,7 +406,6 @@ When you publish the web application using Microsoft Visual Studio, remember to 
 
 Notice that the web application uses a token cache for ADAL tokens, which are used when accessing the Microsoft Graph API. The token cache provided is based on the web application session. Thus, it is not a scalable solution and it cannot be used with multiple instances of the web app. However, you can configure a session based on an external persistence provider, like for example the <a href="https://azure.microsoft.com/en-us/documentation/articles/cache-asp.net-session-state-provider/">Azure Redis Cache</a>, or you can define a token cache handler of your own, using a backend database or whatever else. For further details about ADAL and the token cache, you can read the <a href="./Architecture-and-Implementation.md">architectural document</a> related to the PnP Partner Pack.
  
-
 You are now ready to play with your Office 365 Application. Simply open an Office 365 user session, click on the App Launcher and select the "New" command.
 
 ![Office 365 App Launcher - My Apps](./Figures/Fig-14-O365-App-Launcher.png)
