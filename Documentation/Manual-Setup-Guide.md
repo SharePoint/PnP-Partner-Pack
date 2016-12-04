@@ -29,7 +29,7 @@ Notice that the UI based desktop Setup application (for Windows OS only) that wi
 ## Requirements
 In order to setup the PnP Partner Pack you need:
 * A valid **Microsoft Office 365 tenant** with at least an active subscription
-* The **PnP PowerShell cmdlets** (available here: http://aka.ms/OfficeDevPnPPowerShell). The minimum version you need is version 2.7.1609.2. To double-check the version of the PnP PowerShell cmdlets, you can invoke the `Connect-SPOOnline`  cmdlet with the `-Verbose` argument
+* The **PnP PowerShell cmdlets** (available here: http://aka.ms/OfficeDevPnPPowerShell). The minimum version you need is version 2.7.1609.2. To double-check the version of the PnP PowerShell cmdlets, you can invoke the `Connect-PnPOnline`  cmdlet with the `-Verbose` argument
 
 ## Installation Steps
 The manual installation requires to accomplish the following steps:
@@ -85,10 +85,12 @@ After having created the self-signed X.509 Certificate you have to export it as 
 ### Azure Blob Storage configuration
 To handle some asynchronous tasks, the PnP Partner Pack uses an Azure Blob Storage service to queue items. Thus, you will need to configure an Azure Blob Storage account, in case you don't have one yet.
 
-Go Back to the new Azure Portal, and find **Storage Accounts** menu option. You can eitther use an existing account or create a new one.If you are to create a new one you'll then be presented with the following screen:
+Go Back to the new Azure Portal, and find **Storage Accounts** menu option. You can either use an existing account or create a new one. If you are to create a new one you'll then be presented with the following screen:
+
 ![Azure AD - Storage Account- Create](./Figures/Fig-01-StorageAccount-01.png)
 
-After having created the Azure Blob Storage account, open the "Manage Access Keys" popup screen and copy the values of **"Storage Account Name"**, and **"Primary Access Key"**. Alternatively if using the new Azure Portal, click on your Storage account, click on **"'Accss keys'** under the Settings header and copy out the **"Storage account name"** and **"key1"** values.
+After having created the Azure Blob Storage account, open the "Manage Access Keys" popup screen and copy the values of **"Storage Account Name"**, and **"Primary Access Key"**. Alternatively if using the new Azure Portal, click on your Storage account, click on **"Accss keys"** under the Settings header and copy out the **"Storage account name"** and **"key1"** values.
+
 ![Azure AD - Storage Account- Create](./Figures/Fig-02-StorageAccount-02-Keys.png)
 
 <a name="azurewebapp"></a>
@@ -102,7 +104,7 @@ Back to the New Azure Portal, you will need to create a new **Web App**. Call it
 <a name="apponlywebapp"></a>
 ### App Only certificate configuration in the Azure App Service
 
-Once your app is created you will need to upload the .PFX file of the self-signed certificate to create the App Only context. Thus, go into the **"Configuration"** tab and add a new X.509 certificate to the Azure Web App, through the proper configuration section, which is highlighted in the following figure. Alternatively through the new Azure Portal you will go into the App Service, click on **"Custom domains and SSL"**, click on the **"More"** menu at the top, click on **"Upload Certificates"**, select the PFX certificate that you have created earlier on in these steps and click on **'Save'**.
+Once your app is created you will need to upload the .PFX file of the self-signed certificate to create the App Only context. Thus, go into the **"Configuration"** tab and add a new X.509 certificate to the Azure Web App, through the proper configuration section. Alternatively through the new Azure Portal you will go into the App Service, click on **"SSL certificates"**, click on the **"Upload Certificate"** menu at the top, select the PFX certificate that you have created earlier on in these steps and click on **"Upload"**.
 
 ![Azure App Service - X.509 Certificate](./Figures/Fig-04-Azure-Web-App-Certificate-01.png)
 
@@ -122,7 +124,7 @@ In the following figure you can see a sample configuration.
 ### Azure Active Directory Application Registration
 First of all, because the PnP Partner Pack is an Office 365 Application, you have to **register it in the Azure Active Directory tenant** that is linked to your Office 365 tenant. In order to do that, open the Office 365 Admin Center (https://portal.office.com) using the account of a user member of the Tenant Global Admins group.
 
-Click on the "Azure AD" link that is available under the "Admin centers" group in the left-side treeview of the Office 365 Admin Center. In the new browser's tab that will be opened you will find the Microsoft Azure Management Portal. If it is the first time that you access the Azure Management Portal with your account, you will have to register a new Azure subscription, providing some information and a credit card for any payment need. But don't worry, in order to play with Azure AD and to register Office 365 Application you will not pay anything. In fact, those are free capabilities. 
+Click on the "Azure AD" link that is available under the "Admin centers" group in the left-side treeview of the Office 365 Admin Center. In the new browser's tab that will be opened you will find the Microsoft Azure Management Portal. If it is the first time that you access the Azure Management Portal with your account, you will have to register a new Azure subscription, providing some information and a credit card for any payment need. But don't worry, in order to play with Azure AD and to register an Office 365 Application you will not pay anything. In fact, those are free capabilities. 
 
 Once having access to the Azure Management Portal, select the "Active Directory" section, by clicking on the icon highlighted in the following screen shot:
 
@@ -130,16 +132,16 @@ Once having access to the Azure Management Portal, select the "Active Directory"
 
 If you can't see Azure Active Directory as one of your options then scroll to the end of the left menu and click on "More Services". You'll find "Azure Active Directory"  there. Please favorite the feature as you'll need this later.
 
-You'll see on the left side of blade have you opened the Azure AD tenant corresponding to your Office 365 tenant. Locate and select the option "App Applications". See the next figure for further details.
+You'll see on the left side of the blade that you opened the Azure AD tenant corresponding to your Office 365 tenant. Locate and select the option "App Registrations". See the next figure for further details.
 
 ![Azure AD Main Page](./Figures/Fig-07-Azure-AD-Main-Page.png)
 
-In the "App Registrations" tab you will find the list of Azure AD applications installed in 
+In the "App Registrations" tab you will find the list of Azure AD applications registered in 
 your tenant. Click the "Add" button in the upper left part of the blade, this will show you the following screen.
 
 ![Azure AD - Add an Application - First Step](./Figures/Fig-08-Azure-AD-Add-Application-Step-01.png)
 
-Then, provide a **name** for your application (we suggest to name it "OfficeDev PnP Partner Pack"), select the option **"Web app / API"**, and fill in the **Sign-on URL**  **URL** of the Azure Web App that you will create (in one of the following steps). Click create when done.
+Then, provide a **name** for your application (we suggest to name it "SharePoint PnP Partner Pack"), select the option **"Web app / API"**, and fill in the **"Sign-on URL"** with the **URL** of the Azure Web App that you will create (in one of the following steps). Click create when done.
 
 The newly created app registration will now be listed in your "App Registrations" list.
 Open it and then click into settings and then Properties.  You should now be at the following screen: 
@@ -151,7 +153,8 @@ Please make sure you :
 - Upload the Application logo
 - Press save. 
 
-You should be back at the settings blade. Go into **Keys** where you'll create a Client Secret. In order to do that, add a new security key (selecting 1 year or 2 years for key duration). Press the "Save" button in the lower part of the screen to generate the key value. After saving, you will see the key value. **Copy it in a safe place**, because you will not see it anymore.
+Now, you should go back to the settings blade. Go into **Keys** where you'll create a Client Secret. In order to do that, add a new security key (selecting 1 year or 2 years for key duration). Press the "Save" button in the lower part of the screen to generate the key value. After saving, you will see the key value. **Copy it in a safe place**, because you will not see it anymore.
+
 ![Azure AD - Create a client Secret](./Figures/Fig-10-Azure-AD-Add-AplicationSecret.png)
 
 
@@ -183,13 +186,18 @@ The "Application Permissions" are those granted to the application when running 
 <a name="apponlyazuread"></a>
 ### Update Azure AD Application Manifest
 
-You can execute 
+You can execute the <a href="../scripts/Get-SelfSignedCertificateInformation.ps1">Get-SelfSignedCertificateInformation.ps1</a> script. This script is available in the 
+<a href="../scripts/">Scripts folder</a> of this repository:
+
+ script (which is available under the scripts folder of the PnP Partner Pack):
 
 ```PowerShell
-Get-SPOAzureADManifestKeyCredentials -CertPath <path to your .cer file> | clip
+.\Get-SelfSignedCertificateInformation.ps1 | clip
 ```
 
-which will generate the required snippet and copy it to the clipboard. (Note: the Get-SPOAzureADManifestKeyCredentials command will not currently provide the certificate thumbprint needed for configuration later in the document.)
+You will have to provide the path of the .CER file that you created before, when you created the certificate for the AppOnly context configuration.
+The command will copy into the clipboard a JSON snippet that you will use in the upcoming steps. Paste the content of the clipboard in a safe place (like a fresh new notepad file).
+Notice that the command will also provide the certificate thumbprint needed for configuration later in the document.
 
 Alternatively, start a PowerShell command window, and execute the following instructions:
 
@@ -221,9 +229,10 @@ Write-Host "Certificate Thumbprint:" $cert.Thumbprint
 Copy the output value into a text file as you will have to use it soon.
 
 Go back to the Azure AD Application that you created in the previous step and click the **"Manifest"** button at the top of the blade, then click **Edit'**. This is how your screen should look like now:
+
 ![Azure AD - Application Configuration - Manifest](./Figures/Fig-13-Azure-AD-App-Config-04.png)
 
-Search for the **keyCredentials** property and replace it with the snippet you generated above by either running the PowerShell script or the `Get-SPOAzureADManifestKeyCredentials` cmdlet, this will be similar to:
+Search for the **keyCredentials** property and replace it with the snippet you generated before, this will be similar to:
 
 ```JSON
   "keyCredentials": [
@@ -237,10 +246,6 @@ Search for the **keyCredentials** property and replace it with the snippet you g
   ],
 ```
 
-Now search for **identifierUris**. Update this to a your own **unique ID**, which can be for example `https://yourtenant.onmicrosoft.com/OfficeDevPnP.PartnerPack.SiteProvisioning`.  
-**Important:**
-Please ensure that the listed reply URL (Single sign-on section) ends with a trailing slash and that your id has **yourtenant.onmicrosoft.com**.  
-
 Click **Save** when you complete this step.
 
 >For further details about running App Only applications, you can read <a href="http://blogs.msdn.com/b/richard_dizeregas_blog/archive/2015/05/03/performing-app-only-operations-on-sharepoint-online-through-azure-ad.aspx">the following article
@@ -252,14 +257,14 @@ Click **Save** when you complete this step.
 It is now time to create an infrastructural Site Collection in your Office 365 tenant. You can do that using the SharePoint Online Admin Center, or you can use below PowerShell script that uses the wonderful PnP PowerShell extensions made by <a href="https://twitter.com/erwinvanhunen">Erwin</a> and maintained by the whole community, which are available <a href="https://github.com/OfficeDev/PnP-PowerShell">here</a>.
 
 ```PowerShell
-Connect-SPOnline "https://[tenant]-admin.sharepoint.com/"
+Connect-PnPOnline "https://[tenant]-admin.sharepoint.com/"
 
-New-SPOTenantSite -Title "PnP Partner Pack - Infrastructural Site" -Url "https://[tenant].sharepoint.com/sites/PnP-Partner-Pack-Infrastructure" -Owner "[admin_account]" -Lcid 1033 -Template "STS#0" -TimeZone 4 -RemoveDeletedSite
+New-PnPTenantSite -Title "PnP Partner Pack - Infrastructural Site" -Url "https://[tenant].sharepoint.com/sites/PnP-Partner-Pack-Infrastructure" -Owner "[admin_account]" -Lcid 1033 -Template "STS#0" -TimeZone 4 -RemoveDeletedSite
 ```
 
 Once the **Infrastructural site collection** is available you can continue with configuring this site collection. 
 
-##### Recommended approach
+#### Recommended approach
 The recommended approach here is to use the <a href="../scripts/Provision-InfrastructureSiteArtifacts.ps1">**Provision-InfrastructureSiteArtifacts.ps1**</a> PowerShell script file that is available in the <a href="../scripts/">Scripts folder</a> of this repository. This script will do everything for you, including replacing any parameter within the provisioning templates, in order to make it easier for you to setup the entire solution.
  
 This PowerShell script requires some input arguments, which are:
@@ -271,17 +276,17 @@ This PowerShell script requires some input arguments, which are:
 .\Provision-InfrastructureSiteArtifacts.ps1 -InfrastructureSiteUrl https://[tenant].sharepoint.com/sites/pnp-partner-pack-infrastructure -AzureWebSiteUrl https://[PnP Azure web app].azurewebsites.net/
 ```
 
-##### Manual approach
+#### Manual approach
 Above **Provision-InfrastructureSiteArtifacts.ps1** script did all the work for you...if you however want to manually do this configuration then please follow these instructions: just after having created the site, you will have to provision some artifacts to hold infrastructural information. In order to do that, you simply need to apply three PnP Provisioning Templates that are available in the PnP Partner Pack repository on GitHub.
 
 Here follows an excerpt of the PowerShell script to provision these artifacts:
 
 ```PowerShell
-Connect-SPOnline "https://[tenant].sharepoint.com/sites/PnP-Partner-Pack-Infrastructure"
+Connect-PnPOnline "https://[tenant].sharepoint.com/sites/PnP-Partner-Pack-Infrastructure"
 
-Apply-SPOProvisioningTemplate -Path "[Partner-Pack-Source-Code-Folder]\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning\Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Jobs.xml"
-Apply-SPOProvisioningTemplate -Path "[Partner-Pack-Source-Code-Folder]\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning\Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Templates.xml"
-Apply-SPOProvisioningTemplate -Path "[Partner-Pack-Source-Code-Folder]\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning\Templates\PnP-Partner-Pack-Infrastructure-Contents.xml"
+Apply-PnPProvisioningTemplate -Path "[Partner-Pack-Source-Code-Folder]\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning\Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Jobs.xml"
+Apply-PnPProvisioningTemplate -Path "[Partner-Pack-Source-Code-Folder]\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning\Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Templates.xml"
+Apply-PnPProvisioningTemplate -Path "[Partner-Pack-Source-Code-Folder]\OfficeDevPnP.PartnerPack.SiteProvisioning\OfficeDevPnP.PartnerPack.SiteProvisioning\Templates\PnP-Partner-Pack-Infrastructure-Contents.xml"
 ```
 
 > Notice that the previous code excerpts are just examples, to show you how you should invoke the cmdlets manually. 
@@ -301,6 +306,7 @@ In the latter library, you will already find some Provisioning Templates, organi
 
 Once you've completed the previous steps you'll have all the information needed to prepare the publishing of the PnP components to the Azure App Service. Before you can publish the PnP Partner Pack to the Azure App Service you need to configure all the web.config and app.config files. The recommended approach here is to use the <a href="../scripts/Configure-Configs.ps1">Configure-Configs.ps1</a> script. This script is available in the 
 <a href="../scripts/">Scripts folder</a> of this repository and requires following input:
+
 * **AzureStorageAccountName**: the name of the storage account that will be used the infrastructural services and by the job
 * **AzureStoragePrimaryAccessKey**: the access key to consume the Azure Storage Account
 * **ClientId**: the OAuth ClientID registered in Azure AD for the PnP Partner Pack application 
@@ -433,16 +439,16 @@ Moreover, you will have to publish them into the Azure App Service. To provision
 > For further details about how to publish Azure Web Jobs you can be read the following article: <a href="https://azure.microsoft.com/en-gb/documentation/articles/websites-dotnet-deploy-webjobs/">Deploy WebJobs using Visual Studio</a>.
 
 #### Publishing the **ScheduledJob** using a **minute** schedule
-When you publish a Web Job that requires to be run at a schedule, your web job by default will end up in a free scheduler job collection which only allows to run scheduled jobs at a 1 hour interval or higher. Since site collection creation is handled via the ScheduledJob you might want to have this job running more frequent (e.g. each 5 minutes). Below steps describe how you can convert the created scheduled job collection to a paying version which allows to schedule jobs at a minute level interval:
+When you publish a Web Job that requires to be run at a schedule, your web job by default will end up in a free scheduler job collection which only allows to run scheduled jobs at a 1 hour interval or higher. Since site collection creation is handled via the ScheduledJob you might want to have this job running more frequently (e.g. every 5 minutes). Below steps describe how you can convert the created scheduled job collection to a paying version, which allows to schedule jobs at a minute level interval:
 * Deploy the **ScheduledJob** at a 1 hour interval. This will allow the job to get properly scheduled
 * Go to the [Azure management portal](http://portal.azure.com) (portal.azure.com), click on "Browse >" and select **"Scheduler Job Collections"**
-* Select the "WebJobs-[region]" scheduler job collection. This options the scheduler job collection and it's settings.  
+* Select the "WebJobs-[region]" scheduler job collection. This will show the scheduler job collection and it's settings.
     * Select the **"Pricing tier"** and change from "Free" to **"Standard"**
     * Select **"Quotas"** and change the max recurrence setting to **5 Minutes** 
     * Select **"Scheduler Jobs"** and click on the **ScheduledJob**
-        * Select **"Schedule"** in the settings and change the schedule to for example a 5 minute schedule
+        * Select **"Schedule"** in the settings and - for example - change the schedule to a 5 minute schedule
         * Select **"Action Settings"** and in the **Optional settings** set the **Authentication settings** to **Basic**
-        * Provide the **user name** (e.g. $pnp-partner-pack-demo) and **password**: the best option to obtain these values is to download the publishing profile from the Azure App Service and copy the user and password value from that file
+        * Provide the **username** (e.g. $pnp-partner-pack-demo) and **password**: the best option to obtain these values is to download the publishing profile from the Azure App Service and copy the user and password value from that file
 
 Below screenshots show some of the above steps in action:
 
