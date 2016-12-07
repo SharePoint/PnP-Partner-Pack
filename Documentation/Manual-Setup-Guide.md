@@ -120,7 +120,7 @@ To create a self signed certificate with this script:
 .\Create-SelfSignedCertificate.ps1 -CommonName "MyCompanyName" -StartDate 2015-10-25 -EndDate 2016-10-25
 ```
 
-You will be asked to provide a password to encrypt your private key, and both the .PFX file and .CER file will be exported to the current folder.
+You will be asked to provide a password to encrypt your private key, and both the .PFX file and .CER file will be exported to the current folder. Using the Create-SelfSignedCertificate.ps1 will place both the .CER and .PFX files in the script location.
 
 #### Using makecert (alternative manual option)
 Alternatively, if you have Microsoft Visual Studio 2013/2015 installed on your enviroment, you already have the [makecert tool](https://msdn.microsoft.com/library/windows/desktop/aa386968.aspx), as well. Otherwise, you will have to download from MSDN and to install the Windows SDK for your current version of Windows Operating System.
@@ -143,10 +143,11 @@ After having created the self-signed X.509 Certificate you have to export it as 
 You can execute 
 
 ```PowerShell
-Get-SPOAzureADManifestKeyCredentials -CertPath <path to your .cer file> | clip
+Get-SPOAzureADManifestKeyCredentials -CertPath <path to your .cer file> > C:\Temp\Cert.txt
 ```
 
-which will generate the required snippet and copy it to the clipboard. (Note: the Get-SPOAzureADManifestKeyCredentials command will not currently provide the certificate thumbprint needed for configuration later in the document.)
+which will generate output in the correct format required for your manifest upload.  Using the copy and paste from a PowerShell window method (outlined below) will create unwated whitespaces in your JSON file and will cause you greif during your manifest upload. 
+(Note: the Get-SPOAzureADManifestKeyCredentials command will not currently provide the certificate thumbprint needed for configuration later in the document.)
 
 Alternatively, start a PowerShell command window, and execute the following instructions:
 
