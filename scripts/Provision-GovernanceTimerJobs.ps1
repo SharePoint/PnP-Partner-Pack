@@ -6,13 +6,18 @@ Uploads and configures the governance timerjobs.
 It assumes that the app.config and web.config files have been configured correctly.
 
 .EXAMPLE
-PS C:\> .\Provision-GovernanceTimerJobs.ps1 -Location "North Europe" -AzureWebSite yourwebsite
+PS C:\> .\Provision-GovernanceTimerJobs.ps1 -Location "North Europe" -AzureWebSite WebsiteName
 
 This will pack the 2 governance webjobs, it will upload them to the azurewebsite specified, and it will create a default schedule to run the 
 2 jobs every day at 05:00 AM GMT.
 
 .EXAMPLE
-PS C:\> .\Provision-GovernanceTimerJobs.ps1 -Location "North Europe" -AzureWebSite yourwebsite - StartDateAndTime "2015-11-08 09:00"
+PS C:\> .\Provision-GovernanceTimerJobs.ps1 -Location "North Europe" -AzureWebSite WebsiteName - StartDateAndTime "2015-11-08 09:00"
+
+.EXAMPLE
+Use the Get-AzureSubscription in combination with Get-AzureWebsite to locate which Azure Subscription hosts your website
+
+PS C:\> .\Provision-GovernanceTimerJobs.ps1 -Location "North Europe" -AzureWebSite WebsiteName -AzureSubscriptionName "Visual Studio Enterprise"
 
 #>
 Param(
@@ -27,6 +32,10 @@ Param(
 
    [Parameter(Mandatory=$true)]
    [string]$AzureWebSite,
+   
+   [Parameter(Mandatory=$true)]
+   [ValidateSet('Access to Azure Active Directory', 'Developer Program Benefit', 'Visual Studio Enterprise')]
+   [string]$AzureSubscriptionName = "Access to Azure Active Directory",
 
    [Parameter(Mandatory=$false)]
    [string]$JobCollectionName = "PnP-PartnerPack-GovernanceJobCollection",
@@ -40,6 +49,8 @@ Param(
 Add-AzureAccount
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
+
+Select-AzureSubscription -SubscriptionName $AzureSubscriptionName
 
 function UploadJob($jobName,$jobFile)
 {
