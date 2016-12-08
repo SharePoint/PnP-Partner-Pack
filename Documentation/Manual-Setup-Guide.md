@@ -376,7 +376,7 @@ You need at least the "BASIC" pricing plan, because you will need to upload the 
 
 ![Azure App Service - X.509 Certificate](./Figures/Fig-12-Azure-Web-App-03.png)
 
-After that, scroll a little bit to the "App Settings" section. There, you will have to configure a setting called *WEBSITE_LOAD_CERTIFICATES* with a value of *. In the following figure you can see a sample configuration. Alternatively through the new Azure Portal, you have to go to **"Application settings"**, scroll down to the **"App settings"** section and add the *WEBSITE_LOAD_CERTIFICATES* entry with a value of *. Click on **"Save"** at the top to confirm your modification.
+After that, scroll a little bit to the "App Settings" section. There, you will have to configure a setting called *WEBSITE_LOAD_CERTIFICATES* with a value of '*' (without the '). In the following figure you can see a sample configuration. Alternatively through the new Azure Portal, you have to go to **"Application settings"**, scroll down to the **"App settings"** section and add the *WEBSITE_LOAD_CERTIFICATES* entry with a value of '*' (without the '). Click on **"Save"** at the top to confirm your modification.
 
 ![Azure App Service - SSL Certificates Setting](./Figures/Fig-13-Azure-Web-App-04.png)
 
