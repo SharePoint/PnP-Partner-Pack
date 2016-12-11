@@ -151,10 +151,12 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                             new ProvisioningTemplateApplyingInformation();
 
                         // Write provisioning steps on console log
-                        ptai.MessagesDelegate += delegate (string message, ProvisioningMessageType messageType) {
+                        ptai.MessagesDelegate += delegate (string message, ProvisioningMessageType messageType)
+                        {
                             Console.WriteLine("{0} - {1}", messageType, messageType);
                         };
-                        ptai.ProgressDelegate += delegate (string message, int step, int total) {
+                        ptai.ProgressDelegate += delegate (string message, int step, int total)
+                        {
                             Console.WriteLine("{0:00}/{1:00} - {2}", step, total, message);
                         };
 
@@ -177,8 +179,11 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                         }
 
                         // Fixup Title and Description
-                        template.WebSettings.Title = job.SiteTitle;
-                        template.WebSettings.Description = job.Description;
+                        if (template.WebSettings != null)
+                        {
+                            template.WebSettings.Title = job.SiteTitle;
+                            template.WebSettings.Description = job.Description;
+                        }
 
                         // Apply the template to the target site
                         web.ApplyProvisioningTemplate(template, ptai);
@@ -211,10 +216,17 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                                 var brandingTemplate = BrandingJobHandler.PrepareBrandingTemplate(repositoryContext, brandingSettings);
 
                                 // Fixup Title and Description
-                                brandingTemplate.WebSettings.Title = job.SiteTitle;
-                                brandingTemplate.WebSettings.Description = job.Description;
+                                if (brandingTemplate != null)
+                                {
+                                    if (brandingTemplate.WebSettings != null)
+                                    {
+                                        brandingTemplate.WebSettings.Title = job.SiteTitle;
+                                        brandingTemplate.WebSettings.Description = job.Description;
+                                    }
 
-                                BrandingJobHandler.ApplyBrandingOnWeb(web, brandingSettings, brandingTemplate);
+                                    // TO-DO: Need to handle exception here as there are multiple webs inside this where
+                                    BrandingJobHandler.ApplyBrandingOnWeb(web, brandingSettings, brandingTemplate);
+                                }
                             }
                         }
 
