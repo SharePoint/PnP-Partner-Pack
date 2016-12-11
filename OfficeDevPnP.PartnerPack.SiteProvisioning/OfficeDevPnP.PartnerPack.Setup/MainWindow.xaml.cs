@@ -1,4 +1,5 @@
-﻿using OfficeDevPnP.PartnerPack.Setup.ViewModel;
+﻿using OfficeDevPnP.PartnerPack.Setup.Components;
+using OfficeDevPnP.PartnerPack.Setup.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -46,6 +47,11 @@ namespace OfficeDevPnP.PartnerPack.Setup
 
                 // Move focus on the element
                 Keyboard.Focus(elementWithErrors);
+            }
+
+            if (!SetupManager.SetupPartnerPack())
+            {
+                // Show any error on the screen/log ...
             }
         }
 
