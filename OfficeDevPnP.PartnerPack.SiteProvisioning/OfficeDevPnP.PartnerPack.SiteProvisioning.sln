@@ -36,6 +36,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{1706
 		..\scripts\Reset-Configs.ps1 = ..\scripts\Reset-Configs.ps1
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfficeDevPnP.PartnerPack.ViewResources", "OfficeDevPnP.PartnerPack.ViewResources\OfficeDevPnP.PartnerPack.ViewResources.csproj", "{6253BECD-4BA5-44B6-8CCE-F43FE411F948}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,6 +68,10 @@ Global
 		{F85FA0E0-FF3B-40FD-BC72-D406E7BAB62F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F85FA0E0-FF3B-40FD-BC72-D406E7BAB62F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F85FA0E0-FF3B-40FD-BC72-D406E7BAB62F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6253BECD-4BA5-44B6-8CCE-F43FE411F948}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6253BECD-4BA5-44B6-8CCE-F43FE411F948}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6253BECD-4BA5-44B6-8CCE-F43FE411F948}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6253BECD-4BA5-44B6-8CCE-F43FE411F948}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
