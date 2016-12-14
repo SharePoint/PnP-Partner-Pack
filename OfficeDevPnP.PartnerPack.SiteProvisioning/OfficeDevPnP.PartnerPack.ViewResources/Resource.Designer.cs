@@ -79,6 +79,24 @@ namespace ViewResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Create Site Collection.
+        /// </summary>
+        public static string CreateSiteCollection {
+            get {
+                return ResourceManager.GetString("CreateSiteCollection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create Sub Site.
+        /// </summary>
+        public static string CreateSubSite {
+            get {
+                return ResourceManager.GetString("CreateSubSite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dutch.
         /// </summary>
         public static string Dutch {
@@ -174,6 +192,15 @@ namespace ViewResources {
         public static string SelectLanguage {
             get {
                 return ResourceManager.GetString("SelectLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select a Template.
+        /// </summary>
+        public static string SelectTemplate {
+            get {
+                return ResourceManager.GetString("SelectTemplate", resourceCulture);
             }
         }
         

@@ -123,6 +123,12 @@
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="CreateSiteCollection" xml:space="preserve">
+    <value>Create Site Collection</value>
+  </data>
+  <data name="CreateSubSite" xml:space="preserve">
+    <value>Create Sub Site</value>
+  </data>
   <data name="Dutch" xml:space="preserve">
     <value>Dutch</value>
   </data>
@@ -155,6 +161,9 @@
   </data>
   <data name="SelectLanguage" xml:space="preserve">
     <value>Select Language</value>
+  </data>
+  <data name="SelectTemplate" xml:space="preserve">
+    <value>Select a Template</value>
   </data>
   <data name="SiteDescription" xml:space="preserve">
     <value>Description</value>

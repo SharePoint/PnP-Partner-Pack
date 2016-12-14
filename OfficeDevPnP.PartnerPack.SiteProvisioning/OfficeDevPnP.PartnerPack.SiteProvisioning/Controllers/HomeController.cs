@@ -17,6 +17,8 @@ using System.Drawing;
 using System.IO;
 using System.Drawing.Imaging;
 using Newtonsoft.Json;
+using System.Threading;
+using System.Globalization;
 using System.Threading.Tasks;
 using System.Net.Http;
 using OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml;
@@ -29,6 +31,16 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
     [Authorize]
     public class HomeController : Controller
     {
+        //initilizing culture on controller initialization
+        protected override void Initialize(System.Web.Routing.RequestContext requestContext)
+        {
+            base.Initialize(requestContext);
+            if (Session["CurrentCulture"] != null)
+            {
+                Thread.CurrentThread.CurrentCulture = new CultureInfo(Session["CurrentCulture"].ToString());
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo(Session["CurrentCulture"].ToString());
+            }
+        }
         public ActionResult Index()
         {
             IndexViewModel model = new IndexViewModel();

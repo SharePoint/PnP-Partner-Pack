@@ -15,8 +15,8 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
     {
         public CreateSiteStep Step { get; set; }
 
-        [Required(ErrorMessage = "Title is a required field")]
-        [DisplayName("Title")]
+        [Required(ErrorMessageResourceName = "TitleRequired", ErrorMessageResourceType = typeof(ViewResources.Resource))]
+        [Display(Name ="Title", ResourceType = typeof(ViewResources.Resource))]
         public String Title { get; set; }
 
         [Required(ErrorMessage = "Relative URL is a required field")]
