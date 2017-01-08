@@ -22,7 +22,7 @@ Param(
    [string]$Build = "Release",
 
    [Parameter(Mandatory=$true)]
-   [ValidateSet('South Central US','North Europe','Web Europe','East US','East Asia','Southeast Asia','West US','Central US','Japan West','Japan East','North Central US','East US 2','Brazil South','Australia East', 'Australia Southeast')]
+   [ValidateSet('South Central US','North Europe','Web Europe','East US','East Asia','Southeast Asia','West US','Central US','Japan West','Japan East','North Central US','East US 2','Brazil South')]
    [string]$Location,
 
    [Parameter(Mandatory=$true)]
@@ -34,64 +34,68 @@ Param(
    [Parameter(Mandatory=$false)]
    [string]$StartDateAndTime = (Get-Date -Format "yyyy-MM-dd 06:00")
 )
-write-host "Provision-GovernanceTimerJobs.ps1 -Build $Build -Location $Location -AzureWebSite $AzureWebSite -JobCollection $JobCollection -StartDateAndTime $StartDateAndTime" -ForegroundColor Yellow
+
 # DO NOT MODIFY BELOW
-if($null -eq (Get-AzureAccount -EA 0)){
-    Add-AzureAccount
-}
+
+Add-AzureAccount
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
-function UploadJob($jobName,$jobFile, $jobType = "Triggered")
+function UploadJob($jobName,$jobFile)
 {
     Write-Host -ForegroundColor Yellow "Uploading $jobName"
     $site = Get-AzureWebsite -Name $AzureWebSite
-    $job = $site | New-AzureWebsiteJob -JobName $jobName -JobType $jobType  -JobFile $jobFile
-    if($jobType = "Triggered"){
-        $jobCollection = Get-AzureSchedulerJobCollection -Location $Location -JobCollectionName $JobCollectionName -ErrorAction SilentlyContinue
-        if($jobCollection -eq $null)
-        {
-            $jobCollection = New-AzureSchedulerJobCollection -Location $Location -JobCollectionName $JobCollectionName;
-        }
-        $authPair = "$($site.PublishingUsername):$($site.PublishingPassword)";
-        $pairBytes = [System.Text.Encoding]::UTF8.GetBytes($authPair);
-        $encodedPair = [System.Convert]::ToBase64String($pairBytes);
-        $schedulerJob = Get-AzureSchedulerJob -Location $Location -JobCollectionName $jobCollectionName -JobName $jobName -ErrorAction SilentlyContinue
-        if($schedulerJob -ne $null)
-        {
-            Remove-AzureSchedulerJob -Location $Location -JobCollectionName $jobCollectionName -JobName $jobName -Force | Out-Null
-        }
-        New-AzureSchedulerHttpJob -JobCollectionName $jobCollectionName -JobName $jobName -Method POST -URI "$($job.Url)\run" -Location $Location -StartTime $StartDateAndTime -Interval 1 -Frequency Day |Out-Null
-        }
-}
-function DeployJob($packageName, $folder, $jobType="Triggered")
-{
-if($folder -eq $null)
-{
-    $folder= $packageName
-}
-# Check if the required release files are present
-$files = Get-ChildItem "$basePath\OfficeDevPnP.PartnerPack.$folder\bin\$Build" -ErrorAction SilentlyContinue
-if($files -ne $null -and $files.Length -gt 0)
-{
-    # Pack the files into a ZIP file
-    $zipFile = Get-ChildItem "$basePath\OfficeDevPnP.PartnerPack.$folder\$packageName.zip" -ErrorAction SilentlyContinue
-    if($zipFile -ne $null)
+    $job = $site | New-AzureWebsiteJob -JobName $jobName -JobType Triggered -JobFile $jobFile
+    $jobCollection = Get-AzureSchedulerJobCollection -Location $Location -JobCollectionName $JobCollectionName -ErrorAction SilentlyContinue
+    if($jobCollection -eq $null)
     {
-        Remove-Item "$basePath\OfficeDevPnP.PartnerPack.$folder\$packageName.zip"
+        $jobCollection = New-AzureSchedulerJobCollection -Location $Location -JobCollectionName $JobCollectionName;
     }
-    [IO.Compression.ZipFile]::CreateFromDirectory("$basePath\OfficeDevPnP.PartnerPack.$folder\bin\$Build","$basePath\OfficeDevPnP.PartnerPack.$folder\$packageName.zip");
-    UploadJob "$packageName" "$basePath\OfficeDevPnP.PartnerPack.$folder\$packageName.zip" -jobType $jobType
-} else {
-    Write-Host -ForegroundColor Cyan "No build files available. Please configure and build the solution first."
-}
-}
 
+    $authPair = "$($site.PublishingUsername):$($site.PublishingPassword)";
+    $pairBytes = [System.Text.Encoding]::UTF8.GetBytes($authPair);
+    $encodedPair = [System.Convert]::ToBase64String($pairBytes);
+    $schedulerJob = Get-AzureSchedulerJob -Location $Location -JobCollectionName $jobCollectionName -JobName $jobName -ErrorAction SilentlyContinue
+    if($schedulerJob -ne $null)
+    {
+        Remove-AzureSchedulerJob -Location $Location -JobCollectionName $jobCollectionName -JobName $jobName -Force
+    }
+    #New-AzureSchedulerHttpJob -JobCollectionName $jobCollectionName -JobName $jobName -Method POST -URI "$($job.Url)\run" -Location $Location -StartTime $StartDateAndTime -Interval 1 -Frequency Day -Headers @{ "Content-Type" = "text/plain"; "Authorization" = "Basic $encodedPair"; };
+    New-AzureSchedulerHttpJob -JobCollectionName $jobCollectionName -JobName $jobName -Method POST -URI "$($job.Url)\run" -Location $Location -StartTime $StartDateAndTime -Interval 1 -Frequency Day
+}
 
 $basePath = "$(convert-path ..)\OfficeDevPnP.PartnerPack.SiteProvisioning"
 
+Write-Host -ForegroundColor Yellow "Packing Enforce Administrators Job"
 
-DeployJob "EnforceAdminsJob" "CheckAdminsJob"
-DeployJob "ExternalUsersJob"
-DeployJob "ScheduledJob" 
-DeployJob "ContinuousJob" -jobType "Continuous"
+# Check if the required release files are present
+$files = Get-ChildItem "$basePath\OfficeDevPnP.PartnerPack.CheckAdminsJob\bin\$Build" -ErrorAction SilentlyContinue
+if($files -ne $null -and $files.Length -gt 0)
+{
+    # Pack the files into a ZIP file
+    $zipFile = Get-ChildItem "$basePath\OfficeDevPnP.PartnerPack.CheckAdminsJob\EnforceAdminsJob.zip" -ErrorAction SilentlyContinue
+    if($zipFile -ne $null)
+    {
+        Remove-Item "$basePath\OfficeDevPnP.PartnerPack.CheckAdminsJob\EnforceAdminsJob.zip"
+    }
+    [IO.Compression.ZipFile]::CreateFromDirectory("$basePath\OfficeDevPnP.PartnerPack.CheckAdminsJob\bin\$Build","$basePath\OfficeDevPnP.PartnerPack.CheckAdminsJob\EnforceAdminsJob.zip");
+    UploadJob "EnforceTwoAdminsJob" "$basePath\OfficeDevPnP.PartnerPack.CheckAdminsJob\EnforceAdminsJob.zip"
+} else {
+    Write-Host -ForegroundColor Cyan "No build files available. Please configure and build the solution first."
+}
+
+Write-Host -ForegroundColor Yellow "Packing Check External Users Job"
+$files = Get-ChildItem "$basePath\OfficeDevPnP.PartnerPack.ExternalUsersJob\bin\$Build" -ErrorAction SilentlyContinue
+if($files -ne $null -and $files.Length -gt 0)
+{
+    # Pack the files into a ZIP file
+    $zipFile = Get-ChildItem "$basePath\OfficeDevPnP.PartnerPack.ExternalUsersJob\ExternalUsersJob.zip" -ErrorAction SilentlyContinue
+    if($zipFile -ne $null)
+    {
+        Remove-Item "$basePath\OfficeDevPnP.PartnerPack.CheckAdminsJob\ExternalUsersJob.zip"
+    }
+    [IO.Compression.ZipFile]::CreateFromDirectory("$basePath\OfficeDevPnP.PartnerPack.ExternalUsersJob\bin\$Build","$basePath\OfficeDevPnP.PartnerPack.ExternalUsersJob\ExternalUsersJob.zip");
+    UploadJob "ExternalUsersJob" "$basePath\OfficeDevPnP.PartnerPack.ExternalUsersJob\ExternalUsersJob.zip"
+} else {
+    Write-Host -ForegroundColor Cyan "No build files available. Please configure and build the solution first."
+}

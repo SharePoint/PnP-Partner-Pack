@@ -32,5 +32,5 @@ while ($job.JobStateInfo -eq 'Running'){
 Write-Host "." -NoNewline
 
 Write-Host "Importing Site Artifacts"
-.\Provision-InfrastructureSiteArtifacts.ps1 -InfrastructureSiteUrl $InfrastructureSiteUrl  -AzureWebSiteUrl "http://$($azureService).azurewebsites.net" -Credentials $Credentials
+..\Provision-InfrastructureSiteArtifacts.ps1 -InfrastructureSiteUrl $InfrastructureSiteUrl  -AzureWebSiteUrl "http://$($azureService).azurewebsites.net" -Credentials $Credentials
 Write-Host "Infrastructure Site Created. Url $InfrastructureSiteUrl"

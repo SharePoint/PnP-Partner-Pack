@@ -27,10 +27,9 @@ If you are interested on more detailed architectural description, please have a 
 # How do I install PnP Partner Pack #
 PnP Partner Pack requires quite a few installation steps. Here's resources around the installation and configuration.
 
-- [Step-by-Step](./Documentation/Manual-Setup-Guide.md) guidance on how to setup apps to Office 365 tenant and Azure
+- [Step-by-Step guidance](./Documentation/Manual-Setup-Guide.md) on how to setup apps to Office 365 tenant and Azure
+- [PnP Partner Pack v. 2.0 - Setup Guide video](https://youtu.be/ezWYorZClTI) at YouTube.
 - [Shell-Wizard](./Documentation/ShellWizard-Guide.md) guidance on how to use a scripted approach to provision all required Azure Resources and solution deploy.
-- [PnP Partner Pack - Setup Guide video](https://channel9.msdn.com/blogs/OfficeDevPnP/PnP-Partner-Pack-Setup-and-configuration) at Channel 9. Be careful that the referenced video covers the PnP Partner Pack v. 1.x and not yet the PnP Partner Pack v. 2.0.
-
 
 # What's the supportability story around this? #
 Following statements apply cross all of the PnP samples and solutions, including PnP Partner Pack.
@@ -64,4 +63,6 @@ Here's few screen shots of the responsive behavior included in the PnP Partner P
 ![](http://i.imgur.com/l01hhvE.png)
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+
+
 

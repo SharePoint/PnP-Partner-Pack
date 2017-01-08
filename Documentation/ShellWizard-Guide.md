@@ -20,9 +20,9 @@ Notice that the UI based desktop Setup application (for Windows OS only) that wi
 In order to setup the PnP Partner Pack you need:
 * A valid **Microsoft Office 365 tenant** with at least an active subscription
 * The **PnP PowerShell cmdlets** (available here: http://aka.ms/OfficeDevPnPPowerShell). The minimum version you need is version 2.7.1609.2. To double-check the version of the PnP PowerShell cmdlets, you can invoke the `Connect-SPOOnline`  cmdlet with the `-Verbose` argument
-*  **Azure Active Directory PowerShell Module - Version 2 *** (information here: https://msdn.microsoft.com/en-us/library/azure/mt757189.aspx) 
-*  **Azure and Azure Resource Manager PowerShell Modules *** (information here: http://go.microsoft.com/fwlink/p/?LinkID=320552).
-* **Visual Studio 2015 ***. Required if you wish to build, package and deploy solution. 
+* **Azure Active Directory PowerShell Module - Version 2** (information here: https://msdn.microsoft.com/en-us/library/azure/mt757189.aspx) 
+* **Azure and Azure Resource Manager PowerShell Modules** (information here: http://go.microsoft.com/fwlink/p/?LinkID=320552).
+* **Visual Studio 2015**. Required if you wish to build, package and deploy solution. 
 
 The scripted installation performs most of the steps required in order to deploy the Partner Pack Solution, however there are 2 manual step required after script has been completed.
 * [Azure Active Directory Application API Access Required](#aad-apipermissions)
@@ -36,7 +36,7 @@ The scripted installation performs most of the steps required in order to deploy
 ### Execute Configure-PartnerPack.ps1
 
 Configure-PartnerPack.ps1 creates the resources required for this solution to work, and attempts to deploy the Partner Pack solution to the Azure Web App.
-To run this open a PowerShell console, running as administrator (Certificate step requires admin permissions). Then navigate to the Partner Pack scripts folder 
+To run this open a PowerShell console, running as administrator (Certificate step requires admin permissions). Then navigate to the Partner Pack scripts folder and access the Shell-Wizard subfolder (/scripts/Shell-Wizard): 
 
 ```PowerShell
  ./Configure-PartnerPack.ps1
@@ -48,18 +48,19 @@ The following resources are expected to be created.
 - 1 Resource group
 - 1 Azure App Service Plan, same name as the one defined in ($config.AppServicePlanName)
 - 1 Azure App Service , same name as the one defined in ($config.AppServiceName). This service also comes with the following artefacts
-    - 3 Web jobs, ScheduledJob, EnforceAdminsJob, and ExternalUsersJob 
+    - 3 Web jobs: ScheduledJob, EnforceAdminsJob, and ExternalUsersJob 
     - 1 self signed SSL Certificate
     - 1 Application Property, WEBSITE_LOAD_CERTIFICATES
     - App Service tier configured to Basic (default is Free)
-- 1 Storage Account.     
-    - please note that no storage account is created when there is a default one already configured in your subscription.
+- 1 Storage Account     
+    - Please note that no storage account is created when there is a default one already configured in your subscription.
     - Storage account configured as default for the given Subscription.
 - 1 Scheduler Job Collection
-- 1 Azure AD Application. The following is also configured in this.
+- 1 Azure AD Application. The following are also configured in that application:
     - 1 Key credentials
     - 1 Password Credential, to be used as your app secret
-On top of the changes above mentione the config files of all solution are expected to be updated to reflect the IDs, Urls and Secret configured during this process.
+
+On top of the changes above mentioned, the config files of the whole solution are expected to be updated to reflect the IDs, Urls and Secret configured during this process.
 
 <a name="aad-apipermissions"></a>
 ### Configure Azure AD Application API Permissions
@@ -69,7 +70,9 @@ On top of the changes above mentione the config files of all solution are expect
 - Click App registrations. 
 - Find your newly created application and click on it 
 - Click Required permissions 
+
 At this stage you are expected to see a screen similar to the following
+
 ![Azure AD - Application Registrations](./Figures/ScriptedDeploy-Fig1-AzureADApplication.png)
 
 Now you need to repeat the following process 3 times. 
@@ -105,7 +108,7 @@ for more information the following screenshots are provided
 <a name="aad-applogo"></a>
 ### Configure Azure AD Application Logo
 
-Go back to your Azure AD Application Settings and click PProperties.  You should now be at the following screen: 
+Go back to your Azure AD Application Settings and click Properties.  You should now see the following screen: 
 
 ![Azure AD - Add an Application - Third Step](./Figures/Fig-09-Azure-AD-Add-Application-Step-02.png)
 
@@ -113,8 +116,7 @@ Please make sure you :
 - Upload the Application logo
 - Press save. 
 
-
-Now it is a good time to deploy the Partner Pack to your App Service instance. Please do that before you can use the solution/
+Now it is a good time to deploy the Partner Pack web site to your App Service instance, which is a required step in order to use the solution.
 
 You are now ready to play with your Office 365 Application. Simply open an Office 365 user session, click on the App Launcher and select the "My Apps" command.
 
