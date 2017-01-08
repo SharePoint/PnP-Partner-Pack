@@ -195,3 +195,11 @@ FakesAssemblies/
 # Visual Studio 6 workspace options file
 *.opt
 
+/scripts/contoso.com.cer
+/deploy/OfficeDevPnP.PartnerPack.SiteProvisioning
+/OfficeDevPnP.PartnerPack.SiteProvisioning/OfficeDevPnP.PartnerPack.CheckAdminsJob/EnforceAdminsJob.zip
+/OfficeDevPnP.PartnerPack.SiteProvisioning/OfficeDevPnP.PartnerPack.ExternalUsersJob/ExternalUsersJob.zip
+/OfficeDevPnP.PartnerPack.SiteProvisioning/OfficeDevPnP.PartnerPack.ScheduledJob/ScheduledJob.zip
+/scripts/config.json
+/scripts/tempSetParameters.xml
+/scripts/thumb.txt

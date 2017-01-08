@@ -29,7 +29,7 @@ PnP Partner Pack requires quite a few installation steps. Here's resources aroun
 
 - [Step-by-Step guidance](./Documentation/Manual-Setup-Guide.md) on how to setup apps to Office 365 tenant and Azure
 - [PnP Partner Pack v. 2.0 - Setup Guide video](https://youtu.be/ezWYorZClTI) at YouTube.
-
+- [Shell-Wizard](./Documentation/ShellWizard-Guide.md) guidance on how to use a scripted approach to provision all required Azure Resources and solution deploy.
 
 # What's the supportability story around this? #
 Following statements apply cross all of the PnP samples and solutions, including PnP Partner Pack.
