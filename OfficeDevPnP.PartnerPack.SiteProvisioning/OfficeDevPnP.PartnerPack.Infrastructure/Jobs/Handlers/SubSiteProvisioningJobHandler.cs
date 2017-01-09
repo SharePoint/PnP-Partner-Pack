@@ -71,6 +71,13 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                         Web web = parentWeb.Webs.Add(newWeb);
                         context.ExecuteQueryRetry();
 
+                        // Create sub-web unique groups
+                        if (!job.InheritPermissions)
+                        {
+                            web.CreateDefaultAssociatedGroups(string.Empty, string.Empty, string.Empty);
+                            context.ExecuteQueryRetry();
+                        }
+
                         Console.WriteLine("Site \"{0}\" created.", subSiteUrl);
 
                         // Apply the Provisioning Template
