@@ -141,7 +141,7 @@ your tenant. Click the "Add" button in the upper left part of the blade, this wi
 
 ![Azure AD - Add an Application - First Step](./Figures/Fig-08-Azure-AD-Add-Application-Step-01.png)
 
-Then, provide a **name** for your application (we suggest to name it "SharePoint PnP Partner Pack"), select the option **"Web app / API"**, and fill in the **"Sign-on URL"** with the **URL** of the Azure Web App that you will create (in one of the following steps). Click create when done.
+Then, provide a **name** for your application (we suggest to name it "SharePoint PnP Partner Pack"), select the option **"Web app / API"**, and fill in the **"Sign-on URL"** with the **URL** of the Azure Web App that you created (in one of the previous steps). Click create when done.
 
 The newly created app registration will now be listed in your "App Registrations" list.
 Open it and then click into settings and then Properties.  You should now be at the following screen: 
@@ -298,7 +298,7 @@ To have a look at these libraries, you can open links like the following ones:
 * https://[tenant].sharepoint.com/sites/PnP-Partner-Pack-Infrastructure/PnPProvisioningJobs
 * https://[tenant].sharepoint.com/sites/PnP-Partner-Pack-Infrastructure/PnPProvisioningTemplates
 
-In the latter library, you will already find some Provisioning Templates, organized in sub-folders. You will use them later in this setup guide.
+In the latter library, you will already find some Provisioning Templates, organized in sub-folders. You will use them later in this setup guide. For now, access your "PnP-Empty-Site.xml" and your "PnP-Empty-Sub-Site.xml" and change the property "Template Platform" chosing the platform where you're installing PnP-Partner-Pack to (SharePoint Online, Sharepoint 2016 or Sharepoint 2013). 
 
 <a name="configconfigs"></a>
 ### Partner Pack solution configuration
