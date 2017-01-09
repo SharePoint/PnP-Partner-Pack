@@ -106,8 +106,11 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                         }
 
                         // Fixup Title and Description
-                        template.WebSettings.Title = job.SiteTitle;
-                        template.WebSettings.Description = job.Description;
+                        if (template.WebSettings != null)
+                        {
+                            template.WebSettings.Title = job.SiteTitle;
+                            template.WebSettings.Description = job.Description;
+                        }
 
                         // Apply the template to the target site
                         web.ApplyProvisioningTemplate(template, ptai);
@@ -139,11 +142,20 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                             {
                                 var brandingTemplate = BrandingJobHandler.PrepareBrandingTemplate(repositoryContext, brandingSettings);
 
-                                // Fixup Title and Description
-                                brandingTemplate.WebSettings.Title = job.SiteTitle;
-                                brandingTemplate.WebSettings.Description = job.Description;
-
                                 BrandingJobHandler.ApplyBrandingOnWeb(web, brandingSettings, brandingTemplate);
+
+                                // Fixup Title and Description
+                                if (brandingTemplate != null)
+                                {
+                                    if (brandingTemplate.WebSettings != null)
+                                    {
+                                        brandingTemplate.WebSettings.Title = job.SiteTitle;
+                                        brandingTemplate.WebSettings.Description = job.Description;
+                                    }
+
+                                    // TO-DO: Need to handle exception here as there are multiple webs inside this where
+                                    BrandingJobHandler.ApplyBrandingOnWeb(web, brandingSettings, brandingTemplate);
+                                }
                             }
                         }
 
