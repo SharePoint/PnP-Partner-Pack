@@ -141,7 +141,7 @@ your tenant. Click the "Add" button in the upper left part of the blade, this wi
 
 ![Azure AD - Add an Application - First Step](./Figures/Fig-08-Azure-AD-Add-Application-Step-01.png)
 
-Then, provide a **name** for your application (we suggest to name it "SharePoint PnP Partner Pack"), select the option **"Web app / API"**, and fill in the **"Sign-on URL"** with the **URL** of the Azure Web App that you will create (in one of the following steps). Click create when done.
+Then, provide a **name** for your application (we suggest to name it "SharePoint PnP Partner Pack"), select the option **"Web app / API"**, and fill in the **"Sign-on URL"** with the **URL** of the Azure App Service that you created before. Click create when done.
 
 The newly created app registration will now be listed in your "App Registrations" list.
 Open it and then click into settings and then Properties.  You should now be at the following screen: 
