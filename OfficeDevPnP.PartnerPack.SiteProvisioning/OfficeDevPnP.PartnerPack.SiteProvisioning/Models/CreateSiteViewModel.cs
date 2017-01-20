@@ -15,40 +15,40 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
     {
         public CreateSiteStep Step { get; set; }
 
-        [Required(ErrorMessageResourceName = "TitleRequired", ErrorMessageResourceType = typeof(ViewResources.Resource))]
-        [Display(Name ="Title", ResourceType = typeof(ViewResources.Resource))]
+        [Required(ErrorMessageResourceName = "TitleRequired", ErrorMessageResourceType = typeof(OfficeDevPnP.PartnerPack.Localization.Resource))]
+        [Display(Name = "Title", ResourceType = typeof(OfficeDevPnP.PartnerPack.Localization.Resource))]
         public String Title { get; set; }
 
-        [Required(ErrorMessage = "Relative URL is a required field")]
+        [Required(ErrorMessageResourceName = "RelativeURLRequired", ErrorMessageResourceType = typeof(OfficeDevPnP.PartnerPack.Localization.Resource))]
         [MaxLength(33)]
-        [DisplayName("Relative URL")]
+        [Display(Name = "RelativeURL", ResourceType = typeof(OfficeDevPnP.PartnerPack.Localization.Resource))]
         public String RelativeUrl { get; set; }
 
-        [DisplayName("Site Policy")]
+        [Display(Name = "SitePolicy", ResourceType = typeof(OfficeDevPnP.PartnerPack.Localization.Resource))]
         [UIHint("SitePolicy")]
         public String SitePolicy { get; set; }
 
-        [DisplayName("Description")]
+        [Display(Name = "SiteDescription", ResourceType = typeof(OfficeDevPnP.PartnerPack.Localization.Resource))]
         [DataType(DataType.MultilineText)]
         [UIHint("Multilines")]
         public string Description { get; set; }
 
-        [Required(ErrorMessage = "Language is a required field")]
-        [DisplayName("Language")]
+        [Required(ErrorMessageResourceName = "SiteLanguageRequired", ErrorMessageResourceType = typeof(OfficeDevPnP.PartnerPack.Localization.Resource))]
+        [Display(Name = "SiteLanguage", ResourceType = typeof(OfficeDevPnP.PartnerPack.Localization.Resource))]
         [UIHint("LocaleID")]
         public Int32 Language { get; set; }
 
-        [Required(ErrorMessage = "Template is a required field")]
+        [Required(ErrorMessageResourceName = "SiteTemplateRequired", ErrorMessageResourceType = typeof(OfficeDevPnP.PartnerPack.Localization.Resource))]
         [MinLength(1)]
-        [DisplayName("Template")]
+        [Display(Name = "SiteTemplate", ResourceType = typeof(OfficeDevPnP.PartnerPack.Localization.Resource))]
         [UIHint("ProvisioningTemplate")]
         public String ProvisioningTemplateUrl { get; set; }
 
-        [DisplayName("Time Zone")]
+        [Display(Name = "TimeZone", ResourceType = typeof(OfficeDevPnP.PartnerPack.Localization.Resource))]
         [UIHint("TimeZoneInfo")]
         public Int32 TimeZone { get; set; }
 
-        [DisplayName("Template Parameters")]
+        [Display(Name = "TemplateParameters", ResourceType = typeof(OfficeDevPnP.PartnerPack.Localization.Resource))]
         public Dictionary<String, String> TemplateParameters { get; set; }
 
         public TargetScope Scope { get; set; }
@@ -57,7 +57,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
 
         public String ParentSiteUrl { get; set; }
 
-        [DisplayName("Apply Tenant Branding")]
+        [Display(Name = "ApplyTenantBranding", ResourceType = typeof(OfficeDevPnP.PartnerPack.Localization.Resource))]
         public Boolean ApplyTenantBranding { get; set; }
     }
 

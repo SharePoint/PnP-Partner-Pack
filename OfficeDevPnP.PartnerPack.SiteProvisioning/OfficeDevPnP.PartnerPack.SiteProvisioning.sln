@@ -36,7 +36,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{1706
 		..\scripts\Reset-Configs.ps1 = ..\scripts\Reset-Configs.ps1
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfficeDevPnP.PartnerPack.ViewResources", "OfficeDevPnP.PartnerPack.ViewResources\OfficeDevPnP.PartnerPack.ViewResources.csproj", "{6253BECD-4BA5-44B6-8CCE-F43FE411F948}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfficeDevPnP.PartnerPack.Localization", "OfficeDevPnP.PartnerPack.Localization\OfficeDevPnP.PartnerPack.Localization.csproj", "{6253BECD-4BA5-44B6-8CCE-F43FE411F948}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
