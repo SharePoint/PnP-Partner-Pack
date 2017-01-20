@@ -8,7 +8,7 @@
     <pnp:ProvisioningTemplate ID="PNP-PARTNER-PACK-OVERRIDES" Version="1">
       <pnp:CustomActions>
         <pnp:SiteCustomActions>
-          <pnp:CustomAction Name="PnPPartnerPackOverrides" Location="ScriptLink" Sequence="0" Rights="" ScriptBlock="&#xD;&#xA;                var headID = document.getElementsByTagName('head')[0]; &#xD;&#xA;                var&#xD;&#xA;                newScript = document.createElement('script');&#xD;&#xA;                newScript.type = 'text/javascript';&#xD;&#xA;                newScript.src = '{parameter:AzureWebSiteUrl}/Templates/Overrides/PnP-Partner-Pack-Overrides.js?rev=457cefaa69cc4d6d9d37cecc6cb04dc3';&#xD;&#xA;                newScript.id = 'PnPPartnerPackOverrides';&#xD;&#xA;                headID.appendChild(newScript);">
+          <pnp:CustomAction Name="PnPPartnerPackOverrides" Location="ScriptLink" Sequence="0" Rights="" ScriptBlock="&#xD;&#xA;                var headID = document.getElementsByTagName('head')[0]; &#xD;&#xA;                var&#xD;&#xA;                newScript = document.createElement('script');&#xD;&#xA;                newScript.type = 'text/javascript';&#xD;&#xA;                newScript.src = '{parameter:AzureWebSiteUrl}/Templates/Overrides/PnP-Partner-Pack-Overrides.js?rev=80bdabdc95d34716a8fbf913165d2600';&#xD;&#xA;                newScript.id = 'PnPPartnerPackOverrides';&#xD;&#xA;                headID.appendChild(newScript);">
             <pnp:CommandUIExtension />
           </pnp:CustomAction>
         </pnp:SiteCustomActions>

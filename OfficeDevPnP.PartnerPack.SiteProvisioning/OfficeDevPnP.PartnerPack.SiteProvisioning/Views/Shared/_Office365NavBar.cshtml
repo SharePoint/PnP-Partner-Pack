@@ -1,4 +1,4 @@
-﻿@{ 
+﻿@{
 
     var userIsTenantGlobalAdmin = OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackUtilities.UserIsTenantGlobalAdmin();
     var userIsSharePointAdmin = OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackUtilities.UserIsSPOAdmin();
@@ -9,8 +9,8 @@
     </div>
     <ul class="ms-NavBar-items">
         <li class="ms-NavBar-item"><a class="ms-NavBar-link" href="/Home/Index"><i class="ms-Icon ms-Icon--home"></i> Home</a></li>
-        <li class="ms-NavBar-item"><a class="ms-NavBar-link" href="/Home/CreateSiteCollection"><i class="ms-Icon ms-Icon--onlineAdd"></i> Create Site Collection</a></li>
-        <li class="ms-NavBar-item"><a class="ms-NavBar-link" href="/Home/MyProvisionedSites"><i class="ms-Icon ms-Icon--listBullets"></i> My Site Collections</a></li>
+        <li class="ms-NavBar-item"><a class="ms-NavBar-link" href="/Home/CreateSiteCollection"><i class="ms-Icon ms-Icon--onlineAdd"></i> @OfficeDevPnP.PartnerPack.Localization.Resource.CreateSiteCollection</a></li>
+        <li class="ms-NavBar-item"><a class="ms-NavBar-link" href="/Home/MyProvisionedSites"><i class="ms-Icon ms-Icon--listBullets"></i> @OfficeDevPnP.PartnerPack.Localization.Resource.MySiteCollections</a></li>
 
         @if (userIsTenantGlobalAdmin || userIsSharePointAdmin)
         {
@@ -22,7 +22,7 @@
                         <a class="ms-ContextualMenu-link" href="/Governance/Branding">SharePoint Branding</a>
                     </li>
                     <li class="ms-ContextualMenu-item">
-                        <a class="ms-ContextualMenu-link" href="/Governance/RefreshSites">Refresh Sites</a>
+                        <a class="ms-ContextualMenu-link" href="/Governance/RefreshSites">@OfficeDevPnP.PartnerPack.Localization.Resource.RefreshSites</a>
                     </li>
                     <li class="ms-ContextualMenu-item">
                         <a class="ms-ContextualMenu-link" href="/Governance/SiteCollectionsBatch">Site Collections Batch</a>
@@ -33,7 +33,7 @@
 
         @if (userIsTenantGlobalAdmin || userIsSharePointAdmin)
         {
-            <li class="ms-NavBar-item ms-NavBar-item--right"><a class="ms-NavBar-link" href="/Home/Settings"><i class="ms-Icon ms-Icon--gear"></i> Settings</a></li>
+            <li class="ms-NavBar-item ms-NavBar-item--right"><a class="ms-NavBar-link" href="/Home/Settings"><i class="ms-Icon ms-Icon--gear"></i>@OfficeDevPnP.PartnerPack.Localization.Resource.Settings</a></li>
         }
     </ul>
 </div>

@@ -5,7 +5,7 @@
 
     <input type="hidden" id="@Html.IdFor(model => model.Step)" name="@Html.NameFor(model => model.Step)" value="@Model.Step" />
 
-    <div class="ms-font-xxl">Site Configuration</div>
+    <div class="ms-font-xxl">@OfficeDevPnP.PartnerPack.Localization.Resource.SiteConfiguration</div>
 
     <div class="inputForm">
         <hr />
@@ -75,12 +75,12 @@
 
     <button class="ms-Button PreviousStep">
         <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
-        <span class="ms-Button-label">Previous</span>
+        <span class="ms-Button-label">@OfficeDevPnP.PartnerPack.Localization.Resource.Previous</span>
         <span class="ms-Button-description">Go back to template selection</span>
     </button>
     <button class="ms-Button ms-Button--primary NextStep">
         <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
-        <span class="ms-Button-label">Next</span>
+        <span class="ms-Button-label">@OfficeDevPnP.PartnerPack.Localization.Resource.Next</span>
         <span class="ms-Button-description">Go forward to parameters</span>
     </button>
 
