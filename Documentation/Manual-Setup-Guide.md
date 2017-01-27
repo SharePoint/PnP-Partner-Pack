@@ -269,7 +269,7 @@ The recommended approach here is to use the <a href="../scripts/Provision-Infras
  
 This PowerShell script requires some input arguments, which are:
 * **InfrastructureSiteUrl**: the URL of the SharePoint Online infrastructural Site Collection that you want to create
-* **AzureWebSiteUrl**: the URL of the Azure Web App Site that you will create later in this setup guide
+* **AzureWebSiteUrl**: the URL of the Azure Web App Site that you will create later in this setup guide (important: it must end with '/')
 * **Credentials**: Optionally provide the credentials to use in order to authenticate against the target Microsoft Office 365 tenant. If you don't pass them the script will ask them at run time  
 
 ```PowerShell
