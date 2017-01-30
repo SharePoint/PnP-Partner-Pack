@@ -231,7 +231,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                         }
 
 
-                        Console.WriteLine("Applyed Provisioning Template \"{0}\" to site.",
+                        Console.WriteLine("Applied Provisioning Template \"{0}\" to site.",
                             job.ProvisioningTemplateUrl);
                     }
                 }
