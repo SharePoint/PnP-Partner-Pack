@@ -88,7 +88,7 @@ else
 
         </div>
 
-        <button class="ms-Button Back">
+        <button class="ms-Button BackButton">
             <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
             <span class="ms-Button-label">Back</span>
             <span class="ms-Button-description">Go back to site</span>
@@ -99,6 +99,19 @@ else
             <span class="ms-Button-description">Save the template</span>
         </button>
     }
+}
+
+@section Scripts {
+
+    <script>
+        $(function () {
+
+            // Handle wizard steps
+            $(document).on("click", ".BackButton", function () { history.back(); });
+
+        });
+
+    </script>
 }
 
 <img src="https://telemetrypartnerpack.sharepointpnp.com/Home/SaveSiteAsTemplate" />

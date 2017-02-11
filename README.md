@@ -1,4 +1,4 @@
-# PnP Partner Pack v. 2.0
+﻿# PnP Partner Pack v. 2.0
 This is the repository for PnP Partner Pack, which is part of the community driven [Office 365 Developer Patterns and Practices](http://aka.ms/OfficeDevPnP) (PnP) initiative. 
 
 ![](http://i.imgur.com/5L34MNk.png)
@@ -63,6 +63,4 @@ Here's few screen shots of the responsive behavior included in the PnP Partner P
 ![](http://i.imgur.com/l01hhvE.png)
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
-
-
 
