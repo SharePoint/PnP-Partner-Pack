@@ -7,12 +7,14 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:comp="clr-namespace:OfficeDevPnP.PartnerPack.Setup.Components"
         mc:Ignorable="d"
-        Title="PnP Setup Wizard"
+        Title="PnP Partner Pack v.2.0 - Setup Wizard"
         Height="500"
         Width="700"
         DataContext="{Binding Main,Source={StaticResource Locator}}"
         WindowStartupLocation="CenterScreen">
     <Window.Resources>
+        <SolidColorBrush x:Key="LightAzure"
+                         Color="#FF0071C1" />
         <SolidColorBrush x:Key="DarkBlue"
                          Color="#FF002050" />
         <SolidColorBrush x:Key="Orange"
@@ -59,7 +61,7 @@
             <Setter Property="FontWeight"
                     Value="Bold" />
             <Setter Property="Foreground"
-                    Value="#FF0072C6" />
+                    Value="{DynamicResource LightAzure}" />
             <Setter Property="FontSize"
                     Value="20" />
             <Setter Property="Margin"
@@ -421,7 +423,7 @@
 
         <Grid Grid.Row="1"
               Grid.ColumnSpan="2"
-              Background="{DynamicResource DarkBlue}">
+              Background="{DynamicResource LightAzure}">
             <Button Width="200"
                     Content="Setup"
                     Margin="4,0"

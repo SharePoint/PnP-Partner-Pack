@@ -55,11 +55,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Identity.Client, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Identity.Client.1.0.304142221-alpha\lib\net45\Microsoft.Identity.Client.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Identity.Client.1.0.304142201-alpha\lib\net45\Microsoft.Identity.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Identity.Client.Platform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Identity.Client.1.0.304142221-alpha\lib\net45\Microsoft.Identity.Client.Platform.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Identity.Client.1.0.304142201-alpha\lib\net45\Microsoft.Identity.Client.Platform.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.IdentityModel, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -186,6 +186,7 @@
     <Compile Include="Components\ActionCommand.cs" />
     <Compile Include="Components\PasswordBoxEx.cs" />
     <Compile Include="Components\RequiredIfAttribute.cs" />
+    <Compile Include="Components\SetupInformation.cs" />
     <Compile Include="Components\SetupManager.cs" />
     <Compile Include="SharePointContext.cs" />
     <Compile Include="TokenHelper.cs" />

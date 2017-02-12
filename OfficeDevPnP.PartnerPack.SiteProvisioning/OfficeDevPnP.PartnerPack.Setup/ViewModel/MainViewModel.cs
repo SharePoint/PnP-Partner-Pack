@@ -29,8 +29,8 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
         private string _absoluteUrl;
         private int _lcid;
         private int _timeZone;
-        private KeyValuePair<string, string>? _azureSubscription;
-        private KeyValuePair<string, string>[] _azureSubscriptions;
+        private KeyValuePair<Guid, string>? _azureSubscription;
+        private KeyValuePair<Guid, string>[] _azureSubscriptions;
         private bool _azureLoggedIn;
         private string _azureAppServiceName;
         private string _azureBlobStorageName;
@@ -142,7 +142,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
         }
 
         [Required(ErrorMessage = "The Azure Web App URL is required")]
-        [RegularExpression(@"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)", ErrorMessage = "URI must be formatted as http://site.com")]
+        [RegularExpression(@"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)", ErrorMessage = "URI must be formatted as https://site.com")]
         public string AzureWebAppUrl
         {
             get { return _azureWebAppUrl; }
@@ -228,7 +228,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
             }
         }
 
-        public KeyValuePair<string, string>[] AzureSubscriptions
+        public KeyValuePair<Guid, string>[] AzureSubscriptions
         {
             get { return _azureSubscriptions; }
             private set
@@ -243,7 +243,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
         }
 
         [Required(ErrorMessage = "The Azure subscription is required")]
-        public KeyValuePair<string, string>? AzureSubscription
+        public KeyValuePair<Guid, string>? AzureSubscription
         {
             get { return _azureSubscription; }
             set
@@ -362,7 +362,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
             MessageBox.Show("TODO");
             await Task.Delay(2000);
 
-            AzureSubscriptions = Enumerable.Range(1, 10).Select(n => new KeyValuePair<string, string>(n.ToString(), "Subscription " + n)).ToArray();
+            AzureSubscriptions = Enumerable.Range(1, 10).Select(n => new KeyValuePair<Guid, string>(Guid.NewGuid(), "Subscription " + n)).ToArray();
             AzureSubscription = AzureSubscriptions[0];
         }
 
