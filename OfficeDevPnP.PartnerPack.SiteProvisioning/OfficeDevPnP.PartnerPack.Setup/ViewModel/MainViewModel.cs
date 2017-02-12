@@ -358,11 +358,9 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
             OnPropertyChanged(nameof(AzureSubscriptionsReady));
             OnPropertyChanged(nameof(AzureSubscriptionsNotReady));
 
-            // TODO:
-            MessageBox.Show("TODO");
-            await Task.Delay(2000);
-
-            AzureSubscriptions = Enumerable.Range(1, 10).Select(n => new KeyValuePair<Guid, string>(Guid.NewGuid(), "Subscription " + n)).ToArray();
+            // Get the list of subscriptions for the current user
+            //AzureSubscriptions = Enumerable.Range(1, 10).Select(n => new KeyValuePair<Guid, string>(Guid.NewGuid(), "Subscription " + n)).ToArray();
+            AzureSubscriptions = (await AzureManagementUtility.ListSubscriptionsAsync()).ToArray();
             AzureSubscription = AzureSubscriptions[0];
         }
 
