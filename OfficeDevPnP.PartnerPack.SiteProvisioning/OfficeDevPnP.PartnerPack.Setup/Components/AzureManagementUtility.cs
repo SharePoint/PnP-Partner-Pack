@@ -29,7 +29,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
 
             // Create an instance of AuthenticationContext to acquire an Azure access token  
             // OAuth2 authority Uri  
-            string authorityUri = "https://login.microsoftonline.com/common/oauth2/authorize";
+            string authorityUri = "https://login.microsoftonline.com/common";
             AuthenticationContext authContext = new AuthenticationContext(authorityUri);
 
             // Call AcquireToken to get an Azure token from Azure Active Directory token issuance endpoint  
