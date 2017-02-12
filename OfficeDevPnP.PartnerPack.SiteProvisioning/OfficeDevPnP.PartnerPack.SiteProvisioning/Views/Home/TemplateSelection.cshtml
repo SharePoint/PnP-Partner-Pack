@@ -4,18 +4,19 @@
 
 
 
+
 <div class="stepcontainer">
 
     <input type="hidden" id="@Html.IdFor(model => model.Step)" name="@Html.NameFor(model => model.Step)" value="@Model.Step" />
     <input type="hidden" id="@Html.IdFor(model => model.TemplatesProviderTypeName)" name="@Html.NameFor(model => model.TemplatesProviderTypeName)" value="@Model.TemplatesProviderTypeName" />
 
-    <div class="ms-font-xxl">Select a Template</div>
+    <div class="ms-font-xxl">@OfficeDevPnP.PartnerPack.Localization.Resource.SelectTemplate</div>
 
     <div class="ms-Grid inputForm">
         <div class="ms-Grid-row">
             <div class="ms-Grid-col ms-u-sm4 ms-u-md4 ms-u-lg4">
                 <div class="ms-Dropdown">
-                    <label for="templateProviders" class="ms-Label">Templates provider</label>
+                    <label for="templateProviders" class="ms-Label">@OfficeDevPnP.PartnerPack.Localization.Resource.TemplatesProvider</label>
                     <i class="ms-Dropdown-caretDown ms-Icon ms-Icon--caretDown"></i>
                     <select name="templateProviders" id="templateProviders" class="ms-Dropdown-select">
                         @{
@@ -33,10 +34,10 @@
                 </div>
             </div>
             <div class="ms-Grid-col ms-u-sm6 ms-u-md6 ms-u-lg6">
-                <label for="templatesSearch" class="ms-Label">Search criteria</label>
+                <label for="templatesSearch" class="ms-Label">@OfficeDevPnP.PartnerPack.Localization.Resource.SearchCriteria</label>
                 <div class="ms-SearchBox" style="width: 100%;">
                     <input name="templatesSearch" id="templatesSearch" class="ms-SearchBox-field" style="width: 100%; max-width: none;">
-                    <label class="ms-SearchBox-label"><i class="ms-SearchBox-icon ms-Icon ms-Icon--search"></i>Please provide a text to search for ...</label>
+                    <label class="ms-SearchBox-label"><i class="ms-SearchBox-icon ms-Icon ms-Icon--search"></i>@OfficeDevPnP.PartnerPack.Localization.Resource.SearchText</label>
                     <button class="ms-SearchBox-closeButton templatesSearchButton"><i class="ms-Icon ms-Icon--x"></i></button>
                 </div>
             </div>
@@ -45,7 +46,7 @@
                 <button class="ms-Button ms-Button--primary templatesSearchButton">
                     <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
                     <span class="ms-Button-label"><i class="ms-Icon ms-Icon--search"></i></span>
-                    <span class="ms-Button-description">Search</span>
+                    <span class="ms-Button-description">@OfficeDevPnP.PartnerPack.Localization.Resource.Search</span>
                 </button>
             </div>
         </div>
@@ -59,14 +60,14 @@
 
     <button class="ms-Button BackButton">
         <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
-        <span class="ms-Button-label">Back</span>
-        <span class="ms-Button-description">Go back</span>
+        <span class="ms-Button-label">@OfficeDevPnP.PartnerPack.Localization.Resource.Back</span>
+        <span class="ms-Button-description">@OfficeDevPnP.PartnerPack.Localization.Resource.GoBack</span>
     </button>
 
     <button class="ms-Button ms-Button--primary NextStep">
         <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
-        <span class="ms-Button-label">Next</span>
-        <span class="ms-Button-description">Provide Site information</span>
+        <span class="ms-Button-label">@OfficeDevPnP.PartnerPack.Localization.Resource.Next</span>
+        <span class="ms-Button-description">@OfficeDevPnP.PartnerPack.Localization.Resource.SiteInfo</span>
     </button>
 
 </div>

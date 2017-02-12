@@ -510,6 +510,10 @@
       <Project>{af195497-cafd-444e-9b7b-d3b0acac455c}</Project>
       <Name>OfficeDevPnP.PartnerPack.Infrastructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\OfficeDevPnP.PartnerPack.Localization\OfficeDevPnP.PartnerPack.Localization.csproj">
+      <Project>{6253becd-4ba5-44b6-8cce-f43fe411f948}</Project>
+      <Name>OfficeDevPnP.PartnerPack.Localization</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

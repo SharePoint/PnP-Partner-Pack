@@ -9,7 +9,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
 {
     public class CreateSubSiteViewModel : CreateSiteViewModel
     {
-        [DisplayName("Inherit Permissions from Site Collection")]
+        [Display(Name = "SiteInheritsPermissions", ResourceType = typeof(OfficeDevPnP.PartnerPack.Localization.Resource))]
         public bool InheritPermissions { get; set; }
     }
 }

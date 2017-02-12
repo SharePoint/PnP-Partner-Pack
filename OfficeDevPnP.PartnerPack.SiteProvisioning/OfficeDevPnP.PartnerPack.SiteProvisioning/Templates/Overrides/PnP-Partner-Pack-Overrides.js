@@ -30,7 +30,7 @@ function replaceLinks() {
 
     var ctx = SP.ClientContext.get_current();
     var web = ctx.get_web();
-    ctx.load(web, 'Url');
+    ctx.load(web, 'Url', 'Language');
 
     ctx.executeQueryAsync(
         function () { // on success
@@ -39,17 +39,18 @@ function replaceLinks() {
             var addInSiteUrl = currentScriptUrl.substring(0, currentScriptUrl.indexOf("/Templates/Overrides/"));
             // addInSiteUrl = "https://localhost:44300";
             var hostWebUrl = web.get_url();
+            var hostLang = web.get_language();
 
             // Customize the newsbweb.aspx page, as soon as possible
             if (IsOnPage("newsbweb.aspx")) {
                 // Redirect to the custom "New Sub Site" page URL
-                location.replace(addInSiteUrl + "/Home/CreateSubSite?SPHostUrl=" + encodeURIComponent(hostWebUrl));
+                location.replace(addInSiteUrl + "/Home/CreateSubSite?SPHostUrl=" + encodeURIComponent(hostWebUrl) + "&Lang=" + hostLang);
             }
 
             // Customize the viewlsts.aspx page
             if (IsOnPage("viewlsts.aspx")) {
                 // Replace the "New Sub Site" link
-                $("#createnewsite").attr("href", addInSiteUrl + "/Home/CreateSubSite?SPHostUrl=" + encodeURIComponent(hostWebUrl));
+                $("#createnewsite").attr("href", addInSiteUrl + "/Home/CreateSubSite?SPHostUrl=" + encodeURIComponent(hostWebUrl) + "&Lang=" + hostLang);
             }
 
             // Customize the settings.aspx page

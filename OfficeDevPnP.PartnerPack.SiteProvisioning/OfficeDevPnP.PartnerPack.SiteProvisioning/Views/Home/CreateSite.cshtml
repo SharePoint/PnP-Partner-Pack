@@ -4,11 +4,11 @@
 @{
     if (Model.Scope != OfficeDevPnP.PartnerPack.Infrastructure.TargetScope.Site)
     {
-        ViewBag.Title = "Create Sub Site";
+        ViewBag.Title = OfficeDevPnP.PartnerPack.Localization.Resource.CreateSubSite;
     }
     else
     {
-        ViewBag.Title = "Create Site Collection";
+        ViewBag.Title = OfficeDevPnP.PartnerPack.Localization.Resource.CreateSiteCollection;
     }
 }
 
@@ -33,7 +33,7 @@
             </div>
         </div>
     </div>
-    }
+}
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
@@ -124,7 +124,7 @@
             if (e != null && e != undefined) {
                 e.preventDefault();
             }
-            
+
             var searchText = $("#templatesSearch").val();
             var templatesProvider = $("#templateProviders").val();
 
@@ -145,7 +145,7 @@
             $("#TemplatesSelectionList").empty();
             $("#WorkingOnIt").prependTo($("#TemplatesSelectionList"));
             $("#WorkingOnIt").show();
-            
+
             $.ajax({
                 method: "POST",
                 url: "@Url.Action("SearchTemplates")",

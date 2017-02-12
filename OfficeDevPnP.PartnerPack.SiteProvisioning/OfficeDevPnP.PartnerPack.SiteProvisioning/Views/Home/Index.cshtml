@@ -1,10 +1,24 @@
 ﻿@model OfficeDevPnP.PartnerPack.SiteProvisioning.Models.IndexViewModel
 @{
-    ViewBag.Title = String.Format("Welcome to the {0}!", OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackSettings.Title);
+    //ViewBag.Title = String.Format("Welcome to the {0}!", OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackSettings.Title);
+    ViewBag.Title = OfficeDevPnP.PartnerPack.Localization.Resource.WelcomeTitle;
 }
 
 <div class="ms-Grid">
     <div class="ms-Grid-row">
+        <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12 ms-font-m">
+            @using (Html.BeginForm("ChangeCulture", "Home"))
+            {
+                <p>
+                    @OfficeDevPnP.PartnerPack.Localization.Resource.SelectLanguage : @Html.DropDownList("ddlCulture", new SelectList(new[]
+                                          {
+                                              new{value="en",text=OfficeDevPnP.PartnerPack.Localization.Resource.English},
+                                              new{value="it",text=OfficeDevPnP.PartnerPack.Localization.Resource.Italian},
+                                              new{value="nl",text=OfficeDevPnP.PartnerPack.Localization.Resource.Dutch}
+                                          }, "value", "text", Session["CurrentCulture"]), new { onchange = "this.form.submit();" })
+                </p>
+            }
+        </div>
         <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12 ms-font-m">
             @Html.Raw(OfficeDevPnP.PartnerPack.Infrastructure.PnPPartnerPackSettings.WelcomeMessage)
         </div>
