@@ -360,7 +360,8 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
 
             // Get the list of subscriptions for the current user
             //AzureSubscriptions = Enumerable.Range(1, 10).Select(n => new KeyValuePair<Guid, string>(Guid.NewGuid(), "Subscription " + n)).ToArray();
-            AzureSubscriptions = (await AzureManagementUtility.ListSubscriptionsAsync()).ToArray();
+            var accessToken = await AzureManagementUtility.GetAccessTokenAsync();
+            AzureSubscriptions = (await AzureManagementUtility.ListSubscriptionsAsync(accessToken)).ToArray();
             AzureSubscription = AzureSubscriptions[0];
         }
 

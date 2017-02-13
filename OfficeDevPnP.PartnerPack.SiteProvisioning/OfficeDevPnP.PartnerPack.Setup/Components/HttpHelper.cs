@@ -22,13 +22,15 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         /// <param name="requestUrl">The URL of the request</param>
         /// <param name="accessToken">The OAuth 2.0 Access Token for the request, if authorization is required</param>
         /// <returns>The String value of the result</returns>
-        public static String MakeGetRequestForString(String requestUrl,
+        public async static Task<String> MakeGetRequestForStringAsync(String requestUrl,
             String accessToken = null)
         {
-            return (MakeHttpRequest<String>("GET",
+            HttpResponseHeaders responseHeaders = null;
+            return (await MakeHttpRequestAsync<String>("GET",
                 requestUrl,
-                accessToken,
-                resultPredicate: r => r.Content.ReadAsStringAsync().Result));
+                responseHeaders,
+                accessToken: accessToken,
+                resultPredicate: async (r) => await r.Content.ReadAsStringAsync()));
         }
 
         /// <summary>
@@ -38,16 +40,18 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         /// <param name="accessToken">The OAuth 2.0 Access Token for the request, if authorization is required</param>
         /// <param name="accept">The accept header for the response</param>
         /// <returns>The Stream  of the result</returns>
-        public static System.IO.Stream MakeGetRequestForStream(String requestUrl,
+        public async static Task<System.IO.Stream> MakeGetRequestForStreamAsync(String requestUrl,
             String accept,
             String accessToken = null,
             String referer = null)
         {
-            return (MakeHttpRequest<System.IO.Stream>("GET",
+            HttpResponseHeaders responseHeaders = null;
+            return (await MakeHttpRequestAsync<System.IO.Stream>("GET",
                 requestUrl,
-                accessToken,
+                responseHeaders,
+                accessToken: accessToken,
                 referer: referer,
-                resultPredicate: r => r.Content.ReadAsStreamAsync().Result));
+                resultPredicate: async (r) => await r.Content.ReadAsStreamAsync()));
         }
 
         /// <summary>
@@ -58,16 +62,16 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         /// <param name="accessToken">The OAuth 2.0 Access Token for the request, if authorization is required</param>
         /// <param name="accept">The accept header for the response</param>
         /// <returns>The Stream  of the result</returns>
-        public static System.IO.Stream MakeGetRequestForStreamWithResponseHeaders(String requestUrl,
+        public async static Task<System.IO.Stream> MakeGetRequestForStreamWithResponseHeadersAsync(String requestUrl,
             String accept,
-            out HttpResponseHeaders responseHeaders,
+            HttpResponseHeaders responseHeaders,
             String accessToken = null)
         {
-            return (MakeHttpRequest<System.IO.Stream>("GET",
+            return (await MakeHttpRequestAsync<System.IO.Stream>("GET",
                 requestUrl,
-                out responseHeaders,
+                responseHeaders,
                 accessToken,
-                resultPredicate: r => r.Content.ReadAsStreamAsync().Result));
+                resultPredicate: async (r) => await r.Content.ReadAsStreamAsync()));
         }
 
         /// <summary>
@@ -77,13 +81,15 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         /// <param name="accessToken">The OAuth 2.0 Access Token for the request, if authorization is required</param>
         /// <param name="content">The content of the request</param>
         /// <param name="contentType">The content/type of the request</param>
-        public static void MakePostRequest(String requestUrl,
+        public async static Task MakePostRequestAsync(String requestUrl,
             Object content = null,
             String contentType = null,
             String accessToken = null)
         {
-            MakeHttpRequest<String>("POST",
+            HttpResponseHeaders responseHeaders = null;
+            await MakeHttpRequestAsync<String>("POST",
                 requestUrl,
+                responseHeaders,
                 accessToken: accessToken,
                 content: content,
                 contentType: contentType);
@@ -97,17 +103,19 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         /// <param name="content">The content of the request</param>
         /// <param name="contentType">The content/type of the request</param>
         /// <returns>The String value of the result</returns>
-        public static String MakePostRequestForString(String requestUrl,
+        public async static Task<String> MakePostRequestForStringAsync(String requestUrl,
             Object content = null,
             String contentType = null,
             String accessToken = null)
         {
-            return (MakeHttpRequest<String>("POST",
+            HttpResponseHeaders responseHeaders = null;
+            return (await MakeHttpRequestAsync<String>("POST",
                 requestUrl,
+                responseHeaders,
                 accessToken: accessToken,
                 content: content,
                 contentType: contentType,
-                resultPredicate: r => r.Content.ReadAsStringAsync().Result));
+                resultPredicate: async (r) => await r.Content.ReadAsStringAsync()));
         }
 
         /// <summary>
@@ -117,13 +125,15 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         /// <param name="accessToken">The OAuth 2.0 Access Token for the request, if authorization is required</param>
         /// <param name="content">The content of the request</param>
         /// <param name="contentType">The content/type of the request</param>
-        public static void MakePutRequest(String requestUrl,
+        public async static Task MakePutRequestAsync(String requestUrl,
             Object content = null,
             String contentType = null,
             String accessToken = null)
         {
-            MakeHttpRequest<String>("PUT",
+            HttpResponseHeaders responseHeaders = null;
+            await MakeHttpRequestAsync<String>("PUT",
                 requestUrl,
+                responseHeaders,
                 accessToken: accessToken,
                 content: content,
                 contentType: contentType);
@@ -137,17 +147,19 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         /// <param name="content">The content of the request</param>
         /// <param name="contentType">The content/type of the request</param>
         /// <returns>The String value of the result</returns>
-        public static String MakePutRequestForString(String requestUrl,
+        public async static Task<String> MakePutRequestForStringAsync(String requestUrl,
             Object content = null,
             String contentType = null,
             String accessToken = null)
         {
-            return (MakeHttpRequest<String>("PUT",
+            HttpResponseHeaders responseHeaders = null;
+            return (await MakeHttpRequestAsync<String>("PUT",
                 requestUrl,
+                responseHeaders,
                 accessToken: accessToken,
                 content: content,
                 contentType: contentType,
-                resultPredicate: r => r.Content.ReadAsStringAsync().Result));
+                resultPredicate: async (r) => await r.Content.ReadAsStringAsync()));
         }
 
         /// <summary>
@@ -158,17 +170,19 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         /// <param name="content">The content of the request</param>
         /// <param name="contentType">The content/type of the request</param>
         /// <returns>The String value of the result</returns>
-        public static String MakePatchRequestForString(String requestUrl,
+        public async static Task<String> MakePatchRequestForStringAsync(String requestUrl,
             Object content = null,
             String contentType = null,
             String accessToken = null)
         {
-            return (MakeHttpRequest<String>("PATCH",
+            HttpResponseHeaders responseHeaders = null;
+            return (await MakeHttpRequestAsync<String>("PATCH",
                 requestUrl,
+                responseHeaders,
                 accessToken: accessToken,
                 content: content,
                 contentType: contentType,
-                resultPredicate: r => r.Content.ReadAsStringAsync().Result));
+                resultPredicate: async (r) => await r.Content.ReadAsStringAsync()));
         }
 
         /// <summary>
@@ -177,10 +191,11 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         /// <param name="requestUrl">The URL of the request</param>
         /// <param name="accessToken">The OAuth 2.0 Access Token for the request, if authorization is required</param>
         /// <returns>The String value of the result</returns>
-        public static void MakeDeleteRequest(String requestUrl,
+        public async static Task MakeDeleteRequestAsync(String requestUrl,
             String accessToken = null)
         {
-            MakeHttpRequest<String>("DELETE", requestUrl, accessToken);
+            HttpResponseHeaders responseHeaders = null;
+            await MakeHttpRequestAsync<String>("DELETE", requestUrl, responseHeaders, accessToken);
         }
 
         /// <summary>
@@ -195,7 +210,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         /// <param name="resultPredicate">The predicate to retrieve the result, if any</param>
         /// <typeparam name="TResult">The type of the result, if any</typeparam>
         /// <returns>The value of the result, if any</returns>
-        private static TResult MakeHttpRequest<TResult>(
+        private async static Task<TResult> MakeHttpRequestAsync<TResult>(
             String httpMethod,
             String requestUrl,
             String accessToken = null,
@@ -203,12 +218,12 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
             Object content = null,
             String contentType = null,
             String referer = null,
-            Func<HttpResponseMessage, TResult> resultPredicate = null)
+            Func<HttpResponseMessage, Task<TResult>> resultPredicate = null)
         {
-            HttpResponseHeaders responseHeaders;
-            return (MakeHttpRequest<TResult>(httpMethod,
+            HttpResponseHeaders responseHeaders = null;
+            return (await MakeHttpRequestAsync<TResult>(httpMethod,
                 requestUrl,
-                out responseHeaders,
+                responseHeaders,
                 accessToken,
                 accept,
                 content,
@@ -230,16 +245,16 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         /// <param name="resultPredicate">The predicate to retrieve the result, if any</param>
         /// <typeparam name="TResult">The type of the result, if any</typeparam>
         /// <returns>The value of the result, if any</returns>
-        private static TResult MakeHttpRequest<TResult>(
+        private async static Task<TResult> MakeHttpRequestAsync<TResult>(
             String httpMethod,
             String requestUrl,
-            out HttpResponseHeaders responseHeaders,
+            HttpResponseHeaders responseHeaders = null,
             String accessToken = null,
             String accept = null,
             Object content = null,
             String contentType = null,
             String referer = null,
-            Func<HttpResponseMessage, TResult> resultPredicate = null)
+            Func<HttpResponseMessage, Task<TResult>> resultPredicate = null)
         {
             // Prepare the variable to hold the result, if any
             TResult result = default(TResult);
@@ -306,7 +321,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
             }
 
             // Fire the HTTP request
-            HttpResponseMessage response = httpClient.SendAsync(request).Result;
+            HttpResponseMessage response = await httpClient.SendAsync(request);
 
             if (response.IsSuccessStatusCode)
             {
@@ -314,7 +329,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                 // predicate to retrieve the result, invoke it
                 if (resultPredicate != null)
                 {
-                    result = resultPredicate(response);
+                    result = await resultPredicate(response);
                 }
 
                 // Get any response header and put it in the answer

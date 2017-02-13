@@ -12,11 +12,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
 {
     public static class AzureManagementUtility
     {
-        private static String _accessToken;
-
-        public static String AccessToken => _accessToken;
-
-        private static async Task GetAccessTokenAsync()
+        public static async Task<String> GetAccessTokenAsync()
         {
             // Resource Uri for Azure Management Services
             string resourceUri = "https://management.azure.com/";
@@ -37,19 +33,15 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
             var authResult = await authContext.AcquireTokenAsync(resourceUri, clientId, new Uri(redirectUri), platformParams);
 
             // Return the Access Token
-            _accessToken = authResult.AccessToken;
+            return(authResult.AccessToken);
         }
 
-        public static async Task<Dictionary<Guid, String>> ListSubscriptionsAsync()
+        public static async Task<Dictionary<Guid, String>> ListSubscriptionsAsync(String accessToken)
         {
-            //if (String.IsNullOrEmpty(AccessToken))
-            //{
-            await GetAccessTokenAsync();
-            //}
-
             // Get the list of subscriptions
-            var jsonSubscriptions = HttpHelper.MakeGetRequestForString("https://management.azure.com/subscriptions?api-version=2016-09-01",
-                AccessToken);
+            var jsonSubscriptions = await HttpHelper.MakeGetRequestForStringAsync(
+                "https://management.azure.com/subscriptions?api-version=2016-09-01",
+                accessToken);
 
             // Decode JSON list
             var subscriptions = JsonConvert.DeserializeObject<AzureSubscriptions>(jsonSubscriptions);
