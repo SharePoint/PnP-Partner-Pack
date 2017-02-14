@@ -355,6 +355,12 @@
                           SelectedValuePath="@value"
                           ItemsSource="{Binding Source={StaticResource TimeZones}, XPath=/timeZones/timeZone}" />
 
+                <TextBlock Text="Primary Site Collection Administrator" />
+                <TextBox Text="{Binding PrimaryAdmin, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,ValidatesOnNotifyDataErrors=True}" />
+
+                <TextBlock Text="Secondary Site Collection Administrator" />
+                <TextBox Text="{Binding SecondaryAdmin, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,ValidatesOnNotifyDataErrors=True}" />
+
                 <TextBlock Text="Microsoft Azure"
                            Style="{StaticResource Header}" />
 

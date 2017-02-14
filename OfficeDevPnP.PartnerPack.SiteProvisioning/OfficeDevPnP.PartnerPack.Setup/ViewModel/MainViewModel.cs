@@ -30,6 +30,8 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
         private string _absoluteUrl;
         private int _lcid;
         private int _timeZone;
+        private string _primaryAdmin;
+        private string _secondaryAdmin;
         private KeyValuePair<Guid, string>? _azureSubscription;
         private KeyValuePair<Guid, string>[] _azureSubscriptions;
         private KeyValuePair<string, string>? _azureLocation;
@@ -248,6 +250,26 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
             }
         }
 
+        public string PrimaryAdmin
+        {
+            get { return _primaryAdmin; }
+            set
+            {
+                if (Set(ref _primaryAdmin, value))
+                    ValidateModelProperty(value);
+            }
+        }
+
+        public string SecondaryAdmin
+        {
+            get { return _secondaryAdmin; }
+            set
+            {
+                if (Set(ref _secondaryAdmin, value))
+                    ValidateModelProperty(value);
+            }
+        }
+
         public KeyValuePair<Guid, string>[] AzureSubscriptions
         {
             get { return _azureSubscriptions; }
@@ -381,6 +403,8 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
                 await SetupManager.SetupPartnerPackAsync(new SetupInformation
                 {
                     ViewModel = this,
+                    AzureAccessToken = this._azureAccessToken,
+                    Office365AccessToken = this._office365AccessToken,
                     Office365TargetSubscriptionId = this.Office365AzureSubscription.HasValue ?
                         this.Office365AzureSubscription.Value : Guid.Empty,
                     ApplicationName = this.ApplicationName,
@@ -397,6 +421,8 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
                     InfrastructuralSiteUrl = this.AbsoluteUrl,
                     InfrastructuralSiteLCID = this.Lcid,
                     InfrastructuralSiteTimeZone = this.TimeZone,
+                    InfrastructuralSitePrimaryAdmin = this.PrimaryAdmin,
+                    InfrastructuralSiteSecondaryAdmin = this.SecondaryAdmin,                    
                     AzureTargetSubscriptionId = this.AzureSubscription.HasValue ?
                         this.AzureSubscription.Value.Key : Guid.Empty,
                     AzureLocation = this.AzureLocation.HasValue ?

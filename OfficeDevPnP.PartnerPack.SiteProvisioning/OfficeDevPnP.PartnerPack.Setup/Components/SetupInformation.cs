@@ -28,6 +28,8 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         public String InfrastructuralSiteUrl { get; set; }
         public Int32 InfrastructuralSiteLCID { get; set; }
         public Int32 InfrastructuralSiteTimeZone { get; set; }
+        public String InfrastructuralSitePrimaryAdmin { get; set; }
+        public String InfrastructuralSiteSecondaryAdmin { get; set; }
         public Guid AzureTargetSubscriptionId { get; set; }
         public String AzureLocation { get; set; }
         public String AzureAppServiceName { get; set; }
