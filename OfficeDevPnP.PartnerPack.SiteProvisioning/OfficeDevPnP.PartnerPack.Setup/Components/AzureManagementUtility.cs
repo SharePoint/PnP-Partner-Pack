@@ -14,13 +14,16 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
     {
         private static String apiVersion = "?api-version=2016-09-01";
 
-        public static async Task<String> GetAccessTokenAsync()
+        public static async Task<String> GetAccessTokenAsync(String clientId = null)
         {
             // Resource Uri for Azure Management Services
             string resourceUri = "https://management.azure.com/";
 
             // ClientID of the Azure AD application
-            string clientId = ConfigurationManager.AppSettings["ADAL:ClientId"];
+            if (String.IsNullOrEmpty(clientId))
+            {
+                clientId = ConfigurationManager.AppSettings["ADAL:ClientId"];
+            }
 
             // Redirect URI for native application
             string redirectUri = "urn:ietf:wg:oauth:2.0:oob";
