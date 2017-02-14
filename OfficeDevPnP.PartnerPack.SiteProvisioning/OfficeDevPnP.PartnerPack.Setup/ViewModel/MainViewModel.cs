@@ -441,7 +441,9 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
         {
             // Get the list of subscriptions for the current user
             //AzureSubscriptions = Enumerable.Range(1, 10).Select(n => new KeyValuePair<Guid, string>(Guid.NewGuid(), "Subscription " + n)).ToArray();
-            _office365AccessToken = await AzureManagementUtility.GetAccessTokenAsync(ConfigurationManager.AppSettings["O365:ClientId"]);
+            _office365AccessToken = await AzureManagementUtility.GetAccessTokenAsync(
+                AzureManagementUtility.AzureManagementApiURI, 
+                ConfigurationManager.AppSettings["O365:ClientId"]);
             if (!String.IsNullOrEmpty(_office365AccessToken))
             {
                 var subscriptions = (await AzureManagementUtility.ListSubscriptionsAsync(_office365AccessToken)).ToArray();
@@ -466,7 +468,8 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
 
             // Get the list of subscriptions for the current user
             //AzureSubscriptions = Enumerable.Range(1, 10).Select(n => new KeyValuePair<Guid, string>(Guid.NewGuid(), "Subscription " + n)).ToArray();
-            _azureAccessToken = await AzureManagementUtility.GetAccessTokenAsync();
+            _azureAccessToken = await AzureManagementUtility.GetAccessTokenAsync(
+                AzureManagementUtility.AzureManagementApiURI);
             if (!String.IsNullOrEmpty(_azureAccessToken))
             {
                 AzureSubscriptions = (await AzureManagementUtility.ListSubscriptionsAsync(_azureAccessToken)).ToArray();

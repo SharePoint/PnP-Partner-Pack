@@ -56,7 +56,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
             #region Create the Infrastructural Site Collection
 
             await UpdateProgress(info, SetupStep.CreateInfrastructuralSiteCollection, "Creating Infrastructural Site Collection");
-            CreateInfrastructuralSiteCollection(info);
+            await CreateInfrastructuralSiteCollectionAsync(info);
 
             #endregion
 
@@ -99,17 +99,22 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
             await UpdateProgress(info, SetupStep.Completed, "Setup Completed");
         }
 
-        private static void CreateInfrastructuralSiteCollection(SetupInformation info)
+        private async static Task CreateInfrastructuralSiteCollectionAsync(SetupInformation info)
         {
             Uri infrastructureSiteUri = new Uri(info.InfrastructuralSiteUrl);
             Uri tenantAdminUri = new Uri(infrastructureSiteUri.Scheme + "://" +
-                infrastructureSiteUri.Host.Replace(".sharepoint.com", "-admin.sharepoint.com/"));
+                infrastructureSiteUri.Host.Replace(".sharepoint.com", "-admin.sharepoint.com"));
+            Uri sharepointUri = new Uri(infrastructureSiteUri.Scheme + "://" +
+                infrastructureSiteUri.Host + "/");
             var siteUrl = info.InfrastructuralSiteUrl.Substring(info.InfrastructuralSiteUrl.IndexOf("sharepoint.com/") + 14);
             var siteCreated = false;
 
+            var accessToken = await AzureManagementUtility.GetAccessTokenSilentAsync(
+                tenantAdminUri.ToString(), ConfigurationManager.AppSettings["O365:ClientId"]);
+
             AuthenticationManager am = new AuthenticationManager();
             using (var adminContext = am.GetAzureADAccessTokenAuthenticatedContext(
-                tenantAdminUri.ToString(), info.Office365AccessToken))
+                tenantAdminUri.ToString(), accessToken))
             {
                 adminContext.RequestTimeout = Timeout.Infinite;
 
@@ -135,7 +140,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                     // Create the Site Collection and wait for its creation (we're asynchronous)
                     tenant.CreateSiteCollection(newSite, true, true);
 
-                    Site site = tenant.GetSiteByUrl(siteUrl);
+                    Site site = tenant.GetSiteByUrl(info.InfrastructuralSiteUrl);
                     Web web = site.RootWeb;
 
                     adminContext.Load(site, s => s.Url);
@@ -159,6 +164,9 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
 
             if (siteCreated)
             {
+                accessToken = await AzureManagementUtility.GetAccessTokenSilentAsync(
+                    sharepointUri.ToString(), ConfigurationManager.AppSettings["O365:ClientId"]);
+
                 using (ClientContext clientContext = am.GetAzureADAccessTokenAuthenticatedContext(
                     info.InfrastructuralSiteUrl, info.Office365AccessToken))
                 {

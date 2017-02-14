@@ -13,11 +13,15 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
     public static class AzureManagementUtility
     {
         private static String apiVersion = "?api-version=2016-09-01";
+        public static String AzureManagementApiURI = "https://management.azure.com/";
 
-        public static async Task<String> GetAccessTokenAsync(String clientId = null)
+        public static async Task<String> GetAccessTokenAsync(String resourceUri = null,String clientId = null)
         {
             // Resource Uri for Azure Management Services
-            string resourceUri = "https://management.azure.com/";
+            if (String.IsNullOrEmpty(resourceUri))
+            {
+                resourceUri = AzureManagementApiURI;
+            }
 
             // ClientID of the Azure AD application
             if (String.IsNullOrEmpty(clientId))
@@ -39,6 +43,32 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
 
             // Return the Access Token
             return(authResult.AccessToken);
+        }
+
+        public static async Task<String> GetAccessTokenSilentAsync(String resourceUri, String clientId = null)
+        {
+            // Resource Uri for Azure Management Services
+            if (String.IsNullOrEmpty(resourceUri))
+            {
+                resourceUri = AzureManagementApiURI;
+            }
+
+            // ClientID of the Azure AD application
+            if (String.IsNullOrEmpty(clientId))
+            {
+                clientId = ConfigurationManager.AppSettings["ADAL:ClientId"];
+            }
+
+            // Create an instance of AuthenticationContext to acquire an Azure access token  
+            // OAuth2 authority Uri  
+            string authorityUri = "https://login.microsoftonline.com/common";
+            AuthenticationContext authContext = new AuthenticationContext(authorityUri);
+
+            // Call AcquireTokenSilent to get an Azure token from Azure Active Directory token issuance endpoint  
+            var authResult = await authContext.AcquireTokenSilentAsync(resourceUri, clientId);
+
+            // Return the Access Token
+            return (authResult.AccessToken);
         }
 
         public static async Task<Dictionary<Guid, String>> ListSubscriptionsAsync(String accessToken)
