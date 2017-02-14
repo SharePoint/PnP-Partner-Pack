@@ -67,6 +67,17 @@
             <Setter Property="Margin"
                     Value="0,50,0,0" />
         </Style>
+        <Style x:Key="Normal"
+               TargetType="{x:Type TextBlock}">
+            <Setter Property="FontWeight"
+                    Value="Normal" />
+            <Setter Property="Foreground"
+                    Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+            <Setter Property="FontSize"
+                    Value="14" />
+            <Setter Property="Margin"
+                    Value="0,10,0,0" />
+        </Style>
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="FontSize"
                     Value="16" />
@@ -249,6 +260,13 @@
                 <TextBlock Style="{StaticResource Header}"
                            Margin="0">Office 365 Application Registration</TextBlock>
 
+                <TextBlock Text="Account Office 365" />
+                <Button Width="100"
+                        Content="Login"
+                        HorizontalAlignment="Left"
+                        Command="{Binding Office365LoginCommand, Mode=OneWay}" />
+                <TextBlock Style="{StaticResource Normal}" TextWrapping="Wrap" Text="Please, provide the credentials of an Office 365 Tenant Global Admin account. You need to have a valid Microsoft Azure subscription active for the target Office 365 tenant, before proceeding." />
+
                 <TextBlock Text="Application name" />
                 <TextBox Text="{Binding ApplicationName, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,ValidatesOnNotifyDataErrors=True}" />
 
@@ -388,6 +406,12 @@
                         </Ellipse.Triggers>
                     </Ellipse>
                 </Grid>
+
+                <TextBlock Text="Location" />
+                <ComboBox SelectedItem="{Binding AzureLocation, Mode=TwoWay}"
+                              IsEnabled="{Binding AzureLocationsReady}"
+                              DisplayMemberPath="Value"
+                              ItemsSource="{Binding AzureLocations}" />
 
                 <TextBlock Text="App Service name" />
                 <TextBox Text="{Binding AzureAppServiceName, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,ValidatesOnNotifyDataErrors=True}" />

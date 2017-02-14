@@ -49,26 +49,8 @@ namespace OfficeDevPnP.PartnerPack.Setup
                 Keyboard.Focus(elementWithErrors);
             }
 
-            if (!SetupManager.SetupPartnerPack(new SetupInformation {
-                ApplicationName = this.ViewModel.ApplicationName,
-                ApplicationUniqueUri = this.ViewModel.ApplicationUniqueUri,
-                ApplicationLogoPath = this.ViewModel.ApplicationLogo,
-                AzureWebAppUrl = this.ViewModel.AzureWebAppUrl,
-                SslCertificateGenerate = this.ViewModel.SslCertificateGenerate.HasValue ? 
-                    this.ViewModel.SslCertificateGenerate.Value : false,
-                SslCertificateFile = this.ViewModel.SslCertificateFile,
-                SslCertificatePassword = this.ViewModel.SslCertificatePassword,
-                SslCertificateCommonName = this.ViewModel.SslCertificateCommonName,
-                SslCertificateStartDate = this.ViewModel.SslCertificateStartDate,
-                SslCertificateEndDate = this.ViewModel.SslCertificateEndDate,
-                InfrastructuralSiteUrl = this.ViewModel.AbsoluteUrl,
-                InfrastructuralSiteLCID = this.ViewModel.Lcid,
-                InfrastructuralSiteTimeZone = this.ViewModel.TimeZone,
-                AzureTargetSubscription = this.ViewModel.AzureSubscription.HasValue ? 
-                    this.ViewModel.AzureSubscription.Value.Key : Guid.Empty,
-                AzureAppServiceName = this.ViewModel.AzureAppServiceName,
-                AzureBlobStorageName = this.ViewModel.AzureBlobStorageName,
-            }))
+            // TODO: Double-check this one
+            if (!true)
             {
                 // Show any error on the screen/log ...
 

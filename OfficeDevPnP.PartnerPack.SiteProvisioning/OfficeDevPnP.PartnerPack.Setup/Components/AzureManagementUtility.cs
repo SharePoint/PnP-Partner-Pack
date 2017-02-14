@@ -12,6 +12,8 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
 {
     public static class AzureManagementUtility
     {
+        private static String apiVersion = "?api-version=2016-09-01";
+
         public static async Task<String> GetAccessTokenAsync()
         {
             // Resource Uri for Azure Management Services
@@ -40,7 +42,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         {
             // Get the list of subscriptions
             var jsonSubscriptions = await HttpHelper.MakeGetRequestForStringAsync(
-                "https://management.azure.com/subscriptions?api-version=2016-09-01",
+                $"https://management.azure.com/subscriptions{apiVersion}",
                 accessToken);
 
             // Decode JSON list
@@ -48,6 +50,20 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
 
             // Return a dictionary of subscriptions with ID and DisplayName
             return (subscriptions.Subscriptions.ToDictionary(i => i.SubscriptionId, i => i.DisplayName));
+        }
+
+        public static async Task<Dictionary<String, String>> ListLocations(String accessToken, Guid subscriptionId)
+        {
+            // Get the list of Locations
+            var jsonLocations = await HttpHelper.MakeGetRequestForStringAsync(
+                $"https://management.azure.com/subscriptions/{subscriptionId}/locations{apiVersion}",
+                accessToken);
+
+            // Decode JSON list
+            var locations = JsonConvert.DeserializeObject<AzureLocations>(jsonLocations);
+
+            // Return a dictionary of subscriptions with ID and DisplayName
+            return (locations.Locations.ToDictionary(i => i.Name, i => i.DisplayName));
         }
     }
 }

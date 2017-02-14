@@ -31,6 +31,8 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
         private int _timeZone;
         private KeyValuePair<Guid, string>? _azureSubscription;
         private KeyValuePair<Guid, string>[] _azureSubscriptions;
+        private KeyValuePair<string, string>? _azureLocation;
+        private KeyValuePair<string, string>[] _azureLocations;
         private bool _azureLoggedIn;
         private string _azureAppServiceName;
         private string _azureBlobStorageName;
@@ -38,8 +40,13 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
         private string _setupProgressDescription;
         private bool _setupInProgress;
 
+        private String _office365AccessToken;
+        private Guid? _office365AzureSubscription;
+        private String _azureAccessToken;
+
         public MainViewModel()
         {
+            Office365LoginCommand = new ActionCommand(Office365Login);
             BrowseLogoCommand = new ActionCommand(BrowseLogo);
             BrowseCertificateCommand = new ActionCommand(BrowseCertificate);
             ResetLogoCommand = new ActionCommand(() => ApplicationLogo = null);
@@ -53,6 +60,8 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
             TimeZone = 93;
         }
 
+        public ICommand Office365LoginCommand { get; }
+
         public ICommand BrowseLogoCommand { get; }
 
         public ICommand ResetLogoCommand { get; }
@@ -62,6 +71,16 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
         public ICommand AzureLoginCommand { get; }
 
         public ICommand SetupCommand { get; }
+
+        public Guid? Office365AzureSubscription
+        {
+            get { return _office365AzureSubscription; }
+            set
+            {
+                if (Set(ref _office365AzureSubscription, value))
+                    ValidateModelProperty(value);
+            }
+        }
 
         [Required(ErrorMessage = "The application name is required")]
         public string ApplicationName
@@ -75,7 +94,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
         }
 
         [Required(ErrorMessage = "The application unique URI is required")]
-        [RegularExpression(@"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)", ErrorMessage = "URI must be formatted as http://site.com")]
+        [RegularExpression(@"https:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)", ErrorMessage = "URI must be formatted as https://site.com")]
         public string ApplicationUniqueUri
         {
             get { return _applicationUniqueUri; }
@@ -142,7 +161,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
         }
 
         [Required(ErrorMessage = "The Azure Web App URL is required")]
-        [RegularExpression(@"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)", ErrorMessage = "URI must be formatted as https://site.com")]
+        [RegularExpression(@"https:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)", ErrorMessage = "URI must be formatted as https://site.com")]
         public string AzureWebAppUrl
         {
             get { return _azureWebAppUrl; }
@@ -197,7 +216,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
         }
 
         [Required(ErrorMessage = "The absolute URL is required")]
-        [RegularExpression(@"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)", ErrorMessage = "URL must be formatted as http://site.com")]
+        [RegularExpression(@"https:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)", ErrorMessage = "URL must be formatted as https://site.com")]
         public string AbsoluteUrl
         {
             get { return _absoluteUrl; }
@@ -253,10 +272,33 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
             }
         }
 
+        public KeyValuePair<string, string>[] AzureLocations
+        {
+            get { return _azureLocations; }
+            private set
+            {
+                if (Set(ref _azureLocations, value))
+                {
+                    ValidateModelProperty(value);
+                    OnPropertyChanged(nameof(AzureLocationsReady));
+                }
+            }
+        }
+
+        public KeyValuePair<string, string>? AzureLocation
+        {
+            get { return _azureLocation; }
+            set
+            {
+                if (Set(ref _azureLocation, value))
+                    ValidateModelProperty(value);
+            }
+        }
+
         public double SetupProgress
         {
             get { return _setupProgress; }
-            private set
+            set
             {
                 Set(ref _setupProgress, value);
             }
@@ -265,7 +307,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
         public string SetupProgressDescription
         {
             get { return _setupProgressDescription; }
-            private set
+            set
             {
                 Set(ref _setupProgressDescription, value);
             }
@@ -274,6 +316,8 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
         public bool AzureSubscriptionsReady => _azureLoggedIn && _azureSubscriptions != null;
 
         public bool AzureSubscriptionsNotReady => _azureLoggedIn && _azureSubscriptions == null;
+
+        public bool AzureLocationsReady => _azureLocations != null && _azureLocations.Length > 0;
 
         [Required(ErrorMessage = "The Azure App Service name is required")]
         [RegularExpression(@"^[a-z][a-z0-9]{2,62}$", ErrorMessage = "Name must be lower case and must contain letters and numbers only")]
@@ -333,20 +377,48 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
 
             try
             {
-                // TODO: setup
-                for (int i = 0; i < 100; i++)
+                await SetupManager.SetupPartnerPackAsync(new SetupInformation
                 {
-                    SetupProgress = i;
-                    SetupProgressDescription = $"Progress {i}%";
-
-                    await Task.Delay(100);
-                }
-
-                MessageBox.Show("Done!");
+                    ViewModel = this,
+                    Office365TargetSubscriptionId = this.Office365AzureSubscription.HasValue ?
+                        this.Office365AzureSubscription.Value : Guid.Empty,
+                    ApplicationName = this.ApplicationName,
+                    ApplicationUniqueUri = this.ApplicationUniqueUri,
+                    ApplicationLogoPath = this.ApplicationLogo,
+                    AzureWebAppUrl = this.AzureWebAppUrl,
+                    SslCertificateGenerate = this.SslCertificateGenerate.HasValue ?
+                        this.SslCertificateGenerate.Value : false,
+                    SslCertificateFile = this.SslCertificateFile,
+                    SslCertificatePassword = this.SslCertificatePassword,
+                    SslCertificateCommonName = this.SslCertificateCommonName,
+                    SslCertificateStartDate = this.SslCertificateStartDate,
+                    SslCertificateEndDate = this.SslCertificateEndDate,
+                    InfrastructuralSiteUrl = this.AbsoluteUrl,
+                    InfrastructuralSiteLCID = this.Lcid,
+                    InfrastructuralSiteTimeZone = this.TimeZone,
+                    AzureTargetSubscriptionId = this.AzureSubscription.HasValue ?
+                        this.AzureSubscription.Value.Key : Guid.Empty,
+                    AzureLocation = this.AzureLocation.HasValue ?
+                        this.AzureLocation.Value.Key : String.Empty,
+                    AzureAppServiceName = this.AzureAppServiceName,
+                    AzureBlobStorageName = this.AzureBlobStorageName,
+                });
             }
             finally
             {
                 SetupInProgress = false;
+            }
+        }
+
+        private async void Office365Login()
+        {
+            // Get the list of subscriptions for the current user
+            //AzureSubscriptions = Enumerable.Range(1, 10).Select(n => new KeyValuePair<Guid, string>(Guid.NewGuid(), "Subscription " + n)).ToArray();
+            _office365AccessToken = await AzureManagementUtility.GetAccessTokenAsync();
+            if (!String.IsNullOrEmpty(_office365AccessToken))
+            {
+                var subscriptions = (await AzureManagementUtility.ListSubscriptionsAsync(_office365AccessToken)).ToArray();
+                Office365AzureSubscription = subscriptions[0].Key;
             }
         }
 
@@ -360,9 +432,15 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
 
             // Get the list of subscriptions for the current user
             //AzureSubscriptions = Enumerable.Range(1, 10).Select(n => new KeyValuePair<Guid, string>(Guid.NewGuid(), "Subscription " + n)).ToArray();
-            var accessToken = await AzureManagementUtility.GetAccessTokenAsync();
-            AzureSubscriptions = (await AzureManagementUtility.ListSubscriptionsAsync(accessToken)).ToArray();
-            AzureSubscription = AzureSubscriptions[0];
+            _azureAccessToken = await AzureManagementUtility.GetAccessTokenAsync();
+            if (!String.IsNullOrEmpty(_azureAccessToken))
+            {
+                AzureSubscriptions = (await AzureManagementUtility.ListSubscriptionsAsync(_azureAccessToken)).ToArray();
+                AzureSubscription = AzureSubscriptions[0];
+
+                AzureLocations = (await AzureManagementUtility.ListLocations(_azureAccessToken, AzureSubscription.Value.Key)).ToArray();
+                AzureLocation = AzureLocations[0];
+            }
         }
 
         IEnumerable<ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)

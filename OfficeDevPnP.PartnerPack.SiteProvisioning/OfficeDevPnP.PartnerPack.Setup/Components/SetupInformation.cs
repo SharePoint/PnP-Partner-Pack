@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OfficeDevPnP.PartnerPack.Setup.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security;
@@ -12,6 +13,8 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
     /// </summary>
     public class SetupInformation
     {
+        public MainViewModel ViewModel { get; set; }
+        public Guid Office365TargetSubscriptionId { get; set; }
         public String ApplicationName { get; set; }
         public String ApplicationUniqueUri { get; set; }
         public String ApplicationLogoPath { get; set; }
@@ -25,7 +28,8 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         public String InfrastructuralSiteUrl { get; set; }
         public Int32 InfrastructuralSiteLCID { get; set; }
         public Int32 InfrastructuralSiteTimeZone { get; set; }
-        public Guid AzureTargetSubscription { get; set; }
+        public Guid AzureTargetSubscriptionId { get; set; }
+        public String AzureLocation { get; set; }
         public String AzureAppServiceName { get; set; }
         public String AzureBlobStorageName { get; set; }
     }
