@@ -103,7 +103,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         {
             Uri infrastructureSiteUri = new Uri(info.InfrastructuralSiteUrl);
             Uri tenantAdminUri = new Uri(infrastructureSiteUri.Scheme + "://" +
-                infrastructureSiteUri.Host.Replace(".sharepoint.com", "-admin.sharepoint.com"));
+                infrastructureSiteUri.Host.Replace(".sharepoint.com", "-admin.sharepoint.com/"));
             var siteUrl = info.InfrastructuralSiteUrl.Substring(info.InfrastructuralSiteUrl.IndexOf("sharepoint.com/") + 14);
             var siteCreated = false;
 
@@ -116,7 +116,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                 var tenant = new Tenant(adminContext);
 
                 // Check if the site already exists
-                if (!tenant.SiteExists(info.InfrastructuralSiteUrl))
+                if (true || !tenant.SiteExists(info.InfrastructuralSiteUrl))
                 {
                     // Configure the Site Collection properties
                     SiteEntity newSite = new SiteEntity();

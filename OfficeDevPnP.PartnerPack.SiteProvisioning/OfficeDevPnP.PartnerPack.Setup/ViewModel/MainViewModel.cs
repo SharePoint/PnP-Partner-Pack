@@ -445,7 +445,14 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
             if (!String.IsNullOrEmpty(_office365AccessToken))
             {
                 var subscriptions = (await AzureManagementUtility.ListSubscriptionsAsync(_office365AccessToken)).ToArray();
-                Office365AzureSubscription = subscriptions[0].Key;
+                if (subscriptions.Length == 0)
+                {
+                    throw new ApplicationException("Missing default Azure subscription for Office 365 tenant!");
+                }
+                else
+                {
+                    Office365AzureSubscription = subscriptions[0].Key;
+                }
             }
         }
 
