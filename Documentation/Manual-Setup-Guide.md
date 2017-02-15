@@ -141,7 +141,7 @@ your tenant. Click the "Add" button in the upper left part of the blade, this wi
 
 ![Azure AD - Add an Application - First Step](./Figures/Fig-08-Azure-AD-Add-Application-Step-01.png)
 
-Then, provide a **name** for your application (we suggest to name it "SharePoint PnP Partner Pack"), select the option **"Web app / API"**, and fill in the **"Sign-on URL"** with the **URL** of the Azure App Service that you created before. Click create when done.
+Then, provide a **name** for your application (we suggest to name it "SharePoint PnP Partner Pack"), select the option **"Web app / API"**, and fill in the **"Sign-on URL"** with the **URL** of the Azure App Service that you created before. Make sure to use a forward slash at the end of the URL (otherwise you will get a 'reply address does not match error'). Click create when done.
 
 The newly created app registration will now be listed in your "App Registrations" list.
 Open it and then click into settings and then Properties.  You should now be at the following screen: 
@@ -153,7 +153,7 @@ Please make sure you :
 - Upload the Application logo
 - Press save. 
 
-Now, you should go back to the settings blade. Go into **Keys** where you'll create a Client Secret. In order to do that, add a new security key (selecting 1 year or 2 years for key duration). Press the "Save" button in the lower part of the screen to generate the key value. After saving, you will see the key value. **Copy it in a safe place**, because you will not see it anymore.
+Now, you should go back to the settings blade. Go into **Keys** where you'll create a Client Secret (used for app-only authentication). In order to do that, add a new security key (selecting 1 year, 2 years or never expires for key duration). Press the "Save" button in the lower part of the screen to generate the key value. After saving, you will see the key value. **Copy it in a safe place**, because you will not see it anymore.
 
 ![Azure AD - Create a client Secret](./Figures/Fig-10-Azure-AD-Add-AplicationSecret.png)
 
@@ -178,6 +178,9 @@ You need to configure the following permissions:
 ![Azure AD - Application Configuration - Permissions Blade](./Figures/Fig-12-Azure-AD-App-Config-03.png)
 
 The "Application Permissions" are those granted to the application when running as App Only. The other set of permissions, called "Delegated Permissions", defines the permissions granted to the application when running under a specific user's account delegation (using an app and user access token, from an OAuth 2.0 perspective).
+
+Click the Grant Permission button on the 'Required Permissions' tab, if you want to give non-tenant admin users access to the application.
+
 <!--
 ![Azure AD - Application Configuration - Client Secret](./Figures/Fig-06-Azure-AD-App-Config-01.png)
 -->
@@ -435,7 +438,7 @@ Moreover, you will have to publish them into the Azure App Service. To provision
 
 > For further details about how to publish Azure Web Jobs you can be read the following article: <a href="https://azure.microsoft.com/en-gb/documentation/articles/websites-dotnet-deploy-webjobs/">Deploy WebJobs using Visual Studio</a>.
 
-#### Publishing the **ScheduledJob** using a **minute** schedule
+#### Publishing the **ScheduledJob** using a **minute** schedule (Azure Scheduler)
 When you publish a Web Job that requires to be run at a schedule, your web job by default will end up in a free scheduler job collection which only allows to run scheduled jobs at a 1 hour interval or higher. Since site collection creation is handled via the ScheduledJob you might want to have this job running more frequently (e.g. every 5 minutes). Below steps describe how you can convert the created scheduled job collection to a paying version, which allows to schedule jobs at a minute level interval:
 * Deploy the **ScheduledJob** at a 1 hour interval. This will allow the job to get properly scheduled
 * Go to the [Azure management portal](http://portal.azure.com) (portal.azure.com), click on "Browse >" and select **"Scheduler Job Collections"**
@@ -453,5 +456,21 @@ Below screenshots show some of the above steps in action:
 
 ![](http://i.imgur.com/UR5TsF3.png)
 
+#### Publishing the **ScheduledJob** using a **minute** schedule (Internal WebJob Scheduler)
+Instead of deploying the ScheduledJob to a Schedule Job Collection (Azure Scheduler) you can deploy it directly to the app service you created earlier (Interal WebJob Scheduler) for the PnP Partner Pack web site. The only caveat is that this requires your app service to be configured as Always On (more expensive!). Otherwise the ScheduledJob will stop running after 12 hours.
+
+In the root of the ScheduledJob Visual Studio project, add a JSON file called settings.job. Make sure it is set to 'Copy always' in the file properties. The schedule is specified with a cron expression composed of the following fields: {second} {minute} {hour} {day} {month} {day of the week}. The settings.job for a minute schedule looks like this:  
+
+```
+{
+  "schedule": "0 * * * * *"
+}
+```
+
+Also, in the webjob-publish-settings.json file (under Properties in the Visual Studio project) you want to change the runMode from 'OnDemand' to 'Scheduled'.
+
+Finally, deploy the web job from Visual Studio using the 'Publish as Azure WebJob' function.
+
+> For further details about how to use cron expressions with WebJobs you can be read the following article: <a href="http://blog.amitapple.com/post/2015/06/scheduling-azure-webjobs/">Scheduling Azure WebJobs with cron expressions</a>.
 
 <img src="https://telemetry.sharepointpnp.com/pnp-partner-pack/documentation/manual-setup-guide" /> 
