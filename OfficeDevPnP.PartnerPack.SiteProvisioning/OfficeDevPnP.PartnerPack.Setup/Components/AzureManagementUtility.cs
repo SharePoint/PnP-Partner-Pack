@@ -15,7 +15,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         private static String apiVersion = "?api-version=2016-09-01";
         public static String AzureManagementApiURI = "https://management.azure.com/";
 
-        public static async Task<String> GetAccessTokenAsync(String resourceUri = null,String clientId = null)
+        public static async Task<String> GetAccessTokenAsync(String resourceUri = null, String clientId = null)
         {
             // Resource Uri for Azure Management Services
             if (String.IsNullOrEmpty(resourceUri))
@@ -37,12 +37,26 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
             string authorityUri = "https://login.microsoftonline.com/common";
             AuthenticationContext authContext = new AuthenticationContext(authorityUri);
 
-            // Call AcquireToken to get an Azure token from Azure Active Directory token issuance endpoint  
-            var platformParams = new PlatformParameters(PromptBehavior.RefreshSession);
-            var authResult = await authContext.AcquireTokenAsync(resourceUri, clientId, new Uri(redirectUri), platformParams);
+            try
+            {
+                // Call AcquireToken to get an Azure token from Azure Active Directory token issuance endpoint  
+                var platformParams = new PlatformParameters(PromptBehavior.RefreshSession);
+                var authResult = await authContext.AcquireTokenAsync(resourceUri, clientId, new Uri(redirectUri), platformParams);
 
-            // Return the Access Token
-            return(authResult.AccessToken);
+                // Return the Access Token
+                return (authResult.AccessToken);
+            }
+            catch (AdalServiceException ex)
+            {
+                if (ex.ErrorCode.Equals("authentication_canceled"))
+                {
+                    return (null);
+                }
+                else
+                {
+                    throw (ex);
+                }
+            }
         }
 
         public static async Task<String> GetAccessTokenSilentAsync(String resourceUri, String clientId = null)

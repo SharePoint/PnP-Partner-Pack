@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace OfficeDevPnP.PartnerPack.Setup.Components
 {
@@ -21,6 +22,8 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
     /// </summary>
     public static class SetupManager
     {
+        private static XNamespace PnPProvisioningTemplateSchema = "http://schemas.dev.office.com/PnP/2015/12/ProvisioningSchema";
+
         /// <summary>
         /// This method handles the real setup process
         /// </summary>
@@ -121,7 +124,8 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                 var tenant = new Tenant(adminContext);
 
                 // Check if the site already exists
-                if (true || !tenant.SiteExists(info.InfrastructuralSiteUrl))
+                var siteAlreadyExists = tenant.SiteExists(info.InfrastructuralSiteUrl);
+                if (!siteAlreadyExists)
                 {
                     // Configure the Site Collection properties
                     SiteEntity newSite = new SiteEntity();
@@ -138,7 +142,20 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                     newSite.UserCodeWarningLevel = 0;
 
                     // Create the Site Collection and wait for its creation (we're asynchronous)
-                    tenant.CreateSiteCollection(newSite, true, true);
+                    tenant.CreateSiteCollection(newSite, true, true, (top) =>
+                    {
+                        if (top == TenantOperationMessage.CreatingSiteCollection)
+                        {
+                            var maxProgress = (100 / (Int32)SetupStep.Completed);
+                            info.ViewModel.SetupProgress += 1;
+                            if (info.ViewModel.SetupProgress >= maxProgress)
+                            {
+                                info.ViewModel.SetupProgress = maxProgress;
+                            }
+                            Task.Delay(100);
+                        }
+                        return (false);
+                    });
 
                     Site site = tenant.GetSiteByUrl(info.InfrastructuralSiteUrl);
                     Web web = site.RootWeb;
@@ -157,62 +174,71 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                         web.SiteUsers.AddUser(secondaryOwner);
                         adminContext.ExecuteQueryRetry();
                     }
-
                     siteCreated = true;
                 }
-            }
 
-            if (siteCreated)
-            {
-                accessToken = await AzureManagementUtility.GetAccessTokenSilentAsync(
-                    sharepointUri.ToString(), ConfigurationManager.AppSettings["O365:ClientId"]);
-
-                using (ClientContext clientContext = am.GetAzureADAccessTokenAuthenticatedContext(
-                    info.InfrastructuralSiteUrl, info.Office365AccessToken))
+                if (siteAlreadyExists || siteCreated)
                 {
-                    clientContext.RequestTimeout = Timeout.Infinite;
+                    accessToken = await AzureManagementUtility.GetAccessTokenSilentAsync(
+                        sharepointUri.ToString(), ConfigurationManager.AppSettings["O365:ClientId"]);
 
-                    Site site = clientContext.Site;
-                    Web web = site.RootWeb;
+                    using (ClientContext clientContext = am.GetAzureADAccessTokenAuthenticatedContext(
+                        info.InfrastructuralSiteUrl, accessToken))
+                    {
+                        clientContext.RequestTimeout = Timeout.Infinite;
 
-                    clientContext.Load(site, s => s.Url);
-                    clientContext.Load(web, w => w.Url);
-                    clientContext.ExecuteQueryRetry();
+                        Site site = clientContext.Site;
+                        Web web = site.RootWeb;
 
-                    // Override settings within templates, before uploading them
-                    UpdateProvisioningTemplateParameter("Responsive", "SPO-Responsive.xml",
-                        "AzureWebSiteUrl", info.AzureWebAppUrl);
-                    UpdateProvisioningTemplateParameter("Overrides", "PnP-Partner-Pack-Overrides.xml",
-                        "AzureWebSiteUrl", info.AzureWebAppUrl);
+                        clientContext.Load(site, s => s.Url);
+                        clientContext.Load(web, w => w.Url);
+                        clientContext.ExecuteQueryRetry();
 
-                    // Apply the templates to the target site
-                    ApplyProvisioningTemplate(web, "Infrastructure", "PnP-Partner-Pack-Infrastructure-Jobs.xml");
-                    ApplyProvisioningTemplate(web, "Infrastructure", "PnP-Partner-Pack-Infrastructure-Templates.xml");
-                    ApplyProvisioningTemplate(web, "", "PnP-Partner-Pack-Infrastructure-Contents.xml");
+                        // Override settings within templates, before uploading them
+                        UpdateProvisioningTemplateParameter("Responsive", "SPO-Responsive.xml",
+                            "AzureWebSiteUrl", info.AzureWebAppUrl);
+                        UpdateProvisioningTemplateParameter("Overrides", "PnP-Partner-Pack-Overrides.xml",
+                            "AzureWebSiteUrl", info.AzureWebAppUrl);
+
+                        // Apply the templates to the target site
+                        ApplyProvisioningTemplate(web, "Infrastructure", "PnP-Partner-Pack-Infrastructure-Jobs.xml");
+                        ApplyProvisioningTemplate(web, "Infrastructure", "PnP-Partner-Pack-Infrastructure-Templates.xml");
+                        ApplyProvisioningTemplate(web, "", "PnP-Partner-Pack-Infrastructure-Contents.xml");
+                        
+                        // We to it twice to force the content types, due to a small bug in the provisioning engine
+                        ApplyProvisioningTemplate(web, "", "PnP-Partner-Pack-Infrastructure-Contents.xml");
+                    }
                 }
-            }
-            else
-            {
-                // TODO: Handle some kind of exception ...
+                else
+                {
+                    // TODO: Handle some kind of exception ...
+                }
             }
         }
 
         private static void UpdateProvisioningTemplateParameter(string container, string filename, string parameterName, string parameterValue)
         {
-            XMLTemplateProvider provider =
-                new XMLFileSystemTemplateProvider(
-                    String.Format(@"{0}\..\..\..\OfficeDevPnP.PartnerPack.SiteProvisioning\Templates",
-                    AppDomain.CurrentDomain.BaseDirectory),
-                    container);
+            var filePath = String.Format(@"{0}..\..\..\OfficeDevPnP.PartnerPack.SiteProvisioning\Templates{1}{2}\{3}",
+                    AppDomain.CurrentDomain.BaseDirectory,
+                    !String.IsNullOrEmpty(container) ? @"\" : String.Empty,
+                    container,
+                    filename);
 
-            ProvisioningTemplate template = provider.GetTemplate(filename);
-
-            if (template.Parameters.ContainsKey(parameterName))
+            if (System.IO.File.Exists(filePath))
             {
-                template.Parameters[parameterName] = parameterValue;
-            }
+                filePath = new System.IO.FileInfo(filePath).FullName;
+                XElement templateXml = XElement.Load(filePath);
+                var targetParameter = templateXml
+                    .Descendants(PnPProvisioningTemplateSchema + "Parameter")
+                    .FirstOrDefault(p => p.Attribute("Key").Value == parameterName);
 
-            provider.SaveAs(template, filename);
+                if (targetParameter != null)
+                {
+                    targetParameter.Value = parameterValue;
+                }
+
+                templateXml.Save(filePath);
+            }
         }
 
         private static void ApplyProvisioningTemplate(Web web, string container, string filename)
@@ -234,7 +260,14 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
 
         private static async Task UpdateProgress(SetupInformation info, SetupStep currentStep, String stepDescription)
         {
-            info.ViewModel.SetupProgress = (100 / 7) * (Int32)currentStep;
+            if (currentStep == SetupStep.Completed)
+            {
+                info.ViewModel.SetupProgress = 100;
+            }
+            else
+            {
+                info.ViewModel.SetupProgress = (100 / (Int32)SetupStep.Completed) * (Int32)currentStep;
+            }
             info.ViewModel.SetupProgressDescription = stepDescription;
 
             await Task.Delay(2000);
@@ -243,6 +276,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
 
     public enum SetupStep
     {
+        Starting,
         CreateInfrastructuralSiteCollection,
         ConfigureX509Certificate,
         RegisterAzureADApplication,

@@ -61,6 +61,22 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
             SslCertificateFile = "(Please select a file)";
             Lcid = 1033;
             TimeZone = 93;
+
+#if DEBUG
+            this.ApplicationName = "test";
+            this.ApplicationUniqueUri = "https://test.com";
+            this.AzureWebAppUrl = "https://test.azurewebsites.net/";
+            this.SslCertificateGenerate = true;
+            this.SslCertificateFile = String.Empty;
+            this.SslCertificatePassword = "test123";
+            this.SslCertificateCommonName = "test";
+            this.AbsoluteUrl = "https://testpnp654321.sharepoint.com/sites/PnP-Partner-Pack";
+            this.Lcid = 1033;
+            this.TimeZone = 4;
+            this.PrimaryAdmin = "admin@testpnp654321.onmicrosoft.com";
+            this.AzureAppServiceName = "test";
+            this.AzureBlobStorageName = "test";
+#endif
         }
 
         public ICommand Office365LoginCommand { get; }
@@ -323,7 +339,8 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
             get { return _setupProgress; }
             set
             {
-                Set(ref _setupProgress, value);
+                if (Set(ref _setupProgress, value))
+                    ValidateModelProperty(value);
             }
         }
 
@@ -332,7 +349,8 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
             get { return _setupProgressDescription; }
             set
             {
-                Set(ref _setupProgressDescription, value);
+                if (Set(ref _setupProgressDescription, value))
+                    ValidateModelProperty(value);
             }
         }
 
