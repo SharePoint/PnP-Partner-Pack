@@ -102,6 +102,8 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
             await UpdateProgress(info, SetupStep.Completed, "Setup Completed");
         }
 
+        #region Create Infrastructural Site Collection
+
         private async static Task CreateInfrastructuralSiteCollectionAsync(SetupInformation info)
         {
             Uri infrastructureSiteUri = new Uri(info.InfrastructuralSiteUrl);
@@ -272,6 +274,8 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
 
             await Task.Delay(2000);
         }
+
+        #endregion
     }
 
     public enum SetupStep
