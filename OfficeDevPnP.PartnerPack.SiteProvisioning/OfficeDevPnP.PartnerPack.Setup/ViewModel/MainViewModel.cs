@@ -11,6 +11,7 @@ using System.Linq;
 using System.Windows;
 using System.Threading.Tasks;
 using System.Configuration;
+using System.Text.RegularExpressions;
 
 namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
 {
@@ -62,20 +63,16 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
             Lcid = 1033;
             TimeZone = 93;
 
+            this.ApplicationName = "PnP Partner Pack";
+            this.ApplicationLogo = new System.IO.FileInfo(
+                $@"{AppDomain.CurrentDomain.BaseDirectory}..\..\..\..\Scripts\SharePoint-PnP-Icon.png").FullName;
+            
 #if DEBUG
-            this.ApplicationName = "test";
-            this.ApplicationUniqueUri = "https://test.com";
-            this.AzureWebAppUrl = "https://test.azurewebsites.net/";
             this.SslCertificateGenerate = true;
             this.SslCertificateFile = String.Empty;
-            this.SslCertificatePassword = "test123";
-            this.SslCertificateCommonName = "test";
-            this.AbsoluteUrl = "https://testpnp654321.sharepoint.com/sites/PnP-Partner-Pack";
+            this.SslCertificateCommonName = "PnP-Partner-Pack";
             this.Lcid = 1033;
             this.TimeZone = 4;
-            this.PrimaryAdmin = "admin@testpnp654321.onmicrosoft.com";
-            this.AzureAppServiceName = "test";
-            this.AzureBlobStorageName = "test";
 #endif
         }
 
@@ -361,7 +358,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
         public bool AzureLocationsReady => _azureLocations != null && _azureLocations.Length > 0;
 
         [Required(ErrorMessage = "The Azure App Service name is required")]
-        [RegularExpression(@"^[a-z][a-z0-9]{2,62}$", ErrorMessage = "Name must be lower case and must contain letters and numbers only")]
+        [RegularExpression(@"^[-a-z][-a-z0-9]{2,62}$", ErrorMessage = "Name must be lower case and must contain letters, numbers, and dashes only")]
         public string AzureAppServiceName
         {
             get { return _azureAppServiceName; }
@@ -462,6 +459,29 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
             _office365AccessToken = await AzureManagementUtility.GetAccessTokenAsync(
                 AzureManagementUtility.AzureManagementApiURI, 
                 ConfigurationManager.AppSettings["O365:ClientId"]);
+
+            try
+            {
+                var office365Account = await AzureManagementUtility.GetUserUniqueId(ConfigurationManager.AppSettings["O365:ClientId"]);
+
+                Regex regex = new Regex(@"(?<mailbox>.*)@(?<tenant>\w*)\.(?<remainder>.*)");
+                var match = regex.Match(office365Account);
+                var tenantName = match.Groups["tenant"].Value;
+                var remainderName = match.Groups["remainder"].Value;
+
+                // Configure parameters based on the current Office 365 tenant name
+                this.ApplicationUniqueUri = $"https://{tenantName}.{remainderName}/PnP-Partner-Pack";
+                this.AzureWebAppUrl = $"https://pnp-partner-pack-{tenantName}.azurewebsites.net/";
+                this.AbsoluteUrl = $"https://{tenantName}.sharepoint.com/sites/PnP-Partner-Pack";
+                this.PrimaryAdmin = office365Account;
+                this.AzureAppServiceName = $"pnp-partner-pack-{tenantName}";
+                this.AzureBlobStorageName = $"pnppartnerpack{tenantName}";
+            }
+            catch
+            {
+                // Intentionally ignore any exception related to settings suggestion, because they are not really critical
+            }
+
             if (!String.IsNullOrEmpty(_office365AccessToken))
             {
                 var subscriptions = (await AzureManagementUtility.ListSubscriptionsAsync(_office365AccessToken)).ToArray();

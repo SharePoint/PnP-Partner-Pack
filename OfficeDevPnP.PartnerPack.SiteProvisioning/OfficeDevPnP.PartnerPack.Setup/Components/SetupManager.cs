@@ -1,6 +1,8 @@
-﻿using Microsoft.Identity.Client;
+﻿using CERTENROLLLib;
+using Microsoft.Identity.Client;
 using Microsoft.Online.SharePoint.TenantAdministration;
 using Microsoft.SharePoint.Client;
+using Newtonsoft.Json;
 using OfficeDevPnP.Core;
 using OfficeDevPnP.Core.Entities;
 using OfficeDevPnP.Core.Framework.Provisioning.Model;
@@ -9,7 +11,9 @@ using OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -59,7 +63,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
             #region Create the Infrastructural Site Collection
 
             await UpdateProgress(info, SetupStep.CreateInfrastructuralSiteCollection, "Creating Infrastructural Site Collection");
-            await CreateInfrastructuralSiteCollectionAsync(info);
+            // await CreateInfrastructuralSiteCollectionAsync(info);
 
             #endregion
 
@@ -67,11 +71,23 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
 
             await UpdateProgress(info, SetupStep.ConfigureX509Certificate, "Configuring X.509 Certificate");
 
+            if (info.SslCertificateGenerate)
+            {
+                CreateX509Certificate(info);
+            }
+            else
+            {
+                LoadX509Certificate(info);
+            }
+
+            info.AzureAppKeyCredential = GetX509CertificateInformation(info);
+
             #endregion
 
             #region Register the Azure AD Application
 
             await UpdateProgress(info, SetupStep.RegisterAzureADApplication, "Registering Azure AD Application");
+            await RegisterAzureADApplication(info);
 
             #endregion
 
@@ -206,7 +222,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                         ApplyProvisioningTemplate(web, "Infrastructure", "PnP-Partner-Pack-Infrastructure-Jobs.xml");
                         ApplyProvisioningTemplate(web, "Infrastructure", "PnP-Partner-Pack-Infrastructure-Templates.xml");
                         ApplyProvisioningTemplate(web, "", "PnP-Partner-Pack-Infrastructure-Contents.xml");
-                        
+
                         // We to it twice to force the content types, due to a small bug in the provisioning engine
                         ApplyProvisioningTemplate(web, "", "PnP-Partner-Pack-Infrastructure-Contents.xml");
                     }
@@ -273,6 +289,159 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
             info.ViewModel.SetupProgressDescription = stepDescription;
 
             await Task.Delay(2000);
+        }
+
+        #endregion
+
+        #region Manage X.509 Certificate
+
+        private static void CreateX509Certificate(SetupInformation info)
+        {
+            var certificate = CreateSelfSignedCertificate(info.SslCertificateCommonName.ToLower(),
+                info.SslCertificateStartDate, info.SslCertificateEndDate, info.SslCertificatePassword);
+
+            SaveCertificateFiles(info, certificate);
+        }
+
+        private static void LoadX509Certificate(SetupInformation info)
+        {
+            var certificate = new X509Certificate2(info.SslCertificateFile);
+            info.SslCertificateCommonName = certificate.SubjectName.Name;
+
+            SaveCertificateFiles(info, certificate);
+        }
+
+        private static void SaveCertificateFiles(SetupInformation info, X509Certificate2 certificate)
+        {
+            var basePath = String.Format(@"{0}..\..\..\..\Scripts\", AppDomain.CurrentDomain.BaseDirectory);
+
+            var pfx = certificate.Export(X509ContentType.Pfx, info.SslCertificatePassword);
+            System.IO.File.WriteAllBytes($@"{basePath}{info.SslCertificateCommonName}.pfx", pfx);
+
+            var cer = certificate.Export(X509ContentType.Cert);
+            System.IO.File.WriteAllBytes($@"{basePath}{info.SslCertificateCommonName}.cer", cer);
+        }
+
+        public static X509Certificate2 CreateSelfSignedCertificate(string subjectName, DateTime startDate, DateTime endDate, String password)
+        {
+            // Create DistinguishedName for subject and issuer
+            var name = new CX500DistinguishedName();
+            name.Encode("CN=" + subjectName, X500NameFlags.XCN_CERT_NAME_STR_NONE);
+
+            // Create a new Private Key for the certificate
+            CX509PrivateKey privateKey = new CX509PrivateKey();
+            privateKey.ProviderName = "Microsoft RSA SChannel Cryptographic Provider";
+            privateKey.KeySpec = X509KeySpec.XCN_AT_KEYEXCHANGE;
+            privateKey.Length = 2048;
+            privateKey.SecurityDescriptor = "D:PAI(A;;0xd01f01ff;;;SY)(A;;0xd01f01ff;;;BA)(A;;0x80120089;;;NS)";
+            privateKey.MachineContext = true;
+            privateKey.ExportPolicy = X509PrivateKeyExportFlags.XCN_NCRYPT_ALLOW_EXPORT_FLAG;
+            privateKey.Create();
+
+            // Define the hashing algorithm
+            var serverauthoid = new CObjectId();
+            serverauthoid.InitializeFromValue("1.3.6.1.5.5.7.3.1"); // Server Authentication
+            var ekuoids = new CObjectIds();
+            ekuoids.Add(serverauthoid);
+            var ekuext = new CX509ExtensionEnhancedKeyUsage();
+            ekuext.InitializeEncode(ekuoids);
+
+            // Create the self signing request
+            var cert = new CX509CertificateRequestCertificate();
+            cert.InitializeFromPrivateKey(X509CertificateEnrollmentContext.ContextMachine, privateKey, String.Empty);
+            cert.Subject = name;
+            cert.Issuer = cert.Subject;
+            cert.NotBefore = startDate;
+            cert.NotAfter = endDate;
+            cert.X509Extensions.Add((CX509Extension)ekuext);
+            cert.Encode();
+
+            // Enroll the certificate
+            var enroll = new CX509Enrollment();
+            enroll.InitializeFromRequest(cert);
+            string certData = enroll.CreateRequest(EncodingType.XCN_CRYPT_STRING_BASE64HEADER);
+            enroll.InstallResponse(InstallResponseRestrictionFlags.AllowUntrustedCertificate,
+                certData, EncodingType.XCN_CRYPT_STRING_BASE64HEADER, String.Empty);
+
+            var base64encoded = enroll.CreatePFX(password, PFXExportOptions.PFXExportChainWithRoot);
+
+            // Instantiate the target class with the PKCS#12 data
+            return new X509Certificate2(
+                System.Convert.FromBase64String(base64encoded), password,
+                System.Security.Cryptography.X509Certificates.X509KeyStorageFlags.Exportable);
+        }
+
+        private static String GetX509CertificateInformation(SetupInformation info)
+        {
+            var basePath = String.Format(@"{0}..\..\..\..\Scripts\", AppDomain.CurrentDomain.BaseDirectory);
+
+            var certificate = new X509Certificate2();
+            certificate.Import($@"{basePath}{info.SslCertificateCommonName}.cer");
+
+            var rawCert = certificate.GetRawCertData();
+            var base64Cert = System.Convert.ToBase64String(rawCert);
+            var rawCertHash = certificate.GetCertHash();
+            var base64CertHash = System.Convert.ToBase64String(rawCertHash);
+            var KeyId = System.Guid.NewGuid().ToString();
+
+            var keyCredential =
+                "{" +
+                    "\"customKeyIdentifier\": \"" + base64CertHash + "\"," +
+                    "\"keyId\": \"" + KeyId + "\"," +
+                    "\"type\": \"AsymmetricX509Cert\"," +
+                    "\"usage\": \"Verify\"," +
+                    "\"value\":  \"" + base64Cert + "\"" +
+                "}";
+
+            return (keyCredential);
+        }
+
+        #endregion
+
+        #region Register Azure AD Application
+
+        private async static Task RegisterAzureADApplication(SetupInformation info)
+        {
+            // Fix the App URL
+            if (!info.AzureWebAppUrl.EndsWith("/"))
+            {
+                info.AzureWebAppUrl = info.AzureWebAppUrl + "/";
+            }
+
+            // Load the App Manifest template
+            Stream stream = typeof(SetupManager)
+                .Assembly
+                .GetManifestResourceStream("OfficeDevPnP.PartnerPack.Setup.Resources.azure-ad-app-manifest.json.txt");
+
+            using (StreamReader sr = new StreamReader(stream))
+            {
+                // Get the JSON manifest
+                var jsonApplication = sr.ReadToEnd();
+
+                var application = JsonConvert.DeserializeObject<AzureAdApplication>(jsonApplication);
+                var keyCredential = JsonConvert.DeserializeObject<KeyCredential>(info.AzureAppKeyCredential);
+
+                application.displayName = info.ApplicationName;
+                application.homepage = info.AzureWebAppUrl;
+                application.identifierUris = new List<String>();
+                application.identifierUris.Add(info.ApplicationUniqueUri);
+                application.keyCredentials = new List<KeyCredential>();
+                application.keyCredentials.Add(keyCredential);
+                application.replyUrls = new List<String>();
+                application.replyUrls.Add(info.AzureWebAppUrl);
+
+                // Get an Access Token to create the application via Microsoft Graph
+                var office365AzureADAccessToken = await AzureManagementUtility.GetAccessTokenSilentAsync(
+                    AzureManagementUtility.MicrosoftGraphResourceId,
+                    ConfigurationManager.AppSettings["O365:ClientId"]);
+
+                // Create the Azure AD Application
+                String jsonResponse = await HttpHelper.MakePostRequestForStringAsync(
+                    String.Format("{0}applications",
+                        AzureManagementUtility.MicrosoftGraphBetaBaseUri),
+                    application,
+                    "application/json", office365AzureADAccessToken);
+            }
         }
 
         #endregion

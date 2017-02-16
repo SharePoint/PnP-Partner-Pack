@@ -14,6 +14,29 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
     {
         private static String apiVersion = "?api-version=2016-09-01";
         public static String AzureManagementApiURI = "https://management.azure.com/";
+        public static String MicrosoftGraphResourceId = "https://graph.microsoft.com/";
+        public static String MicrosoftGraphV1BaseUri = "https://graph.microsoft.com/v1.0/";
+        public static String MicrosoftGraphBetaBaseUri = "https://graph.microsoft.com/beta/";
+
+        public static async Task<String> GetUserUniqueId(String clientId = null)
+        {
+            // ClientID of the Azure AD application
+            if (String.IsNullOrEmpty(clientId))
+            {
+                clientId = ConfigurationManager.AppSettings["ADAL:ClientId"];
+            }
+
+            // Create an instance of AuthenticationContext to acquire an Azure access token  
+            // OAuth2 authority Uri  
+            string authorityUri = "https://login.microsoftonline.com/common";
+            AuthenticationContext authContext = new AuthenticationContext(authorityUri);
+
+            // Call AcquireTokenSilent to get an Azure token from Azure Active Directory token issuance endpoint  
+            var authResult = await authContext.AcquireTokenSilentAsync(MicrosoftGraphResourceId, clientId);
+
+            // Return the user's unique ID
+            return (authResult.UserInfo.DisplayableId);
+        }
 
         public static async Task<String> GetAccessTokenAsync(String resourceUri = null, String clientId = null)
         {

@@ -220,6 +220,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Components\ActionCommand.cs" />
+    <Compile Include="Components\AzureAdApplication.cs" />
     <Compile Include="Components\HttpHelper.cs" />
     <Compile Include="Components\PasswordBoxEx.cs" />
     <Compile Include="Components\RequiredIfAttribute.cs" />
@@ -273,6 +274,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <EmbeddedResource Include="Resources\azure-ad-app-manifest.json.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -283,6 +285,17 @@
   <ItemGroup>
     <Resource Include="Resources\SupportedUILanguages.xml" />
     <Resource Include="Resources\TimeZones.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="CERTENROLLLib">
+      <Guid>{728AB348-217D-11DA-B2A4-000E7BBB2B09}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

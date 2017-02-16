@@ -36,5 +36,6 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         public String AzureBlobStorageName { get; set; }
         public String Office365AccessToken { get; set; }
         public String AzureAccessToken { get; set; }
+        public String AzureAppKeyCredential { get; set; }
     }
 }
