@@ -232,6 +232,7 @@
       <DependentUpon>PnPPartnerPackConfiguration.xsd</DependentUpon>
     </Compile>
     <Compile Include="Configuration\PnPPartnerPackConfigurationSectionHandler.cs" />
+    <Compile Include="Diagnostics\RemoveWordsFilter.cs" />
     <Compile Include="HttpHelper.cs" />
     <Compile Include="IConfigurable.cs" />
     <Compile Include="IProvisioningRepository.cs" />
