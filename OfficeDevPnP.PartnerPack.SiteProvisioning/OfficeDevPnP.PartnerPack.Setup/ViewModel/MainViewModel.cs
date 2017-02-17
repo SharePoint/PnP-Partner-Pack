@@ -477,7 +477,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
                 this.AbsoluteUrl = $"https://{tenantName}.sharepoint.com/sites/PnP-Partner-Pack";
                 this.PrimaryAdmin = office365Account;
                 this.AzureAppServiceName = $"pnp-partner-pack-{tenantName}";
-                this.AzureBlobStorageName = $"pnppartnerpack{tenantName}";
+                this.AzureBlobStorageName = $"{tenantName}storage";
             }
             catch
             {

@@ -156,24 +156,21 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
             var jsonProviderRegistration = await HttpHelper.MakePostRequestForStringAsync(
                 $"{AzureManagementApiURI}subscriptions/{subscriptionId}/providers/{providerNamespace}/register{apiVersion}",
                 accessToken: accessToken);
-
-            // Wait five seconds to let Azure to be updated
-            await Task.Delay(5000);
         }
 
         public static async Task CreateServicePlan(String accessToken, Guid subscriptionId, String resourceGroupName, String servicePlanName, String location)
         {
             var jsonServicePlanCreated = await HttpHelper.MakePutRequestForStringAsync(
-                $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/serverfarms/{servicePlanName}{apiVersion}",
+                $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/serverfarms/{servicePlanName}?api-version=2015-08-01",
                 new { Kind = "app", Location = location, Name = servicePlanName, Sku = new { Capacity = 1, Family = "B", Name = "B1", Size = "B1", Tier = "Basic" }, Type = "Microsoft.Web/serverfarms" },
                 "application/json",
                 accessToken);
         }
 
-        public static async Task CreateAppServiceWebSite(String accessToken, Guid subscriptionId, String resourceGroupName, String servicePlanName, String appServiceName, String location, Dictionary<String, String> appSettings)
+        public static async Task CreateAppServiceWebSite(String accessToken, Guid subscriptionId, String resourceGroupName, String servicePlanName, String appServiceName, String location, AzureAppServiceSetting[] appSettings)
         {
             var jsonAppServiceCreated = await HttpHelper.MakePutRequestForStringAsync(
-                $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{appServiceName}{apiVersion}",
+                $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{appServiceName}?api-version=2016-08-01",
                 new
                 {
                     Kind = "app",
@@ -196,7 +193,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         public static async Task<String> GetAppServiceWebSitePublishingSettings(String accessToken, Guid subscriptionId, String resourceGroupName, String appServiceName)
         {
             var xmlPublishingProfile = await HttpHelper.MakePostRequestForStringAsync(
-                $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{appServiceName}/publishxml{apiVersion}",
+                $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{appServiceName}/publishxml?api-version=2016-08-01",
                 new
                 {
                     Format = "WebDeploy",
@@ -210,7 +207,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         public static async Task<String> CreateStorageAccount(String accessToken, Guid subscriptionId, String resourceGroupName, String servicePlanName, String storageAccountName, String location)
         {
             var jsonStorageAccountCreated = await HttpHelper.MakePutRequestForStringAsync(
-                $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Storage/storageAccounts/{storageAccountName.ToLower()}{apiVersion}",
+                $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Storage/storageAccounts/{storageAccountName.ToLower()}?api-version=2016-12-01",
                 new
                 {
                     Kind = "Storage",
@@ -223,8 +220,11 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                 "application/json",
                 accessToken);
 
+            // Wait a couple of seconds
+            await Task.Delay(2000);
+
             var jsonStorageKeys = await HttpHelper.MakePostRequestForStringAsync(
-                $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Storage/storageAccounts/{storageAccountName.ToLower()}/listKeys{apiVersion}",
+                $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Storage/storageAccounts/{storageAccountName.ToLower()}/listKeys?api-version=2016-12-01",
                 accessToken: accessToken);
 
             var keys = JsonConvert.DeserializeObject<StorageKeys>(jsonStorageKeys);

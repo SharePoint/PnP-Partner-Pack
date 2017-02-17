@@ -528,39 +528,39 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                 info.AzureResourceGroupName,
                 info.AzureServicePlanName,
                 info.AzureLocationDisplayName);
-
-            await AzureManagementUtility.RegisterAzureProvider(info.AzureAccessToken,
-                info.AzureTargetSubscriptionId,
-                "Microsoft.Web");
-
-            await AzureManagementUtility.RegisterAzureProvider(info.AzureAccessToken,
-                info.AzureTargetSubscriptionId,
-                "Microsoft.Storage");
         }
 
         private async static Task CreateAzureStorageAccount(SetupInformation info)
         {
+            await AzureManagementUtility.RegisterAzureProvider(info.AzureAccessToken,
+                info.AzureTargetSubscriptionId,
+                "Microsoft.Storage");
+
             var key = await AzureManagementUtility.CreateStorageAccount(info.AzureAccessToken,
                 info.AzureTargetSubscriptionId,
                 info.AzureResourceGroupName,
                 info.AzureServicePlanName,
                 info.AzureBlobStorageName,
-                info.AzureLocationId);
+                info.AzureLocationDisplayName);
         }
 
         private async static Task CreateAzureAppService(SetupInformation info)
         {
-            var appSettings = new System.Collections.Generic.Dictionary<String, String>();
-            appSettings.Add("WEBSITE_LOAD_CERTIFICATES", "*");
-            appSettings.Add("WEBJOBS_IDLE_TIMEOUT", "10000");
-            appSettings.Add("SCM_COMMAND_IDLE_TIMEOUT", "10000");
+            await AzureManagementUtility.RegisterAzureProvider(info.AzureAccessToken,
+                info.AzureTargetSubscriptionId,
+                "Microsoft.Web");
+
+            var appSettings = new AzureAppServiceSetting[3];
+            appSettings[0] = new AzureAppServiceSetting { Name = "WEBSITE_LOAD_CERTIFICATES", Value = "*" };
+            appSettings[1] = new AzureAppServiceSetting { Name = "WEBJOBS_IDLE_TIMEOUT", Value = "10000" };
+            appSettings[2] = new AzureAppServiceSetting { Name = "SCM_COMMAND_IDLE_TIMEOUT", Value = "10000" };
 
             await AzureManagementUtility.CreateAppServiceWebSite(info.AzureAccessToken,
                 info.AzureTargetSubscriptionId,
                 info.AzureResourceGroupName,
                 info.AzureServicePlanName,
                 info.AzureAppServiceName,
-                info.AzureLocationId,
+                info.AzureLocationDisplayName,
                 appSettings);
 
             // TODO: Certificate handling
