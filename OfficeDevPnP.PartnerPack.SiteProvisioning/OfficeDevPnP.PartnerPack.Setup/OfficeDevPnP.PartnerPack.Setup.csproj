@@ -221,6 +221,8 @@
     </ApplicationDefinition>
     <Compile Include="Components\ActionCommand.cs" />
     <Compile Include="Components\AzureAdApplication.cs" />
+    <Compile Include="Components\AzureAdApplications.cs" />
+    <Compile Include="Components\GraphError.cs" />
     <Compile Include="Components\HttpHelper.cs" />
     <Compile Include="Components\PasswordBoxEx.cs" />
     <Compile Include="Components\RequiredIfAttribute.cs" />
@@ -274,7 +276,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <EmbeddedResource Include="Resources\azure-ad-app-manifest.json.txt" />
+    <EmbeddedResource Include="Resources\azure-ad-app-manifest.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

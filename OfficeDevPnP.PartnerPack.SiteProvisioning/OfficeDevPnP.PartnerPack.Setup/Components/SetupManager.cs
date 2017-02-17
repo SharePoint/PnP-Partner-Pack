@@ -17,6 +17,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using System.Xml.Linq;
 
 namespace OfficeDevPnP.PartnerPack.Setup.Components
@@ -305,10 +306,8 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
 
         private static void LoadX509Certificate(SetupInformation info)
         {
-            var certificate = new X509Certificate2(info.SslCertificateFile);
+            var certificate = new X509Certificate2(info.SslCertificateFile, info.SslCertificatePassword);
             info.SslCertificateCommonName = certificate.SubjectName.Name;
-
-            SaveCertificateFiles(info, certificate);
         }
 
         private static void SaveCertificateFiles(SetupInformation info, X509Certificate2 certificate)
@@ -376,7 +375,14 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
             var basePath = String.Format(@"{0}..\..\..\..\Scripts\", AppDomain.CurrentDomain.BaseDirectory);
 
             var certificate = new X509Certificate2();
-            certificate.Import($@"{basePath}{info.SslCertificateCommonName}.cer");
+            if (info.SslCertificateGenerate)
+            {
+                certificate.Import($@"{basePath}{info.SslCertificateCommonName}.cer");
+            }
+            else
+            {
+                certificate = new X509Certificate2(info.SslCertificateFile, info.SslCertificatePassword);
+            }
 
             var rawCert = certificate.GetRawCertData();
             var base64Cert = System.Convert.ToBase64String(rawCert);
@@ -411,7 +417,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
             // Load the App Manifest template
             Stream stream = typeof(SetupManager)
                 .Assembly
-                .GetManifestResourceStream("OfficeDevPnP.PartnerPack.Setup.Resources.azure-ad-app-manifest.json.txt");
+                .GetManifestResourceStream("OfficeDevPnP.PartnerPack.Setup.Resources.azure-ad-app-manifest.json");
 
             using (StreamReader sr = new StreamReader(stream))
             {
@@ -435,14 +441,70 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                     AzureManagementUtility.MicrosoftGraphResourceId,
                     ConfigurationManager.AppSettings["O365:ClientId"]);
 
+                var azureAdApplicationCreated = false;
+
                 // Create the Azure AD Application
-                String jsonResponse = await HttpHelper.MakePostRequestForStringAsync(
-                    String.Format("{0}applications",
-                        AzureManagementUtility.MicrosoftGraphBetaBaseUri),
-                    application,
-                    "application/json", office365AzureADAccessToken);
+                try
+                {
+                    String jsonResponse = await HttpHelper.MakePostRequestForStringAsync(
+                        String.Format("{0}applications",
+                            AzureManagementUtility.MicrosoftGraphBetaBaseUri),
+                        application,
+                        "application/json", office365AzureADAccessToken);
+
+                    azureAdApplicationCreated = true;
+                }
+                catch (ApplicationException ex)
+                {
+                    var graphError = JsonConvert.DeserializeObject<GraphError>(((HttpException)ex.InnerException).Message);
+                    if (graphError != null && graphError.error.code == "Request_BadRequest" &&
+                        graphError.error.message.Contains("identifierUris already exists"))
+                    {
+                        // We need to remove the existing application
+
+                        // Thus, retrieve it
+                        String jsonApplications = await HttpHelper.MakeGetRequestForStringAsync(
+                            String.Format("{0}applications?$filter=identifierUris/any(c:c+eq+'{1}')",
+                                AzureManagementUtility.MicrosoftGraphBetaBaseUri,
+                                HttpUtility.UrlEncode(info.ApplicationUniqueUri)),
+                            office365AzureADAccessToken);
+
+                        var applications = JsonConvert.DeserializeObject<AzureAdApplications>(jsonApplications);
+                        var applicationToUpdate = applications.Applications.FirstOrDefault();
+                        if (applicationToUpdate != null)
+                        {
+                            // Remove it
+                            await HttpHelper.MakeDeleteRequestAsync(
+                                String.Format("{0}applications/{1}",
+                                    AzureManagementUtility.MicrosoftGraphBetaBaseUri,
+                                    applicationToUpdate.Id),
+                                office365AzureADAccessToken);
+
+                            // And add it again
+                            String jsonResponse = await HttpHelper.MakePostRequestForStringAsync(
+                                String.Format("{0}applications",
+                                    AzureManagementUtility.MicrosoftGraphBetaBaseUri),
+                                application,
+                                "application/json", office365AzureADAccessToken);
+
+                            azureAdApplicationCreated = true;
+                        }
+                    }
+                }
+
+                if (azureAdApplicationCreated)
+                {
+                    // TODO: We should upload the logo
+                    // property mainLogo: stream of the application via PATCH
+                }
             }
         }
+
+        #endregion
+
+        #region Create the Azure Resources
+
+
 
         #endregion
     }

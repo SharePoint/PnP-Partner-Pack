@@ -29,8 +29,10 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
 
     public class AzureAdApplication
     {
+        public Guid? Id { get; set; }
         public List<object> addIns { get; set; }
         public List<object> appRoles { get; set; }
+        public Guid? AppId { get; set; }
         public bool availableToOtherOrganizations { get; set; }
         public string displayName { get; set; }
         public object errorUrl { get; set; }
