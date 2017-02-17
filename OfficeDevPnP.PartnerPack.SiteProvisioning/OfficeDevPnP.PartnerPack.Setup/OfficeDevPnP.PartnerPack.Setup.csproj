@@ -227,8 +227,10 @@
     <Compile Include="Components\PasswordBoxEx.cs" />
     <Compile Include="Components\RequiredIfAttribute.cs" />
     <Compile Include="Components\AzureManagementUtility.cs" />
+    <Compile Include="Components\ResourceGroupCreation.cs" />
     <Compile Include="Components\SetupInformation.cs" />
     <Compile Include="Components\SetupManager.cs" />
+    <Compile Include="Components\StorageKeys.cs" />
     <Compile Include="SharePointContext.cs" />
     <Compile Include="TokenHelper.cs" />
     <Compile Include="ViewModel\AzureLocation.cs" />

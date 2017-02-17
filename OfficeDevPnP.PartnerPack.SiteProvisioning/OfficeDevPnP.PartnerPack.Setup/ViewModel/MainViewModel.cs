@@ -440,8 +440,10 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
                     InfrastructuralSiteSecondaryAdmin = this.SecondaryAdmin,                    
                     AzureTargetSubscriptionId = this.AzureSubscription.HasValue ?
                         this.AzureSubscription.Value.Key : Guid.Empty,
-                    AzureLocation = this.AzureLocation.HasValue ?
+                    AzureLocationId = this.AzureLocation.HasValue ?
                         this.AzureLocation.Value.Key : String.Empty,
+                    AzureLocationDisplayName = this.AzureLocation.HasValue ?
+                        this.AzureLocation.Value.Value : String.Empty,
                     AzureAppServiceName = this.AzureAppServiceName,
                     AzureBlobStorageName = this.AzureBlobStorageName,
                 });

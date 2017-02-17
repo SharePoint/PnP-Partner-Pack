@@ -112,7 +112,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         {
             // Get the list of subscriptions
             var jsonSubscriptions = await HttpHelper.MakeGetRequestForStringAsync(
-                $"https://management.azure.com/subscriptions{apiVersion}",
+                $"{AzureManagementApiURI}subscriptions{apiVersion}",
                 accessToken);
 
             // Decode JSON list
@@ -126,7 +126,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         {
             // Get the list of Locations
             var jsonLocations = await HttpHelper.MakeGetRequestForStringAsync(
-                $"https://management.azure.com/subscriptions/{subscriptionId}/locations{apiVersion}",
+                $"{AzureManagementApiURI}subscriptions/{subscriptionId}/locations{apiVersion}",
                 accessToken);
 
             // Decode JSON list
@@ -134,6 +134,101 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
 
             // Return a dictionary of subscriptions with ID and DisplayName
             return (locations.Locations.ToDictionary(i => i.Name, i => i.DisplayName));
+        }
+
+        public static async Task<Boolean> CreateResourceGroup(String accessToken, Guid subscriptionId, String resourceGroupName, String location)
+        {
+            var jsonResourceGroup = await HttpHelper.MakePutRequestForStringAsync(
+                $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}{apiVersion}",
+                new { Name = resourceGroupName, Location = location },
+                "application/json",
+                accessToken);
+
+            // Decode JSON list
+            var resourceGroup = JsonConvert.DeserializeObject<ResourceGroupCreation>(jsonResourceGroup);
+
+            // Return a dictionary of subscriptions with ID and DisplayName
+            return (resourceGroup.properties.provisioningState == "Succeded");
+        }
+
+        public static async Task RegisterAzureProvider(String accessToken, Guid subscriptionId, String providerNamespace)
+        {
+            var jsonProviderRegistration = await HttpHelper.MakePostRequestForStringAsync(
+                $"{AzureManagementApiURI}subscriptions/{subscriptionId}/providers/{providerNamespace}/register{apiVersion}",
+                accessToken: accessToken);
+
+            // Wait five seconds to let Azure to be updated
+            await Task.Delay(5000);
+        }
+
+        public static async Task CreateServicePlan(String accessToken, Guid subscriptionId, String resourceGroupName, String servicePlanName, String location)
+        {
+            var jsonServicePlanCreated = await HttpHelper.MakePutRequestForStringAsync(
+                $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/serverfarms/{servicePlanName}{apiVersion}",
+                new { Kind = "app", Location = location, Name = servicePlanName, Sku = new { Capacity = 1, Family = "B", Name = "B1", Size = "B1", Tier = "Basic" }, Type = "Microsoft.Web/serverfarms" },
+                "application/json",
+                accessToken);
+        }
+
+        public static async Task CreateAppServiceWebSite(String accessToken, Guid subscriptionId, String resourceGroupName, String servicePlanName, String appServiceName, String location, Dictionary<String, String> appSettings)
+        {
+            var jsonAppServiceCreated = await HttpHelper.MakePutRequestForStringAsync(
+                $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{appServiceName}{apiVersion}",
+                new
+                {
+                    Kind = "app",
+                    Location = location,
+                    Name = appServiceName,
+                    @Properties = new
+                    {
+                        ServerFarmId = $"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/serverfarms/{servicePlanName}",
+                        SiteConfig = new
+                        {
+                            AppSettings = appSettings
+                        }
+                    },
+                    Type = "Microsoft.Web/sites"
+                },
+                "application/json",
+                accessToken);
+        }
+
+        public static async Task<String> GetAppServiceWebSitePublishingSettings(String accessToken, Guid subscriptionId, String resourceGroupName, String appServiceName)
+        {
+            var xmlPublishingProfile = await HttpHelper.MakePostRequestForStringAsync(
+                $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{appServiceName}/publishxml{apiVersion}",
+                new
+                {
+                    Format = "WebDeploy",
+                },
+                "application/json",
+                accessToken);
+
+            return (xmlPublishingProfile);
+        }
+
+        public static async Task<String> CreateStorageAccount(String accessToken, Guid subscriptionId, String resourceGroupName, String servicePlanName, String storageAccountName, String location)
+        {
+            var jsonStorageAccountCreated = await HttpHelper.MakePutRequestForStringAsync(
+                $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Storage/storageAccounts/{storageAccountName.ToLower()}{apiVersion}",
+                new
+                {
+                    Kind = "Storage",
+                    Location = location,
+                    Sku = new
+                    {
+                        Name = "Standard_GRS"
+                    }
+                },
+                "application/json",
+                accessToken);
+
+            var jsonStorageKeys = await HttpHelper.MakePostRequestForStringAsync(
+                $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Storage/storageAccounts/{storageAccountName.ToLower()}/listKeys{apiVersion}",
+                accessToken: accessToken);
+
+            var keys = JsonConvert.DeserializeObject<StorageKeys>(jsonStorageKeys);
+            return (keys.keys[0].value);
         }
     }
 }

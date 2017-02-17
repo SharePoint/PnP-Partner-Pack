@@ -31,11 +31,16 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         public String InfrastructuralSitePrimaryAdmin { get; set; }
         public String InfrastructuralSiteSecondaryAdmin { get; set; }
         public Guid AzureTargetSubscriptionId { get; set; }
-        public String AzureLocation { get; set; }
+        public String AzureLocationId { get; set; }
+        public String AzureLocationDisplayName { get; set; }
         public String AzureAppServiceName { get; set; }
         public String AzureBlobStorageName { get; set; }
         public String Office365AccessToken { get; set; }
         public String AzureAccessToken { get; set; }
         public String AzureAppKeyCredential { get; set; }
+        public String AzureResourceGroupName { get; set; }
+        public String AzureServicePlanName { get; set; }
+        public String AzureStorageAccountName { get; set; }
+        public String AzureStorageKey { get; set; }
     }
 }

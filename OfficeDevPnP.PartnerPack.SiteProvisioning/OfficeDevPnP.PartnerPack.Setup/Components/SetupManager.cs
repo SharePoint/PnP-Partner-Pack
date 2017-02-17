@@ -92,15 +92,24 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
 
             #endregion
 
+            #region Create the Azure Resource Group
+
+            await UpdateProgress(info, SetupStep.CreateResourceGroup, "Creating Azure Resource Group");
+            await CreateAzureResourceGroup(info);
+
+            #endregion
+
             #region Create the Azure Blob Storage
 
             await UpdateProgress(info, SetupStep.CreateBlobStorageAccount, "Creating Azure Blob Storage Account");
+            await CreateAzureStorageAccount(info);
 
             #endregion
 
             #region Create the Azure App Service
 
             await UpdateProgress(info, SetupStep.CreateAzureAppService, "Creating Azure App Service");
+            await CreateAzureAppService(info);
 
             #endregion
 
@@ -504,7 +513,64 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
 
         #region Create the Azure Resources
 
+        private async static Task CreateAzureResourceGroup(SetupInformation info)
+        {
+            info.AzureResourceGroupName = $"{info.AzureAppServiceName}-resource-group";
+            info.AzureServicePlanName = $"{info.AzureAppServiceName}-plan";
 
+            await AzureManagementUtility.CreateResourceGroup(info.AzureAccessToken,
+                info.AzureTargetSubscriptionId,
+                info.AzureResourceGroupName,
+                info.AzureLocationId);
+
+            await AzureManagementUtility.CreateServicePlan(info.AzureAccessToken,
+                info.AzureTargetSubscriptionId,
+                info.AzureResourceGroupName,
+                info.AzureServicePlanName,
+                info.AzureLocationDisplayName);
+
+            await AzureManagementUtility.RegisterAzureProvider(info.AzureAccessToken,
+                info.AzureTargetSubscriptionId,
+                "Microsoft.Web");
+
+            await AzureManagementUtility.RegisterAzureProvider(info.AzureAccessToken,
+                info.AzureTargetSubscriptionId,
+                "Microsoft.Storage");
+        }
+
+        private async static Task CreateAzureStorageAccount(SetupInformation info)
+        {
+            var key = await AzureManagementUtility.CreateStorageAccount(info.AzureAccessToken,
+                info.AzureTargetSubscriptionId,
+                info.AzureResourceGroupName,
+                info.AzureServicePlanName,
+                info.AzureBlobStorageName,
+                info.AzureLocationId);
+        }
+
+        private async static Task CreateAzureAppService(SetupInformation info)
+        {
+            var appSettings = new System.Collections.Generic.Dictionary<String, String>();
+            appSettings.Add("WEBSITE_LOAD_CERTIFICATES", "*");
+            appSettings.Add("WEBJOBS_IDLE_TIMEOUT", "10000");
+            appSettings.Add("SCM_COMMAND_IDLE_TIMEOUT", "10000");
+
+            await AzureManagementUtility.CreateAppServiceWebSite(info.AzureAccessToken,
+                info.AzureTargetSubscriptionId,
+                info.AzureResourceGroupName,
+                info.AzureServicePlanName,
+                info.AzureAppServiceName,
+                info.AzureLocationId,
+                appSettings);
+
+            // TODO: Certificate handling
+
+            var xmlPuglishingSettings = await AzureManagementUtility.GetAppServiceWebSitePublishingSettings(
+                info.AzureAccessToken,
+                info.AzureTargetSubscriptionId,
+                info.AzureResourceGroupName,
+                info.AzureAppServiceName);
+        }
 
         #endregion
     }
@@ -515,6 +581,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         CreateInfrastructuralSiteCollection,
         ConfigureX509Certificate,
         RegisterAzureADApplication,
+        CreateResourceGroup,
         CreateBlobStorageAccount,
         CreateAzureAppService,
         ConfigureSettings,
