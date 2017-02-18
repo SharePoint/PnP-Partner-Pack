@@ -190,6 +190,19 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                 accessToken);
         }
 
+        public static async Task UploadCertificateToAzureAppService(String accessToken, Guid subscriptionId, String resourceGroupName, String appServiceName, Byte[] pfxBlob, String certificatePassword)
+        {
+            var jsonAppServiceCreated = await HttpHelper.MakePutRequestForStringAsync(
+                $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/certificates/{appServiceName}-pfx?api-version=2016-03-01",
+                new
+                {
+                    PfxBlob = pfxBlob,
+                    Password = certificatePassword
+                },
+                "application/json",
+                accessToken);
+        }
+
         public static async Task<String> GetAppServiceWebSitePublishingSettings(String accessToken, Guid subscriptionId, String resourceGroupName, String appServiceName)
         {
             var xmlPublishingProfile = await HttpHelper.MakePostRequestForStringAsync(
@@ -220,8 +233,18 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                 "application/json",
                 accessToken);
 
-            // Wait a couple of seconds
-            await Task.Delay(2000);
+            // Wait for the Storage Account to be ready
+            var succeded = false;
+            while (!succeded)
+            {
+                var jsonStorageAccount = await HttpHelper.MakeGetRequestForStringAsync(
+                    $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Storage/storageAccounts/{storageAccountName.ToLower()}?api-version=2016-12-01",
+                    accessToken: accessToken);
+
+                succeded = jsonStorageAccount.Contains("Succeeded");
+
+                await Task.Delay(2000);
+            }
 
             var jsonStorageKeys = await HttpHelper.MakePostRequestForStringAsync(
                 $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Storage/storageAccounts/{storageAccountName.ToLower()}/listKeys?api-version=2016-12-01",

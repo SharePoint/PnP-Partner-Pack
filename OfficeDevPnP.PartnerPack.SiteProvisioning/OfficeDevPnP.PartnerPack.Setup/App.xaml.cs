@@ -16,26 +16,6 @@ namespace OfficeDevPnP.PartnerPack.Setup
     {
         public App()
         {
-            bool isAdmin;
-
-            try
-            {
-                using (var user = WindowsIdentity.GetCurrent())
-                {
-                    WindowsPrincipal principal = new WindowsPrincipal(user);
-                    isAdmin = principal.IsInRole(WindowsBuiltInRole.Administrator);
-                }
-            }
-            catch (Exception)
-            {
-                isAdmin = false;
-            }
-
-            if (!isAdmin)
-            {
-                MessageBox.Show("This application requires administrative privileges to be executed!");
-                this.Shutdown();
-            }
         }
     }
 }

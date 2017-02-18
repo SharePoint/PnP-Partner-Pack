@@ -316,18 +316,21 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         private static void LoadX509Certificate(SetupInformation info)
         {
             var certificate = new X509Certificate2(info.SslCertificateFile, info.SslCertificatePassword);
+            info.AuthenticationCertificate = certificate;
             info.SslCertificateCommonName = certificate.SubjectName.Name;
         }
 
         private static void SaveCertificateFiles(SetupInformation info, X509Certificate2 certificate)
         {
-            var basePath = String.Format(@"{0}..\..\..\..\Scripts\", AppDomain.CurrentDomain.BaseDirectory);
+            info.AuthenticationCertificate = certificate;
+            //var basePath = String.Format(@"{0}..\..\..\..\Scripts\", AppDomain.CurrentDomain.BaseDirectory);
 
-            var pfx = certificate.Export(X509ContentType.Pfx, info.SslCertificatePassword);
-            System.IO.File.WriteAllBytes($@"{basePath}{info.SslCertificateCommonName}.pfx", pfx);
+            //info.SslCertificateFile = $@"{basePath}{info.SslCertificateCommonName}.pfx";
+            //var pfx = certificate.Export(X509ContentType.Pfx, info.SslCertificatePassword);
+            //System.IO.File.WriteAllBytes(info.SslCertificateFile, pfx);
 
-            var cer = certificate.Export(X509ContentType.Cert);
-            System.IO.File.WriteAllBytes($@"{basePath}{info.SslCertificateCommonName}.cer", cer);
+            //var cer = certificate.Export(X509ContentType.Cert);
+            //System.IO.File.WriteAllBytes($@"{basePath}{info.SslCertificateCommonName}.cer", cer);
         }
 
         public static X509Certificate2 CreateSelfSignedCertificate(string subjectName, DateTime startDate, DateTime endDate, String password)
@@ -383,15 +386,16 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         {
             var basePath = String.Format(@"{0}..\..\..\..\Scripts\", AppDomain.CurrentDomain.BaseDirectory);
 
-            var certificate = new X509Certificate2();
-            if (info.SslCertificateGenerate)
-            {
-                certificate.Import($@"{basePath}{info.SslCertificateCommonName}.cer");
-            }
-            else
-            {
-                certificate = new X509Certificate2(info.SslCertificateFile, info.SslCertificatePassword);
-            }
+            var certificate = info.AuthenticationCertificate;
+            //var certificate = new X509Certificate2();
+            //if (info.SslCertificateGenerate)
+            //{
+            //    certificate.Import($@"{basePath}{info.SslCertificateCommonName}.cer");
+            //}
+            //else
+            //{
+            //    certificate = new X509Certificate2(info.SslCertificateFile, info.SslCertificatePassword);
+            //}
 
             var rawCert = certificate.GetRawCertData();
             var base64Cert = System.Convert.ToBase64String(rawCert);
@@ -563,7 +567,15 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                 info.AzureLocationDisplayName,
                 appSettings);
 
-            // TODO: Certificate handling
+            var certificate = info.AuthenticationCertificate;
+            var pfxBlob = certificate.Export(X509ContentType.Pfx, info.SslCertificatePassword);
+
+            await AzureManagementUtility.UploadCertificateToAzureAppService(info.AzureAccessToken,
+                info.AzureTargetSubscriptionId,
+                info.AzureResourceGroupName,
+                info.AzureAppServiceName,
+                pfxBlob,
+                info.SslCertificatePassword);
 
             var xmlPuglishingSettings = await AzureManagementUtility.GetAppServiceWebSitePublishingSettings(
                 info.AzureAccessToken,

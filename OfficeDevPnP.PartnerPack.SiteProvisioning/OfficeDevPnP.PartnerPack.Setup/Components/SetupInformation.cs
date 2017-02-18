@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -42,5 +43,6 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         public String AzureServicePlanName { get; set; }
         public String AzureStorageAccountName { get; set; }
         public String AzureStorageKey { get; set; }
+        public X509Certificate2 AuthenticationCertificate { get; set; }
     }
 }
