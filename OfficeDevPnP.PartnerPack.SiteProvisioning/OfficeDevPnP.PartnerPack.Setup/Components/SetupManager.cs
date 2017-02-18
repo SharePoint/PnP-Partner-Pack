@@ -574,6 +574,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                 info.AzureTargetSubscriptionId,
                 info.AzureResourceGroupName,
                 info.AzureAppServiceName,
+                info.AzureLocationDisplayName,
                 pfxBlob,
                 info.SslCertificatePassword);
 

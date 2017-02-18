@@ -190,14 +190,18 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                 accessToken);
         }
 
-        public static async Task UploadCertificateToAzureAppService(String accessToken, Guid subscriptionId, String resourceGroupName, String appServiceName, Byte[] pfxBlob, String certificatePassword)
+        public static async Task UploadCertificateToAzureAppService(String accessToken, Guid subscriptionId, String resourceGroupName, String appServiceName, String location, Byte[] pfxBlob, String certificatePassword)
         {
             var jsonAppServiceCreated = await HttpHelper.MakePutRequestForStringAsync(
                 $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/certificates/{appServiceName}-pfx?api-version=2016-03-01",
                 new
                 {
-                    PfxBlob = pfxBlob,
-                    Password = certificatePassword
+                    Location = location,
+                    Properties = new
+                    {
+                        PfxBlob = pfxBlob,
+                        Password = certificatePassword
+                    }
                 },
                 "application/json",
                 accessToken);
