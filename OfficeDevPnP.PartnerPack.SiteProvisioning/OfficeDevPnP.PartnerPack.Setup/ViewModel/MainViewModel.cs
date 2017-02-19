@@ -43,6 +43,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
         private double _setupProgress;
         private string _setupProgressDescription;
         private bool _setupInProgress;
+        private string _tenantName;
 
         private String _office365AccessToken;
         private Guid? _office365AzureSubscription;
@@ -67,13 +68,11 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
             this.ApplicationLogo = new System.IO.FileInfo(
                 $@"{AppDomain.CurrentDomain.BaseDirectory}..\..\..\..\Scripts\SharePoint-PnP-Icon.png").FullName;
             
-#if DEBUG
             this.SslCertificateGenerate = true;
             this.SslCertificateFile = String.Empty;
             this.SslCertificateCommonName = "PnP-Partner-Pack";
             this.Lcid = 1033;
             this.TimeZone = 4;
-#endif
         }
 
         public ICommand Office365LoginCommand { get; }
@@ -415,43 +414,49 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
 
             try
             {
-                await SetupManager.SetupPartnerPackAsync(new SetupInformation
-                {
-                    ViewModel = this,
-                    AzureAccessToken = this._azureAccessToken,
-                    Office365AccessToken = this._office365AccessToken,
-                    Office365TargetSubscriptionId = this.Office365AzureSubscription.HasValue ?
-                        this.Office365AzureSubscription.Value : Guid.Empty,
-                    ApplicationName = this.ApplicationName,
-                    ApplicationUniqueUri = this.ApplicationUniqueUri,
-                    ApplicationLogoPath = this.ApplicationLogo,
-                    AzureWebAppUrl = this.AzureWebAppUrl,
-                    SslCertificateGenerate = this.SslCertificateGenerate.HasValue ?
-                        this.SslCertificateGenerate.Value : false,
-                    SslCertificateFile = this.SslCertificateFile,
-                    SslCertificatePassword = this.SslCertificatePassword,
-                    SslCertificateCommonName = this.SslCertificateCommonName,
-                    SslCertificateStartDate = this.SslCertificateStartDate,
-                    SslCertificateEndDate = this.SslCertificateEndDate,
-                    InfrastructuralSiteUrl = this.AbsoluteUrl,
-                    InfrastructuralSiteLCID = this.Lcid,
-                    InfrastructuralSiteTimeZone = this.TimeZone,
-                    InfrastructuralSitePrimaryAdmin = this.PrimaryAdmin,
-                    InfrastructuralSiteSecondaryAdmin = this.SecondaryAdmin,                    
-                    AzureTargetSubscriptionId = this.AzureSubscription.HasValue ?
-                        this.AzureSubscription.Value.Key : Guid.Empty,
-                    AzureLocationId = this.AzureLocation.HasValue ?
-                        this.AzureLocation.Value.Key : String.Empty,
-                    AzureLocationDisplayName = this.AzureLocation.HasValue ?
-                        this.AzureLocation.Value.Value : String.Empty,
-                    AzureAppServiceName = this.AzureAppServiceName,
-                    AzureBlobStorageName = this.AzureBlobStorageName,
-                });
+                await SetupManager.SetupPartnerPackAsync(MapSetupInformation(this));
             }
             finally
             {
                 SetupInProgress = false;
             }
+        }
+
+        private SetupInformation MapSetupInformation(MainViewModel viewModel)
+        {
+            return new SetupInformation
+            {
+                ViewModel = viewModel,
+                AzureAccessToken = viewModel._azureAccessToken,
+                Office365AccessToken = viewModel._office365AccessToken,
+                Office365TargetSubscriptionId = viewModel.Office365AzureSubscription.HasValue ?
+                        viewModel.Office365AzureSubscription.Value : Guid.Empty,
+                ApplicationName = viewModel.ApplicationName,
+                ApplicationUniqueUri = viewModel.ApplicationUniqueUri,
+                ApplicationLogoPath = viewModel.ApplicationLogo,
+                AzureWebAppUrl = viewModel.AzureWebAppUrl,
+                SslCertificateGenerate = viewModel.SslCertificateGenerate.HasValue ?
+                        viewModel.SslCertificateGenerate.Value : false,
+                SslCertificateFile = viewModel.SslCertificateFile,
+                SslCertificatePassword = viewModel.SslCertificatePassword,
+                SslCertificateCommonName = viewModel.SslCertificateCommonName,
+                SslCertificateStartDate = viewModel.SslCertificateStartDate,
+                SslCertificateEndDate = viewModel.SslCertificateEndDate,
+                InfrastructuralSiteUrl = viewModel.AbsoluteUrl,
+                InfrastructuralSiteLCID = viewModel.Lcid,
+                InfrastructuralSiteTimeZone = viewModel.TimeZone,
+                InfrastructuralSitePrimaryAdmin = viewModel.PrimaryAdmin,
+                InfrastructuralSiteSecondaryAdmin = viewModel.SecondaryAdmin,
+                AzureTargetSubscriptionId = viewModel.AzureSubscription.HasValue ?
+                        viewModel.AzureSubscription.Value.Key : Guid.Empty,
+                AzureLocationId = viewModel.AzureLocation.HasValue ?
+                        viewModel.AzureLocation.Value.Key : String.Empty,
+                AzureLocationDisplayName = viewModel.AzureLocation.HasValue ?
+                        viewModel.AzureLocation.Value.Value : String.Empty,
+                AzureAppServiceName = viewModel.AzureAppServiceName,
+                AzureBlobStorageName = viewModel.AzureBlobStorageName,
+                AzureADTenant = viewModel._tenantName,
+            };
         }
 
         private async void Office365Login()
@@ -468,16 +473,16 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
 
                 Regex regex = new Regex(@"(?<mailbox>.*)@(?<tenant>\w*)\.(?<remainder>.*)");
                 var match = regex.Match(office365Account);
-                var tenantName = match.Groups["tenant"].Value;
+                _tenantName = match.Groups["tenant"].Value;
                 var remainderName = match.Groups["remainder"].Value;
 
                 // Configure parameters based on the current Office 365 tenant name
-                this.ApplicationUniqueUri = $"https://{tenantName}.{remainderName}/PnP-Partner-Pack";
-                this.AzureWebAppUrl = $"https://pnp-partner-pack-{tenantName}.azurewebsites.net/";
-                this.AbsoluteUrl = $"https://{tenantName}.sharepoint.com/sites/PnP-Partner-Pack";
+                this.ApplicationUniqueUri = $"https://{_tenantName}.{remainderName}/PnP-Partner-Pack";
+                this.AzureWebAppUrl = $"https://pnp-partner-pack-{_tenantName}.azurewebsites.net/";
+                this.AbsoluteUrl = $"https://{_tenantName}.sharepoint.com/sites/PnP-Partner-Pack";
                 this.PrimaryAdmin = office365Account;
-                this.AzureAppServiceName = $"pnp-partner-pack-{tenantName}";
-                this.AzureBlobStorageName = $"{tenantName}storage";
+                this.AzureAppServiceName = $"pnp-partner-pack-{_tenantName}";
+                this.AzureBlobStorageName = $"{_tenantName}storage";
             }
             catch
             {

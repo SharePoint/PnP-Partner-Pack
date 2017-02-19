@@ -26,6 +26,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         public String SslCertificateCommonName { get; set; }
         public DateTime SslCertificateStartDate { get; set; }
         public DateTime SslCertificateEndDate { get; set; }
+        public String SslCertificateThumbprint { get; set; }
         public String InfrastructuralSiteUrl { get; set; }
         public Int32 InfrastructuralSiteLCID { get; set; }
         public Int32 InfrastructuralSiteTimeZone { get; set; }
@@ -38,6 +39,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         public String AzureBlobStorageName { get; set; }
         public String Office365AccessToken { get; set; }
         public String AzureAccessToken { get; set; }
+        public Guid AzureAppClientId { get; set; }
         public String AzureAppSharedSecret { get; set; }
         public String AzureAppKeyCredential { get; set; }
         public String AzureResourceGroupName { get; set; }
@@ -46,5 +48,6 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         public String AzureStorageKey { get; set; }
         public X509Certificate2 AuthenticationCertificate { get; set; }
         public String AzureAppPublishingSettings { get; set; }
+        public String AzureADTenant { get; set; }
     }
 }

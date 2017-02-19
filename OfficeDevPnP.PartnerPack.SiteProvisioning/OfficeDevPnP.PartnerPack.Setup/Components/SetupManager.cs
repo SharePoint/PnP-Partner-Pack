@@ -35,32 +35,6 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         /// <returns></returns>
         public static async Task SetupPartnerPackAsync(SetupInformation info)
         {
-            #region Acquire the Access Token for Azure AD
-
-            //// ***************************************************************************************
-            //// First of all get the access token to create the application in Azure AD
-            //// ***************************************************************************************
-
-            //// Prepare the MSAL PublicClientApplication to get the access token
-            //String MSAL_ClientID = ConfigurationManager.AppSettings["MSAL:ClientId"];
-            //PublicClientApplication clientApplication =
-            //    new PublicClientApplication(MSAL_ClientID);
-
-            //// Configure the permissions
-            //String[] scopes = {
-            //            // "Directory.Read.All",
-            //            // "Directory.ReadWrite.All",
-            //            "Directory.AccessAsUser.All",
-            //            };
-
-            //// Acquire an access token for the given scope.
-            //var authenticationResult = clientApplication.AcquireTokenAsync(scopes).GetAwaiter().GetResult();
-
-            //// Get back the access token.
-            //var accessToken = authenticationResult.Token;
-
-            #endregion
-
             #region Create the Infrastructural Site Collection
 
             await UpdateProgress(info, SetupStep.CreateInfrastructuralSiteCollection, "Creating Infrastructural Site Collection");
@@ -81,6 +55,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                 LoadX509Certificate(info);
             }
 
+            info.SslCertificateThumbprint = GetX509CertificateThumbprint(info);
             info.AzureAppKeyCredential = GetX509CertificateInformation(info);
 
             #endregion
@@ -116,6 +91,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
             #region Configure the .config files of the App Service, before uploading files
 
             await UpdateProgress(info, SetupStep.ConfigureSettings, "Configuring Settings");
+            await ConfigureSettings(info);
 
             #endregion
 
@@ -388,9 +364,15 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                 System.Security.Cryptography.X509Certificates.X509KeyStorageFlags.Exportable);
         }
 
+        private static String GetX509CertificateThumbprint(SetupInformation info)
+        {
+            var certificate = info.AuthenticationCertificate;
+            return (certificate.Thumbprint.ToUpper());
+        }
+
         private static String GetX509CertificateInformation(SetupInformation info)
         {
-            var basePath = String.Format(@"{0}..\..\..\..\Scripts\", AppDomain.CurrentDomain.BaseDirectory);
+            // var basePath = String.Format(@"{0}..\..\..\..\Scripts\", AppDomain.CurrentDomain.BaseDirectory);
 
             var certificate = info.AuthenticationCertificate;
             //var certificate = new X509Certificate2();
@@ -482,12 +464,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                 // Create the Azure AD Application
                 try
                 {
-                    String jsonResponse = await HttpHelper.MakePostRequestForStringAsync(
-                        String.Format("{0}applications",
-                            AzureManagementUtility.MicrosoftGraphBetaBaseUri),
-                        application,
-                        "application/json", office365AzureADAccessToken);
-
+                    await CreateAzureADApplication(info, application, office365AzureADAccessToken);
                     azureAdApplicationCreated = true;
                 }
                 catch (ApplicationException ex)
@@ -517,11 +494,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                                 office365AzureADAccessToken);
 
                             // And add it again
-                            String jsonResponse = await HttpHelper.MakePostRequestForStringAsync(
-                                String.Format("{0}applications",
-                                    AzureManagementUtility.MicrosoftGraphBetaBaseUri),
-                                application,
-                                "application/json", office365AzureADAccessToken);
+                            await CreateAzureADApplication(info, application, office365AzureADAccessToken);
 
                             azureAdApplicationCreated = true;
                         }
@@ -534,6 +507,18 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                     // property mainLogo: stream of the application via PATCH
                 }
             }
+        }
+
+        private static async Task CreateAzureADApplication(SetupInformation info, AzureAdApplication application, string office365AzureADAccessToken)
+        {
+            String jsonResponse = await HttpHelper.MakePostRequestForStringAsync(
+                String.Format("{0}applications",
+                    AzureManagementUtility.MicrosoftGraphBetaBaseUri),
+                application,
+                "application/json", office365AzureADAccessToken);
+
+            var azureAdApplication = JsonConvert.DeserializeObject<AzureAdApplication>(jsonResponse);
+            info.AzureAppClientId = azureAdApplication.AppId.HasValue ? azureAdApplication.AppId.Value : Guid.Empty;
         }
 
         #endregion
@@ -569,6 +554,8 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                 info.AzureServicePlanName,
                 info.AzureBlobStorageName,
                 info.AzureLocationDisplayName);
+
+            info.AzureStorageKey = key;
         }
 
         private async static Task CreateAzureAppService(SetupInformation info)
@@ -606,6 +593,82 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                 info.AzureTargetSubscriptionId,
                 info.AzureResourceGroupName,
                 info.AzureAppServiceName);
+        }
+
+        #endregion
+
+        #region Configure Settings
+
+        private async static Task ConfigureSettings(SetupInformation info)
+        {
+            var basePath = String.Format(@"{0}..\..\..\..\..\", AppDomain.CurrentDomain.BaseDirectory);
+
+            var configFiles = new String[5];
+            configFiles[0] = (new System.IO.FileInfo(System.IO.Path.Combine(basePath, @"OfficeDevPnP.PartnerPack.CheckAdminsJob\App.config"))).FullName;
+            configFiles[1] = (new System.IO.FileInfo(System.IO.Path.Combine(basePath, @"OfficeDevPnP.PartnerPack.ExternalUsersJob\App.config"))).FullName;
+            configFiles[2] = (new System.IO.FileInfo(System.IO.Path.Combine(basePath, @"OfficeDevPnP.PartnerPack.ContinousJob\App.config"))).FullName;
+            configFiles[3] = (new System.IO.FileInfo(System.IO.Path.Combine(basePath, @"OfficeDevPnP.PartnerPack.ScheduledJob\App.config"))).FullName;
+            configFiles[4] = (new System.IO.FileInfo(System.IO.Path.Combine(basePath, @"OfficeDevPnP.PartnerPack.SiteProvisioning\Web.config"))).FullName;
+
+            var azureStorageConnection = $"DefaultEndpointsProtocol=https;AccountName={info.AzureBlobStorageName};AccountKey={info.AzureStorageKey}";
+
+            foreach (var config in configFiles)
+            {
+                XElement xmlConfig = XElement.Load(config);
+
+                // Configure Connection Strings
+                var connectionStrings = xmlConfig.Element("connectionStrings");
+                foreach (var cn in connectionStrings.Elements("add"))
+                {
+                    if (cn.Attribute("name").Value == "AzureWebJobsDashboard" ||
+                        cn.Attribute("name").Value == "AzureWebJobsStorage")
+                    {
+                        cn.Attribute("connectionString").Value = azureStorageConnection;
+                    }
+                }
+
+                // Configure AppSettings
+                var appSettings = xmlConfig.Element("appSettings");
+                foreach(var s in appSettings.Elements("add"))
+                {
+                    switch (s.Attribute("key").Value)
+                    {
+                        case "ida:ClientId":
+                            s.Attribute("value").Value = info.AzureAppClientId.ToString();
+                            break;
+                        case "ida:ClientSecret":
+                            s.Attribute("value").Value = info.AzureAppSharedSecret;
+                            break;
+                    }
+                }
+
+                // PnP Partner Pack custom settings
+                var pnpNamespace = XNamespace.Get("http://schemas.dev.office.com/PnP/2016/08/PnPPartnerPackConfiguration");
+
+                var pnpPartnerPackSettings = xmlConfig.Element(pnpNamespace + "PnPPartnerPackConfiguration");
+                if (pnpPartnerPackSettings != null)
+                {
+                    var tenantSettings = pnpPartnerPackSettings.Element(pnpNamespace + "TenantSettings");
+
+                    if (tenantSettings != null)
+                    {
+                        if (tenantSettings.Attribute("tenant") != null)
+                        {
+                            tenantSettings.Attribute("tenant").Value = $"{info.AzureADTenant}.onmicrosoft.com";
+                        }
+                        if (tenantSettings.Attribute("appOnlyCertificateThumbprint") != null)
+                        {
+                            tenantSettings.Attribute("appOnlyCertificateThumbprint").Value = info.SslCertificateThumbprint;
+                        }
+                        if (tenantSettings.Attribute("infrastructureSiteUrl") != null)
+                        {
+                            tenantSettings.Attribute("infrastructureSiteUrl").Value = info.InfrastructuralSiteUrl;
+                        }                        
+                    }
+                }
+
+                xmlConfig.Save(config);
+            }
         }
 
         #endregion
