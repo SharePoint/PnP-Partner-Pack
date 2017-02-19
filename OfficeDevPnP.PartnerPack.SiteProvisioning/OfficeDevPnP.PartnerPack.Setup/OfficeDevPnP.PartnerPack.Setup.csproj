@@ -224,6 +224,7 @@
     </ApplicationDefinition>
     <Compile Include="Components\ActionCommand.cs" />
     <Compile Include="Components\AzureAdApplication.cs" />
+    <Compile Include="Components\AzureAdApplicationPasswordCredential.cs" />
     <Compile Include="Components\AzureAdApplications.cs" />
     <Compile Include="Components\AzureAppServiceSetting.cs" />
     <Compile Include="Components\GraphError.cs" />
