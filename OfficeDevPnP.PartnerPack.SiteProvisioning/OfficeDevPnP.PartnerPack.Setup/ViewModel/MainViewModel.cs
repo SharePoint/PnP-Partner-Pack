@@ -175,8 +175,8 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
             }
         }
 
-        [Required(ErrorMessage = "The Azure Web App URL is required")]
-        [RegularExpression(@"https:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)", ErrorMessage = "URI must be formatted as https://site.com")]
+        //[Required(ErrorMessage = "The Azure Web App URL is required")]
+        //[RegularExpression(@"https:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)", ErrorMessage = "URI must be formatted as https://site.com")]
         public string AzureWebAppUrl
         {
             get { return _azureWebAppUrl; }
@@ -434,7 +434,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
                 ApplicationName = viewModel.ApplicationName,
                 ApplicationUniqueUri = viewModel.ApplicationUniqueUri,
                 ApplicationLogoPath = viewModel.ApplicationLogo,
-                AzureWebAppUrl = viewModel.AzureWebAppUrl,
+                AzureWebAppUrl = $"https://{viewModel.AzureAppServiceName}.azurewebsites.net/",
                 SslCertificateGenerate = viewModel.SslCertificateGenerate.HasValue ?
                         viewModel.SslCertificateGenerate.Value : false,
                 SslCertificateFile = viewModel.SslCertificateFile,
@@ -478,7 +478,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
 
                 // Configure parameters based on the current Office 365 tenant name
                 this.ApplicationUniqueUri = $"https://{_tenantName}.{remainderName}/PnP-Partner-Pack";
-                this.AzureWebAppUrl = $"https://pnp-partner-pack-{_tenantName}.azurewebsites.net/";
+                // this.AzureWebAppUrl = $"https://pnp-partner-pack-{_tenantName}.azurewebsites.net/";
                 this.AbsoluteUrl = $"https://{_tenantName}.sharepoint.com/sites/PnP-Partner-Pack";
                 this.PrimaryAdmin = office365Account;
                 this.AzureAppServiceName = $"pnp-partner-pack-{_tenantName}";

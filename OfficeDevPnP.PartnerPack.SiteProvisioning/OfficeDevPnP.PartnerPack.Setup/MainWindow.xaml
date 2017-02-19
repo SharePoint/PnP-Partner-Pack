@@ -299,8 +299,10 @@
                     </StackPanel>
                 </Grid>
 
+                <!--
                 <TextBlock Text="Azure Web App URL" />
                 <TextBox Text="{Binding AzureWebAppUrl, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,ValidatesOnNotifyDataErrors=True}" />
+                -->
 
                 <TextBlock Style="{StaticResource Header}">SSL certificate</TextBlock>
 

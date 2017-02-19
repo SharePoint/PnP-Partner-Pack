@@ -601,14 +601,14 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
 
         private async static Task ConfigureSettings(SetupInformation info)
         {
-            var basePath = String.Format(@"{0}..\..\..\..\..\", AppDomain.CurrentDomain.BaseDirectory);
+            var basePath = String.Format(@"{0}..\..\..\", AppDomain.CurrentDomain.BaseDirectory);
 
             var configFiles = new String[5];
-            configFiles[0] = (new System.IO.FileInfo(System.IO.Path.Combine(basePath, @"OfficeDevPnP.PartnerPack.CheckAdminsJob\App.config"))).FullName;
-            configFiles[1] = (new System.IO.FileInfo(System.IO.Path.Combine(basePath, @"OfficeDevPnP.PartnerPack.ExternalUsersJob\App.config"))).FullName;
-            configFiles[2] = (new System.IO.FileInfo(System.IO.Path.Combine(basePath, @"OfficeDevPnP.PartnerPack.ContinousJob\App.config"))).FullName;
-            configFiles[3] = (new System.IO.FileInfo(System.IO.Path.Combine(basePath, @"OfficeDevPnP.PartnerPack.ScheduledJob\App.config"))).FullName;
-            configFiles[4] = (new System.IO.FileInfo(System.IO.Path.Combine(basePath, @"OfficeDevPnP.PartnerPack.SiteProvisioning\Web.config"))).FullName;
+            configFiles[0] = (new System.IO.FileInfo(basePath + @"OfficeDevPnP.PartnerPack.CheckAdminsJob\App.config")).FullName;
+            configFiles[1] = (new System.IO.FileInfo(basePath + @"OfficeDevPnP.PartnerPack.ExternalUsersJob\App.config")).FullName;
+            configFiles[2] = (new System.IO.FileInfo(basePath + @"OfficeDevPnP.PartnerPack.ContinousJob\App.config")).FullName;
+            configFiles[3] = (new System.IO.FileInfo(basePath + @"OfficeDevPnP.PartnerPack.ScheduledJob\App.config")).FullName;
+            configFiles[4] = (new System.IO.FileInfo(basePath + @"OfficeDevPnP.PartnerPack.SiteProvisioning\Web.config")).FullName;
 
             var azureStorageConnection = $"DefaultEndpointsProtocol=https;AccountName={info.AzureBlobStorageName};AccountKey={info.AzureStorageKey}";
 
@@ -666,7 +666,6 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                         }                        
                     }
                 }
-
                 xmlConfig.Save(config);
             }
         }
