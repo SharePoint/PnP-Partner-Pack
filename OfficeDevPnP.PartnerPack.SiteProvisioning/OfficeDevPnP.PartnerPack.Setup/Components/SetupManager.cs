@@ -119,9 +119,15 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
 
             #endregion
 
+            #region Provision the Web Site
+
+            await UpdateProgress(info, SetupStep.ProvisionWebSite, "Provisioning Azure Web Site");
+
+            #endregion
+
             #region Provision the WebJobs
 
-            await UpdateProgress(info, SetupStep.ProvisionWebJobs, "Provisioning WebJobs");
+            await UpdateProgress(info, SetupStep.ProvisionWebJobs, "Provisioning Azure WebJobs");
 
             #endregion
 
@@ -298,7 +304,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
             }
             info.ViewModel.SetupProgressDescription = stepDescription;
 
-            await Task.Delay(2000);
+            // await Task.Delay(2000);
         }
 
         #endregion
@@ -449,6 +455,23 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                 application.replyUrls = new List<String>();
                 application.replyUrls.Add(info.AzureWebAppUrl);
 
+                // Generate the Application Shared Secret
+                var startDate = DateTime.Now;
+                Byte[] bytes = new Byte[32];
+                using (var rand = System.Security.Cryptography.RandomNumberGenerator.Create())
+                {
+                    rand.GetBytes(bytes);
+                }
+                info.AzureAppSharedSecret = System.Convert.ToBase64String(bytes);
+                application.passwordCredentials = new List<object>();
+                application.passwordCredentials.Add(new AzureAdApplicationPasswordCredential {
+                    CustomKeyIdentifier = null,
+                    StartDate = startDate.ToString("o"),
+                    EndDate = startDate.AddYears(2).ToString("o"),
+                    KeyId = Guid.NewGuid().ToString(),
+                    Value = info.AzureAppSharedSecret,
+                });
+
                 // Get an Access Token to create the application via Microsoft Graph
                 var office365AzureADAccessToken = await AzureManagementUtility.GetAccessTokenSilentAsync(
                     AzureManagementUtility.MicrosoftGraphResourceId,
@@ -578,7 +601,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                 pfxBlob,
                 info.SslCertificatePassword);
 
-            var xmlPuglishingSettings = await AzureManagementUtility.GetAppServiceWebSitePublishingSettings(
+            info.AzureAppPublishingSettings = await AzureManagementUtility.GetAppServiceWebSitePublishingSettings(
                 info.AzureAccessToken,
                 info.AzureTargetSubscriptionId,
                 info.AzureResourceGroupName,
@@ -598,6 +621,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         CreateBlobStorageAccount,
         CreateAzureAppService,
         ConfigureSettings,
+        ProvisionWebSite,
         ProvisionWebJobs,
         Completed,
     }
