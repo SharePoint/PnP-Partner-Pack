@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<supportedUILanguages>
+  <supportedUILanguage value="1025" description="Arabic" />
+  <supportedUILanguage value="1068" description="Azerbaijani" />
+  <supportedUILanguage value="1069" description="Basque" />
+  <supportedUILanguage value="5146" description="Bosnian (Latin)" />
+  <supportedUILanguage value="1026" description="Bulgarian" />
+  <supportedUILanguage value="1027" description="Catalan" />
+  <supportedUILanguage value="2052" description="Chinese (Simplified)" />
+  <supportedUILanguage value="1028" description="Chinese (Traditional)" />
+  <supportedUILanguage value="1050" description="Croatian" />
+  <supportedUILanguage value="1029" description="Czech" />
+  <supportedUILanguage value="1030" description="Danish" />
+  <supportedUILanguage value="1164" description="Dari" />
+  <supportedUILanguage value="1043" description="Dutch" />
+  <supportedUILanguage value="1033" description="English" />
+  <supportedUILanguage value="1061" description="Estonian" />
+  <supportedUILanguage value="1035" description="Finnish" />
+  <supportedUILanguage value="1036" description="French" />
+  <supportedUILanguage value="1110" description="Galician" />
+  <supportedUILanguage value="1031" description="German" />
+  <supportedUILanguage value="1032" description="Greek" />
+  <supportedUILanguage value="1037" description="Hebrew" />
+  <supportedUILanguage value="1081" description="Hindi" />
+  <supportedUILanguage value="1038" description="Hungarian" />
+  <supportedUILanguage value="1057" description="Indonesian" />
+  <supportedUILanguage value="2108" description="Irish" />
+  <supportedUILanguage value="1040" description="Italian" />
+  <supportedUILanguage value="1041" description="Japanese" />
+  <supportedUILanguage value="1087" description="Kazakh" />
+  <supportedUILanguage value="1042" description="Korean" />
+  <supportedUILanguage value="1062" description="Latvian" />
+  <supportedUILanguage value="1063" description="Lithuanian" />
+  <supportedUILanguage value="1071" description="Macedonian" />
+  <supportedUILanguage value="1086" description="Malay" />
+  <supportedUILanguage value="1044" description="Norwegian (Bokmål)" />
+  <supportedUILanguage value="1045" description="Polish" />
+  <supportedUILanguage value="1046" description="Portuguese (Brazil)" />
+  <supportedUILanguage value="2070" description="Portuguese (Portugal)" />
+  <supportedUILanguage value="1048" description="Romanian" />
+  <supportedUILanguage value="1049" description="Russian" />
+  <supportedUILanguage value="10266" description="Serbian (Cyrillic, Serbia)" />
+  <supportedUILanguage value="2074" description="Serbian (Latin)" />
+  <supportedUILanguage value="9242" description="Serbian (Latin, Serbia)" />
+  <supportedUILanguage value="1051" description="Slovak" />
+  <supportedUILanguage value="1060" description="Slovenian" />
+  <supportedUILanguage value="3082" description="Spanish" />
+  <supportedUILanguage value="1053" description="Swedish" />
+  <supportedUILanguage value="1054" description="Thai" />
+  <supportedUILanguage value="1055" description="Turkish" />
+  <supportedUILanguage value="1058" description="Ukrainian" />
+  <supportedUILanguage value="1066" description="Vietnamese" />
+  <supportedUILanguage value="1106" description="Welsh" />
+</supportedUILanguages>
