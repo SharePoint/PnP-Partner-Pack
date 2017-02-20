@@ -32,6 +32,11 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         public void Execute(object parameter)
         {
             _execute();
+            RaiseCanExecuteChanged();
+        }
+
+        public void RaiseCanExecuteChanged()
+        {
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
     }

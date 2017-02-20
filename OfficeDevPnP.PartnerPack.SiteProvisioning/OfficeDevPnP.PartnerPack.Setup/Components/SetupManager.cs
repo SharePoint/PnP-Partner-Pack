@@ -9,10 +9,12 @@ using OfficeDevPnP.Core.Framework.Provisioning.Model;
 using OfficeDevPnP.Core.Framework.Provisioning.ObjectHandlers;
 using OfficeDevPnP.Core.Framework.Provisioning.Providers.Xml;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Resources;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
@@ -38,7 +40,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
             #region Create the Infrastructural Site Collection
 
             await UpdateProgress(info, SetupStep.CreateInfrastructuralSiteCollection, "Creating Infrastructural Site Collection");
-            // await CreateInfrastructuralSiteCollectionAsync(info);
+            await CreateInfrastructuralSiteCollectionAsync(info);
 
             #endregion
 
@@ -98,16 +100,31 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
             #region Provision the Web Site
 
             await UpdateProgress(info, SetupStep.ProvisionWebSite, "Provisioning Azure Web Site");
+            await BuildAndDeployWebSite(info);
 
             #endregion
 
             #region Provision the WebJobs
 
             await UpdateProgress(info, SetupStep.ProvisionWebJobs, "Provisioning Azure WebJobs");
+            await BuildAndDeployJobs(info);
 
             #endregion
 
             await UpdateProgress(info, SetupStep.Completed, "Setup Completed");
+        }
+
+        private static async Task UpdateProgress(SetupInformation info, SetupStep currentStep, String stepDescription)
+        {
+            if (currentStep == SetupStep.Completed)
+            {
+                info.ViewModel.SetupProgress = 100;
+            }
+            else
+            {
+                info.ViewModel.SetupProgress = (100 / (Int32)SetupStep.Completed) * (Int32)currentStep;
+            }
+            info.ViewModel.SetupProgressDescription = stepDescription;
         }
 
         #region Create Infrastructural Site Collection
@@ -162,7 +179,6 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                             {
                                 info.ViewModel.SetupProgress = maxProgress;
                             }
-                            Task.Delay(100);
                         }
                         return (false);
                     });
@@ -266,21 +282,6 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                 new ProvisioningTemplateApplyingInformation();
 
             web.ApplyProvisioningTemplate(template, ptai);
-        }
-
-        private static async Task UpdateProgress(SetupInformation info, SetupStep currentStep, String stepDescription)
-        {
-            if (currentStep == SetupStep.Completed)
-            {
-                info.ViewModel.SetupProgress = 100;
-            }
-            else
-            {
-                info.ViewModel.SetupProgress = (100 / (Int32)SetupStep.Completed) * (Int32)currentStep;
-            }
-            info.ViewModel.SetupProgressDescription = stepDescription;
-
-            // await Task.Delay(2000);
         }
 
         #endregion
@@ -446,7 +447,8 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                 }
                 info.AzureAppSharedSecret = System.Convert.ToBase64String(bytes);
                 application.passwordCredentials = new List<object>();
-                application.passwordCredentials.Add(new AzureAdApplicationPasswordCredential {
+                application.passwordCredentials.Add(new AzureAdApplicationPasswordCredential
+                {
                     CustomKeyIdentifier = null,
                     StartDate = startDate.ToString("o"),
                     EndDate = startDate.AddYears(2).ToString("o"),
@@ -629,7 +631,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
 
                 // Configure AppSettings
                 var appSettings = xmlConfig.Element("appSettings");
-                foreach(var s in appSettings.Elements("add"))
+                foreach (var s in appSettings.Elements("add"))
                 {
                     switch (s.Attribute("key").Value)
                     {
@@ -663,10 +665,103 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                         if (tenantSettings.Attribute("infrastructureSiteUrl") != null)
                         {
                             tenantSettings.Attribute("infrastructureSiteUrl").Value = info.InfrastructuralSiteUrl;
-                        }                        
+                        }
                     }
                 }
                 xmlConfig.Save(config);
+            }
+        }
+
+        #endregion
+
+        #region Build and Publish Azure Web Site
+
+        private static async Task BuildAndDeployWebSite(SetupInformation info)
+        {
+            // Get the Project Path
+            var basePath = String.Format(@"{0}..\..\..\", AppDomain.CurrentDomain.BaseDirectory);
+            var projectPath = (new System.IO.FileInfo(basePath + @"OfficeDevPnP.PartnerPack.SiteProvisioning")).FullName;
+
+            // Save the PublishingSettings file
+            var xmlPublishingSettings = XElement.Parse(info.AzureAppPublishingSettings);
+            var publishingSettingsPath = projectPath + @"\pnp-partner-pack.publishingSettings";
+            xmlPublishingSettings.Save(publishingSettingsPath);
+
+            // Run PowerShell script to build and deploy
+            Hashtable packageBuildParameters = new Hashtable();
+            packageBuildParameters.Add("ProjectPath", projectPath);
+            packageBuildParameters.Add("PublishingSettingsPath", publishingSettingsPath);
+
+            var powerShellScriptPath = (new System.IO.FileInfo($@"{basePath}\OfficeDevPnP.PartnerPack.Setup\Scripts\MsBuildWebSite.ps1")).FullName;
+            string packageBuildResult = Run.RunScript(powerShellScriptPath, packageBuildParameters);
+
+            if (packageBuildResult.Contains("Build FAILED"))
+            {
+                // TODO: Handle exception
+            }
+        }
+
+        #endregion
+
+        #region Build and Publish Azure Web Jobs
+
+        private async static Task BuildAndDeployJobs(SetupInformation info)
+        {
+            var basePath = String.Format(@"{0}..\..\..\", AppDomain.CurrentDomain.BaseDirectory);
+
+            await BuildAndDeployJob(info, "CheckAdminsJob",
+                (new System.IO.FileInfo(basePath + @"OfficeDevPnP.PartnerPack.CheckAdminsJob")).FullName,
+                basePath, JobType.Triggered);
+            await BuildAndDeployJob(info, "ExternalUsersJob",
+                (new System.IO.FileInfo(basePath + @"OfficeDevPnP.PartnerPack.ExternalUsersJob")).FullName,
+                basePath, JobType.Triggered);
+            await BuildAndDeployJob(info, "ScheduledJob",
+                (new System.IO.FileInfo(basePath + @"OfficeDevPnP.PartnerPack.ScheduledJob")).FullName,
+                basePath, JobType.Triggered);
+            await BuildAndDeployJob(info, "ContinousJob",
+                (new System.IO.FileInfo(basePath + @"OfficeDevPnP.PartnerPack.ContinousJob")).FullName,
+                basePath, JobType.Continuous);
+        }
+
+        private async static Task BuildAndDeployJob(SetupInformation info, String jobName, String jobPath, String basePath, JobType jobType)
+        {
+            // Run PowerShell script to build and deploy
+            Hashtable packageBuildParameters = new Hashtable();
+            packageBuildParameters.Add("ProjectPath", jobPath);
+
+            var powerShellScriptPath = (new System.IO.FileInfo($@"{basePath}\OfficeDevPnP.PartnerPack.Setup\Scripts\MsBuildWebJob.ps1")).FullName;
+            string packageBuildResult = Run.RunScript(powerShellScriptPath, packageBuildParameters);
+
+            if (packageBuildResult.Contains("Build FAILED"))
+            {
+                // TODO: Handle exception
+            }
+
+            // Create the WebJob ZIP file
+            var binPath = Path.Combine(jobPath, @"bin\Release");
+            var zipPath = $@"{basePath}\OfficeDevPnP.PartnerPack.Setup\{jobName}.zip";
+
+            if (System.IO.File.Exists(zipPath))
+            {
+                System.IO.File.Delete(zipPath);
+            }
+
+            System.IO.Compression.ZipFile.CreateFromDirectory(binPath, zipPath);
+
+            // Get the Azure App Service Publishing Credentials
+            var xmlPublishingSettings = XElement.Parse(info.AzureAppPublishingSettings);
+            if (xmlPublishingSettings != null)
+            {
+                var xmlPublishProfile = xmlPublishingSettings.Element("publishProfile");
+
+                if (xmlPublishProfile != null)
+                {
+                    var username = xmlPublishProfile.Attribute("userName").Value;
+                    var password = xmlPublishProfile.Attribute("userPWD").Value;
+
+                    // Upload the WebJobB
+                    await AzureManagementUtility.UploadWebJob(info.AzureAppServiceName, username, password, jobName, zipPath, jobType);
+                }
             }
         }
 
@@ -686,5 +781,11 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         ProvisionWebSite,
         ProvisionWebJobs,
         Completed,
+    }
+
+    public enum JobType
+    {
+        Triggered,
+        Continuous,
     }
 }

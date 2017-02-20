@@ -4,7 +4,11 @@ using OfficeDevPnP.PartnerPack.Setup.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -256,6 +260,33 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
 
             var keys = JsonConvert.DeserializeObject<StorageKeys>(jsonStorageKeys);
             return (keys.keys[0].value);
+        }
+
+        public static async Task UploadWebJob(String appServiceName, String username, String password, string jobName, string zipPath, JobType jobType)
+        {
+            // Prepare the BASIC authentication token
+            var encoding = System.Text.Encoding.GetEncoding("ISO-8859-1");
+            var token = System.Convert.ToBase64String(encoding.GetBytes($"{username}:{password}"));
+
+            var httpClient = new HttpClient();
+            httpClient.BaseAddress = new Uri($"https://{appServiceName}.scm.azurewebsites.net/");
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Basic {token}");
+            
+            using (StreamReader reader = new StreamReader(zipPath))
+            {
+                StreamContent streamContent = new StreamContent(reader.BaseStream);
+                streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/zip");
+                streamContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+                {
+                    FileName = $"{jobName}.zip"
+                };
+                var response = await httpClient.PutAsync($"api/zip/site/wwwroot/App_Data/jobs/{jobType.ToString().ToLower()}/{jobName}/", streamContent);
+                var result = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    throw new ApplicationException(result);
+                }
+            }
         }
     }
 }

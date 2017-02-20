@@ -41,7 +41,9 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
         private string _azureAppServiceName;
         private string _azureBlobStorageName;
         private double _setupProgress;
+        private bool _hasFatalError;
         private string _setupProgressDescription;
+        private string _fatalErrorDescription;
         private bool _setupInProgress;
         private string _tenantName;
 
@@ -57,6 +59,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
             ResetLogoCommand = new ActionCommand(() => ApplicationLogo = null);
             AzureLoginCommand = new ActionCommand(AzureLogin);
             SetupCommand = new ActionCommand(Setup, () => !SetupInProgress);
+            CloseFatalErrorCommand = new Components.ActionCommand(CloseFatalError, () => HasFatalError);
             SslCertificateUpload = true;
             SslCertificateStartDate = DateTime.Today;
             SslCertificateEndDate = DateTime.Today.AddYears(1);
@@ -75,6 +78,12 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
             this.TimeZone = 4;
         }
 
+        private void CloseFatalError()
+        {
+            HasFatalError = false;
+            FatalErrorDescription = "";
+        }
+
         public ICommand Office365LoginCommand { get; }
 
         public ICommand BrowseLogoCommand { get; }
@@ -85,7 +94,9 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
 
         public ICommand AzureLoginCommand { get; }
 
-        public ICommand SetupCommand { get; }
+        public ActionCommand SetupCommand { get; }
+
+        public ActionCommand CloseFatalErrorCommand { get; }
 
         public Guid? Office365AzureSubscription
         {
@@ -147,7 +158,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
             {
                 if (Set(ref _setupInProgress, value))
                 {
-                    OnPropertyChanged(nameof(SetupCommand));
+                    SetupCommand.RaiseCanExecuteChanged();
                 }
             }
         }
@@ -340,13 +351,31 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
             }
         }
 
+        public bool HasFatalError
+        {
+            get { return _hasFatalError; }
+            set
+            {
+                if (Set(ref _hasFatalError, value))
+                    CloseFatalErrorCommand.RaiseCanExecuteChanged();
+            }
+        }
+
+        public string FatalErrorDescription
+        {
+            get { return _fatalErrorDescription; }
+            set
+            {
+                Set(ref _fatalErrorDescription, value);
+            }
+        }
+
         public string SetupProgressDescription
         {
             get { return _setupProgressDescription; }
             set
             {
-                if (Set(ref _setupProgressDescription, value))
-                    ValidateModelProperty(value);
+                Set(ref _setupProgressDescription, value);
             }
         }
 
@@ -414,17 +443,31 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
 
             try
             {
-                await SetupManager.SetupPartnerPackAsync(MapSetupInformation(this));
+                try
+                {
+                    await Task.Run(() =>
+                    {
+                        SetupManager.SetupPartnerPackAsync(MapSetupInformation(this)).Wait();
+                    });
+
+                    // Start the browser targeting the PnP Partner Pack site
+                    System.Diagnostics.Process.Start(this.AzureWebAppUrl);
+                }
+                finally
+                {
+                    SetupInProgress = false;
+                }
             }
-            finally
+            catch (Exception ex)
             {
-                SetupInProgress = false;
+                HasFatalError = true;
+                FatalErrorDescription = ((ex as AggregateException)?.InnerException ?? ex).ToString();
             }
         }
 
         private SetupInformation MapSetupInformation(MainViewModel viewModel)
         {
-            return new SetupInformation
+            var result = new SetupInformation
             {
                 ViewModel = viewModel,
                 AzureAccessToken = viewModel._azureAccessToken,
@@ -457,6 +500,10 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
                 AzureBlobStorageName = viewModel.AzureBlobStorageName,
                 AzureADTenant = viewModel._tenantName,
             };
+
+            this.AzureWebAppUrl = result.AzureWebAppUrl;
+
+            return (result);
         }
 
         private async void Office365Login()
