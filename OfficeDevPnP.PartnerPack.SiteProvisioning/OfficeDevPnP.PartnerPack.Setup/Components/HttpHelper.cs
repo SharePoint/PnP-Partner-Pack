@@ -34,6 +34,22 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         }
 
         /// <summary>
+        /// This helper method makes an HTTP HEAD request and returns the result as a String
+        /// </summary>
+        /// <param name="requestUrl">The URL of the request</param>
+        /// <param name="accessToken">The OAuth 2.0 Access Token for the request, if authorization is required</param>
+        /// <returns>The String value of the result</returns>
+        public async static Task<String> MakeHeadRequestAsync(String requestUrl,
+            String accessToken = null)
+        {
+            HttpResponseHeaders responseHeaders = null;
+            return (await MakeHttpRequestAsync<String>("HEAD",
+                requestUrl,
+                responseHeaders,
+                accessToken: accessToken));
+        }
+
+        /// <summary>
         /// This helper method makes an HTTP GET request and returns the result as a String
         /// </summary>
         /// <param name="requestUrl">The URL of the request</param>

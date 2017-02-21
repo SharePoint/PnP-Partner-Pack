@@ -11,6 +11,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace OfficeDevPnP.PartnerPack.Setup.Components
 {
@@ -142,17 +143,46 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
 
         public static async Task<Boolean> CreateResourceGroup(String accessToken, Guid subscriptionId, String resourceGroupName, String location)
         {
-            var jsonResourceGroup = await HttpHelper.MakePutRequestForStringAsync(
-                $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}{apiVersion}",
-                new { Name = resourceGroupName, Location = location },
-                "application/json",
-                accessToken);
+            Boolean? resourceGroupExists = null;
 
-            // Decode JSON list
-            var resourceGroup = JsonConvert.DeserializeObject<ResourceGroupCreation>(jsonResourceGroup);
+            try
+            {
+                await HttpHelper.MakeHeadRequestAsync(
+                    $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}{apiVersion}",
+                    accessToken);
 
-            // Return a dictionary of subscriptions with ID and DisplayName
-            return (resourceGroup.properties.provisioningState == "Succeded");
+                resourceGroupExists = true;
+            }
+            catch (ApplicationException ex)
+            {
+                if (ex.InnerException != null)
+                {
+                    var statusCode = (ex.InnerException as HttpException)?.GetHttpCode();
+                    if (statusCode == 404)
+                    {
+                        resourceGroupExists = false;
+                    }
+                }
+            }
+
+            if (!resourceGroupExists.Value)
+            {
+                var jsonResourceGroup = await HttpHelper.MakePutRequestForStringAsync(
+                    $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourcegroups/{resourceGroupName}{apiVersion}",
+                    new { Name = resourceGroupName, Location = location },
+                    "application/json",
+                    accessToken);
+
+                // Decode JSON list
+                var resourceGroup = JsonConvert.DeserializeObject<ResourceGroupCreation>(jsonResourceGroup);
+
+                // Return a dictionary of subscriptions with ID and DisplayName
+                return (resourceGroup.properties.provisioningState == "Succeded");
+            }
+            else
+            {
+                return (resourceGroupExists.Value);
+            }
         }
 
         public static async Task RegisterAzureProvider(String accessToken, Guid subscriptionId, String providerNamespace)
@@ -164,34 +194,84 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
 
         public static async Task CreateServicePlan(String accessToken, Guid subscriptionId, String resourceGroupName, String servicePlanName, String location)
         {
-            var jsonServicePlanCreated = await HttpHelper.MakePutRequestForStringAsync(
-                $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/serverfarms/{servicePlanName}?api-version=2015-08-01",
-                new { Kind = "app", Location = location, Name = servicePlanName, Sku = new { Capacity = 1, Family = "B", Name = "B1", Size = "B1", Tier = "Basic" }, Type = "Microsoft.Web/serverfarms" },
-                "application/json",
-                accessToken);
+            Boolean? servicePlanExists = null;
+
+            try
+            {
+                await HttpHelper.MakeGetRequestForStringAsync(
+                    $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/serverfarms/{servicePlanName}?api-version=2015-08-01",
+                    accessToken);
+
+                servicePlanExists = true;
+            }
+            catch (ApplicationException ex)
+            {
+                if (ex.InnerException != null)
+                {
+                    var statusCode = (ex.InnerException as HttpException)?.GetHttpCode();
+                    if (statusCode == 404)
+                    {
+                        servicePlanExists = false;
+                    }
+                }
+            }
+
+            if (!servicePlanExists.Value)
+            {
+                var jsonServicePlanCreated = await HttpHelper.MakePutRequestForStringAsync(
+                    $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/serverfarms/{servicePlanName}?api-version=2015-08-01",
+                    new { Kind = "app", Location = location, Name = servicePlanName, Sku = new { Capacity = 1, Family = "B", Name = "B1", Size = "B1", Tier = "Basic" }, Type = "Microsoft.Web/serverfarms" },
+                    "application/json",
+                    accessToken);
+            }
         }
 
         public static async Task CreateAppServiceWebSite(String accessToken, Guid subscriptionId, String resourceGroupName, String servicePlanName, String appServiceName, String location, AzureAppServiceSetting[] appSettings)
         {
-            var jsonAppServiceCreated = await HttpHelper.MakePutRequestForStringAsync(
-                $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{appServiceName}?api-version=2016-08-01",
-                new
+            Boolean? webSiteExists = null;
+
+            try
+            {
+                await HttpHelper.MakeGetRequestForStringAsync(
+                    $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{appServiceName}?api-version=2016-08-01",
+                    accessToken);
+
+                webSiteExists = true;
+            }
+            catch (ApplicationException ex)
+            {
+                if (ex.InnerException != null)
                 {
-                    Kind = "app",
-                    Location = location,
-                    Name = appServiceName,
-                    @Properties = new
+                    var statusCode = (ex.InnerException as HttpException)?.GetHttpCode();
+                    if (statusCode == 404)
                     {
-                        ServerFarmId = $"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/serverfarms/{servicePlanName}",
-                        SiteConfig = new
+                        webSiteExists = false;
+                    }
+                }
+            }
+
+            if (!webSiteExists.Value)
+            {
+                var jsonAppServiceCreated = await HttpHelper.MakePutRequestForStringAsync(
+                    $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/sites/{appServiceName}?api-version=2016-08-01",
+                    new
+                    {
+                        Kind = "app",
+                        Location = location,
+                        Name = appServiceName,
+                        @Properties = new
                         {
-                            AppSettings = appSettings
-                        }
+                            ServerFarmId = $"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Web/serverfarms/{servicePlanName}",
+                            SiteConfig = new
+                            {
+                                AppSettings = appSettings
+                            }
+                        },
+                        Type = "Microsoft.Web/sites"
                     },
-                    Type = "Microsoft.Web/sites"
-                },
-                "application/json",
-                accessToken);
+                    "application/json",
+                    accessToken);
+            }
         }
 
         public static async Task UploadCertificateToAzureAppService(String accessToken, Guid subscriptionId, String resourceGroupName, String appServiceName, String location, Byte[] pfxBlob, String certificatePassword)
@@ -227,31 +307,56 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
 
         public static async Task<String> CreateStorageAccount(String accessToken, Guid subscriptionId, String resourceGroupName, String servicePlanName, String storageAccountName, String location)
         {
-            var jsonStorageAccountCreated = await HttpHelper.MakePutRequestForStringAsync(
-                $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Storage/storageAccounts/{storageAccountName.ToLower()}?api-version=2016-12-01",
-                new
-                {
-                    Kind = "Storage",
-                    Location = location,
-                    Sku = new
-                    {
-                        Name = "Standard_GRS"
-                    }
-                },
-                "application/json",
-                accessToken);
+            Boolean? storageAccountExists = null;
 
-            // Wait for the Storage Account to be ready
-            var succeded = false;
-            while (!succeded)
+            try
             {
-                var jsonStorageAccount = await HttpHelper.MakeGetRequestForStringAsync(
+                await HttpHelper.MakeGetRequestForStringAsync(
                     $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Storage/storageAccounts/{storageAccountName.ToLower()}?api-version=2016-12-01",
-                    accessToken: accessToken);
+                    accessToken);
 
-                succeded = jsonStorageAccount.Contains("Succeeded");
+                storageAccountExists = true;
+            }
+            catch (ApplicationException ex)
+            {
+                if (ex.InnerException != null)
+                {
+                    var statusCode = (ex.InnerException as HttpException)?.GetHttpCode();
+                    if (statusCode == 404)
+                    {
+                        storageAccountExists = false;
+                    }
+                }
+            }
 
-                await Task.Delay(2000);
+            if (!storageAccountExists.Value)
+            {
+                var jsonStorageAccountCreated = await HttpHelper.MakePutRequestForStringAsync(
+                    $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Storage/storageAccounts/{storageAccountName.ToLower()}?api-version=2016-12-01",
+                    new
+                    {
+                        Kind = "Storage",
+                        Location = location,
+                        Sku = new
+                        {
+                            Name = "Standard_GRS"
+                        }
+                    },
+                    "application/json",
+                    accessToken);
+
+                // Wait for the Storage Account to be ready
+                var succeded = false;
+                while (!succeded)
+                {
+                    var jsonStorageAccount = await HttpHelper.MakeGetRequestForStringAsync(
+                        $"{AzureManagementApiURI}subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Storage/storageAccounts/{storageAccountName.ToLower()}?api-version=2016-12-01",
+                        accessToken: accessToken);
+
+                    succeded = jsonStorageAccount.Contains("Succeeded");
+
+                    await Task.Delay(2000);
+                }
             }
 
             var jsonStorageKeys = await HttpHelper.MakePostRequestForStringAsync(
