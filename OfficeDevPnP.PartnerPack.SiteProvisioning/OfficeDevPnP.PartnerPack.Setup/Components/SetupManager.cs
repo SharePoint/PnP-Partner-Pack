@@ -150,7 +150,12 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
 
                 var tenant = new Tenant(adminContext);
 
-                // Check if the site already exists
+                // Check if the site already exists, and eventually removes it from the Recycle Bin
+                if (tenant.CheckIfSiteExists(info.InfrastructuralSiteUrl, "Recycled"))
+                {
+                    tenant.DeleteSiteCollectionFromRecycleBin(info.InfrastructuralSiteUrl);
+                }
+
                 var siteAlreadyExists = tenant.SiteExists(info.InfrastructuralSiteUrl);
                 if (!siteAlreadyExists)
                 {
@@ -741,6 +746,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
             var binPath = Path.Combine(jobPath, @"bin\Release");
             var zipPath = $@"{basePath}\OfficeDevPnP.PartnerPack.Setup\{jobName}.zip";
 
+            // Remove any already existing file
             if (System.IO.File.Exists(zipPath))
             {
                 System.IO.File.Delete(zipPath);
@@ -762,6 +768,12 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                     // Upload the WebJobB
                     await AzureManagementUtility.UploadWebJob(info.AzureAppServiceName, username, password, jobName, zipPath, jobType);
                 }
+            }
+
+            // Remove the ZIP file after having created the job
+            if (System.IO.File.Exists(zipPath))
+            {
+                System.IO.File.Delete(zipPath);
             }
         }
 

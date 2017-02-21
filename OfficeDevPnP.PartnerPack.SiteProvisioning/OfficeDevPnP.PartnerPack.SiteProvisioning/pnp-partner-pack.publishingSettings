@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<publishData>
-  <publishProfile profileName="pnp-partner-pack-testpnp888321 - Web Deploy" publishMethod="MSDeploy" publishUrl="pnp-partner-pack-testpnp888321.scm.azurewebsites.net:443" msdeploySite="pnp-partner-pack-testpnp888321" userName="$pnp-partner-pack-testpnp888321" userPWD="ZMZWcbaemXhW8frAxB48twRgfWxZylXga1jzJiZHG6jADzzBysq6vnjKm5wd" destinationAppUrl="http://pnp-partner-pack-testpnp888321.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="http://windows.azure.com" webSystem="WebSites">
-    <databases />
-  </publishProfile>
-  <publishProfile profileName="pnp-partner-pack-testpnp888321 - FTP" publishMethod="FTP" publishUrl="ftp://waws-prod-db3-077.ftp.azurewebsites.windows.net/site/wwwroot" ftpPassiveMode="True" userName="pnp-partner-pack-testpnp888321\$pnp-partner-pack-testpnp888321" userPWD="ZMZWcbaemXhW8frAxB48twRgfWxZylXga1jzJiZHG6jADzzBysq6vnjKm5wd" destinationAppUrl="http://pnp-partner-pack-testpnp888321.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="http://windows.azure.com" webSystem="WebSites">
-    <databases />
-  </publishProfile>
-</publishData>
