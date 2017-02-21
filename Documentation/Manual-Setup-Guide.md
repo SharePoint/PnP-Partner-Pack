@@ -66,7 +66,7 @@ To create a self signed certificate with this script:
 You will be asked to provide a password to encrypt your private key, and both the .PFX file and .CER file will be exported to the current folder.
 
 #### Using makecert (alternative manual option)
-Alternatively, if you have Microsoft Visual Studio 2013/2015 installed on your enviroment, you already have the [makecert tool](https://msdn.microsoft.com/library/windows/desktop/aa386968.aspx), as well. Otherwise, you will have to download from MSDN and to install the Windows SDK for your current version of Windows Operating System.
+Alternatively, if you have Microsoft Visual Studio 2013/2015 installed on your environment, you already have the [makecert tool](https://msdn.microsoft.com/library/windows/desktop/aa386968.aspx), as well. Otherwise, you will have to download from MSDN and to install the Windows SDK for your current version of Windows Operating System.
 
 The command for creating a new self-signed X.509 certificate is the following one:
 
@@ -89,7 +89,7 @@ Go Back to the new Azure Portal, and find **Storage Accounts** menu option. You 
 
 ![Azure AD - Storage Account- Create](./Figures/Fig-01-StorageAccount-01.png)
 
-After having created the Azure Blob Storage account, open the "Manage Access Keys" popup screen and copy the values of **"Storage Account Name"**, and **"Primary Access Key"**. Alternatively if using the new Azure Portal, click on your Storage account, click on **"Accss keys"** under the Settings header and copy out the **"Storage account name"** and **"key1"** values.
+After having created the Azure Blob Storage account, open the "Manage Access Keys" popup screen and copy the values of **"Storage Account Name"**, and **"Primary Access Key"**. Alternatively if using the new Azure Portal, click on your Storage account, click on **"Access keys"** under the Settings header and copy out the **"Storage account name"** and **"key1"** values.
 
 ![Azure AD - Storage Account- Create](./Figures/Fig-02-StorageAccount-02-Keys.png)
 
@@ -149,8 +149,8 @@ Open it and then click into settings and then Properties.  You should now be at 
 ![Azure AD - Add an Application - Third Step](./Figures/Fig-09-Azure-AD-Add-Application-Step-02.png)
 
 Please make sure you :
-- Copy the **Aplication ID** value as you'll need it later.
-- Upload the Application logo
+- Copy the **Application ID** value as you'll need it later.
+- Upload the Application logo (location: OfficeDevPnP.PartnerPack.SiteProvisioning\PnP-O365-App-Icon.png)
 - Press save. 
 
 Now, you should go back to the settings blade. Go into **Keys** where you'll create a Client Secret (used for app-only authentication). In order to do that, add a new security key (selecting 1 year, 2 years or never expires for key duration). Press the "Save" button in the lower part of the screen to generate the key value. After saving, you will see the key value. **Copy it in a safe place**, because you will not see it anymore.
@@ -405,7 +405,7 @@ All the values surrounded by [name] have to be replaced with the corresponding v
 Upload the Web application to the target Azure App Service. You can use any of the available techniques for doing that (GitHub repository, FTP, Visual Studio Publish, etc.). 
 
 **Important:**
-When you publish the web application using Microsoft Visual Studio, remember to **uncheck **the option "Enable Organizational Authentication". If you leave this selected you migh face authentication issues when running the PnP Partner Pack.
+When you publish the web application using Microsoft Visual Studio, remember to **uncheck **the option "Enable Organizational Authentication". If you leave this selected you might face authentication issues when running the PnP Partner Pack.
 
 Notice that the web application uses a token cache for ADAL tokens, which are used when accessing the Microsoft Graph API. The token cache provided is based on the web application session. Thus, it is not a scalable solution and it cannot be used with multiple instances of the web app. However, you can configure a session based on an external persistence provider, like for example the <a href="https://azure.microsoft.com/en-us/documentation/articles/cache-asp.net-session-state-provider/">Azure Redis Cache</a>, or you can define a token cache handler of your own, using a backend database or whatever else. For further details about ADAL and the token cache, you can read the <a href="./Architecture-and-Implementation.md">architectural document</a> related to the PnP Partner Pack.
  
@@ -461,13 +461,22 @@ Instead of deploying the ScheduledJob to a Schedule Job Collection (Azure Schedu
 
 In the root of the ScheduledJob Visual Studio project, add a JSON file called settings.job. Make sure it is set to 'Copy always' in the file properties. The schedule is specified with a cron expression composed of the following fields: {second} {minute} {hour} {day} {month} {day of the week}. The settings.job for a minute schedule looks like this:  
 
-```
+```JSON
 {
   "schedule": "0 * * * * *"
 }
 ```
 
-Also, in the webjob-publish-settings.json file (under Properties in the Visual Studio project) you want to change the runMode from 'OnDemand' to 'Scheduled'.
+Also, in the webjob-publish-settings.json file (under Properties in the Visual Studio project) you want to change the runMode from 'OnDemand' to 'Scheduled' and give it at start date. You will end up with a file looking like this:
+
+```JSON
+{
+  "$schema": "http://schemastore.org/schemas/json/webjob-publish-settings.json",
+  "webJobName": "ScheduledJob",
+  "startTime": "2016-12-18T00:00:00-08:00",
+  "runMode": "Scheduled"
+}
+```
 
 Finally, deploy the web job from Visual Studio using the 'Publish as Azure WebJob' function.
 
