@@ -509,7 +509,6 @@ namespace OfficeDevPnP.PartnerPack.Setup.ViewModel
         private async void Office365Login()
         {
             // Get the list of subscriptions for the current user
-            //AzureSubscriptions = Enumerable.Range(1, 10).Select(n => new KeyValuePair<Guid, string>(Guid.NewGuid(), "Subscription " + n)).ToArray();
             _office365AccessToken = await AzureManagementUtility.GetAccessTokenAsync(
                 AzureManagementUtility.AzureManagementApiURI, 
                 ConfigurationManager.AppSettings["O365:ClientId"]);
