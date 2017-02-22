@@ -56,7 +56,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                         // Configure the Site Collection properties
                         SiteEntity newSite = new SiteEntity();
                         newSite.Description = job.Description;
-                        newSite.Lcid = (uint)job.Language;
+                        newSite.Lcid = (uint) job.Language;
                         newSite.Title = job.SiteTitle;
                         newSite.Url = siteUrl;
                         newSite.SiteOwnerLogin = job.PrimarySiteCollectionAdmin;
@@ -65,9 +65,9 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
 
                         // Use the BaseSiteTemplate of the template, if any, otherwise 
                         // fallback to the pre-configured site template (i.e. STS#0)
-                        newSite.Template = !String.IsNullOrEmpty(template.BaseSiteTemplate) ?
-                            template.BaseSiteTemplate :
-                            PnPPartnerPackSettings.DefaultSiteTemplate;
+                        newSite.Template = !String.IsNullOrEmpty(template.BaseSiteTemplate)
+                            ? template.BaseSiteTemplate
+                            : PnPPartnerPackSettings.DefaultSiteTemplate;
 
                         newSite.TimeZoneId = job.TimeZone;
                         newSite.UserCodeMaximumLevel = job.UserCodeMaximumLevel;
@@ -76,7 +76,13 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                         // Create the Site Collection and wait for its creation (we're asynchronous)
                         var tenant = new Tenant(adminContext);
                         tenant.CreateSiteCollection(newSite, true, true); // TODO: Do we want to empty Recycle Bin?
+                    }
 
+                    // Work-around for the error 'Operation is not valid due to the current state of the object' (since DEC 2016)
+                    // Get fresh Tenant instance after site collection was initially created.
+                    using (var adminContext = PnPPartnerPackContextProvider.GetAppOnlyTenantLevelClientContext())
+                    {
+                        var tenant = new Tenant(adminContext);
                         Site site = tenant.GetSiteByUrl(siteUrl);
                         Web web = site.RootWeb;
 
