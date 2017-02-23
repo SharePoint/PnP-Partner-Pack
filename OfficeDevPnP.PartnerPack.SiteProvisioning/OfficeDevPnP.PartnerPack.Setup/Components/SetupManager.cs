@@ -138,6 +138,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                 infrastructureSiteUri.Host + "/");
             var siteUrl = info.InfrastructuralSiteUrl.Substring(info.InfrastructuralSiteUrl.IndexOf("sharepoint.com/") + 14);
             var siteCreated = false;
+            var siteAlreadyExists = false;
 
             var accessToken = await AzureManagementUtility.GetAccessTokenSilentAsync(
                 tenantAdminUri.ToString(), ConfigurationManager.AppSettings["O365:ClientId"]);
@@ -156,7 +157,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                     tenant.DeleteSiteCollectionFromRecycleBin(info.InfrastructuralSiteUrl);
                 }
 
-                var siteAlreadyExists = tenant.SiteExists(info.InfrastructuralSiteUrl);
+                siteAlreadyExists = tenant.SiteExists(info.InfrastructuralSiteUrl);
                 if (!siteAlreadyExists)
                 {
                     // Configure the Site Collection properties
@@ -187,63 +188,72 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                         }
                         return (false);
                     });
+                }
+            }
 
-                    Site site = tenant.GetSiteByUrl(info.InfrastructuralSiteUrl);
+            await Task.Delay(5000);
+
+            using (var adminContext = am.GetAzureADAccessTokenAuthenticatedContext(
+                tenantAdminUri.ToString(), accessToken))
+            {
+                adminContext.RequestTimeout = Timeout.Infinite;
+
+                var tenant = new Tenant(adminContext);
+                Site site = tenant.GetSiteByUrl(info.InfrastructuralSiteUrl);
+                Web web = site.RootWeb;
+
+                adminContext.Load(site, s => s.Url);
+                adminContext.Load(web, w => w.Url);
+                adminContext.ExecuteQueryRetry();
+
+                // Enable Secondary Site Collection Administrator
+                if (!String.IsNullOrEmpty(info.InfrastructuralSiteSecondaryAdmin))
+                {
+                    Microsoft.SharePoint.Client.User secondaryOwner = web.EnsureUser(info.InfrastructuralSiteSecondaryAdmin);
+                    secondaryOwner.IsSiteAdmin = true;
+                    secondaryOwner.Update();
+
+                    web.SiteUsers.AddUser(secondaryOwner);
+                    adminContext.ExecuteQueryRetry();
+                }
+                siteCreated = true;
+            }
+
+            if (siteAlreadyExists || siteCreated)
+            {
+                accessToken = await AzureManagementUtility.GetAccessTokenSilentAsync(
+                    sharepointUri.ToString(), ConfigurationManager.AppSettings["O365:ClientId"]);
+
+                using (ClientContext clientContext = am.GetAzureADAccessTokenAuthenticatedContext(
+                    info.InfrastructuralSiteUrl, accessToken))
+                {
+                    clientContext.RequestTimeout = Timeout.Infinite;
+
+                    Site site = clientContext.Site;
                     Web web = site.RootWeb;
 
-                    adminContext.Load(site, s => s.Url);
-                    adminContext.Load(web, w => w.Url);
-                    adminContext.ExecuteQueryRetry();
+                    clientContext.Load(site, s => s.Url);
+                    clientContext.Load(web, w => w.Url);
+                    clientContext.ExecuteQueryRetry();
 
-                    // Enable Secondary Site Collection Administrator
-                    if (!String.IsNullOrEmpty(info.InfrastructuralSiteSecondaryAdmin))
-                    {
-                        Microsoft.SharePoint.Client.User secondaryOwner = web.EnsureUser(info.InfrastructuralSiteSecondaryAdmin);
-                        secondaryOwner.IsSiteAdmin = true;
-                        secondaryOwner.Update();
+                    // Override settings within templates, before uploading them
+                    UpdateProvisioningTemplateParameter("Responsive", "SPO-Responsive.xml",
+                        "AzureWebSiteUrl", info.AzureWebAppUrl);
+                    UpdateProvisioningTemplateParameter("Overrides", "PnP-Partner-Pack-Overrides.xml",
+                        "AzureWebSiteUrl", info.AzureWebAppUrl);
 
-                        web.SiteUsers.AddUser(secondaryOwner);
-                        adminContext.ExecuteQueryRetry();
-                    }
-                    siteCreated = true;
+                    // Apply the templates to the target site
+                    ApplyProvisioningTemplate(web, "Infrastructure", "PnP-Partner-Pack-Infrastructure-Jobs.xml");
+                    ApplyProvisioningTemplate(web, "Infrastructure", "PnP-Partner-Pack-Infrastructure-Templates.xml");
+                    ApplyProvisioningTemplate(web, "", "PnP-Partner-Pack-Infrastructure-Contents.xml");
+
+                    // We to it twice to force the content types, due to a small bug in the provisioning engine
+                    ApplyProvisioningTemplate(web, "", "PnP-Partner-Pack-Infrastructure-Contents.xml");
                 }
-
-                if (siteAlreadyExists || siteCreated)
-                {
-                    accessToken = await AzureManagementUtility.GetAccessTokenSilentAsync(
-                        sharepointUri.ToString(), ConfigurationManager.AppSettings["O365:ClientId"]);
-
-                    using (ClientContext clientContext = am.GetAzureADAccessTokenAuthenticatedContext(
-                        info.InfrastructuralSiteUrl, accessToken))
-                    {
-                        clientContext.RequestTimeout = Timeout.Infinite;
-
-                        Site site = clientContext.Site;
-                        Web web = site.RootWeb;
-
-                        clientContext.Load(site, s => s.Url);
-                        clientContext.Load(web, w => w.Url);
-                        clientContext.ExecuteQueryRetry();
-
-                        // Override settings within templates, before uploading them
-                        UpdateProvisioningTemplateParameter("Responsive", "SPO-Responsive.xml",
-                            "AzureWebSiteUrl", info.AzureWebAppUrl);
-                        UpdateProvisioningTemplateParameter("Overrides", "PnP-Partner-Pack-Overrides.xml",
-                            "AzureWebSiteUrl", info.AzureWebAppUrl);
-
-                        // Apply the templates to the target site
-                        ApplyProvisioningTemplate(web, "Infrastructure", "PnP-Partner-Pack-Infrastructure-Jobs.xml");
-                        ApplyProvisioningTemplate(web, "Infrastructure", "PnP-Partner-Pack-Infrastructure-Templates.xml");
-                        ApplyProvisioningTemplate(web, "", "PnP-Partner-Pack-Infrastructure-Contents.xml");
-
-                        // We to it twice to force the content types, due to a small bug in the provisioning engine
-                        ApplyProvisioningTemplate(web, "", "PnP-Partner-Pack-Infrastructure-Contents.xml");
-                    }
-                }
-                else
-                {
-                    // TODO: Handle some kind of exception ...
-                }
+            }
+            else
+            {
+                // TODO: Handle some kind of exception ...
             }
         }
 
