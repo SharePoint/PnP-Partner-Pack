@@ -26,5 +26,10 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Components
         /// UPN for the user
         /// </summary>
         public String UserPrincipalName;
+
+        /// <summary>
+        /// Preferred language of the user
+        /// </summary>
+        public String PreferredLanguage;
     }
 }

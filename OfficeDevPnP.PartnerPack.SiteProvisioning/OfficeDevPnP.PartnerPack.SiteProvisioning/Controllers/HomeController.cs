@@ -29,15 +29,9 @@ using System.Net;
 namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
 {
     [Authorize]
+    [UserLanguageFilter]
     public class HomeController : Controller
     {
-        protected override void Initialize(System.Web.Routing.RequestContext requestContext)
-        {
-            base.Initialize(requestContext);
-
-            EnsurePreferredLanguage();
-        }
-
         public ActionResult Index()
         {
             IndexViewModel model = new IndexViewModel();
@@ -508,49 +502,6 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
 
                 return (base.File(imageFileStream, "image/png"));
             }
-        }
-
-        public ActionResult ChangeCulture(string ddlCulture)
-        {
-            var prefUserCulture = new CultureInfo(ddlCulture);
-            Session["CurrentCulture"] = prefUserCulture.Name;
-
-            Thread.CurrentThread.CurrentCulture = prefUserCulture;
-            Thread.CurrentThread.CurrentUICulture = prefUserCulture;
-
-            return View("Index");
-        }
-
-        private void EnsurePreferredLanguage()
-        {
-            var prefUserCulture = new CultureInfo("en-US");
-
-            if (Request?.QueryString["Lang"] != null)
-            {
-                var qsValue = Request.QueryString["Lang"];
-                var nValue = default(int);
-
-                if (int.TryParse(qsValue, out nValue))
-                {
-                    //Language is in numeric form: LCID values (e.g. 1033, 1043, ..)
-                    prefUserCulture = new CultureInfo(nValue);
-                }
-                else
-                {
-                    //Language is in string form: Culture name (e.g. 'en', 'en-US', 'nl-NL', ...)
-                    prefUserCulture = new CultureInfo(qsValue);
-                }
-
-            }
-            else if (!string.IsNullOrEmpty(Convert.ToString(Session["CurrentCulture"])))
-            {
-                prefUserCulture = new CultureInfo((string)Session["CurrentCulture"]);
-            }
-
-            Session["CurrentCulture"] = prefUserCulture.Name;
-
-            Thread.CurrentThread.CurrentCulture = prefUserCulture;
-            Thread.CurrentThread.CurrentUICulture = prefUserCulture;
         }
     }
 }
