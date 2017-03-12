@@ -50,7 +50,7 @@ blocking one, considering the target audience of the PnP Partner Pack.
 Furthermore, there are a bunch of Web Jobs, which are provisioned within the same 
 Azure Web App that hosts the main PnP Partner Pack Sites Provisioning Module.
 From an implementation perspective, the Sites Provisioning module is implemented as an
-ASP.NET MVC Web Application using Microsoft Visual Studio 2015, and references the NuGet
+ASP.NET MVC Web Application using Microsoft Visual Studio 2015/2017, and references the NuGet
 package of the [OfficeDev PnP Core](#https://www.github.com/OfficeDev/PnP-Sites-Core/) library,
 as well as all the related requirements.
 

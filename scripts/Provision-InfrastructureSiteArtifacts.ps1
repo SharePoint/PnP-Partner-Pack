@@ -56,40 +56,40 @@ $siteHost = $siteHost.Replace(".sharepoint.com","-admin.sharepoint.com")
 $siteHost = $siteHost.Trim('/')
 
 Connect-SPOnline -Url "https://$siteHost" -Credentials $Credentials
-$infrastructureSiteInfo = Get-SPOTenantSite -Url $InfrastructureSiteUrl -ErrorAction SilentlyContinue
+$infrastructureSiteInfo = Get-PnPTenantSite -Url $InfrastructureSiteUrl -ErrorAction SilentlyContinue
 if($InfrastructureSiteInfo -eq $null)
 {
-    Write-Host -ForegroundColor Cyan "Infrastructure Site does not exist. Please create site collection first through the UI, or use New-SPOTenantSite"
+    Write-Host -ForegroundColor Cyan "Infrastructure Site does not exist. Please create site collection first through the UI, or use New-PnPTenantSite"
 } else {
     Connect-SPOnline -Url $InfrastructureSiteUrl -Credentials $Credentials
-    Apply-SPOProvisioningTemplate -Path "$basePath\Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Jobs.xml"
-    Apply-SPOProvisioningTemplate -Path "$basePath\Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Templates.xml"
+    Apply-PnPProvisioningTemplate -Path "$basePath\Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Jobs.xml"
+    Apply-PnPProvisioningTemplate -Path "$basePath\Templates\Infrastructure\PnP-Partner-Pack-Infrastructure-Templates.xml"
 
     # Unhide the 2 infrastructure lists
-    $l = Get-SPOList "PnPProvisioningTemplates"
+    $l = Get-PnPList "PnPProvisioningTemplates"
     $l.Hidden = $false
     $l.OnQuickLaunch = $true
     $l.Update()
-    Execute-SPOQuery
+    Execute-PnPQuery
 
-    $l = Get-SPOList "PnPPRovisioningJobs"
+    $l = Get-PnPList "PnPPRovisioningJobs"
     $l.Hidden = $false
     $l.OnQuickLaunch = $true
     $l.Update()
-    Execute-SPOQuery
+    Execute-PnPQuery
     
-    Apply-SPOProvisioningTemplate $basePath\Templates\PnP-Partner-Pack-Infrastructure-Contents.xml
+    Apply-PnPProvisioningTemplate $basePath\Templates\PnP-Partner-Pack-Infrastructure-Contents.xml
 
 	
     # Due to an issue in core, we have to loop through the items in the provisioning template list and set the correct content type
     # Find the content type in the list
-    $ctx = Get-SPOContext
-    $l = Get-SPOList "PnPProvisioningTemplates"
+    $ctx = Get-PnPContext
+    $l = Get-PnPList "PnPProvisioningTemplates"
     $ctx.Load($l.ContentTypes)
-    Execute-SPOQuery
+    Execute-PnPQuery
     $ct = $l.ContentTypes | ?{$_.Name -eq "PnpProvisioningTemplate"}
 
-    $items = Get-SPOListItem -List "PnPProvisioningTemplates" -Fields "FileLeafRef"
+    $items = Get-PnPListItem -List "PnPProvisioningTemplates" -Fields "FileLeafRef"
     foreach($item in $items)
     {
 	$filename = $item["FileLeafRef"]
@@ -98,7 +98,7 @@ if($InfrastructureSiteInfo -eq $null)
 		Write-Host -ForeGroundColor DarkGray "Setting content type on $filename"
 		$item["ContentTypeId"] = $ct.Id
 		$item.Update()
-		Execute-SPOQuery
+		Execute-PnPQuery
 	}
     }
     

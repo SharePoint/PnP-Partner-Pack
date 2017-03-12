@@ -13,7 +13,7 @@ The PnP Partner Pack allows you to extend the out of the box experience of Micro
 This document describes the deployment for the **PnP Partner Pack version 2.0 (September 2016)**.
 Follow step by step the detailed instructions provided in this document, if you like to manually setup the PnP Partner Pack version 2.0.
 
-Otherwise, you will also be able to use a UI based desktop Setup application (for Windows OS only) that will be released pretty soon, and which allows you to fully automate the setup process.
+Keep in mind that since March 2017 you can also **setup the PnP Partner Pack using a tool**. Please follow the instructions provided in the video about the [Setup Wizard](https://www.youtube.com/watch?v=D98jqzPkfj0&index=34&list=PLR9nK3mnD-OUnJytlXlO84fQnYt50iTmS) to understand how it works and how to use it. The **Setup Wizard** is a UI based desktop Setup application (for Windows OS only) that allows you to fully automate the setup process.
 
 ## Setup Overview
 From a deployment perspective the PnP Partner Pack is an Office 365 Application, which leverages an Azure Web App with an Azure Web Sites and some Azure Web Jobs. The application has to be registered in Azure Active Directory and acts against SharePoint Online using an App Only access token, based on an X.509 self-signed Certificate. Moreover, it is a requirement to have an Infrastructural Site Collection provisioned in the target SharePoint Online tenant.
@@ -66,7 +66,7 @@ To create a self signed certificate with this script:
 You will be asked to provide a password to encrypt your private key, and both the .PFX file and .CER file will be exported to the current folder.
 
 #### Using makecert (alternative manual option)
-Alternatively, if you have Microsoft Visual Studio 2013/2015 installed on your enviroment, you already have the [makecert tool](https://msdn.microsoft.com/library/windows/desktop/aa386968.aspx), as well. Otherwise, you will have to download from MSDN and to install the Windows SDK for your current version of Windows Operating System.
+Alternatively, if you have Microsoft Visual Studio 2013/2015/2017 installed on your environment, you already have the [makecert tool](https://msdn.microsoft.com/library/windows/desktop/aa386968.aspx), as well. Otherwise, you will have to download from MSDN and to install the Windows SDK for your current version of Windows Operating System.
 
 The command for creating a new self-signed X.509 certificate is the following one:
 
@@ -89,7 +89,7 @@ Go Back to the new Azure Portal, and find **Storage Accounts** menu option. You 
 
 ![Azure AD - Storage Account- Create](./Figures/Fig-01-StorageAccount-01.png)
 
-After having created the Azure Blob Storage account, open the "Manage Access Keys" popup screen and copy the values of **"Storage Account Name"**, and **"Primary Access Key"**. Alternatively if using the new Azure Portal, click on your Storage account, click on **"Accss keys"** under the Settings header and copy out the **"Storage account name"** and **"key1"** values.
+After having created the Azure Blob Storage account, open the "Manage Access Keys" popup screen and copy the values of **"Storage Account Name"**, and **"Primary Access Key"**. Alternatively if using the new Azure Portal, click on your Storage account, click on **"Access keys"** under the Settings header and copy out the **"Storage account name"** and **"key1"** values.
 
 ![Azure AD - Storage Account- Create](./Figures/Fig-02-StorageAccount-02-Keys.png)
 
@@ -141,7 +141,7 @@ your tenant. Click the "Add" button in the upper left part of the blade, this wi
 
 ![Azure AD - Add an Application - First Step](./Figures/Fig-08-Azure-AD-Add-Application-Step-01.png)
 
-Then, provide a **name** for your application (we suggest to name it "SharePoint PnP Partner Pack"), select the option **"Web app / API"**, and fill in the **"Sign-on URL"** with the **URL** of the Azure App Service that you created before. Click create when done.
+Then, provide a **name** for your application (we suggest to name it "SharePoint PnP Partner Pack"), select the option **"Web app / API"**, and fill in the **"Sign-on URL"** with the **URL** of the Azure App Service that you created before. Make sure to use a forward slash at the end of the URL (otherwise you will get a 'reply address does not match error'). Click create when done.
 
 The newly created app registration will now be listed in your "App Registrations" list.
 Open it and then click into settings and then Properties.  You should now be at the following screen: 
@@ -149,11 +149,11 @@ Open it and then click into settings and then Properties.  You should now be at 
 ![Azure AD - Add an Application - Third Step](./Figures/Fig-09-Azure-AD-Add-Application-Step-02.png)
 
 Please make sure you :
-- Copy the **Aplication ID** value as you'll need it later.
-- Upload the Application logo
+- Copy the **Application ID** value as you'll need it later.
+- Upload the Application logo (location: OfficeDevPnP.PartnerPack.SiteProvisioning\PnP-O365-App-Icon.png)
 - Press save. 
 
-Now, you should go back to the settings blade. Go into **Keys** where you'll create a Client Secret. In order to do that, add a new security key (selecting 1 year or 2 years for key duration). Press the "Save" button in the lower part of the screen to generate the key value. After saving, you will see the key value. **Copy it in a safe place**, because you will not see it anymore.
+Now, you should go back to the settings blade. Go into **Keys** where you'll create a Client Secret (used for app-only authentication). In order to do that, add a new security key (selecting 1 year, 2 years or never expires for key duration). Press the "Save" button in the lower part of the screen to generate the key value. After saving, you will see the key value. **Copy it in a safe place**, because you will not see it anymore.
 
 ![Azure AD - Create a client Secret](./Figures/Fig-10-Azure-AD-Add-AplicationSecret.png)
 
@@ -178,6 +178,9 @@ You need to configure the following permissions:
 ![Azure AD - Application Configuration - Permissions Blade](./Figures/Fig-12-Azure-AD-App-Config-03.png)
 
 The "Application Permissions" are those granted to the application when running as App Only. The other set of permissions, called "Delegated Permissions", defines the permissions granted to the application when running under a specific user's account delegation (using an app and user access token, from an OAuth 2.0 perspective).
+
+Click the Grant Permission button on the 'Required Permissions' tab, if you want to give non-tenant admin users access to the application.
+
 <!--
 ![Azure AD - Application Configuration - Client Secret](./Figures/Fig-06-Azure-AD-App-Config-01.png)
 -->
@@ -402,7 +405,7 @@ All the values surrounded by [name] have to be replaced with the corresponding v
 Upload the Web application to the target Azure App Service. You can use any of the available techniques for doing that (GitHub repository, FTP, Visual Studio Publish, etc.). 
 
 **Important:**
-When you publish the web application using Microsoft Visual Studio, remember to **uncheck **the option "Enable Organizational Authentication". If you leave this selected you migh face authentication issues when running the PnP Partner Pack.
+When you publish the web application using Microsoft Visual Studio, remember to **uncheck **the option "Enable Organizational Authentication". If you leave this selected you might face authentication issues when running the PnP Partner Pack.
 
 Notice that the web application uses a token cache for ADAL tokens, which are used when accessing the Microsoft Graph API. The token cache provided is based on the web application session. Thus, it is not a scalable solution and it cannot be used with multiple instances of the web app. However, you can configure a session based on an external persistence provider, like for example the <a href="https://azure.microsoft.com/en-us/documentation/articles/cache-asp.net-session-state-provider/">Azure Redis Cache</a>, or you can define a token cache handler of your own, using a backend database or whatever else. For further details about ADAL and the token cache, you can read the <a href="./Architecture-and-Implementation.md">architectural document</a> related to the PnP Partner Pack.
  
@@ -435,7 +438,7 @@ Moreover, you will have to publish them into the Azure App Service. To provision
 
 > For further details about how to publish Azure Web Jobs you can be read the following article: <a href="https://azure.microsoft.com/en-gb/documentation/articles/websites-dotnet-deploy-webjobs/">Deploy WebJobs using Visual Studio</a>.
 
-#### Publishing the **ScheduledJob** using a **minute** schedule
+#### Publishing the **ScheduledJob** using a **minute** schedule (Azure Scheduler)
 When you publish a Web Job that requires to be run at a schedule, your web job by default will end up in a free scheduler job collection which only allows to run scheduled jobs at a 1 hour interval or higher. Since site collection creation is handled via the ScheduledJob you might want to have this job running more frequently (e.g. every 5 minutes). Below steps describe how you can convert the created scheduled job collection to a paying version, which allows to schedule jobs at a minute level interval:
 * Deploy the **ScheduledJob** at a 1 hour interval. This will allow the job to get properly scheduled
 * Go to the [Azure management portal](http://portal.azure.com) (portal.azure.com), click on "Browse >" and select **"Scheduler Job Collections"**
@@ -453,5 +456,30 @@ Below screenshots show some of the above steps in action:
 
 ![](http://i.imgur.com/UR5TsF3.png)
 
+#### Publishing the **ScheduledJob** using a **minute** schedule (Internal WebJob Scheduler)
+Instead of deploying the ScheduledJob to a Schedule Job Collection (Azure Scheduler) you can deploy it directly to the app service you created earlier (Interal WebJob Scheduler) for the PnP Partner Pack web site. The only caveat is that this requires your app service to be configured as Always On (more expensive!). Otherwise the ScheduledJob will stop running after 12 hours.
+
+In the root of the ScheduledJob Visual Studio project, add a JSON file called settings.job. Make sure it is set to 'Copy always' in the file properties. The schedule is specified with a cron expression composed of the following fields: {second} {minute} {hour} {day} {month} {day of the week}. The settings.job for a minute schedule looks like this:  
+
+```JSON
+{
+  "schedule": "0 * * * * *"
+}
+```
+
+Also, in the webjob-publish-settings.json file (under Properties in the Visual Studio project) you want to change the runMode from 'OnDemand' to 'Scheduled' and give it at start date. You will end up with a file looking like this:
+
+```JSON
+{
+  "$schema": "http://schemastore.org/schemas/json/webjob-publish-settings.json",
+  "webJobName": "ScheduledJob",
+  "startTime": "2016-12-18T00:00:00-08:00",
+  "runMode": "Scheduled"
+}
+```
+
+Finally, deploy the web job from Visual Studio using the 'Publish as Azure WebJob' function.
+
+> For further details about how to use cron expressions with WebJobs you can be read the following article: <a href="http://blog.amitapple.com/post/2015/06/scheduling-azure-webjobs/">Scheduling Azure WebJobs with cron expressions</a>.
 
 <img src="https://telemetry.sharepointpnp.com/pnp-partner-pack/documentation/manual-setup-guide" /> 
