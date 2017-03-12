@@ -8,6 +8,8 @@ using Microsoft.Azure.WebJobs;
 using OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers;
 using OfficeDevPnP.PartnerPack.Infrastructure;
 using OfficeDevPnP.PartnerPack.Infrastructure.Jobs;
+using System.Diagnostics;
+using OfficeDevPnP.PartnerPack.Infrastructure.Diagnostics;
 
 namespace OfficeDevPnP.PartnerPack.ContinousJob
 {
@@ -17,6 +19,15 @@ namespace OfficeDevPnP.PartnerPack.ContinousJob
         // on an Azure Queue called queue.
         public static void ProcessQueueMessage([QueueTrigger(PnPPartnerPackSettings.StorageQueueName)] ContinousJobItem content, TextWriter log)
         {
+            // Attach TextWriter log to Trace
+            // https://blog.josequinto.com/2017/02/16/enable-azure-invocation-log-at-a-web-job-function-level-for-pnp-provisioning/
+            TextWriterTraceListener twtl = new TextWriterTraceListener(log);
+            twtl.Name = "ContinousJobLogger";
+            string[] notShownWords = new string[] { "TokenCache", "AcquireTokenHandlerBase"};
+            twtl.Filter = new RemoveWordsFilter(notShownWords); 
+            Trace.Listeners.Add(twtl);
+            Trace.AutoFlush = true;
+
             log.WriteLine(String.Format("Found Job: {0}", content.JobId));
 
             // Get the info about the Provisioning Job
@@ -32,6 +43,9 @@ namespace OfficeDevPnP.PartnerPack.ContinousJob
             }
 
             log.WriteLine("Completed Job execution");
+
+            // Remove Trace Listener
+            Trace.Listeners.Remove(twtl);
         }
     }
 }
