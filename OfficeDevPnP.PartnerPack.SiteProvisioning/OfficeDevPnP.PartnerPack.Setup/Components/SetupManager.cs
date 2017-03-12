@@ -544,6 +544,14 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
 
         private async static Task CreateAzureResourceGroup(SetupInformation info)
         {
+            await AzureManagementUtility.RegisterAzureProvider(info.AzureAccessToken,
+                info.AzureTargetSubscriptionId,
+                "Microsoft.Storage");
+
+            await AzureManagementUtility.RegisterAzureProvider(info.AzureAccessToken,
+                info.AzureTargetSubscriptionId,
+                "Microsoft.Web");
+
             info.AzureResourceGroupName = $"{info.AzureAppServiceName}-resource-group";
             info.AzureServicePlanName = $"{info.AzureAppServiceName}-plan";
 
@@ -561,10 +569,6 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
 
         private async static Task CreateAzureStorageAccount(SetupInformation info)
         {
-            await AzureManagementUtility.RegisterAzureProvider(info.AzureAccessToken,
-                info.AzureTargetSubscriptionId,
-                "Microsoft.Storage");
-
             var key = await AzureManagementUtility.CreateStorageAccount(info.AzureAccessToken,
                 info.AzureTargetSubscriptionId,
                 info.AzureResourceGroupName,
@@ -577,10 +581,6 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
 
         private async static Task CreateAzureAppService(SetupInformation info)
         {
-            await AzureManagementUtility.RegisterAzureProvider(info.AzureAccessToken,
-                info.AzureTargetSubscriptionId,
-                "Microsoft.Web");
-
             var appSettings = new AzureAppServiceSetting[3];
             appSettings[0] = new AzureAppServiceSetting { Name = "WEBSITE_LOAD_CERTIFICATES", Value = "*" };
             appSettings[1] = new AzureAppServiceSetting { Name = "WEBJOBS_IDLE_TIMEOUT", Value = "10000" };

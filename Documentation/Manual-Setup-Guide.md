@@ -13,7 +13,7 @@ The PnP Partner Pack allows you to extend the out of the box experience of Micro
 This document describes the deployment for the **PnP Partner Pack version 2.0 (September 2016)**.
 Follow step by step the detailed instructions provided in this document, if you like to manually setup the PnP Partner Pack version 2.0.
 
-Otherwise, you will also be able to use a UI based desktop Setup application (for Windows OS only) that will be released pretty soon, and which allows you to fully automate the setup process.
+Keep in mind that since March 2017 you can also **setup the PnP Partner Pack using a tool**. Please follow the instructions provided in the video about the [Setup Wizard](https://www.youtube.com/watch?v=D98jqzPkfj0&index=34&list=PLR9nK3mnD-OUnJytlXlO84fQnYt50iTmS) to understand how it works and how to use it. The **Setup Wizard** is a UI based desktop Setup application (for Windows OS only) that allows you to fully automate the setup process.
 
 ## Setup Overview
 From a deployment perspective the PnP Partner Pack is an Office 365 Application, which leverages an Azure Web App with an Azure Web Sites and some Azure Web Jobs. The application has to be registered in Azure Active Directory and acts against SharePoint Online using an App Only access token, based on an X.509 self-signed Certificate. Moreover, it is a requirement to have an Infrastructural Site Collection provisioned in the target SharePoint Online tenant.
@@ -66,7 +66,7 @@ To create a self signed certificate with this script:
 You will be asked to provide a password to encrypt your private key, and both the .PFX file and .CER file will be exported to the current folder.
 
 #### Using makecert (alternative manual option)
-Alternatively, if you have Microsoft Visual Studio 2013/2015 installed on your environment, you already have the [makecert tool](https://msdn.microsoft.com/library/windows/desktop/aa386968.aspx), as well. Otherwise, you will have to download from MSDN and to install the Windows SDK for your current version of Windows Operating System.
+Alternatively, if you have Microsoft Visual Studio 2013/2015/2017 installed on your environment, you already have the [makecert tool](https://msdn.microsoft.com/library/windows/desktop/aa386968.aspx), as well. Otherwise, you will have to download from MSDN and to install the Windows SDK for your current version of Windows Operating System.
 
 The command for creating a new self-signed X.509 certificate is the following one:
 

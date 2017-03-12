@@ -27,6 +27,7 @@ If you are interested on more detailed architectural description, please have a 
 # How do I install PnP Partner Pack #
 PnP Partner Pack requires quite a few installation steps. Here's resources around the installation and configuration.
 
+- Follow the instruction about how to use the [Setup Wizard](https://www.youtube.com/watch?v=D98jqzPkfj0&index=34&list=PLR9nK3mnD-OUnJytlXlO84fQnYt50iTmS) in order to install the PnP Partner Pack automatically
 - [Step-by-Step guidance](./Documentation/Manual-Setup-Guide.md) on how to setup apps to Office 365 tenant and Azure
 - [PnP Partner Pack v. 2.0 - Setup Guide video](https://youtu.be/ezWYorZClTI) at YouTube.
 
