@@ -49,6 +49,8 @@
                                 </div>
                                 <button class="ms-PeoplePicker-resultAction js-selectedRemove"><i class="ms-Icon ms-Icon--x"></i></button>
                                 @Html.HiddenFor(m => Model.Principals[x].Mail)
+                                @Html.HiddenFor(m => Model.Principals[x].DisplayName)
+                                @Html.HiddenFor(m => Model.Principals[x].UserPrincipalName)
                             </li>
                         }
                     }
