@@ -79,7 +79,12 @@ function searchPeopleOrGroups(searchId, searchName, searchGroups, maxSelection) 
                         $(li).append(div);
 
                         var mail = e.Mail;
-
+                        var upn = e.UserPrincipalName;
+                        var displayName = e.DisplayName;
+                        if (e.FirstName != null && e.LastName != null) {
+                            displayName = e.FirstName + " " + e.LastName;
+                        }
+                        
                         $(li).click(function (e) {
                             var currentSelected = $("#" + searchId + " ul[class=ms-PeoplePicker-selectedPeople] > li").length;
                             if (currentSelected >= maxSelection) {
@@ -105,7 +110,9 @@ function searchPeopleOrGroups(searchId, searchName, searchGroups, maxSelection) 
                             var ul = $("#" + searchId + " ul[class = ms-PeoplePicker-selectedPeople]");
                             var count = $("li", ul).length;
                             selectedLi.append($("<input type=hidden name=" + searchName + ".Principals[" + count + "].Mail />").val(mail));
-
+                            selectedLi.append($("<input type=hidden name=" + searchName + ".Principals[" + count + "].UserPrincipalName />").val(upn));
+                            selectedLi.append($("<input type=hidden name=" + searchName + ".Principals[" + count + "].DisplayName />").val(displayName));
+                            
                             $("#" + searchId + " .ms-PeoplePicker-selectedCount").text(count + 1);
 
                             ul.append(selectedLi);
