@@ -119,6 +119,25 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                             template.WebSettings.Description = job.Description;
                         }
 
+                        // Replace existing structural navigation on target site
+                        if (template.Navigation != null &&
+                            template.Navigation.CurrentNavigation != null &&
+                            template.Navigation.CurrentNavigation.StructuralNavigation != null &&
+                            (template.Navigation.CurrentNavigation.NavigationType == CurrentNavigationType.Structural ||
+                            template.Navigation.CurrentNavigation.NavigationType == CurrentNavigationType.StructuralLocal))
+                        {
+                            template.Navigation.CurrentNavigation.StructuralNavigation.RemoveExistingNodes = true;
+                        }
+
+                        // Replace existing Structural Global Navigation on target site
+                        if (template.Navigation != null &&
+                            template.Navigation.GlobalNavigation != null &&
+                            template.Navigation.GlobalNavigation.StructuralNavigation != null &&
+                            template.Navigation.GlobalNavigation.NavigationType == GlobalNavigationType.Structural)
+                        {
+                            template.Navigation.GlobalNavigation.StructuralNavigation.RemoveExistingNodes = true;
+                        }
+
                         // Apply the template to the target site
                         web.ApplyProvisioningTemplate(template, ptai);
 
