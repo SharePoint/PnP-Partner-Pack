@@ -90,11 +90,52 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                             new ProvisioningTemplateApplyingInformation();
 
                         // Write provisioning steps on console log
-                        ptai.MessagesDelegate += delegate (string message, ProvisioningMessageType messageType) {
-                            Console.WriteLine("{0} - {1}", messageType, messageType);
+                        ptai.MessagesDelegate = (message, type) =>
+                        {
+                            switch (type)
+                            {
+                                case ProvisioningMessageType.Warning:
+                                    {
+                                        Console.WriteLine("{0} - {1}", type, message);
+                                        break;
+                                    }
+                                case ProvisioningMessageType.Progress:
+                                    {
+                                        var activity = message;
+                                        if (message.IndexOf("|") > -1)
+                                        {
+                                            var messageSplitted = message.Split('|');
+                                            if (messageSplitted.Length == 4)
+                                            {
+                                                var status = messageSplitted[0];
+                                                var statusDescription = messageSplitted[1];
+                                                var current = double.Parse(messageSplitted[2]);
+                                                var total = double.Parse(messageSplitted[3]);
+                                                var percentage = Convert.ToInt32((100 / total) * current);
+                                                Console.WriteLine("{0} - {1} - {2}", percentage, status, statusDescription);
+                                            }
+                                            else
+                                            {
+                                                Console.WriteLine(activity);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine(activity);
+                                        }
+                                        break;
+                                    }
+                                case ProvisioningMessageType.Completed:
+                                    {
+                                        Console.WriteLine(type);
+                                        break;
+                                    }
+                            }
                         };
-                        ptai.ProgressDelegate += delegate (string message, int step, int total) {
-                            Console.WriteLine("{0:00}/{1:00} - {2}", step, total, message);
+                        ptai.ProgressDelegate = (message, step, total) =>
+                        {
+                            var percentage = Convert.ToInt32((100 / Convert.ToDouble(total)) * Convert.ToDouble(step));
+                            Console.WriteLine("{0:00}/{1:00} - {2} - {3}", step, total, percentage, message);
                         };
 
                         // Exclude handlers not supported in App-Only
