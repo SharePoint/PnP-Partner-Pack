@@ -200,6 +200,14 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                         {
                             template.Navigation.CurrentNavigation.StructuralNavigation.RemoveExistingNodes = true;
                         }
+                        else if (template.Navigation != null &&
+                            template.Navigation.CurrentNavigation != null &&
+                            template.Navigation.CurrentNavigation.ManagedNavigation != null &&
+                            template.Navigation.CurrentNavigation.NavigationType == CurrentNavigationType.Managed)
+                        {
+                            // We intentionally skip the Managed Navigation
+                            template.Navigation = new Core.Framework.Provisioning.Model.Navigation(template.Navigation.GlobalNavigation, null);
+                        }
 
                         // Replace existing Structural Global Navigation on target site
                         if (template.Navigation != null &&
@@ -208,6 +216,14 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                             template.Navigation.GlobalNavigation.NavigationType == GlobalNavigationType.Structural)
                         {
                             template.Navigation.GlobalNavigation.StructuralNavigation.RemoveExistingNodes = true;
+                        }
+                        else if (template.Navigation != null &&
+                            template.Navigation.GlobalNavigation != null &&
+                            template.Navigation.GlobalNavigation.ManagedNavigation != null &&
+                            template.Navigation.GlobalNavigation.NavigationType == GlobalNavigationType.Managed)
+                        {
+                            // We intentionally skip the Managed Navigation
+                            template.Navigation = new Core.Framework.Provisioning.Model.Navigation(null, template.Navigation.CurrentNavigation);
                         }
 
                         // Apply the template to the target site
