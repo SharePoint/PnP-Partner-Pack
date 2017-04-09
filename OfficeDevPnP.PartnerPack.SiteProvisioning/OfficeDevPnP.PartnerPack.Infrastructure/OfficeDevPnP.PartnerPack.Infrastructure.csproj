@@ -228,6 +228,7 @@
     <Compile Include="Jobs\BrandingJob.cs" />
     <Compile Include="Jobs\BrandingSettings.cs" />
     <Compile Include="Jobs\GetProvisioningTemplateJob.cs" />
+    <Compile Include="Jobs\Handlers\RefreshSingleSiteJobHandler.cs" />
     <Compile Include="Jobs\Handlers\RefreshSitesJobHandler.cs" />
     <Compile Include="Jobs\Handlers\BrandingJobHandler.cs" />
     <Compile Include="Jobs\Handlers\ContinousJobItem.cs" />
@@ -241,6 +242,7 @@
     <Compile Include="Jobs\ProvisioningJob.cs" />
     <Compile Include="Jobs\ProvisioningJobInformation.cs" />
     <Compile Include="Jobs\ProvisioningTemplateLocation.cs" />
+    <Compile Include="Jobs\RefreshSingleSiteJob.cs" />
     <Compile Include="Jobs\SiteCollectionsBatchJob.cs" />
     <Compile Include="Jobs\SiteProvisioningJob.cs" />
     <Compile Include="Jobs\SiteCollectionProvisioningJob.cs" />
