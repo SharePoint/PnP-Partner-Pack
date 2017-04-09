@@ -21,7 +21,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
             RefreshSitesJob updateJob = job as RefreshSitesJob;
             if (updateJob == null)
             {
-                throw new ArgumentException("Invalid job type for BrandingJobHandler.");
+                throw new ArgumentException("Invalid job type for RefreshSitesJobHandler.");
             }
 
             UpdateTemplates(updateJob);
@@ -51,14 +51,14 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                             var targetWeb = siteContext.Site.RootWeb;
 
                             // Update the root web of the site collection
-                            UpdateTemplateOnWeb(targetWeb, job);
+                            RefreshSitesJobHandler.UpdateTemplateOnWeb(targetWeb, job);
                         }
                     }
                 }
             }
         }
 
-        private void UpdateTemplateOnWeb(Web targetWeb, RefreshSitesJob job)
+        internal static void UpdateTemplateOnWeb(Web targetWeb, RefreshSitesJob job = null)
         {
             targetWeb.EnsureProperty(w => w.Url);
 

@@ -60,11 +60,11 @@ function replaceLinks() {
                     manageSiteFeaturesCommand.parent().parent().append('<li class="ms-linksection-listItem"><a id="ctl00_PlaceHolderMain_SiteTasks_RptControls_SaveAsProvisioningTemplate" href="' + addInSiteUrl + '/Home/SaveSiteAsTemplate?SPHostUrl=' + encodeURIComponent(hostWebUrl) + '">Save site as Provisioning Template</a></li>');
                 }
 
-                //var saveSiteCommand = $("#ctl00_PlaceHolderMain_SiteTasks_RptControls_SaveAsTemplate");
-                //if (saveSiteCommand != undefined) {
-                //    saveSiteCommand.attr("href", addInSiteUrl + "Home/SaveSiteTemplate?SPHostUrl=" + encodeURIComponent(hostWebUrl));
-                //    saveSiteCommand.text("Save site as Provisioning Template");
-                //}
+                // Add the "Update Provisioning Template" link
+                var manageSiteFeaturesCommand = $("#ctl00_PlaceHolderMain_SiteTasks_RptControls_ManageSiteFeatures");
+                if (manageSiteFeaturesCommand != undefined) {
+                    manageSiteFeaturesCommand.parent().parent().append('<li class="ms-linksection-listItem"><a id="ctl00_PlaceHolderMain_SiteTasks_RptControls_SaveAsProvisioningTemplate" href="' + addInSiteUrl + '/Home/UpdateSiteTemplate?SPHostUrl=' + encodeURIComponent(hostWebUrl) + '">Update Provisioning Template</a></li>');
+                }
             }
         },
         function (s, e) { // on failure

@@ -316,6 +316,7 @@
     <Compile Include="Models\SearchTemplatesViewModel.cs" />
     <Compile Include="Models\SettingsViewModel.cs" />
     <Compile Include="Models\SiteCollectionsBatchViewModel.cs" />
+    <Compile Include="Models\UpdateSiteTemplateViewModel.cs" />
     <Compile Include="Models\UpdateTemplatesViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SharePointContext.cs" />
@@ -393,6 +394,7 @@
     <Content Include="Scripts\custom.principals.js" />
     <Content Include="Scripts\jquery-2.2.1.js" />
     <Content Include="Scripts\jquery-2.2.1.min.js" />
+    <None Include="Properties\PublishProfiles\pnp-partner-pack - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.2.3.js" />
     <Content Include="Scripts\jquery-2.2.3.min.js" />
@@ -482,10 +484,10 @@
     <Content Include="Views\Governance\BatchStartup.cshtml" />
     <Content Include="Views\Governance\BatchFileUploaded.cshtml" />
     <Content Include="Views\Governance\BatchScheduled.cshtml" />
+    <Content Include="Views\Home\UpdateSiteTemplate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="Views\Shared\DisplayTemplates\" />
   </ItemGroup>
   <ItemGroup>
