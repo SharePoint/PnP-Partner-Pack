@@ -358,6 +358,34 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Controllers
         }
 
         [HttpGet]
+        public ActionResult UpdateSiteTemplate(String spHostUrl)
+        {
+            UpdateSiteTemplateViewModel model = new UpdateSiteTemplateViewModel();
+            model.TargetSiteUrl = spHostUrl;
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult UpdateSiteTemplate(UpdateSiteTemplateViewModel model)
+        {
+            AntiForgery.Validate();
+            if (ModelState.IsValid)
+            {
+                // Prepare the Job to update the Provisioning Template
+                RefreshSingleSiteJob job = new RefreshSingleSiteJob();
+                job.TargetSiteUrl = model.TargetSiteUrl;
+
+                // Prepare all the other information about the Provisioning Job
+                job.Owner = ClaimsPrincipal.Current.Identity.Name;
+                job.Title = $"Update Provisioning Template for {model.TargetSiteUrl}";
+
+                model.JobId = ProvisioningRepositoryFactory.Current.EnqueueProvisioningJob(job);
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
         public ActionResult ApplyProvisioningTemplate()
         {
             ApplyProvisioningTemplateViewModel model = new ApplyProvisioningTemplateViewModel();

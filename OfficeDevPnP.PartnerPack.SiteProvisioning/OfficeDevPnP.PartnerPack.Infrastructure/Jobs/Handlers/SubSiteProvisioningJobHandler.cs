@@ -90,11 +90,52 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                             new ProvisioningTemplateApplyingInformation();
 
                         // Write provisioning steps on console log
-                        ptai.MessagesDelegate += delegate (string message, ProvisioningMessageType messageType) {
-                            Console.WriteLine("{0} - {1}", messageType, messageType);
+                        ptai.MessagesDelegate = (message, type) =>
+                        {
+                            switch (type)
+                            {
+                                case ProvisioningMessageType.Warning:
+                                    {
+                                        Console.WriteLine("{0} - {1}", type, message);
+                                        break;
+                                    }
+                                case ProvisioningMessageType.Progress:
+                                    {
+                                        var activity = message;
+                                        if (message.IndexOf("|") > -1)
+                                        {
+                                            var messageSplitted = message.Split('|');
+                                            if (messageSplitted.Length == 4)
+                                            {
+                                                var status = messageSplitted[0];
+                                                var statusDescription = messageSplitted[1];
+                                                var current = double.Parse(messageSplitted[2]);
+                                                var total = double.Parse(messageSplitted[3]);
+                                                var percentage = Convert.ToInt32((100 / total) * current);
+                                                Console.WriteLine("{0} - {1} - {2}", percentage, status, statusDescription);
+                                            }
+                                            else
+                                            {
+                                                Console.WriteLine(activity);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine(activity);
+                                        }
+                                        break;
+                                    }
+                                case ProvisioningMessageType.Completed:
+                                    {
+                                        Console.WriteLine(type);
+                                        break;
+                                    }
+                            }
                         };
-                        ptai.ProgressDelegate += delegate (string message, int step, int total) {
-                            Console.WriteLine("{0:00}/{1:00} - {2}", step, total, message);
+                        ptai.ProgressDelegate = (message, step, total) =>
+                        {
+                            var percentage = Convert.ToInt32((100 / Convert.ToDouble(total)) * Convert.ToDouble(step));
+                            Console.WriteLine("{0:00}/{1:00} - {2} - {3}", step, total, percentage, message);
                         };
 
                         // Exclude handlers not supported in App-Only
@@ -117,6 +158,25 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                         {
                             template.WebSettings.Title = job.SiteTitle;
                             template.WebSettings.Description = job.Description;
+                        }
+
+                        // Replace existing structural navigation on target site
+                        if (template.Navigation != null &&
+                            template.Navigation.CurrentNavigation != null &&
+                            template.Navigation.CurrentNavigation.StructuralNavigation != null &&
+                            (template.Navigation.CurrentNavigation.NavigationType == CurrentNavigationType.Structural ||
+                            template.Navigation.CurrentNavigation.NavigationType == CurrentNavigationType.StructuralLocal))
+                        {
+                            template.Navigation.CurrentNavigation.StructuralNavigation.RemoveExistingNodes = true;
+                        }
+
+                        // Replace existing Structural Global Navigation on target site
+                        if (template.Navigation != null &&
+                            template.Navigation.GlobalNavigation != null &&
+                            template.Navigation.GlobalNavigation.StructuralNavigation != null &&
+                            template.Navigation.GlobalNavigation.NavigationType == GlobalNavigationType.Structural)
+                        {
+                            template.Navigation.GlobalNavigation.StructuralNavigation.RemoveExistingNodes = true;
                         }
 
                         // Apply the template to the target site
