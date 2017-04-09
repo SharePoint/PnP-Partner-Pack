@@ -469,3 +469,4 @@ Index action of the Home controller, and you can remove the image elements at th
 project, thus you have the source code and you can do whatever you like with it.
 
 <img src="https://telemetry.sharepointpnp.com/pnp-partner-pack/documentation/architecture-and-implementation" /> 
+
