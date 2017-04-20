@@ -21,7 +21,8 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Models
 
         [Required(ErrorMessage = "Relative URL is a required field")]
         [MaxLength(33)]
-        [DisplayName("Relative URL")]
+        [RegularExpression(@"^[a-zA-Z0-9-_%]+$", ErrorMessage = "Invalid url format. Should be just the site name with no https, blank spaces neither initial or final /")]
+        [DisplayName("Relative URL (just the site name)")]
         public String RelativeUrl { get; set; }
 
         [DisplayName("Site Policy")]
