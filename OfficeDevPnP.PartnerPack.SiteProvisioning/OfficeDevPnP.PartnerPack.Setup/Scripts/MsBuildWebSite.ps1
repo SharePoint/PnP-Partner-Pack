@@ -5,10 +5,25 @@
 
 pushd $ProjectPath
 
-# Get the path of MSBuild v. 14.0
-$msbuildPath = Get-ItemProperty "hklm:\SOFTWARE\Microsoft\MSBuild\14.0"
-$msbuildPath = $msbuildPath.MSBuildOverrideTasksPath.Substring(0, $msbuildPath.MSBuildOverrideTasksPath.IndexOf("\bin\") + 5)
-$msbuildPath = $msbuildPath + "MSBuild.exe"
+# Get the path of MSBuild v. 14.0.25420.1 or higher
+$vs15 = Get-ItemProperty "hklm:\SOFTWARE\WOW6432Node\Microsoft\VisualStudio\SxS\VS7"
+$msBuild15Path = $vs15.'15.0' + "\MSBuild\15.0\bin\msbuild.exe"
+if (Test-Path $msBuild15Path)
+{
+    $msbuildPath = $msBuild15Path
+}
+
+if ($msbuildPath -eq $null)
+{
+    $msbuildPath = Get-ItemProperty "hklm:\SOFTWARE\Microsoft\MSBuild\14.0"
+    $msbuildPath = $msbuildPath.MSBuildOverrideTasksPath.Substring(0, $msbuildPath.MSBuildOverrideTasksPath.IndexOf("\bin\") + 5)
+    $msbuildPath = $msbuildPath + "MSBuild.exe"
+}
+
+if ((Test-Path $msBuild15Path) -ne $true)
+{
+    Write-Host "Missing MSBuild"
+}
 
 # Create a temporary PnP path for the deployment files
 $unique = (New-Guid).GetHashCode()

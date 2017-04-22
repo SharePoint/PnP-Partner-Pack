@@ -712,7 +712,11 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
 
             if (packageBuildResult.Contains("Build FAILED"))
             {
-                // TODO: Handle exception
+                throw new ApplicationException("Failed to build the web project with MSBuild!");
+            }
+            else if (packageBuildResult.Contains("Missing MSBuild"))
+            {
+                throw new ApplicationException("Missing MSBuild v. 14.0.25420.1 or higher!");
             }
         }
 
