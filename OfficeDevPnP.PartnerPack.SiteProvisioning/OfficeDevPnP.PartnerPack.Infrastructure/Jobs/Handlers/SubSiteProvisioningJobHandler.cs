@@ -71,6 +71,14 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                         Web web = parentWeb.Webs.Add(newWeb);
                         context.ExecuteQueryRetry();
 
+                        if (template.ExtensibilityHandlers.Any())
+                        {
+                            // Clone Context pointing to Sub Site (needed for calling custom Extensibility Providers from the pnp template passing the right ClientContext)
+                            string newWeburl = web.EnsureProperty(w => w.Url);
+                            ClientContext webClientContext = context.Clone(newWeburl);
+                            web = webClientContext.Web;
+                        }
+
                         // Create sub-web unique groups
                         if (!job.InheritPermissions)
                         {
