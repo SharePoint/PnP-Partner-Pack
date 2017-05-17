@@ -29,6 +29,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
 
                 RunspaceInvoke runSpaceInvoker = new RunspaceInvoke(runspace);
                 runSpaceInvoker.Invoke("Set-ExecutionPolicy Unrestricted");
+                runSpaceInvoker.Invoke($"Unblock-File {powershellpath}");
 
                 // create a pipeline and feed it the script text
                 Pipeline pipeline = runspace.CreatePipeline();
