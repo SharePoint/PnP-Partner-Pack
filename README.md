@@ -1,4 +1,4 @@
-﻿# PnP Partner Pack v. 2.0 (May 2017)
+﻿# PnP Partner Pack v. 2.0 (June 2017)
 This is the repository for PnP Partner Pack, which is part of the community driven [Office 365 Developer Patterns and Practices](http://aka.ms/OfficeDevPnP) (PnP) initiative. 
 
 ![](http://i.imgur.com/5L34MNk.png)
