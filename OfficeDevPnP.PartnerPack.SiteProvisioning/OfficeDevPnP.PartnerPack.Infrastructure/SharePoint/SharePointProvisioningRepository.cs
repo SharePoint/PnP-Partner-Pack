@@ -1,7 +1,8 @@
-﻿using Microsoft.SharePoint.Client;
+using Microsoft.SharePoint.Client;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Newtonsoft.Json;
+using OfficeDevPnP.Core.Entities;
 using OfficeDevPnP.Core.Enums;
 using OfficeDevPnP.Core.Framework.Provisioning.Connectors;
 using OfficeDevPnP.Core.Framework.Provisioning.Model;
@@ -12,9 +13,7 @@ using OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
@@ -154,15 +153,18 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
                 job.FileName += ".pnp";
             }
 
+            // Get the Access Token from the current context
+            var accessToken = context.GetAccessToken();
+
             // Get a reference to the target web site
             Web web = context.Web;
-            context.Load(web, w => w.Url);
+            context.Load(web, w => w.Url, w => w.ServerRelativeUrl);
             context.ExecuteQueryRetry();
 
             // Prepare the support variables
             ClientContext repositoryContext = null;
             Web repositoryWeb = null;
-
+            
             // Define whether we need to use the global infrastructural repository or the local one
             if (globalRepository)
             {
@@ -207,6 +209,63 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
 
                 templateToSave.Description = job.Description;
                 templateToSave.DisplayName = job.Title;
+
+                if (job.PersistComposedLookFiles)
+                {
+                    templateToSave.ComposedLook.Name = "SharePointBranding";
+
+                    var refererUri = new Uri(web.Url);
+                    var refererValue = $"{refererUri.Scheme}://{refererUri.Host}/";
+
+                    // Create Theme Entity object
+                    ThemeEntity cl = web.GetCurrentComposedLook();
+                
+                    if (!String.IsNullOrEmpty(cl.Font))
+                    {
+                        // Construct files endpoint for spfont
+                        string strUrl = String.Format("{0}/_api/web/getfilebyserverrelativeurl('{1}{2}')/$value", web.Url, web.ServerRelativeUrl,cl.Font);
+
+                        var fontFileName = cl.Font.Substring(cl.Font.LastIndexOf("/") + 1);
+                        var fontFileStream = HttpHelper.MakeGetRequestForStream(strUrl, "application/octet-stream", accessToken, referer: refererValue);
+
+                        templateToSave.ComposedLook.FontFile = String.Format("{{themecatalog}}/15/{0}", fontFileName);
+                        provider.Connector.SaveFileStream(fontFileName, fontFileStream);
+
+                        templateToSave.Files.Add(new Core.Framework.Provisioning.Model.File
+                        {
+                            Src = fontFileName,
+                            Folder = "{themecatalog}/15",
+                            Overwrite = true,
+                        });
+                    }
+                    else
+                    {
+                        templateToSave.ComposedLook.FontFile = String.Empty;
+                    }
+
+                    if (!String.IsNullOrEmpty(cl.Theme))
+                    {
+                        // Construct files endpoint for spcolor
+                        string strUrl = String.Format("{0}/_api/web/getfilebyserverrelativeurl('{1}{2}')/$value", web.Url, web.ServerRelativeUrl, cl.Theme);
+
+                        var colorFileName = cl.Theme.Substring(cl.Theme.LastIndexOf("/") + 1);
+                        var colorFileStream = HttpHelper.MakeGetRequestForStream(strUrl, "application/xhtml+xml", accessToken, referer: refererValue);
+
+                        templateToSave.ComposedLook.ColorFile = String.Format("{{themecatalog}}/15/{0}", colorFileName);
+                        provider.Connector.SaveFileStream(colorFileName, colorFileStream);
+
+                        templateToSave.Files.Add(new Core.Framework.Provisioning.Model.File
+                        {
+                            Src = colorFileName,
+                            Folder = "{themecatalog}/15",
+                            Overwrite = true,
+                        });
+                    }
+                    else
+                    {
+                        templateToSave.ComposedLook.ColorFile = String.Empty;
+                    }
+                }
 
                 // Save template image preview in folder
                 Microsoft.SharePoint.Client.Folder templatesFolder = repositoryWeb.GetFolderByServerRelativeUrl(PnPPartnerPackConstants.PnPProvisioningTemplates);
@@ -522,7 +581,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.SharePoint
                     </View>";
 
                 ListItemCollection items = list.GetItems(query);
-                context.Load(items, 
+                context.Load(items,
                     includes => includes.IncludeWithDefaultProperties(
                         j => j[PnPPartnerPackConstants.PnPProvisioningJobStatus],
                         j => j[PnPPartnerPackConstants.PnPProvisioningJobError],
