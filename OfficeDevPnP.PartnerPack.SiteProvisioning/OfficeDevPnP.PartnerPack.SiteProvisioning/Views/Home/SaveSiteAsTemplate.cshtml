@@ -1,4 +1,4 @@
-﻿@model OfficeDevPnP.PartnerPack.SiteProvisioning.Models.SaveTemplateViewModel
+@model OfficeDevPnP.PartnerPack.SiteProvisioning.Models.SaveTemplateViewModel
 
 @{
     ViewBag.Title = "Save Site as Provisioning Template";
@@ -69,6 +69,18 @@ else
                         @Html.EditorFor(model => model.PersistComposedLookFiles)
                     </div>
                 </div>
+                @*<script>
+                    $(function () {
+                        $("#PersistComposedLookFiles").click(function () {
+                            if ($(this).val()) {
+                                $("#templateAltCSSFileLabel").show();
+                            }
+                            else {
+                                $("#templateAltCSSFileLabel").hide();
+                            }
+                        });
+                    });
+                </script>*@
 
                 <div class="ms-Grid-row">
                     <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
@@ -83,12 +95,26 @@ else
                         <input type="file" name="templateImageFile" id="templateImageFile" class="form-control" />
                     </div>
                 </div>
-
             </div>
+
+                <div class="ms-Grid-row">
+                        <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                            <label class="ms-Label" id="templateBackgroundImgFileLabel">Template Background Image PNG File</label>
+                            <input type="file" name="templateBackgroundImgFile" id="templateBackgroundImgFile" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="ms-Grid-row">
+                        <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                            <label class="ms-Label" id="templateAltCSSFileLabel">Template Alternate CSS File</label>
+                            <input type="file" name="templateAltCSSFile" id="templateAltCSSFile" class="form-control" />
+                        </div>
+                    </div>
+
+
 
         </div>
 
-        <button class="ms-Button Back">
+        <button class="ms-Button BackButton">
             <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
             <span class="ms-Button-label">Back</span>
             <span class="ms-Button-description">Go back to site</span>
@@ -99,6 +125,19 @@ else
             <span class="ms-Button-description">Save the template</span>
         </button>
     }
+}
+
+@section Scripts {
+
+    <script>
+        $(function () {
+
+            // Handle wizard steps
+            $(document).on("click", ".BackButton", function () { history.back(); });
+
+        });
+
+    </script>
 }
 
 <img src="https://telemetrypartnerpack.sharepointpnp.com/Home/SaveSiteAsTemplate" />
