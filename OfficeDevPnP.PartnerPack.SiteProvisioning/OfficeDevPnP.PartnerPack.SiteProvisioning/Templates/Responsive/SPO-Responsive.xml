@@ -1,7 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <pnp:Provisioning xmlns:pnp="http://schemas.dev.office.com/PnP/2015/12/ProvisioningSchema">
   <pnp:Preferences Generator="OfficeDevPnP.Core, Version=2.1.1602.0, Culture=neutral, PublicKeyToken=null">
     <pnp:Parameters>
-      <pnp:Parameter Key="AzureWebSiteUrl" Required="true">https://pnp-partner-pack.azurewebsites.net</pnp:Parameter>
+      <pnp:Parameter Key="AzureWebSiteUrl" Required="true">https://pnp-partner-pack-testpnp444321.azurewebsites.net/</pnp:Parameter>
     </pnp:Parameters>
   </pnp:Preferences>
   <pnp:Templates ID="CONTAINER-PNP-PARTNER-PACK-RESPONSIVE">

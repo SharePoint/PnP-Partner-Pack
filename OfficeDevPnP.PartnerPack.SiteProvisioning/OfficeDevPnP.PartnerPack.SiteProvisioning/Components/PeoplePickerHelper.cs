@@ -75,8 +75,9 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning.Components
 
             if (source != null)
             {
-                foreach (var u in source.Where(us => !String.IsNullOrEmpty(us.Mail)))
+                foreach (var u in source)
                 {
+                    u.Mail = (string.IsNullOrEmpty(u.Mail)) ? u.UserPrincipalName : u.Mail;
                     result.Principals.Add(await MapUser(u));
                 }
             }

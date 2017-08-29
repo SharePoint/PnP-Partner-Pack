@@ -22,7 +22,7 @@ Param(
    [string]$Build = "Release",
 
    [Parameter(Mandatory=$true)]
-   [ValidateSet('South Central US','North Europe','Web Europe','East US','East Asia','Southeast Asia','West US','Central US','Japan West','Japan East','North Central US','East US 2','Brazil South')]
+   [ValidateSet('UK West','South Central US','North Europe','West Europe','East US','East Asia','Southeast Asia','West US','Central US','Japan West','Japan East','North Central US','East US 2','Brazil South')]
    [string]$Location,
 
    [Parameter(Mandatory=$true)]
@@ -92,7 +92,7 @@ if($files -ne $null -and $files.Length -gt 0)
     $zipFile = Get-ChildItem "$basePath\OfficeDevPnP.PartnerPack.ExternalUsersJob\ExternalUsersJob.zip" -ErrorAction SilentlyContinue
     if($zipFile -ne $null)
     {
-        Remove-Item "$basePath\OfficeDevPnP.PartnerPack.CheckAdminsJob\ExternalUsersJob.zip"
+        Remove-Item "$basePath\OfficeDevPnP.PartnerPack.ExternalUsersJob\ExternalUsersJob.zip"
     }
     [IO.Compression.ZipFile]::CreateFromDirectory("$basePath\OfficeDevPnP.PartnerPack.ExternalUsersJob\bin\$Build","$basePath\OfficeDevPnP.PartnerPack.ExternalUsersJob\ExternalUsersJob.zip");
     UploadJob "ExternalUsersJob" "$basePath\OfficeDevPnP.PartnerPack.ExternalUsersJob\ExternalUsersJob.zip"

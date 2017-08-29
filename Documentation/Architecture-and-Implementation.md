@@ -50,7 +50,7 @@ blocking one, considering the target audience of the PnP Partner Pack.
 Furthermore, there are a bunch of Web Jobs, which are provisioned within the same 
 Azure Web App that hosts the main PnP Partner Pack Sites Provisioning Module.
 From an implementation perspective, the Sites Provisioning module is implemented as an
-ASP.NET MVC Web Application using Microsoft Visual Studio 2015, and references the NuGet
+ASP.NET MVC Web Application using Microsoft Visual Studio 2015/2017, and references the NuGet
 package of the [OfficeDev PnP Core](#https://www.github.com/OfficeDev/PnP-Sites-Core/) library,
 as well as all the related requirements.
 
@@ -433,33 +433,31 @@ of the currently configured Provisioning Repository.
 ## Important Notes
 Here is a list of important things to know in order to master the PnP Partner Pack solution.
 
-###AppOnly Access Token and Authorization Rules
+### AppOnly Access Token and Authorization Rules
 Keep in mind that the PnP Partner Pack runs with an AppOnly token against SharePoint Online. This
 allows any user to play with the solution. However, the current implementation of the solution does
 not provide any authorization rules. We advise you to customize the solution, which is open source,
 in order to include your own custom authorization rules.
 
-###Taxonomies Support
+### Taxonomies Support
 Because the the PnP Partner Pack runs with an AppOnly token against SharePoint Online, it does not 
 support applying taxonomies while applying any PnP Provisioning Template. Thus, if you are going to 
 apply a PnP Provisioning Template that includes Term Groups, those will be remove from the template
 before applying it.
 
-<<<<<<< HEAD
-###Search Settings Support
+### Managed Navigation Support
+Because the the PnP Partner Pack runs with an AppOnly token against SharePoint Online, it does not 
+support applying managed navigation for sites. If you apply a PnP Provisioning Template, which includes
+managed navigation settings (current or global), the PnP Partner Pack will remove that navigation settings 
+and will not apply it onto the target site.
+
+### Search Settings Support
 Because the the PnP Partner Pack runs with an AppOnly token against SharePoint Online, it does not 
 support applying search settings while applying any PnP Provisioning Template. Thus, if you are going to 
 apply a PnP Provisioning Template that includes Search Settings, those will be remove from the template
 before applying it.
 
-###Home Page Extraction Support
-Because the the PnP Partner Pack runs with an AppOnly token against SharePoint Online, and due to restrictions
-of the current implementation of the CSOM library when running with an AppOnly token, the PnP Partner Pack does not 
-support extraction of the Home Page, when saving a template from a site. Thus, if you need to include the Home Page in a template that you
-want to reuse, you will have to extract the template manually (for example using the Get-SPOProvisioningTemplate cmdlet)
-and upload it into the Infrastructural Site Collection.
-
-###Telemetry
+### Telemetry
 In order to measure and track the usage of the PnP Partner Pack, we introduced a "call home" function in the Index action
 of the Home controller of the PnP Partner Pack. Thus, we will be able to monitor and track what are the Office 365 tenants 
 that benefit from using the PnP Partner Pack. Moreover, every single view (.CSHTML) of the project includes a 1 pixel tracking
@@ -471,3 +469,4 @@ Index action of the Home controller, and you can remove the image elements at th
 project, thus you have the source code and you can do whatever you like with it.
 
 <img src="https://telemetry.sharepointpnp.com/pnp-partner-pack/documentation/architecture-and-implementation" /> 
+

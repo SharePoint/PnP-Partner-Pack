@@ -71,6 +71,21 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                         Web web = parentWeb.Webs.Add(newWeb);
                         context.ExecuteQueryRetry();
 
+                        if (template.ExtensibilityHandlers.Any())
+                        {
+                            // Clone Context pointing to Sub Site (needed for calling custom Extensibility Providers from the pnp template passing the right ClientContext)
+                            string newWeburl = web.EnsureProperty(w => w.Url);
+                            ClientContext webClientContext = context.Clone(newWeburl);
+                            web = webClientContext.Web;
+                        }
+
+                        // Create sub-web unique groups
+                        if (!job.InheritPermissions)
+                        {
+                            web.CreateDefaultAssociatedGroups(string.Empty, string.Empty, string.Empty);
+                            context.ExecuteQueryRetry();
+                        }
+
                         Console.WriteLine("Site \"{0}\" created.", subSiteUrl);
 
                         // Apply the Provisioning Template
@@ -83,11 +98,52 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                             new ProvisioningTemplateApplyingInformation();
 
                         // Write provisioning steps on console log
-                        ptai.MessagesDelegate += delegate (string message, ProvisioningMessageType messageType) {
-                            Console.WriteLine("{0} - {1}", messageType, messageType);
+                        ptai.MessagesDelegate = (message, type) =>
+                        {
+                            switch (type)
+                            {
+                                case ProvisioningMessageType.Warning:
+                                    {
+                                        Console.WriteLine("{0} - {1}", type, message);
+                                        break;
+                                    }
+                                case ProvisioningMessageType.Progress:
+                                    {
+                                        var activity = message;
+                                        if (message.IndexOf("|") > -1)
+                                        {
+                                            var messageSplitted = message.Split('|');
+                                            if (messageSplitted.Length == 4)
+                                            {
+                                                var status = messageSplitted[0];
+                                                var statusDescription = messageSplitted[1];
+                                                var current = double.Parse(messageSplitted[2]);
+                                                var total = double.Parse(messageSplitted[3]);
+                                                var percentage = Convert.ToInt32((100 / total) * current);
+                                                Console.WriteLine("{0} - {1} - {2}", percentage, status, statusDescription);
+                                            }
+                                            else
+                                            {
+                                                Console.WriteLine(activity);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine(activity);
+                                        }
+                                        break;
+                                    }
+                                case ProvisioningMessageType.Completed:
+                                    {
+                                        Console.WriteLine(type);
+                                        break;
+                                    }
+                            }
                         };
-                        ptai.ProgressDelegate += delegate (string message, int step, int total) {
-                            Console.WriteLine("{0:00}/{1:00} - {2}", step, total, message);
+                        ptai.ProgressDelegate = (message, step, total) =>
+                        {
+                            var percentage = Convert.ToInt32((100 / Convert.ToDouble(total)) * Convert.ToDouble(step));
+                            Console.WriteLine("{0:00}/{1:00} - {2} - {3}", step, total, percentage, message);
                         };
 
                         // Exclude handlers not supported in App-Only
@@ -106,8 +162,30 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                         }
 
                         // Fixup Title and Description
-                        template.WebSettings.Title = job.SiteTitle;
-                        template.WebSettings.Description = job.Description;
+                        if (template.WebSettings != null)
+                        {
+                            template.WebSettings.Title = job.SiteTitle;
+                            template.WebSettings.Description = job.Description;
+                        }
+
+                        // Replace existing structural navigation on target site
+                        if (template.Navigation != null &&
+                            template.Navigation.CurrentNavigation != null &&
+                            template.Navigation.CurrentNavigation.StructuralNavigation != null &&
+                            (template.Navigation.CurrentNavigation.NavigationType == CurrentNavigationType.Structural ||
+                            template.Navigation.CurrentNavigation.NavigationType == CurrentNavigationType.StructuralLocal))
+                        {
+                            template.Navigation.CurrentNavigation.StructuralNavigation.RemoveExistingNodes = true;
+                        }
+
+                        // Replace existing Structural Global Navigation on target site
+                        if (template.Navigation != null &&
+                            template.Navigation.GlobalNavigation != null &&
+                            template.Navigation.GlobalNavigation.StructuralNavigation != null &&
+                            template.Navigation.GlobalNavigation.NavigationType == GlobalNavigationType.Structural)
+                        {
+                            template.Navigation.GlobalNavigation.StructuralNavigation.RemoveExistingNodes = true;
+                        }
 
                         // Apply the template to the target site
                         web.ApplyProvisioningTemplate(template, ptai);
@@ -139,15 +217,24 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                             {
                                 var brandingTemplate = BrandingJobHandler.PrepareBrandingTemplate(repositoryContext, brandingSettings);
 
-                                // Fixup Title and Description
-                                brandingTemplate.WebSettings.Title = job.SiteTitle;
-                                brandingTemplate.WebSettings.Description = job.Description;
-
                                 BrandingJobHandler.ApplyBrandingOnWeb(web, brandingSettings, brandingTemplate);
+
+                                // Fixup Title and Description
+                                if (brandingTemplate != null)
+                                {
+                                    if (brandingTemplate.WebSettings != null)
+                                    {
+                                        brandingTemplate.WebSettings.Title = job.SiteTitle;
+                                        brandingTemplate.WebSettings.Description = job.Description;
+                                    }
+
+                                    // TO-DO: Need to handle exception here as there are multiple webs inside this where
+                                    BrandingJobHandler.ApplyBrandingOnWeb(web, brandingSettings, brandingTemplate);
+                                }
                             }
                         }
 
-                        Console.WriteLine("Applyed Provisioning Template \"{0}\" to site.",
+                        Console.WriteLine("Applied Provisioning Template \"{0}\" to site.",
                             job.ProvisioningTemplateUrl);
                     }
                 }

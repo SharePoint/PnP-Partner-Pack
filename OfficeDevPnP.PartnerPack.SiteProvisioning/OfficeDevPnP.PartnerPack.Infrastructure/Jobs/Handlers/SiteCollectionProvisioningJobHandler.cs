@@ -56,7 +56,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                         // Configure the Site Collection properties
                         SiteEntity newSite = new SiteEntity();
                         newSite.Description = job.Description;
-                        newSite.Lcid = (uint)job.Language;
+                        newSite.Lcid = (uint) job.Language;
                         newSite.Title = job.SiteTitle;
                         newSite.Url = siteUrl;
                         newSite.SiteOwnerLogin = job.PrimarySiteCollectionAdmin;
@@ -65,9 +65,9 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
 
                         // Use the BaseSiteTemplate of the template, if any, otherwise 
                         // fallback to the pre-configured site template (i.e. STS#0)
-                        newSite.Template = !String.IsNullOrEmpty(template.BaseSiteTemplate) ?
-                            template.BaseSiteTemplate :
-                            PnPPartnerPackSettings.DefaultSiteTemplate;
+                        newSite.Template = !String.IsNullOrEmpty(template.BaseSiteTemplate)
+                            ? template.BaseSiteTemplate
+                            : PnPPartnerPackSettings.DefaultSiteTemplate;
 
                         newSite.TimeZoneId = job.TimeZone;
                         newSite.UserCodeMaximumLevel = job.UserCodeMaximumLevel;
@@ -76,7 +76,13 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                         // Create the Site Collection and wait for its creation (we're asynchronous)
                         var tenant = new Tenant(adminContext);
                         tenant.CreateSiteCollection(newSite, true, true); // TODO: Do we want to empty Recycle Bin?
+                    }
 
+                    // Work-around for the error 'Operation is not valid due to the current state of the object' (since DEC 2016)
+                    // Get fresh Tenant instance after site collection was initially created.
+                    using (var adminContext = PnPPartnerPackContextProvider.GetAppOnlyTenantLevelClientContext())
+                    {
+                        var tenant = new Tenant(adminContext);
                         Site site = tenant.GetSiteByUrl(siteUrl);
                         Web web = site.RootWeb;
 
@@ -151,11 +157,52 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                             new ProvisioningTemplateApplyingInformation();
 
                         // Write provisioning steps on console log
-                        ptai.MessagesDelegate += delegate (string message, ProvisioningMessageType messageType) {
-                            Console.WriteLine("{0} - {1}", messageType, messageType);
+                        ptai.MessagesDelegate = (message, type) =>
+                        {
+                            switch (type)
+                            {
+                                case ProvisioningMessageType.Warning:
+                                    {
+                                        Console.WriteLine("{0} - {1}", type, message);
+                                        break;
+                                    }
+                                case ProvisioningMessageType.Progress:
+                                    {
+                                        var activity = message;
+                                        if (message.IndexOf("|") > -1)
+                                        {
+                                            var messageSplitted = message.Split('|');
+                                            if (messageSplitted.Length == 4)
+                                            {
+                                                var status = messageSplitted[0];
+                                                var statusDescription = messageSplitted[1];
+                                                var current = double.Parse(messageSplitted[2]);
+                                                var total = double.Parse(messageSplitted[3]);
+                                                var percentage = Convert.ToInt32((100 / total) * current);
+                                                Console.WriteLine("{0} - {1} - {2}", percentage, status, statusDescription);
+                                            }
+                                            else
+                                            {
+                                                Console.WriteLine(activity);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine(activity);
+                                        }
+                                        break;
+                                    }
+                                case ProvisioningMessageType.Completed:
+                                    {
+                                        Console.WriteLine(type);
+                                        break;
+                                    }
+                            }
                         };
-                        ptai.ProgressDelegate += delegate (string message, int step, int total) {
-                            Console.WriteLine("{0:00}/{1:00} - {2}", step, total, message);
+                        ptai.ProgressDelegate = (message, step, total) =>
+                        {
+                            var percentage = Convert.ToInt32((100 / Convert.ToDouble(total)) * Convert.ToDouble(step));
+                            Console.WriteLine("{0:00}/{1:00} - {2} - {3}", step, total, percentage, message);
                         };
 
                         // Exclude handlers not supported in App-Only
@@ -177,8 +224,46 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                         }
 
                         // Fixup Title and Description
-                        template.WebSettings.Title = job.SiteTitle;
-                        template.WebSettings.Description = job.Description;
+                        if (template.WebSettings != null)
+                        {
+                            template.WebSettings.Title = job.SiteTitle;
+                            template.WebSettings.Description = job.Description;
+                        }
+
+                        // Replace existing Structural Current Navigation on target site
+                        if (template.Navigation != null &&
+                            template.Navigation.CurrentNavigation != null &&
+                            template.Navigation.CurrentNavigation.StructuralNavigation != null &&
+                            (template.Navigation.CurrentNavigation.NavigationType == CurrentNavigationType.Structural ||
+                            template.Navigation.CurrentNavigation.NavigationType == CurrentNavigationType.StructuralLocal))
+                        {
+                            template.Navigation.CurrentNavigation.StructuralNavigation.RemoveExistingNodes = true;
+                        }
+                        else if (template.Navigation != null &&
+                            template.Navigation.CurrentNavigation != null &&
+                            template.Navigation.CurrentNavigation.ManagedNavigation != null &&
+                            template.Navigation.CurrentNavigation.NavigationType == CurrentNavigationType.Managed)
+                        {
+                            // We intentionally skip the Managed Navigation
+                            template.Navigation = new Core.Framework.Provisioning.Model.Navigation(template.Navigation.GlobalNavigation, null);
+                        }
+
+                        // Replace existing Structural Global Navigation on target site
+                        if (template.Navigation != null &&
+                            template.Navigation.GlobalNavigation != null &&
+                            template.Navigation.GlobalNavigation.StructuralNavigation != null &&
+                            template.Navigation.GlobalNavigation.NavigationType == GlobalNavigationType.Structural)
+                        {
+                            template.Navigation.GlobalNavigation.StructuralNavigation.RemoveExistingNodes = true;
+                        }
+                        else if (template.Navigation != null &&
+                            template.Navigation.GlobalNavigation != null &&
+                            template.Navigation.GlobalNavigation.ManagedNavigation != null &&
+                            template.Navigation.GlobalNavigation.NavigationType == GlobalNavigationType.Managed)
+                        {
+                            // We intentionally skip the Managed Navigation
+                            template.Navigation = new Core.Framework.Provisioning.Model.Navigation(null, template.Navigation.CurrentNavigation);
+                        }
 
                         // Apply the template to the target site
                         web.ApplyProvisioningTemplate(template, ptai);
@@ -211,15 +296,22 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.Jobs.Handlers
                                 var brandingTemplate = BrandingJobHandler.PrepareBrandingTemplate(repositoryContext, brandingSettings);
 
                                 // Fixup Title and Description
-                                brandingTemplate.WebSettings.Title = job.SiteTitle;
-                                brandingTemplate.WebSettings.Description = job.Description;
+                                if (brandingTemplate != null)
+                                {
+                                    if (brandingTemplate.WebSettings != null)
+                                    {
+                                        brandingTemplate.WebSettings.Title = job.SiteTitle;
+                                        brandingTemplate.WebSettings.Description = job.Description;
+                                    }
 
-                                BrandingJobHandler.ApplyBrandingOnWeb(web, brandingSettings, brandingTemplate);
+                                    // TO-DO: Need to handle exception here as there are multiple webs inside this where
+                                    BrandingJobHandler.ApplyBrandingOnWeb(web, brandingSettings, brandingTemplate);
+                                }
                             }
                         }
 
 
-                        Console.WriteLine("Applyed Provisioning Template \"{0}\" to site.",
+                        Console.WriteLine("Applied Provisioning Template \"{0}\" to site.",
                             job.ProvisioningTemplateUrl);
                     }
                 }

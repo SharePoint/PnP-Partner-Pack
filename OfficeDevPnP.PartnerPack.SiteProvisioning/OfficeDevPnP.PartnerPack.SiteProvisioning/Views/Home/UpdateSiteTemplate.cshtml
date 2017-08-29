@@ -1,0 +1,66 @@
+﻿@model OfficeDevPnP.PartnerPack.SiteProvisioning.Models.UpdateSiteTemplateViewModel
+
+@{
+    ViewBag.Title = "Update Site Provisioning Template";
+}
+
+@if (Model.JobId.HasValue && Model.JobId.Value != Guid.Empty)
+{
+    <div class="ms-Grid">
+        <div class="ms-Grid-row">
+            <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                The Site will be updated with the latest version of the Provisioning Template applied to the current site. The ID assigned to the Job is: @Model.JobId.
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    using (Html.BeginForm("UpdateSiteTemplate", "Home", "", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+
+        @Html.HiddenFor(model => model.TargetSiteUrl)
+
+        <div class="ms-Grid">
+            <div class="ms-Grid-row">
+                <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                    Click the "Update Site" button in order to refresh the Provisioning Template applied to the current site.
+                </div>
+            </div>
+        </div>
+
+        <div class="inputForm">
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        </div>
+
+        <button class="ms-Button BackButton">
+            <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+            <span class="ms-Button-label">Back</span>
+            <span class="ms-Button-description">Go back to site</span>
+        </button>
+        <button class="ms-Button ms-Button--primary Save">
+            <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+            <span class="ms-Button-label">Update Site</span>
+            <span class="ms-Button-description">Update Site Provisioning Template</span>
+        </button>
+    }
+}
+
+@section Scripts {
+
+    <script>
+        $(function () {
+
+            // Handle wizard steps
+            $(document).on("click", ".BackButton", function () { history.back(); });
+
+        });
+
+    </script>
+}
+
+<img src="https://telemetrypartnerpack.sharepointpnp.com/Home/UpdateSiteTemplate" />

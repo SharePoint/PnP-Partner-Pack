@@ -20,7 +20,8 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders
     public abstract class SharePointBaseTemplatesProvider : ITemplatesProvider
     {
         // Lazy static private property for managing the in memory cache
-        private static Lazy<MemoryCache> cacheValue = new Lazy<MemoryCache>(() => {
+        private static Lazy<MemoryCache> cacheValue = new Lazy<MemoryCache>(() =>
+        {
             MemoryCache result = new MemoryCache("SharePointTemplatesProvider");
             return (result);
         }, true);
@@ -252,78 +253,86 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders
                             // Determine the name of the XML file inside the PNP Open XML file, if any
                             var xmlTemplateFile = item.File.Name.ToLower().Replace(".pnp", ".xml");
 
-                            // Get the template
-                            ProvisioningTemplate template = provider.GetTemplate(xmlTemplateFile);
-
-                            // Prepare the resulting item
-                            var templateInformation = new ProvisioningTemplateInformation
+                            try
                             {
-                                // Scope = (TargetScope)Enum.Parse(typeof(TargetScope), (String)item[PnPPartnerPackConstants.PnPProvisioningTemplateScope], true),
-                                TemplateSourceUrl = item[PnPPartnerPackConstants.PnPProvisioningTemplateSourceUrl] != null ? ((FieldUrlValue)item[PnPPartnerPackConstants.PnPProvisioningTemplateSourceUrl]).Url : null,
-                                TemplateFileUri = String.Format("{0}/{1}/{2}", web.Url, PnPPartnerPackConstants.PnPProvisioningTemplates, item.File.Name),
-                                TemplateImageUrl = template.ImagePreviewUrl,
-                                DisplayName = template.DisplayName,
-                                Description = template.Description,
-                            };
+                                // Get the template
+                                ProvisioningTemplate template = provider.GetTemplate(xmlTemplateFile);
 
-                            #region Determine Scope
+                                // Prepare the resulting item
+                                var templateInformation = new ProvisioningTemplateInformation
+                                {
+                                    // Scope = (TargetScope)Enum.Parse(typeof(TargetScope), (String)item[PnPPartnerPackConstants.PnPProvisioningTemplateScope], true),
+                                    TemplateSourceUrl = item[PnPPartnerPackConstants.PnPProvisioningTemplateSourceUrl] != null ? ((FieldUrlValue)item[PnPPartnerPackConstants.PnPProvisioningTemplateSourceUrl]).Url : null,
+                                    TemplateFileUri = String.Format("{0}/{1}/{2}", web.Url, PnPPartnerPackConstants.PnPProvisioningTemplates, item.File.Name),
+                                    TemplateImageUrl = template.ImagePreviewUrl,
+                                    DisplayName = template.DisplayName,
+                                    Description = template.Description,
+                                };
 
-                            String targetScope;
-                            if (template.Properties.TryGetValue(PnPPartnerPackConstants.TEMPLATE_SCOPE, out targetScope))
-                            {
-                                if (String.Equals(targetScope, PnPPartnerPackConstants.TEMPLATE_SCOPE_PARTIAL, StringComparison.InvariantCultureIgnoreCase))
+                                #region Determine Scope
+
+                                String targetScope;
+                                if (template.Properties.TryGetValue(PnPPartnerPackConstants.TEMPLATE_SCOPE, out targetScope))
                                 {
-                                    templateInformation.Scope = TargetScope.Partial;
+                                    if (String.Equals(targetScope, PnPPartnerPackConstants.TEMPLATE_SCOPE_PARTIAL, StringComparison.InvariantCultureIgnoreCase))
+                                    {
+                                        templateInformation.Scope = TargetScope.Partial;
+                                    }
+                                    else if (String.Equals(targetScope, PnPPartnerPackConstants.TEMPLATE_SCOPE_WEB, StringComparison.InvariantCultureIgnoreCase))
+                                    {
+                                        templateInformation.Scope = TargetScope.Web;
+                                    }
+                                    else if (String.Equals(targetScope, PnPPartnerPackConstants.TEMPLATE_SCOPE_SITE, StringComparison.InvariantCultureIgnoreCase))
+                                    {
+                                        templateInformation.Scope = TargetScope.Site;
+                                    }
                                 }
-                                else if (String.Equals(targetScope, PnPPartnerPackConstants.TEMPLATE_SCOPE_WEB, StringComparison.InvariantCultureIgnoreCase))
+
+                                #endregion
+
+                                #region Determine target Platforms
+
+                                String spoPlatform, sp2016Platform, sp2013Platform;
+                                if (template.Properties.TryGetValue(PnPPartnerPackConstants.PLATFORM_SPO, out spoPlatform))
                                 {
-                                    templateInformation.Scope = TargetScope.Web;
+                                    if (spoPlatform.Equals(PnPPartnerPackConstants.TRUE_VALUE, StringComparison.InvariantCultureIgnoreCase))
+                                    {
+                                        templateInformation.Platforms |= TargetPlatform.SharePointOnline;
+                                    }
                                 }
-                                else if (String.Equals(targetScope, PnPPartnerPackConstants.TEMPLATE_SCOPE_SITE, StringComparison.InvariantCultureIgnoreCase))
+                                if (template.Properties.TryGetValue(PnPPartnerPackConstants.PLATFORM_SP2016, out sp2016Platform))
                                 {
-                                    templateInformation.Scope = TargetScope.Site;
+                                    if (sp2016Platform.Equals(PnPPartnerPackConstants.TRUE_VALUE, StringComparison.InvariantCultureIgnoreCase))
+                                    {
+                                        templateInformation.Platforms |= TargetPlatform.SharePoint2016;
+                                    }
+                                }
+                                if (template.Properties.TryGetValue(PnPPartnerPackConstants.PLATFORM_SP2013, out sp2013Platform))
+                                {
+                                    if (sp2013Platform.Equals(PnPPartnerPackConstants.TRUE_VALUE, StringComparison.InvariantCultureIgnoreCase))
+                                    {
+                                        templateInformation.Platforms |= TargetPlatform.SharePoint2013;
+                                    }
+                                }
+
+                                #endregion
+
+                                // If we don't have a search text 
+                                // or we have a search text and it is contained either 
+                                // in the DisplayName or in the Description of the template
+                                if ((!String.IsNullOrEmpty(searchText) &&
+                                    ((!String.IsNullOrEmpty(template.DisplayName) && template.DisplayName.ToLower().Contains(searchText.ToLower())) ||
+                                    (!String.IsNullOrEmpty(template.Description) && template.Description.ToLower().Contains(searchText.ToLower())))) ||
+                                    String.IsNullOrEmpty(searchText))
+                                {
+                                    // Add the template to the result
+                                    result.Add(templateInformation);
                                 }
                             }
-
-                            #endregion
-
-                            #region Determine target Platforms
-
-                            String spoPlatform, sp2016Platform, sp2013Platform;
-                            if (template.Properties.TryGetValue(PnPPartnerPackConstants.PLATFORM_SPO, out spoPlatform))
+                            catch (Exception ex)
                             {
-                                if (spoPlatform.Equals(PnPPartnerPackConstants.TRUE_VALUE, StringComparison.InvariantCultureIgnoreCase))
-                                {
-                                    templateInformation.Platforms |= TargetPlatform.SharePointOnline;
-                                }
-                            }
-                            if (template.Properties.TryGetValue(PnPPartnerPackConstants.PLATFORM_SP2016, out sp2016Platform))
-                            {
-                                if (sp2016Platform.Equals(PnPPartnerPackConstants.TRUE_VALUE, StringComparison.InvariantCultureIgnoreCase))
-                                {
-                                    templateInformation.Platforms |= TargetPlatform.SharePoint2016;
-                                }
-                            }
-                            if (template.Properties.TryGetValue(PnPPartnerPackConstants.PLATFORM_SP2013, out sp2013Platform))
-                            {
-                                if (sp2013Platform.Equals(PnPPartnerPackConstants.TRUE_VALUE, StringComparison.InvariantCultureIgnoreCase))
-                                {
-                                    templateInformation.Platforms |= TargetPlatform.SharePoint2013;
-                                }
-                            }
-
-                            #endregion
-
-                            // If we don't have a search text 
-                            // or we have a search text and it is contained either 
-                            // in the DisplayName or in the Description of the template
-                            if ((!String.IsNullOrEmpty(searchText) &&
-                                ((!String.IsNullOrEmpty(template.DisplayName) && template.DisplayName.ToLower().Contains(searchText.ToLower())) ||
-                                (!String.IsNullOrEmpty(template.Description) && template.Description.ToLower().Contains(searchText.ToLower())))) ||
-                                String.IsNullOrEmpty(searchText))
-                            {
-                                // Add the template to the result
-                                result.Add(templateInformation);
+                                // Ignore any exception related to the current template
+                                // and move to the next template
                             }
                         }
                     }

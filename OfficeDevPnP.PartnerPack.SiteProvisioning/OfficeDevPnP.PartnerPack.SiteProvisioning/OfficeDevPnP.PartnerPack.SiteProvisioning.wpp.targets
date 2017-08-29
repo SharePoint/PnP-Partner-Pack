@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003"> 
+  
+  <!--
+  When using this file you must supply /p:PublishSettingsFile as a parameter
+  -->  
+  <PropertyGroup>
+    <!-- These must be declared outside of a Target because they impact the Import Project flow -->
+    <WebPublishMethod>MSDeploy</WebPublishMethod>
+    <DeployTarget>WebPublish</DeployTarget>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <PipelineDependsOn>
+      GetPublishPropertiesFromPublishSettings;
+      $(PipelineDependsOn);
+    </PipelineDependsOn>
+  </PropertyGroup>
+
+  <Target Name="Demo" DependsOnTargets="GetPublishPropertiesFromPublishSettings"/>
+
+  <Target Name="GetPublishPropertiesFromPublishSettings" BeforeTargets="Build">
+    <PropertyGroup Condition=" Exists('$(PublishSettingsFile)')">
+      <_BaseQuery>/publishData/publishProfile[@publishMethod='MSDeploy']/</_BaseQuery>
+      <!-- This value is not in the .publishSettings file and needs to be specified, it can be overridden with a cmd line parameter -->
+      <!-- If you are using the Remote Agent then specify this as RemoteAgent -->
+      <MSDeployPublishMethod>WMSVC</MSDeployPublishMethod>
+    </PropertyGroup>
+
+    <ItemGroup Condition=" Exists('$(PublishSettingsFile)')">
+      <_MSDeployXPath Include="WebPublishMethod">
+        <Query>$(_BaseQuery)@publishMethod</Query>
+      </_MSDeployXPath>
+
+      <_MSDeployXPath Include="MSDeployServiceURL">
+        <Query>$(_BaseQuery)@publishUrl</Query>
+      </_MSDeployXPath>
+
+      <_MSDeployXPath Include="SiteUrlToLaunchAfterPublish">
+        <Query>$(_BaseQuery)@destinationAppUrl</Query>
+      </_MSDeployXPath>
+
+      <_MSDeployXPath Include="DeployIisAppPath">
+        <Query>$(_BaseQuery)@msdeploySite</Query>
+      </_MSDeployXPath>
+
+      <_MSDeployXPath Include="UserName">
+        <Query>$(_BaseQuery)@userName</Query>
+      </_MSDeployXPath>
+
+      <_MSDeployXPath Include="Password">
+        <Query>$(_BaseQuery)@userPWD</Query>
+      </_MSDeployXPath>
+    </ItemGroup>
+
+    <XmlPeek XmlInputPath="$(PublishSettingsFile)"
+             Query="%(_MSDeployXPath.Query)"
+             Condition=" Exists('$(PublishSettingsFile)')">
+      <Output TaskParameter="Result" PropertyName="%(_MSDeployXPath.Identity)"/>
+    </XmlPeek>
+  </Target>
+</Project>
