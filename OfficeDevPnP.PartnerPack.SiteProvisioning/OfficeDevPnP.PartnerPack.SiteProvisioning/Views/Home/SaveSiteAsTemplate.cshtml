@@ -50,38 +50,24 @@ else
                     </div>
                 </div>
 
-@*
-                <div class="ms-Grid-row">
-                    <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
-                        @Html.EditorFor(model => model.IncludeSearchConfiguration)
-                    </div>
+                @*
+            <div class="ms-Grid-row">
+                <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+                    @Html.EditorFor(model => model.IncludeSearchConfiguration)
                 </div>
-*@
+            </div>
+                *@
 
                 <div class="ms-Grid-row">
                     <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
                         @Html.EditorFor(model => model.IncludeSiteGroups)
                     </div>
                 </div>
-
-                <div class="ms-Grid-row">
+                <div id="toggleSwitch" class="ms-Grid-row">
                     <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
                         @Html.EditorFor(model => model.PersistComposedLookFiles)
                     </div>
                 </div>
-                @*<script>
-                    $(function () {
-                        $("#PersistComposedLookFiles").click(function () {
-                            if ($(this).val()) {
-                                $("#templateAltCSSFileLabel").show();
-                            }
-                            else {
-                                $("#templateAltCSSFileLabel").hide();
-                            }
-                        });
-                    });
-                </script>*@
-
                 <div class="ms-Grid-row">
                     <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
                         <label class="ms-Label" id="templateImageFileLabel">Target Location for Template</label>
@@ -95,11 +81,10 @@ else
                         <input type="file" name="templateImageFile" id="templateImageFile" class="form-control" />
                     </div>
                 </div>
-            </div>
-
-                <div class="ms-Grid-row">
+                <div id="composedLooks" class="ms-Grid-row">
+                    <div class="ms-Grid-row">
                         <div class="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
-                            <label class="ms-Label" id="templateBackgroundImgFileLabel">Template Background Image PNG File</label>
+                            <label class="ms-Label" id="templateBackgroundImgFileLabel">Template Background Image PNG File (OVERRIDES SITE IMAGE)</label>
                             <input type="file" name="templateBackgroundImgFile" id="templateBackgroundImgFile" class="form-control" />
                         </div>
                     </div>
@@ -109,9 +94,13 @@ else
                             <input type="file" name="templateAltCSSFile" id="templateAltCSSFile" class="form-control" />
                         </div>
                     </div>
-
-
-
+                </div>
+                <script>
+                    $("#PersistComposedLookFilesLabel").click(function () {
+                        $("#composedLooks").toggle();
+                    });
+                </script>
+            </div>
         </div>
 
         <button class="ms-Button BackButton">
@@ -137,7 +126,7 @@ else
 
         });
 
-    </script>
+            </script>
 }
 
 <img src="https://telemetrypartnerpack.sharepointpnp.com/Home/SaveSiteAsTemplate" />
