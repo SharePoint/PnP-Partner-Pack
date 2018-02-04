@@ -405,7 +405,7 @@ All the values surrounded by [name] have to be replaced with the corresponding v
 Upload the Web application to the target Azure App Service. You can use any of the available techniques for doing that (GitHub repository, FTP, Visual Studio Publish, etc.). 
 
 **Important:**
-When you publish the web application using Microsoft Visual Studio, remember to **uncheck **the option "Enable Organizational Authentication". If you leave this selected you might face authentication issues when running the PnP Partner Pack.
+When you publish the web application using Microsoft Visual Studio, remember to **uncheck **the option "Enable Organizational Authentication". If you leave this selected you might face authentication issues when running the PnP Partner Pack. To find this option, select the "Settings..." link in the Summary section of the Publish tool. When the Publish window opens, select the Settings item on the left menu.
 
 Notice that the web application uses a token cache for ADAL tokens, which are used when accessing the Microsoft Graph API. The token cache provided is based on the web application session. Thus, it is not a scalable solution and it cannot be used with multiple instances of the web app. However, you can configure a session based on an external persistence provider, like for example the <a href="https://azure.microsoft.com/en-us/documentation/articles/cache-asp.net-session-state-provider/">Azure Redis Cache</a>, or you can define a token cache handler of your own, using a backend database or whatever else. For further details about ADAL and the token cache, you can read the <a href="./Architecture-and-Implementation.md">architectural document</a> related to the PnP Partner Pack.
  
