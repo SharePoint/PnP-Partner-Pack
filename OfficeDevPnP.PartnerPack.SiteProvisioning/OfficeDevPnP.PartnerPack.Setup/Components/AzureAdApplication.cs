@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,8 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
         public string keyId { get; set; }
         public string type { get; set; }
         public string usage { get; set; }
+
+        [JsonProperty("key")]
         public string value { get; set; }
     }
 

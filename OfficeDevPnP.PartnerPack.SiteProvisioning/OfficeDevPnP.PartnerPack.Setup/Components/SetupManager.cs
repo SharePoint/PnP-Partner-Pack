@@ -413,7 +413,7 @@ namespace OfficeDevPnP.PartnerPack.Setup.Components
                     "\"keyId\": \"" + KeyId + "\"," +
                     "\"type\": \"AsymmetricX509Cert\"," +
                     "\"usage\": \"Verify\"," +
-                    "\"value\":  \"" + base64Cert + "\"" +
+                    "\"key\":  \"" + base64Cert + "\"" +
                 "}";
 
             return (keyCredential);
