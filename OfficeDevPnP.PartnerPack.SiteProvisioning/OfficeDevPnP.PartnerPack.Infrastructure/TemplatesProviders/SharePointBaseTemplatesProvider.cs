@@ -216,6 +216,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders
                         ListItemCollection items = list.GetItems(query);
                         context.Load(items,
                             includes => includes.Include(i => i.File,
+							i => i["Title"],
                             i => i[PnPPartnerPackConstants.PnPProvisioningTemplateScope],
                             i => i[PnPPartnerPackConstants.PnPProvisioningTemplatePlatform],
                             i => i[PnPPartnerPackConstants.PnPProvisioningTemplateSourceUrl]));
@@ -265,7 +266,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure.TemplatesProviders
                                     TemplateSourceUrl = item[PnPPartnerPackConstants.PnPProvisioningTemplateSourceUrl] != null ? ((FieldUrlValue)item[PnPPartnerPackConstants.PnPProvisioningTemplateSourceUrl]).Url : null,
                                     TemplateFileUri = String.Format("{0}/{1}/{2}", web.Url, PnPPartnerPackConstants.PnPProvisioningTemplates, item.File.Name),
                                     TemplateImageUrl = template.ImagePreviewUrl,
-                                    DisplayName = template.DisplayName,
+                                    DisplayName = String.IsNullOrEmpty(template.DisplayName) ? item["Title"].ToString() : template.DisplayName,
                                     Description = template.Description,
                                 };
 
