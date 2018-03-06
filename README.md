@@ -15,8 +15,8 @@ PnP Partner Pack solution is demonstrating following capabilities:
 	- Sub site creation implementation with remote provisioning
 	- Support for tenant wide or site collection templates
 - Responsive UI package for the Office 365 SP sites
+	- Can be applied independently to any Classic SharePoint site (it's part of the PnP Core functionality)
 	- Uses JavaScript and custom CSS files to transform oob SP sites as responsive
-	- Can be applied to any SharePoint site and does not dependencies on the PnP Partner Pack
 - UI widget implementations with JavaScript embedding pattern to avoid custom master pages
 - Governance tools for administrators: apply SharePoint farm-wide branding, refresh site templates, bulk creation of site collections 
 - Reference governance remote timer jobs (Azure WebJobs) to perform typical enterprise governance operations to existing site collections and sites
