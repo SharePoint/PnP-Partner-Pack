@@ -128,17 +128,7 @@
             var searchText = $("#templatesSearch").val();
             var templatesProvider = $("#templateProviders").val();
 
-            if ((searchText == "" || searchText == null || searchText == undefined) && (e != null && e != undefined))
-            {
-                $(".WarningMessage").text("Please provide a text to search for!");
-                $("#SiteCreationWizard > div").show();
-                $("#WorkingOnIt").hide();
-                return;
-            }
-            else
-            {
-                $(".WarningMessage").text("");
-            }
+			$(".WarningMessage").text("");
 
             $("#@(Html.IdFor(model => model.TemplatesProviderTypeName))").val(templatesProvider);
 
