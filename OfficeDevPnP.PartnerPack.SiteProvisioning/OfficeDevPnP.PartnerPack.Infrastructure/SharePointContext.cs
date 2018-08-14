@@ -330,7 +330,7 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
                     return RedirectionStatus.Ok;
                 }
             }
-            catch (SecurityTokenExpiredException)
+            catch (Exception) // was: SecurityTokenExpiredException)
             {
                 contextTokenExpired = true;
             }

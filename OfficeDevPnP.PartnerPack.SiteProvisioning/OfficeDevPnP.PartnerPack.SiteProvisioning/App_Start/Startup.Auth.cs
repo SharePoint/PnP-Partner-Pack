@@ -33,7 +33,7 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning
                 {
                     ClientId = PnPPartnerPackSettings.ClientId,
                     Authority = PnPPartnerPackSettings.AADInstance + "common",
-                    TokenValidationParameters = new System.IdentityModel.Tokens.TokenValidationParameters
+                    TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                     {
                         // instead of using the default validation (validating against a single issuer value, as we do in line of business apps), 
                         // we inject our own multitenant validation logic
@@ -60,9 +60,9 @@ namespace OfficeDevPnP.PartnerPack.SiteProvisioning
                             AuthenticationContext authContext = new AuthenticationContext(
                                 PnPPartnerPackSettings.AADInstance + tenantId,
                                 new SessionADALCache(signedInUserID));
-                            AuthenticationResult result = authContext.AcquireTokenByAuthorizationCode(
+                            AuthenticationResult result = authContext.AcquireTokenByAuthorizationCodeAsync(
                                 code, new Uri(HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Path)),
-                                credential, MicrosoftGraphConstants.MicrosoftGraphResourceId);
+                                credential, MicrosoftGraphConstants.MicrosoftGraphResourceId).Result;
 
                             return Task.FromResult(0);
                         },

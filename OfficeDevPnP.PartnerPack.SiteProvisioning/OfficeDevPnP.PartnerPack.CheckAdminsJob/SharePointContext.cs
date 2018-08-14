@@ -330,7 +330,7 @@ namespace OfficeDevPnP.PartnerPack.CheckAdminsJob
                     return RedirectionStatus.Ok;
                 }
             }
-            catch (SecurityTokenExpiredException)
+            catch (Exception) // was: SecurityTokenExpiredException)
             {
                 contextTokenExpired = true;
             }

@@ -71,10 +71,12 @@ namespace OfficeDevPnP.PartnerPack.Infrastructure
                     PnPPartnerPackSettings.AADInstance + tenantId,
                     new SessionADALCache(signedInUserID));
 
-                AuthenticationResult result = authContext.AcquireTokenSilent(
-                    resourceId,
-                    credential,
-                    UserIdentifier.AnyUser);
+                AuthenticationResult result = Task.Run(() => authContext
+                    .AcquireTokenSilentAsync(
+                        resourceId,
+                        credential,
+                        UserIdentifier.AnyUser))
+                    .GetAwaiter().GetResult();
 
                 accessToken = result.AccessToken;
             }
