@@ -1,4 +1,8 @@
-﻿# PnP Partner Pack v. 2.0 (October 2018)
+
+> This project is not anymore actively being developed, so repository is archive. You may use the source code and any other assets anyway you prefer. If you are looking for similar more complete solution, please have a look on the [SharePoint Starter Kit](https://github.com/SharePoint/sp-starter-kit), which is providing similar end-to-end solution, but using modern experiences.
+
+
+# PnP Partner Pack v. 2.0 (October 2018)
 This is the repository for PnP Partner Pack, which is part of the community driven [Office 365 Developer Patterns and Practices](http://aka.ms/OfficeDevPnP) (PnP) initiative. 
 
 ![](http://i.imgur.com/5L34MNk.png)
